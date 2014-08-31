@@ -1,0 +1,77 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+F:\myproject\51\yanshanelab2\1.uv2
+Project File Date:  07/05/2009
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SECTOR_ERASE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_PROGRAM?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_VERIFY?TEXT1
+Program Size: data=9.0 xdata=12 code=530
+creating hex file from "1"...
+"1" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(61): error C207: 'show': declared with 'void' parameter list
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(159): warning C209: '_show': too few actual parameters
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SECTOR_ERASE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_PROGRAM?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_VERIFY?TEXT1
+Program Size: data=9.0 xdata=14 code=733
+creating hex file from "1"...
+"1" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(163): warning C209: '_show': too few actual parameters
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SECTOR_ERASE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_PROGRAM?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_VERIFY?TEXT1
+Program Size: data=9.0 xdata=14 code=743
+creating hex file from "1"...
+"1" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(164): warning C209: '_show': too few actual parameters
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SECTOR_ERASE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_PROGRAM?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_VERIFY?TEXT1
+Program Size: data=9.0 xdata=14 code=748
+creating hex file from "1"...
+"1" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(164): warning C209: '_show': too few actual parameters
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SECTOR_ERASE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_PROGRAM?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_VERIFY?TEXT1
+Program Size: data=9.0 xdata=14 code=694
+creating hex file from "1"...
+"1" - 0 Error(s), 4 Warning(s).

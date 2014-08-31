@@ -1,0 +1,154 @@
+C51 COMPILER V8.02   TEXT1                                                                 07/10/2009 17:37:11 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c ROM(SMALL) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          
+   3          sbit rst=P2^0;
+   4          sbit io=P2^1;
+   5          sbit sck=P2^2;
+   6          unsigned char buffer[10];
+   7          void delay(unsigned char i)
+   8          {
+   9   1              unsigned char j;
+  10   1              while(i--)
+  11   1              {
+  12   2                      for(j=200;j;j--);
+  13   2              }
+  14   1      }
+  15          
+  16          void initserial(void)
+  17          {
+  18   1              TMOD = 0x20;                    // 定时器1工作于8位自动重载模式, 用于产生波特率
+  19   1              TH1 = 0xFD;                             // 波特率9600
+  20   1              TL1 = 0xFD;
+  21   1              SCON = 0x50;                    // 设定串行口工作方式
+  22   1              PCON &= 0xef;                   // 波特率不倍增
+  23   1              TR1 = 1;                                // 启动定时器1
+  24   1              IE = 0x0;                               // 禁止任何中断
+  25   1              EA=1;
+  26   1              ES=1;
+  27   1      }
+  28          void serialint(void)interrupt 4 using 2
+  29          {
+  30   1              if(RI)
+  31   1              {
+  32   2                      RI=0;
+  33   2                      SBUF=SBUF;
+  34   2              }
+  35   1      }
+  36          void send_byte(unsigned char d)
+  37          {
+  38   1              ES=0;
+  39   1              SBUF=d;
+  40   1              while(!TI);
+  41   1              TI=0;
+  42   1              ES=1;
+  43   1      }
+  44          void send_str(unsigned char *str)// 传送字串
+  45          {
+  46   1              unsigned char i = 0;
+  47   1              ES=0;
+  48   1              while(str[i] != '\0')
+  49   1              {
+  50   2                      SBUF = str[i];
+  51   2                      while(!TI);                             // 等特数据传送
+  52   2                      TI = 0;                                 // 清除数据传送标志
+  53   2                      i++;                                    // 下一个字符
+  54   2              }
+  55   1              ES=1;
+C51 COMPILER V8.02   TEXT1                                                                 07/10/2009 17:37:11 PAGE 2   
+
+  56   1      }
+  57          
+  58          void send1302(unsigned char d)
+  59          {
+  60   1              unsigned char i;
+  61   1              sck=0;
+  62   1              for(i=0;i<8;i++)
+  63   1              {
+  64   2                      if(d&0x01)
+  65   2                      {
+  66   3                              io=1;
+  67   3                      }
+  68   2                      else
+  69   2                      {
+  70   3                              io=0;
+  71   3                      }
+  72   2                      sck=0;
+  73   2                      sck=1;
+  74   2                      d>>=1;
+  75   2              }
+  76   1      }
+  77          
+  78          unsigned char read1302(void)
+  79          {
+  80   1              unsigned char d=0,i;
+  81   1      
+  82   1              for(i=0;i<8;i++)
+  83   1              {
+  84   2                      d>>=1;
+  85   2                      sck=1;
+  86   2                      io=1;
+  87   2                      sck=0;          
+  88   2                      if(io)
+  89   2                      {
+  90   3                              d|=0x80;
+  91   3                      }
+  92   2              }
+  93   1              return d;
+  94   1      }
+  95          void write1comd(unsigned char addr,unsigned char mydata)
+  96          {
+  97   1              sck=0;
+  98   1              rst=0;
+  99   1              rst=1;
+ 100   1              send1302(addr);
+ 101   1              send1302(mydata);
+ 102   1              rst=0;
+ 103   1      }
+ 104          unsigned char read1byte(unsigned char addr)
+ 105          {
+ 106   1              unsigned char ret;
+ 107   1              sck=0;
+ 108   1              rst=1;
+ 109   1              send1302(addr);
+ 110   1              ret=read1302();
+ 111   1              rst=0;
+ 112   1              return ret;
+ 113   1      }
+ 114          void main(void)
+ 115          {
+ 116   1              initserial();
+ 117   1              write1comd(0x8e,0x00);
+C51 COMPILER V8.02   TEXT1                                                                 07/10/2009 17:37:11 PAGE 3   
+
+ 118   1              write1comd(0x80,0x00);
+ 119   1              while(1)
+ 120   1              {
+ 121   2      
+ 122   2                      buffer[0]=read1byte(0x81);
+ 123   2                      
+ 124   2                      send_byte(buffer[0]);
+ 125   2                      delay(200);
+ 126   2              }
+ 127   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    202    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     10       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

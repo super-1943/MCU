@@ -1,0 +1,382 @@
+C51 COMPILER V8.02   EEPROM                                                                07/21/2010 10:42:04 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE EEPROM
+OBJECT MODULE PLACED IN eeprom.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE eeprom.c BROWSE DEFINE(WORK_AROUND_192) DEBUG OBJECTEXTEND CODE
+
+line level    source
+
+   1          #include "reg52modified.h"
+   2          #include "types.h"
+   3          #include "tusb2136.h"
+   4          
+   5          
+   6          BYTE eeprom_read(WORD wAddress, BYTE bNumber, PBYTE pbDataArray);
+   7          BYTE eeprom_write(WORD wAddress, BYTE bNumber, PBYTE pbDataArray);
+   8          
+   9          
+  10          //----------------------------------------------------------------------------
+  11          BYTE eeprom_read(WORD wAddress, BYTE bNumber, PBYTE pbDataArray)
+  12          {
+  13   1          // If error, return a value other than zero.
+  14   1          if(bNumber == 0x00) return NO_ERROR;
+  15   1      
+  16   1          bI2CSTA = 0x10; // set to 400KHz, clear everthing else
+  17   1          bI2CADR = 0xA0; // 0xA0 for EEPROM address + 0 for write
+  18   1      
+  19   1              bI2CDAO = (BYTE)(wAddress >> 8); // write high byte of EEPROM address word
+  20   1              while(!(bI2CSTA & I2CSTA_TXE)); // wait for previous EEPROM write to finish
+  21   1          if (bI2CSTA & I2CSTA_ERR) return ERROR;
+  22   1      
+  23   1              bI2CDAO = (BYTE)wAddress; // write low byte of EEPROM address word
+  24   1              while(!(bI2CSTA & I2CSTA_TXE)); // wait for previous EEPROM write to finish
+  25   1          if (bI2CSTA & I2CSTA_ERR) return ERROR;
+  26   1      
+  27   1          bI2CADR = 0xA1; // 0xA0 for EEPROM address + 1 for read
+  28   1          bI2CDAO = 0x00; // write a dummy byte to start read
+  29   1      
+  30   1          // SRD should be cleared
+  31   1          while(bNumber > 1)
+  32   1          {
+  33   2              while(!(bI2CSTA & I2CSTA_RXF)); // wait for reading a byte
+  34   2              if (bI2CSTA & I2CSTA_ERR) return ERROR;
+  35   2              *pbDataArray++ = bI2CDAI;
+  36   2              bNumber--;
+  37   2          }
+  38   1         
+  39   1          // read the last byte 
+  40   1          bI2CSTA |= I2CSTA_SRD;
+  41   1          while(!(bI2CSTA & I2CSTA_RXF)); // wait for reading a byte
+  42   1          if (bI2CSTA & I2CSTA_ERR) return ERROR;
+  43   1          *pbDataArray = bI2CDAI;
+  44   1      
+  45   1          return NO_ERROR;
+  46   1      }
+  47          
+  48          
+  49          //----------------------------------------------------------------------------
+  50          BYTE eeprom_write(WORD wAddress, BYTE bNumber, PBYTE pbDataArray)
+  51          {
+  52   1          // If error, return a value other than zero.
+  53   1          if(bNumber == 0x00) return NO_ERROR;
+  54   1      
+  55   1          bI2CSTA = 0x10; // set to 400KHz, clear everthing else
+C51 COMPILER V8.02   EEPROM                                                                07/21/2010 10:42:04 PAGE 2   
+
+  56   1          bI2CADR = 0xA0; // 0xA0 for EEPROM address + 0 for write
+  57   1      
+  58   1              bI2CDAO = (BYTE)(wAddress >> 8); // write high byte of EEPROM address word
+  59   1              while(!(bI2CSTA & I2CSTA_TXE)); // wait for previous EEPROM write to finish
+  60   1          if (bI2CSTA & I2CSTA_ERR) return ERROR;
+  61   1      
+  62   1              bI2CDAO = (BYTE)wAddress; // write low byte of EEPROM address word
+  63   1              while(!(bI2CSTA & I2CSTA_TXE)); // wait for previous EEPROM write to finish
+  64   1          if (bI2CSTA & I2CSTA_ERR) return ERROR;
+  65   1      
+  66   1          // SRD should be cleared.
+  67   1          while(bNumber > 1){
+  68   2              bI2CDAO = *pbDataArray++;
+  69   2              while(!(bI2CSTA & I2CSTA_TXE)); // wait for previous EEPROM write to finish
+  70   2              if (bI2CSTA & I2CSTA_ERR) return ERROR;
+  71   2              bNumber--;
+  72   2          }
+  73   1      
+  74   1          // write the last byte
+  75   1              //sendUartString("Writing the last byte \n\r");
+  76   1          bI2CSTA |= I2CSTA_SWR;                          // set SWR bit
+  77   1          bI2CDAO  = *pbDataArray;                        // write out the data
+  78   1              while(!(bI2CSTA & I2CSTA_TXE)); // wait for previous EEPROM write to finish
+  79   1          if (bI2CSTA & I2CSTA_ERR) return ERROR;
+  80   1      
+  81   1          return NO_ERROR;
+  82   1      }
+C51 COMPILER V8.02   EEPROM                                                                07/21/2010 10:42:04 PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _eeprom_read (BEGIN)
+                                           ; SOURCE LINE # 11
+0000 8E00        R     MOV     wAddress,R6
+0002 8F00        R     MOV     wAddress+01H,R7
+0004 8B00        R     MOV     pbDataArray,R3
+0006 8A00        R     MOV     pbDataArray+01H,R2
+0008 8900        R     MOV     pbDataArray+02H,R1
+;---- Variable 'bNumber' assigned to Register 'R5' ----
+                                           ; SOURCE LINE # 12
+                                           ; SOURCE LINE # 14
+000A ED                MOV     A,R5
+000B 7002              JNZ     ?C0001
+000D FF                MOV     R7,A
+000E 22                RET     
+000F         ?C0001:
+                                           ; SOURCE LINE # 16
+000F 90FFF0            MOV     DPTR,#0FFF0H
+0012 7410              MOV     A,#010H
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 17
+0015 90FFF3            MOV     DPTR,#0FFF3H
+0018 74A0              MOV     A,#0A0H
+001A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 19
+001B E500        R     MOV     A,wAddress
+001D 90FFF1            MOV     DPTR,#0FFF1H
+0020 F0                MOVX    @DPTR,A
+0021         ?C0003:
+                                           ; SOURCE LINE # 20
+0021 90FFF0            MOV     DPTR,#0FFF0H
+0024 E0                MOVX    A,@DPTR
+0025 FF                MOV     R7,A
+0026 30E3F8            JNB     ACC.3,?C0003
+0029         ?C0004:
+                                           ; SOURCE LINE # 21
+0029 EF                MOV     A,R7
+002A 30E503            JNB     ACC.5,?C0005
+002D 7F01              MOV     R7,#01H
+002F 22                RET     
+0030         ?C0005:
+                                           ; SOURCE LINE # 23
+0030 90FFF1            MOV     DPTR,#0FFF1H
+0033 E500        R     MOV     A,wAddress+01H
+0035 F0                MOVX    @DPTR,A
+0036         ?C0006:
+                                           ; SOURCE LINE # 24
+0036 90FFF0            MOV     DPTR,#0FFF0H
+0039 E0                MOVX    A,@DPTR
+003A FF                MOV     R7,A
+003B 30E3F8            JNB     ACC.3,?C0006
+003E         ?C0007:
+                                           ; SOURCE LINE # 25
+003E EF                MOV     A,R7
+003F 30E503            JNB     ACC.5,?C0008
+0042 7F01              MOV     R7,#01H
+0044 22                RET     
+0045         ?C0008:
+                                           ; SOURCE LINE # 27
+0045 90FFF3            MOV     DPTR,#0FFF3H
+C51 COMPILER V8.02   EEPROM                                                                07/21/2010 10:42:04 PAGE 4   
+
+0048 74A1              MOV     A,#0A1H
+004A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 28
+004B 90FFF1            MOV     DPTR,#0FFF1H
+004E E4                CLR     A
+004F F0                MOVX    @DPTR,A
+0050         ?C0009:
+                                           ; SOURCE LINE # 31
+0050 ED                MOV     A,R5
+0051 D3                SETB    C
+0052 9401              SUBB    A,#01H
+0054 4029              JC      ?C0010
+                                           ; SOURCE LINE # 32
+0056         ?C0011:
+                                           ; SOURCE LINE # 33
+0056 90FFF0            MOV     DPTR,#0FFF0H
+0059 E0                MOVX    A,@DPTR
+005A FF                MOV     R7,A
+005B 30E7F8            JNB     ACC.7,?C0011
+005E         ?C0012:
+                                           ; SOURCE LINE # 34
+005E EF                MOV     A,R7
+005F 30E503            JNB     ACC.5,?C0013
+0062 7F01              MOV     R7,#01H
+0064 22                RET     
+0065         ?C0013:
+                                           ; SOURCE LINE # 35
+0065 90FFF2            MOV     DPTR,#0FFF2H
+0068 E0                MOVX    A,@DPTR
+0069 FF                MOV     R7,A
+006A AB00        R     MOV     R3,pbDataArray
+006C 0500        R     INC     pbDataArray+02H
+006E E500        R     MOV     A,pbDataArray+02H
+0070 AA00        R     MOV     R2,pbDataArray+01H
+0072 7002              JNZ     ?C0033
+0074 0500        R     INC     pbDataArray+01H
+0076         ?C0033:
+0076 14                DEC     A
+0077 F9                MOV     R1,A
+0078 EF                MOV     A,R7
+0079 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 36
+007C 1D                DEC     R5
+                                           ; SOURCE LINE # 37
+007D 80D1              SJMP    ?C0009
+007F         ?C0010:
+                                           ; SOURCE LINE # 40
+007F 90FFF0            MOV     DPTR,#0FFF0H
+0082 E0                MOVX    A,@DPTR
+0083 4402              ORL     A,#02H
+0085 F0                MOVX    @DPTR,A
+0086         ?C0014:
+                                           ; SOURCE LINE # 41
+0086 90FFF0            MOV     DPTR,#0FFF0H
+0089 E0                MOVX    A,@DPTR
+008A FF                MOV     R7,A
+008B 30E7F8            JNB     ACC.7,?C0014
+008E         ?C0015:
+                                           ; SOURCE LINE # 42
+008E EF                MOV     A,R7
+008F 30E503            JNB     ACC.5,?C0016
+0092 7F01              MOV     R7,#01H
+C51 COMPILER V8.02   EEPROM                                                                07/21/2010 10:42:04 PAGE 5   
+
+0094 22                RET     
+0095         ?C0016:
+                                           ; SOURCE LINE # 43
+0095 90FFF2            MOV     DPTR,#0FFF2H
+0098 E0                MOVX    A,@DPTR
+0099 AB00        R     MOV     R3,pbDataArray
+009B AA00        R     MOV     R2,pbDataArray+01H
+009D A900        R     MOV     R1,pbDataArray+02H
+009F 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 45
+00A2 7F00              MOV     R7,#00H
+                                           ; SOURCE LINE # 46
+00A4         ?C0002:
+00A4 22                RET     
+             ; FUNCTION _eeprom_read (END)
+
+             ; FUNCTION _eeprom_write (BEGIN)
+                                           ; SOURCE LINE # 50
+0000 8E00        R     MOV     wAddress,R6
+0002 8F00        R     MOV     wAddress+01H,R7
+0004 8B00        R     MOV     pbDataArray,R3
+0006 8A00        R     MOV     pbDataArray+01H,R2
+0008 8900        R     MOV     pbDataArray+02H,R1
+;---- Variable 'bNumber' assigned to Register 'R5' ----
+                                           ; SOURCE LINE # 51
+                                           ; SOURCE LINE # 53
+000A ED                MOV     A,R5
+000B 7002              JNZ     ?C0017
+000D FF                MOV     R7,A
+000E 22                RET     
+000F         ?C0017:
+                                           ; SOURCE LINE # 55
+000F 90FFF0            MOV     DPTR,#0FFF0H
+0012 7410              MOV     A,#010H
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 56
+0015 90FFF3            MOV     DPTR,#0FFF3H
+0018 74A0              MOV     A,#0A0H
+001A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 58
+001B E500        R     MOV     A,wAddress
+001D 90FFF1            MOV     DPTR,#0FFF1H
+0020 F0                MOVX    @DPTR,A
+0021         ?C0019:
+                                           ; SOURCE LINE # 59
+0021 90FFF0            MOV     DPTR,#0FFF0H
+0024 E0                MOVX    A,@DPTR
+0025 FF                MOV     R7,A
+0026 30E3F8            JNB     ACC.3,?C0019
+0029         ?C0020:
+                                           ; SOURCE LINE # 60
+0029 EF                MOV     A,R7
+002A 30E503            JNB     ACC.5,?C0021
+002D 7F01              MOV     R7,#01H
+002F 22                RET     
+0030         ?C0021:
+                                           ; SOURCE LINE # 62
+0030 90FFF1            MOV     DPTR,#0FFF1H
+0033 E500        R     MOV     A,wAddress+01H
+0035 F0                MOVX    @DPTR,A
+0036         ?C0022:
+                                           ; SOURCE LINE # 63
+C51 COMPILER V8.02   EEPROM                                                                07/21/2010 10:42:04 PAGE 6   
+
+0036 90FFF0            MOV     DPTR,#0FFF0H
+0039 E0                MOVX    A,@DPTR
+003A FF                MOV     R7,A
+003B 30E3F8            JNB     ACC.3,?C0022
+003E         ?C0023:
+                                           ; SOURCE LINE # 64
+003E EF                MOV     A,R7
+003F 30E503            JNB     ACC.5,?C0025
+0042 7F01              MOV     R7,#01H
+0044 22                RET     
+0045         ?C0025:
+                                           ; SOURCE LINE # 67
+0045 ED                MOV     A,R5
+0046 D3                SETB    C
+0047 9401              SUBB    A,#01H
+0049 4027              JC      ?C0026
+                                           ; SOURCE LINE # 68
+004B AB00        R     MOV     R3,pbDataArray
+004D 0500        R     INC     pbDataArray+02H
+004F E500        R     MOV     A,pbDataArray+02H
+0051 AA00        R     MOV     R2,pbDataArray+01H
+0053 7002              JNZ     ?C0034
+0055 0500        R     INC     pbDataArray+01H
+0057         ?C0034:
+0057 14                DEC     A
+0058 F9                MOV     R1,A
+0059 120000      E     LCALL   ?C?CLDPTR
+005C 90FFF1            MOV     DPTR,#0FFF1H
+005F F0                MOVX    @DPTR,A
+0060         ?C0027:
+                                           ; SOURCE LINE # 69
+0060 90FFF0            MOV     DPTR,#0FFF0H
+0063 E0                MOVX    A,@DPTR
+0064 FF                MOV     R7,A
+0065 30E3F8            JNB     ACC.3,?C0027
+0068         ?C0028:
+                                           ; SOURCE LINE # 70
+0068 EF                MOV     A,R7
+0069 30E503            JNB     ACC.5,?C0029
+006C 7F01              MOV     R7,#01H
+006E 22                RET     
+006F         ?C0029:
+                                           ; SOURCE LINE # 71
+006F 1D                DEC     R5
+                                           ; SOURCE LINE # 72
+0070 80D3              SJMP    ?C0025
+0072         ?C0026:
+                                           ; SOURCE LINE # 76
+0072 90FFF0            MOV     DPTR,#0FFF0H
+0075 E0                MOVX    A,@DPTR
+0076 4401              ORL     A,#01H
+0078 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 77
+0079 AB00        R     MOV     R3,pbDataArray
+007B AA00        R     MOV     R2,pbDataArray+01H
+007D A900        R     MOV     R1,pbDataArray+02H
+007F 120000      E     LCALL   ?C?CLDPTR
+0082 90FFF1            MOV     DPTR,#0FFF1H
+0085 F0                MOVX    @DPTR,A
+0086         ?C0030:
+                                           ; SOURCE LINE # 78
+0086 90FFF0            MOV     DPTR,#0FFF0H
+C51 COMPILER V8.02   EEPROM                                                                07/21/2010 10:42:04 PAGE 7   
+
+0089 E0                MOVX    A,@DPTR
+008A FF                MOV     R7,A
+008B 30E3F8            JNB     ACC.3,?C0030
+008E         ?C0031:
+                                           ; SOURCE LINE # 79
+008E EF                MOV     A,R7
+008F 30E503            JNB     ACC.5,?C0032
+0092 7F01              MOV     R7,#01H
+0094 22                RET     
+0095         ?C0032:
+                                           ; SOURCE LINE # 81
+0095 7F00              MOV     R7,#00H
+                                           ; SOURCE LINE # 82
+0097         ?C0018:
+0097 22                RET     
+             ; FUNCTION _eeprom_write (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    317    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      10
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

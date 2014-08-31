@@ -1,0 +1,9 @@
+"myfun.obj",
+"spi.obj",
+"znFAT.obj",
+"_main.obj",
+"sd.obj",
+"uart.obj",
+"vs1003.obj" 
+TO "sdmp3" 
+RAMSIZE(256) 

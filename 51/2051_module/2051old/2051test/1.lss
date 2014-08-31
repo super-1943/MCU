@@ -1,0 +1,283 @@
+
+1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000110  00000000  00000000  00000094  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00000110  000001a4  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000000  00800060  00000110  000001a4  2**0
+                  ALLOC
+  3 .noinit       00000000  00800060  00800060  000001a4  2**0
+                  CONTENTS
+  4 .eeprom       00000000  00810000  00810000  000001a4  2**0
+                  CONTENTS
+  5 .debug_aranges 00000014  00000000  00000000  000001a4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_pubnames 00000061  00000000  00000000  000001b8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_info   000001e4  00000000  00000000  00000219  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_abbrev 000000f2  00000000  00000000  000003fd  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_line   000001d1  00000000  00000000  000004ef  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    000000dc  00000000  00000000  000006c0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	1c c0       	rjmp	.+56     	; 0x3a
+   2:	35 c0       	rjmp	.+106    	; 0x6e
+   4:	34 c0       	rjmp	.+104    	; 0x6e
+   6:	33 c0       	rjmp	.+102    	; 0x6e
+   8:	32 c0       	rjmp	.+100    	; 0x6e
+   a:	31 c0       	rjmp	.+98     	; 0x6e
+   c:	30 c0       	rjmp	.+96     	; 0x6e
+   e:	2f c0       	rjmp	.+94     	; 0x6e
+  10:	2e c0       	rjmp	.+92     	; 0x6e
+  12:	2d c0       	rjmp	.+90     	; 0x6e
+  14:	2c c0       	rjmp	.+88     	; 0x6e
+  16:	2b c0       	rjmp	.+86     	; 0x6e
+  18:	2a c0       	rjmp	.+84     	; 0x6e
+  1a:	29 c0       	rjmp	.+82     	; 0x6e
+  1c:	28 c0       	rjmp	.+80     	; 0x6e
+  1e:	27 c0       	rjmp	.+78     	; 0x6e
+  20:	26 c0       	rjmp	.+76     	; 0x6e
+  22:	25 c0       	rjmp	.+74     	; 0x6e
+  24:	24 c0       	rjmp	.+72     	; 0x6e
+
+00000026 <__ctors_end>:
+  26:	74 01       	movw	r14, r8
+  28:	f5 90       	lpm	r15, Z+
+  2a:	11 0b       	sbc	r17, r17
+  2c:	03 80       	ldd	r0, Z+3	; 0x03
+  2e:	f9 80       	ldd	r15, Y+1	; 0x01
+  30:	f5 79       	andi	r31, 0x95	; 149
+  32:	ff 7a       	andi	r31, 0xAF	; 175
+  34:	ff da       	rcall	.-2562   	; 0xfffff634
+  36:	fe d9       	rcall	.-3076   	; 0xfffff434
+  38:	fa 22       	and	r15, r26
+
+0000003a <__init>:
+  3a:	11 24       	eor	r1, r1
+  3c:	1f be       	out	0x3f, r1	; 63
+  3e:	cf e5       	ldi	r28, 0x5F	; 95
+  40:	d4 e0       	ldi	r29, 0x04	; 4
+  42:	de bf       	out	0x3e, r29	; 62
+  44:	cd bf       	out	0x3d, r28	; 61
+
+00000046 <__do_copy_data>:
+  46:	10 e0       	ldi	r17, 0x00	; 0
+  48:	a0 e6       	ldi	r26, 0x60	; 96
+  4a:	b0 e0       	ldi	r27, 0x00	; 0
+  4c:	e0 e1       	ldi	r30, 0x10	; 16
+  4e:	f1 e0       	ldi	r31, 0x01	; 1
+  50:	02 c0       	rjmp	.+4      	; 0x56
+
+00000052 <.do_copy_data_loop>:
+  52:	05 90       	lpm	r0, Z+
+  54:	0d 92       	st	X+, r0
+
+00000056 <.do_copy_data_start>:
+  56:	a0 36       	cpi	r26, 0x60	; 96
+  58:	b1 07       	cpc	r27, r17
+  5a:	d9 f7       	brne	.-10     	; 0x52
+
+0000005c <__do_clear_bss>:
+  5c:	10 e0       	ldi	r17, 0x00	; 0
+  5e:	a0 e6       	ldi	r26, 0x60	; 96
+  60:	b0 e0       	ldi	r27, 0x00	; 0
+  62:	01 c0       	rjmp	.+2      	; 0x66
+
+00000064 <.do_clear_bss_loop>:
+  64:	1d 92       	st	X+, r1
+
+00000066 <.do_clear_bss_start>:
+  66:	a0 36       	cpi	r26, 0x60	; 96
+  68:	b1 07       	cpc	r27, r17
+  6a:	e1 f7       	brne	.-8      	; 0x64
+  6c:	40 c0       	rjmp	.+128    	; 0xee
+
+0000006e <__bad_interrupt>:
+  6e:	c8 cf       	rjmp	.-112    	; 0x0
+
+00000070 <initport>:
+
+
+void initport(void)
+{
+	asm("NOP");
+  70:	00 00       	nop
+	DDRB=0xff;
+  72:	8f ef       	ldi	r24, 0xFF	; 255
+  74:	87 bb       	out	0x17, r24	; 23
+	DDRC=0xff;
+  76:	84 bb       	out	0x14, r24	; 20
+	PORTB=0x00;
+  78:	18 ba       	out	0x18, r1	; 24
+	PORTC=0x00;
+  7a:	15 ba       	out	0x15, r1	; 21
+	asm("NOP");
+  7c:	00 00       	nop
+  7e:	08 95       	ret
+
+00000080 <delay>:
+}
+
+void delay(unsigned int i)
+{
+	unsigned int a,b;
+	while(i--)
+	{
+		for(a=200;a;a--)
+  80:	01 97       	sbiw	r24, 0x01	; 1
+  82:	2f ef       	ldi	r18, 0xFF	; 255
+  84:	8f 3f       	cpi	r24, 0xFF	; 255
+  86:	92 07       	cpc	r25, r18
+  88:	61 f0       	breq	.+24     	; 0xa2
+  8a:	48 ec       	ldi	r20, 0xC8	; 200
+  8c:	50 e0       	ldi	r21, 0x00	; 0
+		for(b=10;b;b--)
+  8e:	2a e0       	ldi	r18, 0x0A	; 10
+  90:	30 e0       	ldi	r19, 0x00	; 0
+		asm("NOP");
+  92:	00 00       	nop
+  94:	21 50       	subi	r18, 0x01	; 1
+  96:	30 40       	sbci	r19, 0x00	; 0
+  98:	e1 f7       	brne	.-8      	; 0x92
+  9a:	41 50       	subi	r20, 0x01	; 1
+  9c:	50 40       	sbci	r21, 0x00	; 0
+  9e:	b9 f7       	brne	.-18     	; 0x8e
+  a0:	ef cf       	rjmp	.-34     	; 0x80
+  a2:	08 95       	ret
+
+000000a4 <erasechip>:
+	}
+}
+
+void erasechip(void)
+{
+	initport();
+  a4:	e5 df       	rcall	.-54     	; 0x70
+	PORTC=ChipErase;
+  a6:	84 e0       	ldi	r24, 0x04	; 4
+  a8:	85 bb       	out	0x15, r24	; 21
+	PROG_1;
+  aa:	a9 9a       	sbi	0x15, 1	; 21
+	delay(1);
+  ac:	81 e0       	ldi	r24, 0x01	; 1
+  ae:	90 e0       	ldi	r25, 0x00	; 0
+  b0:	e7 df       	rcall	.-50     	; 0x80
+	PROG_0;
+  b2:	a9 98       	cbi	0x15, 1	; 21
+	delay(10);
+  b4:	8a e0       	ldi	r24, 0x0A	; 10
+  b6:	90 e0       	ldi	r25, 0x00	; 0
+  b8:	e3 df       	rcall	.-58     	; 0x80
+	PROG_1;
+  ba:	a9 9a       	sbi	0x15, 1	; 21
+  bc:	08 95       	ret
+
+000000be <writecode>:
+}
+
+void writecode(unsigned char c)
+{
+  be:	98 2f       	mov	r25, r24
+	PORTC=WriteCodeData;
+  c0:	88 e3       	ldi	r24, 0x38	; 56
+  c2:	85 bb       	out	0x15, r24	; 21
+	databus_w=c;
+  c4:	98 bb       	out	0x18, r25	; 24
+	PROG_1;
+  c6:	a9 9a       	sbi	0x15, 1	; 21
+	delay(1);
+  c8:	81 e0       	ldi	r24, 0x01	; 1
+  ca:	90 e0       	ldi	r25, 0x00	; 0
+  cc:	d9 df       	rcall	.-78     	; 0x80
+	PROG_0;
+  ce:	a9 98       	cbi	0x15, 1	; 21
+	delay(1);
+  d0:	81 e0       	ldi	r24, 0x01	; 1
+  d2:	90 e0       	ldi	r25, 0x00	; 0
+  d4:	d5 df       	rcall	.-86     	; 0x80
+	PROG_1;
+  d6:	a9 9a       	sbi	0x15, 1	; 21
+	databus_w=0x00;
+  d8:	18 ba       	out	0x18, r1	; 24
+	xtal_0;delay(1);
+  da:	a8 98       	cbi	0x15, 0	; 21
+  dc:	81 e0       	ldi	r24, 0x01	; 1
+  de:	90 e0       	ldi	r25, 0x00	; 0
+  e0:	cf df       	rcall	.-98     	; 0x80
+	xtal_1;delay(1);
+  e2:	a8 9a       	sbi	0x15, 0	; 21
+  e4:	81 e0       	ldi	r24, 0x01	; 1
+  e6:	90 e0       	ldi	r25, 0x00	; 0
+  e8:	cb df       	rcall	.-106    	; 0x80
+	xtal_0;
+  ea:	a8 98       	cbi	0x15, 0	; 21
+  ec:	08 95       	ret
+
+000000ee <main>:
+}
+/*
+unsigned char readcode(void)
+{
+	unsigned char a;
+	DDRB=0x00;
+	PORTB=0x00;
+	PORTC=ReadCodeData;
+
+	PROG_1;
+	delay(10);
+	a=PINB;
+	DDRB=0xff;
+	return a;
+}
+unsigned char readmark(void)
+{
+	unsigned char a;
+	DDRB=0x00;
+	PORTC=ReadSignatureByte;
+
+	PROG_1;
+	delay(10);
+	a=PINB;
+	DDRB=0xff;
+	return a;
+}
+	
+*/
+int main(void)
+{
+  ee:	cf e5       	ldi	r28, 0x5F	; 95
+  f0:	d4 e0       	ldi	r29, 0x04	; 4
+  f2:	de bf       	out	0x3e, r29	; 62
+  f4:	cd bf       	out	0x3d, r28	; 61
+	unsigned char *p=dataforprogram,count=0;
+  f6:	c6 e2       	ldi	r28, 0x26	; 38
+  f8:	d0 e0       	ldi	r29, 0x00	; 0
+	initport();
+  fa:	ba df       	rcall	.-140    	; 0x70
+	erasechip();
+  fc:	d3 df       	rcall	.-90     	; 0xa4
+  fe:	13 e1       	ldi	r17, 0x13	; 19
+	while(count<lengthofcode)
+	{
+		writecode(pgm_read_byte(p));
+ 100:	fe 01       	movw	r30, r28
+ 102:	84 91       	lpm	r24, Z
+ 104:	dc df       	rcall	.-72     	; 0xbe
+		p++;
+ 106:	21 96       	adiw	r28, 0x01	; 1
+		count++;
+ 108:	11 50       	subi	r17, 0x01	; 1
+ 10a:	17 ff       	sbrs	r17, 7
+ 10c:	f9 cf       	rjmp	.-14     	; 0x100
+	}
+	
+	while(1)
+ 10e:	ff cf       	rjmp	.-2      	; 0x10e

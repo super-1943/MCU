@@ -1,0 +1,1938 @@
+	NAME	usb(17)
+	RSEG	CODE(0)
+	RSEG	CONST(0)
+	COMMON	INTVEC(0)
+	RSEG	I_UDATA(0)
+	RSEG	I_IDATA(0)
+	RSEG	I_CDATA(0)
+	RSEG	TUSB2136_SETUPPACKET_SEG(0)
+	RSEG	TUSB2136_EP0_EDB_SEG(0)
+	RSEG	TUSB2136_IEP_EDB_SEG(0)
+	RSEG	TUSB2136_OEP_EDB_SEG(0)
+	RSEG	TUSB2136_IEP0BUFFER_SEG(0)
+	RSEG	TUSB2136_OEP0BUFFER_SEG(0)
+	RSEG	TUSB2136_DESC_SEG(0)
+	RSEG	TUSB2136_OEP1_X_BUFFER_SEG(0)
+	RSEG	TUSB2136_OEP1_Y_BUFFER_SEG(0)
+	PUBLIC	IEP0InterruptHandler
+	$DEFFN	IEP0InterruptHandler(0,0,0,0,32768,0,0,0),usbSendNextPacketOnIEP0
+	EXTERN	IEP1InterruptHandler
+	$DEFFN	IEP1InterruptHandler(32768,0,0,0)
+	PUBLIC	OEP0InterruptHandler
+	$DEFFN	OEP0InterruptHandler(0,0,0,0,32768,0,0,0),usbReceiveNextPacketOnOEP0
+	EXTERN	OEP0SetLEDs
+	$DEFFN	OEP0SetLEDs(32768,0,0,0)
+	PUBLIC	P33Interrupt
+	$DEFFN	P33Interrupt(512,0,0,0,32768,0,0,0)
+	PUBLIC	SetupPacketInterruptHandler
+	$DEFFN	SetupPacketInterruptHandler(0,0,0,0,32768,0,0,0),usbDecodeAndProcessUsbRequest
+	PUBLIC	USBInterrupt
+	$DEFFN	USBInterrupt(512,0,0,0,32768,0,0,0),OEP0InterruptHandler,IEP0InterruptHandler,\
+		IEP1InterruptHandler,SetupPacketInterruptHandler,SetupPacketInterruptHandler,\
+		UsbReset
+	EXTERN	UsbReset
+	$DEFFN	UsbReset(32768,0,0,0)
+	PUBLIC	abDescriptor
+	PUBLIC	abIEP0Buffer
+	PUBLIC	abOEP0Buffer
+	EXTERN	abromConfigurationDescriptorGroup
+	EXTERN	abromDeviceDescriptor
+	EXTERN	abromReportDescriptor
+	PUBLIC	bConfigurationNumber
+	PUBLIC	bHostAskMoreDataThanAvailable
+	PUBLIC	bInterfaceNumber
+	EXTERN	bLED
+	PUBLIC	bStatusAction
+	PUBLIC	bSuspended
+	PUBLIC	bUsbDeviceAddress
+	PUBLIC	deviceReady
+	EXTERN	fncOffset
+	EXTERN	funcDefs
+	PUBLIC	gbIdleRateH
+	PUBLIC	gbIdleRateL
+	PUBLIC	gbProtocol
+	PUBLIC	pbIEP0Buffer
+	PUBLIC	pbOEP0Buffer
+	PUBLIC	pbXBufferAddress
+	PUBLIC	pbYBufferAddress
+	EXTERN	strlen
+	$DEFFN	strlen(32768,3,0,0)
+	PUBLIC	tEndPoint0DescriptorBlock
+	PUBLIC	tInputEndPointDescriptorBlock
+	PUBLIC	tOutputEndPointDescriptorBlock
+	PUBLIC	tSetupPacket
+	PUBLIC	tUsbRequestList
+	PUBLIC	usbClearEndpointHalt
+	$DEFFN	usbClearEndpointHalt(0,0,0,0,32768,0,0,0),usbSendZeroLengthPacketOnIEP0
+	PUBLIC	usbClearRemoteWakeup
+	$DEFFN	usbClearRemoteWakeup(0,0,0,0,32768,0,0,0),usbSendZeroLengthPacketOnIEP0
+	PUBLIC	usbDecodeAndProcessUsbRequest
+	$DEFFN	usbDecodeAndProcessUsbRequest(256,6,0,0,32768,0,0,0)
+	PUBLIC	usbGetConfiguration
+	$DEFFN	usbGetConfiguration(0,0,0,0,32768,0,0,0),usbSendDataPacketOnEP0
+	PUBLIC	usbGetConfigurationDescriptor
+	$DEFFN	usbGetConfigurationDescriptor(0,1,0,0,32768,0,0,0),usbSendDataPacketOnEP0
+	PUBLIC	usbGetDeviceDescriptor
+	$DEFFN	usbGetDeviceDescriptor(0,1,0,0,32768,0,0,0),usbSendDataPacketOnEP0
+	PUBLIC	usbGetDeviceStatus
+	$DEFFN	usbGetDeviceStatus(0,0,0,0,32768,0,0,0),usbSendDataPacketOnEP0
+	PUBLIC	usbGetEndpointStatus
+	$DEFFN	usbGetEndpointStatus(0,2,0,0,32768,0,0,0),usbSendDataPacketOnEP0
+	PUBLIC	usbGetHIDDescriptor
+	$DEFFN	usbGetHIDDescriptor(0,1,0,0,32768,0,0,0),usbSendDataPacketOnEP0
+	PUBLIC	usbGetIdle
+	$DEFFN	usbGetIdle(0,0,0,0,32768,0,0,0),usbSendDataPacketOnEP0
+	PUBLIC	usbGetInterface
+	$DEFFN	usbGetInterface(0,0,0,0,32768,0,0,0),usbSendDataPacketOnEP0
+	PUBLIC	usbGetInterfaceStatus
+	$DEFFN	usbGetInterfaceStatus(0,2,0,0,32768,0,0,0),usbSendDataPacketOnEP0
+	PUBLIC	usbGetProtocol
+	$DEFFN	usbGetProtocol(0,0,0,0,32768,0,0,0),usbSendDataPacketOnEP0
+	PUBLIC	usbGetReportDescriptor
+	$DEFFN	usbGetReportDescriptor(0,0,0,0,32768,0,0,0),usbSendDataPacketOnEP0
+	PUBLIC	usbGetStringDescriptor
+	$DEFFN	usbGetStringDescriptor(0,2,0,0,32768,0,0,0),strlen,strlen,strlen,\
+		strlen,strlen,strlen,usbSendDataPacketOnEP0
+	PUBLIC	usbNonStandardRequest
+	$DEFFN	usbNonStandardRequest(0,0,0,0,32768,0,0,0),usbStallEndpoint0
+	PUBLIC	usbReceiveDataPacketOnEP0
+	$DEFFN	usbReceiveDataPacketOnEP0(0,0,0,0,32768,3,0,0)
+	PUBLIC	usbReceiveNextPacketOnOEP0
+	$DEFFN	usbReceiveNextPacketOnOEP0(0,2,0,0,32768,0,0,0),OEP0SetLEDs
+	PUBLIC	usbSendDataPacketOnEP0
+	$DEFFN	usbSendDataPacketOnEP0(0,2,0,0,32768,3,0,0),usbSendNextPacketOnIEP0
+	PUBLIC	usbSendNextPacketOnIEP0
+	$DEFFN	usbSendNextPacketOnIEP0(0,2,0,0,32768,0,0,0)
+	PUBLIC	usbSendZeroLengthPacketOnIEP0
+	$DEFFN	usbSendZeroLengthPacketOnIEP0(0,0,0,0,32768,0,0,0)
+	PUBLIC	usbSetAddress
+	$DEFFN	usbSetAddress(0,0,0,0,32768,0,0,0),usbSendZeroLengthPacketOnIEP0,\
+		usbStallEndpoint0
+	PUBLIC	usbSetConfiguration
+	$DEFFN	usbSetConfiguration(0,0,0,0,32768,0,0,0),usbSendZeroLengthPacketOnIEP0
+	PUBLIC	usbSetEndpointHalt
+	$DEFFN	usbSetEndpointHalt(0,0,0,0,32768,0,0,0),usbSendZeroLengthPacketOnIEP0
+	PUBLIC	usbSetIdle
+	$DEFFN	usbSetIdle(0,0,0,0,32768,0,0,0),usbSendZeroLengthPacketOnIEP0
+	PUBLIC	usbSetInterface
+	$DEFFN	usbSetInterface(0,0,0,0,32768,0,0,0),usbSendZeroLengthPacketOnIEP0
+	PUBLIC	usbSetProtocol
+	$DEFFN	usbSetProtocol(0,0,0,0,32768,0,0,0),usbSendZeroLengthPacketOnIEP0
+	PUBLIC	usbSetRemoteWakeup
+	$DEFFN	usbSetRemoteWakeup(0,0,0,0,32768,0,0,0),usbSendZeroLengthPacketOnIEP0
+	PUBLIC	usbSetReport
+	$DEFFN	usbSetReport(0,0,0,0,32768,0,0,0),usbReceiveDataPacketOnEP0
+	PUBLIC	usbStallEndpoint0
+	$DEFFN	usbStallEndpoint0(0,0,0,0,32768,0,0,0)
+	PUBLIC	wBytesRemainingOnIEP0
+	PUBLIC	wBytesRemainingOnOEP0
+	PUBLIC	wDeviceFeatures
+	EXTERN	?LD_A_R567_L17
+	EXTERN	?ST_A_R567_L17
+	EXTERN	?LD_A_R567_DISP_L17
+	EXTERN	?LD_AR3_R567_DISP_L17
+	EXTERN	?LD_R567_POST_INC_R0_L17
+	EXTERN	?A_V_SWITCH_L05
+	EXTERN	?STO_R567_IR0_L20
+	EXTERN	?LD_R567_IR0_L20
+	EXTERN	?LD_R567_CDPTR_L20
+	EXTERN	?LOAD_IND_DPTR2_L20
+	EXTERN	?LCALL_IND_L20
+	EXTERN	?CL8051S_5_50_L17
+	RSEG	CODE
+usbGetConfiguration:
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	INC	A
+	MOV	@R0,A
+	MOV	R5,#bConfigurationNumber
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LJMP	$REFFN usbSendDataPacketOnEP0
+usbSetConfiguration:
+	MOV	DPTR,#tEndPoint0DescriptorBlock+2
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+	MOV	DPTR,#tSetupPacket+2
+	MOVX	A,@DPTR
+	MOV	R0,#bConfigurationNumber
+	MOV	@R0,A
+	LJMP	$REFFN usbSendZeroLengthPacketOnIEP0
+usbSetReport:
+	MOV	R0,#wBytesRemainingOnOEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	INC	A
+	MOV	@R0,A
+	MOV	R5,#bLED
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LJMP	$REFFN usbReceiveDataPacketOnEP0
+usbGetDeviceDescriptor:
+	MOV	R7,#0
+?0001:
+	MOV	A,R7
+	ADD	A,#238
+	JC	?0000
+?0002:
+	MOV	A,R7
+	MOV	DPTR,#abromDeviceDescriptor
+	MOVC	A,@A+DPTR
+	MOV	R4,A
+	MOV	A,R7
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,R4
+	MOVX	@DPTR,A
+	INC	R7
+	SJMP	?0001
+?0000:
+	MOV	R0,#$LOCBI usbGetDeviceDescriptor
+	MOV	A,R7
+	MOV	@R0,A
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+5)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+5)
+	MOV	DPH,A
+	MOV	A,#1
+	MOVC	A,@A+DPTR
+	MOV	DPTR,#abDescriptor+8
+	MOVX	@DPTR,A
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+5)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+5)
+	MOV	DPH,A
+	CLR	A
+	MOV	R5,A
+	CLR	A
+	MOVC	A,@A+DPTR
+	XCH	A,R5
+	MOV	R4,A
+	MOV	A,R5
+	MOV	DPTR,#abDescriptor+9
+	MOVX	@DPTR,A
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+7)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+7)
+	MOV	DPH,A
+	MOV	A,#1
+	MOVC	A,@A+DPTR
+	MOV	DPTR,#abDescriptor+10
+	MOVX	@DPTR,A
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+7)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+7)
+	MOV	DPH,A
+	CLR	A
+	MOV	R5,A
+	CLR	A
+	MOVC	A,@A+DPTR
+	XCH	A,R5
+	MOV	R4,A
+	MOV	A,R5
+	MOV	DPTR,#abDescriptor+11
+	MOVX	@DPTR,A
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+9)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+9)
+	MOV	DPH,A
+	MOV	A,#1
+	MOVC	A,@A+DPTR
+	MOV	DPTR,#abDescriptor+12
+	MOVX	@DPTR,A
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+9)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+9)
+	MOV	DPH,A
+	CLR	A
+	MOV	R5,A
+	CLR	A
+	MOVC	A,@A+DPTR
+	XCH	A,R5
+	MOV	R4,A
+	MOV	A,R5
+	MOV	DPTR,#abDescriptor+13
+	MOVX	@DPTR,A
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+11)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+11)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	MOV	A,R5
+	ORL	A,R6
+	JNZ	?0005
+?0004:
+	CLR	A
+	MOV	DPTR,#abDescriptor+14
+	MOVX	@DPTR,A
+?0005:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+14)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+14)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	MOV	A,R5
+	ORL	A,R6
+	JNZ	?0007
+?0006:
+	CLR	A
+	MOV	DPTR,#abDescriptor+15
+	MOVX	@DPTR,A
+?0007:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+17)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+17)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	MOV	A,R5
+	ORL	A,R6
+	JNZ	?0009
+?0008:
+	CLR	A
+	MOV	DPTR,#abDescriptor+16
+	MOVX	@DPTR,A
+?0009:
+	CLR	A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+3
+	MOVX	@DPTR,A
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,#18
+	MOV	R5,#LOW(abDescriptor)
+	MOV	R6,#HIGH(abDescriptor)
+	MOV	R7,#1
+	LCALL	$REFFN usbSendDataPacketOnEP0
+	MOV	R0,#deviceReady
+	MOV	@R0,#1
+	RET
+usbGetHIDDescriptor:
+	MOV	R7,#0
+?0011:
+	MOV	A,R7
+	ADD	A,#238
+	JC	?0010
+?0012:
+	CLR	A
+	MOV	A,R7
+	ADD	A,#18
+	MOV	DPTR,#abromConfigurationDescriptorGroup
+	MOVC	A,@A+DPTR
+	MOV	R4,A
+	MOV	A,R7
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,R4
+	MOVX	@DPTR,A
+	INC	R7
+	SJMP	?0011
+?0010:
+	MOV	R0,#$LOCBI usbGetHIDDescriptor
+	MOV	A,R7
+	MOV	@R0,A
+	CLR	A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+3
+	MOVX	@DPTR,A
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,#9
+	MOV	R5,#LOW(abDescriptor)
+	MOV	R6,#HIGH(abDescriptor)
+	MOV	R7,#1
+	LJMP	$REFFN usbSendDataPacketOnEP0
+usbGetConfigurationDescriptor:
+	MOV	R7,#0
+?0015:
+	MOV	A,R7
+	ADD	A,#222
+	JC	?0014
+?0016:
+	MOV	A,R7
+	MOV	DPTR,#abromConfigurationDescriptorGroup
+	MOVC	A,@A+DPTR
+	MOV	R4,A
+	MOV	A,R7
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,R4
+	MOVX	@DPTR,A
+	INC	R7
+	SJMP	?0015
+?0014:
+	MOV	R0,#$LOCBI usbGetConfigurationDescriptor
+	MOV	A,R7
+	MOV	@R0,A
+	CLR	A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+3
+	MOVX	@DPTR,A
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,#34
+	MOV	R5,#LOW(abDescriptor)
+	MOV	R6,#HIGH(abDescriptor)
+	MOV	R7,#1
+	LJMP	$REFFN usbSendDataPacketOnEP0
+usbGetStringDescriptor:
+	CLR	A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+3
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	@R0,#0
+	MOV	DPTR,#tSetupPacket+2
+	MOVX	A,@DPTR
+	CJNE	A,#0,?0106
+	SJMP	?0107
+?0106:
+	SETB	C
+	JC	?0020
+?0107:
+?0019:
+	MOV	A,#4
+	MOV	DPTR,#abDescriptor
+	MOVX	@DPTR,A
+	MOV	A,#3
+	MOV	DPTR,#abDescriptor+1
+	MOVX	@DPTR,A
+	MOV	A,#9
+	MOV	DPTR,#abDescriptor+2
+	MOVX	@DPTR,A
+	MOV	A,#4
+	MOV	DPTR,#abDescriptor+3
+	MOVX	@DPTR,A
+	LJMP	?0018
+?0020:
+	CJNE	A,#1,?0108
+	SJMP	?0109
+?0108:
+	SETB	C
+	JNC	$+5
+	LJMP	?0025
+?0109:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+11)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+11)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	LCALL	$REFFN strlen
+	MOV	A,R4
+	ADD	A,ACC
+	INC	A
+	INC	A
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	R4,A
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,R4
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,#3
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	MOV	@R0,#0
+?0022:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+11)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+11)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	LCALL	$REFFN strlen
+	MOV	A,R4
+	SETB	C
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	SUBB	A,@R0
+	JC	?0021
+?0023:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+11)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+11)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	MOV	A,@R0
+	MOV	DPL,A
+	MOV	DPH,#0
+	LCALL	?LD_A_R567_DISP_L17
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	R4,A
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,R4
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	CLR	A
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	INC	@R0
+	SJMP	?0022
+?0021:
+	LJMP	?0018
+?0025:
+	CJNE	A,#2,?0110
+	SJMP	?0111
+?0110:
+	SETB	C
+	JNC	$+5
+	LJMP	?0030
+?0111:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+14)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+14)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	LCALL	$REFFN strlen
+	MOV	A,R4
+	ADD	A,ACC
+	INC	A
+	INC	A
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	R4,A
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,R4
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,#3
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	MOV	@R0,#0
+?0027:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+14)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+14)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	LCALL	$REFFN strlen
+	MOV	A,R4
+	SETB	C
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	SUBB	A,@R0
+	JC	?0026
+?0028:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+14)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+14)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	MOV	A,@R0
+	MOV	DPL,A
+	MOV	DPH,#0
+	LCALL	?LD_A_R567_DISP_L17
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	R4,A
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,R4
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	CLR	A
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	INC	@R0
+	SJMP	?0027
+?0026:
+	LJMP	?0018
+?0030:
+	CJNE	A,#3,?0112
+	SJMP	?0113
+?0112:
+	SETB	C
+	JNC	$+5
+	LJMP	?0035
+?0113:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+17)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+17)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	LCALL	$REFFN strlen
+	MOV	A,R4
+	ADD	A,ACC
+	INC	A
+	INC	A
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	R4,A
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,R4
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,#3
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	MOV	@R0,#0
+?0032:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+17)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+17)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	LCALL	$REFFN strlen
+	MOV	A,R4
+	SETB	C
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	SUBB	A,@R0
+	JC	?0031
+?0033:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs+17)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs+17)
+	MOV	DPH,A
+	LCALL	?LD_R567_CDPTR_L20
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	MOV	A,@R0
+	MOV	DPL,A
+	MOV	DPH,#0
+	LCALL	?LD_A_R567_DISP_L17
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	R4,A
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	MOV	A,R4
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor+1
+	MOV	A,@R0
+	INC	@R0
+	ADD	A,#LOW(abDescriptor)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abDescriptor)
+	MOV	DPH,A
+	CLR	A
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbGetStringDescriptor
+	INC	@R0
+	SJMP	?0032
+?0031:
+	SJMP	?0018
+?0035:
+	SJMP	?0018
+?0018:
+	MOV	DPTR,#abDescriptor
+	MOVX	A,@DPTR
+	MOV	R0,#wBytesRemainingOnIEP0
+	MOV	@R0,#0
+	INC	R0
+	MOV	@R0,A
+	MOV	R5,#LOW(abDescriptor)
+	MOV	R6,#HIGH(abDescriptor)
+	MOV	R7,#1
+	LJMP	$REFFN usbSendDataPacketOnEP0
+usbGetReportDescriptor:
+	CLR	A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+3
+	MOVX	@DPTR,A
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,#63
+	MOV	R5,#LOW(abromReportDescriptor)
+	MOV	R6,#HIGH(abromReportDescriptor)
+	MOV	R7,#2
+	LJMP	$REFFN usbSendDataPacketOnEP0
+usbSetIdle:
+	MOV	DPTR,#tSetupPacket+2
+	MOVX	A,@DPTR
+	MOV	R0,#gbIdleRateL
+	MOV	@R0,A
+	MOV	DPTR,#tSetupPacket+3
+	MOVX	A,@DPTR
+	MOV	R0,#gbIdleRateH
+	MOV	@R0,A
+	LJMP	$REFFN usbSendZeroLengthPacketOnIEP0
+usbGetIdle:
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	INC	A
+	MOV	@R0,A
+	MOV	R5,#gbIdleRateH
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LJMP	$REFFN usbSendDataPacketOnEP0
+usbSetProtocol:
+	MOV	DPTR,#tSetupPacket+2
+	MOVX	A,@DPTR
+	MOV	R0,#gbProtocol
+	MOV	@R0,A
+	LJMP	$REFFN usbSendZeroLengthPacketOnIEP0
+usbGetProtocol:
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	INC	A
+	MOV	@R0,A
+	MOV	R5,#gbProtocol
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LJMP	$REFFN usbSendDataPacketOnEP0
+usbGetInterface:
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	INC	A
+	MOV	@R0,A
+	MOV	R5,#bInterfaceNumber
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LJMP	$REFFN usbSendDataPacketOnEP0
+usbSetInterface:
+	MOV	DPTR,#tEndPoint0DescriptorBlock+2
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+	MOV	DPTR,#tSetupPacket+4
+	MOVX	A,@DPTR
+	MOV	R0,#bInterfaceNumber
+	MOV	@R0,A
+	LJMP	$REFFN usbSendZeroLengthPacketOnIEP0
+usbGetDeviceStatus:
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,#2
+	MOV	R5,#wDeviceFeatures
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LJMP	$REFFN usbSendDataPacketOnEP0
+usbSetRemoteWakeup:
+	MOV	DPTR,#65532
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+	MOV	R0,#wDeviceFeatures
+	MOV	A,@R0
+	ORL	A,#2
+	MOV	@R0,A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+2
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+	LJMP	$REFFN usbSendZeroLengthPacketOnIEP0
+usbClearRemoteWakeup:
+	MOV	DPTR,#65532
+	MOVX	A,@DPTR
+	ANL	A,#247
+	MOVX	@DPTR,A
+	MOV	R0,#wDeviceFeatures
+	MOV	A,@R0
+	ANL	A,#253
+	MOV	@R0,A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+2
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+	LJMP	$REFFN usbSendZeroLengthPacketOnIEP0
+usbGetInterfaceStatus:
+	MOV	R0,#$LOCBI usbGetInterfaceStatus
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+2
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,#2
+	MOV	R5,#$LOCBI usbGetInterfaceStatus
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LJMP	$REFFN usbSendDataPacketOnEP0
+usbSetAddress:
+	MOV	DPTR,#tSetupPacket+2
+	MOVX	A,@DPTR
+	RLC	A
+	JC	?0037
+?0036:
+	MOV	DPTR,#tSetupPacket+2
+	MOVX	A,@DPTR
+	MOV	DPTR,#65535
+	MOVX	@DPTR,A
+	MOV	DPTR,#tSetupPacket+2
+	MOVX	A,@DPTR
+	MOV	R0,#bUsbDeviceAddress
+	MOV	@R0,A
+	MOV	R0,#bStatusAction
+	MOV	@R0,#3
+	LCALL	$REFFN usbSendZeroLengthPacketOnIEP0
+	SJMP	?0038
+?0037:
+	LCALL	$REFFN usbStallEndpoint0
+?0038:
+	RET
+usbSetEndpointHalt:
+	MOV	DPTR,#tInputEndPointDescriptorBlock
+	MOVX	A,@DPTR
+	ANL	A,#127
+	MOVX	@DPTR,A
+	LJMP	$REFFN usbSendZeroLengthPacketOnIEP0
+usbClearEndpointHalt:
+	MOV	DPTR,#tInputEndPointDescriptorBlock
+	MOVX	A,@DPTR
+	ORL	A,#128
+	MOVX	@DPTR,A
+	LJMP	$REFFN usbSendZeroLengthPacketOnIEP0
+usbGetEndpointStatus:
+	MOV	R0,#$LOCBI usbGetEndpointStatus
+	MOV	@R0,#1
+	INC	R0
+	CLR	A
+	MOV	@R0,A
+	MOV	DPTR,#tInputEndPointDescriptorBlock
+	MOVX	A,@DPTR
+	JNB	ACC.7,?0040
+?0039:
+	MOV	R0,#$LOCBI usbGetEndpointStatus
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,A
+?0040:
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,#2
+	MOV	R5,#$LOCBI usbGetEndpointStatus
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LJMP	$REFFN usbSendDataPacketOnEP0
+usbNonStandardRequest:
+	LJMP	$REFFN usbStallEndpoint0
+usbDecodeAndProcessUsbRequest:
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+3
+	MOV	@R0,#2
+	INC	R0
+	MOV	@R0,#HIGH(tUsbRequestList)
+	INC	R0
+	MOV	@R0,#LOW(tUsbRequestList)
+?0042:
+?0043:
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+1
+	MOV	@R0,#0
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest
+	MOV	@R0,#128
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+2
+	MOV	@R0,#0
+?0045:
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+2
+	MOV	A,@R0
+	ADD	A,#248
+	JC	?0044
+?0046:
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+2
+	MOV	A,@R0
+	MOV	DPL,A
+	CLR	A
+	ADD	A,#255
+	MOV	DPH,A
+	MOVX	A,@DPTR
+	MOV	R4,A
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+3
+	LCALL	?LD_R567_IR0_L20
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+2
+	MOV	A,@R0
+	MOV	DPL,A
+	MOV	DPH,#0
+	LCALL	?LD_A_R567_DISP_L17
+	XRL	A,R4
+	JNZ	?0049
+?0048:
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+1
+	MOV	A,@R0
+	MOV	R1,#$LOCBI usbDecodeAndProcessUsbRequest
+	ORL	A,@R1
+	MOV	R1,#$LOCBI usbDecodeAndProcessUsbRequest+1
+	MOV	@R1,A
+?0049:
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest
+	XCH	A,@R0
+	CLR	C
+	RRC	A
+	MOV	@R0,A
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+2
+	INC	@R0
+	SJMP	?0045
+?0044:
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+3
+	LCALL	?LD_R567_IR0_L20
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+2
+	MOV	A,@R0
+	MOV	DPL,A
+	MOV	DPH,#0
+	LCALL	?LD_A_R567_DISP_L17
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+1
+	ANL	A,@R0
+	MOV	R4,A
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+2
+	MOV	A,@R0
+	MOV	DPL,A
+	MOV	DPH,#0
+	LCALL	?LD_A_R567_DISP_L17
+	XRL	A,R4
+	JNZ	?0051
+?0050:
+	SJMP	?0041
+?0051:
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+5
+	MOV	A,@R0
+	ADD	A,#11
+	MOV	@R0,A
+	DEC	R0
+	MOV	A,@R0
+	ADDC	A,#0
+	MOV	@R0,A
+	SJMP	?0042
+?0041:
+	MOV	DPTR,#65534
+	MOVX	A,@DPTR
+	JNB	ACC.0,?0053
+?0052:
+	RET
+?0053:
+	MOV	R0,#$LOCBI usbDecodeAndProcessUsbRequest+3
+	LCALL	?LD_R567_IR0_L20
+	MOV	DPTR,#9
+	LCALL	?LD_AR3_R567_DISP_L17
+	MOV	DPL,A
+	MOV	DPH,R3
+	LCALL	?LOAD_IND_DPTR2_L20
+	LJMP	?LCALL_IND_L20
+?0054:
+usbStallEndpoint0:
+	MOV	DPTR,#tEndPoint0DescriptorBlock
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+2
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+	RET
+usbReceiveDataPacketOnEP0:
+	MOV	R0,#pbOEP0Buffer
+	LCALL	?STO_R567_IR0_L20
+	MOV	R0,#$LOCBI usbReceiveDataPacketOnEP0
+	LCALL	?STO_R567_IR0_L20
+	MOV	DPTR,#tSetupPacket+7
+	MOVX	A,@DPTR
+	MOV	R4,A
+	MOV	DPTR,#tSetupPacket+6
+	MOVX	A,@DPTR
+	XCH	A,R4
+	MOV	R7,A
+	XCH	A,R4
+	MOV	R0,#wBytesRemainingOnOEP0+1
+	MOV	@R0,A
+	MOV	A,R7
+	DEC	R0
+	MOV	@R0,A
+	MOV	R0,#bStatusAction
+	MOV	@R0,#2
+	CLR	A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+3
+	MOVX	@DPTR,A
+	RET
+usbReceiveNextPacketOnOEP0:
+	MOV	DPTR,#tEndPoint0DescriptorBlock+3
+	MOVX	A,@DPTR
+	ANL	A,#127
+	MOV	R0,#$LOCBI usbReceiveNextPacketOnOEP0+1
+	MOV	@R0,A
+	MOV	R0,#$LOCBI usbReceiveNextPacketOnOEP0+1
+	MOV	A,@R0
+	MOV	R5,#0
+	MOV	R0,#wBytesRemainingOnOEP0+1
+	SETB	C
+	SUBB	A,@R0
+	MOV	A,R5
+	DEC	R0
+	SUBB	A,@R0
+	JNC	?0056
+?0055:
+	MOV	R0,#$LOCBI usbReceiveNextPacketOnOEP0
+	MOV	@R0,#0
+?0058:
+	MOV	R0,#$LOCBI usbReceiveNextPacketOnOEP0
+	MOV	A,@R0
+	CLR	C
+	MOV	R0,#$LOCBI usbReceiveNextPacketOnOEP0+1
+	SUBB	A,@R0
+	JNC	?0057
+?0059:
+	MOV	R0,#$LOCBI usbReceiveNextPacketOnOEP0
+	MOV	A,@R0
+	ADD	A,#LOW(abOEP0Buffer)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abOEP0Buffer)
+	MOV	DPH,A
+	MOVX	A,@DPTR
+	MOV	R4,A
+	MOV	R0,#pbOEP0Buffer
+	LCALL	?LD_R567_POST_INC_R0_L17
+	MOV	A,R4
+	LCALL	?ST_A_R567_L17
+	MOV	R0,#$LOCBI usbReceiveNextPacketOnOEP0
+	INC	@R0
+	SJMP	?0058
+?0057:
+	MOV	R0,#$LOCBI usbReceiveNextPacketOnOEP0+1
+	MOV	A,@R0
+	MOV	R5,#0
+	MOV	R4,A
+	MOV	R0,#wBytesRemainingOnOEP0+1
+	CLR	C
+	MOV	A,@R0
+	SUBB	A,R4
+	MOV	@R0,A
+	DEC	R0
+	MOV	A,@R0
+	SUBB	A,R5
+	MOV	@R0,A
+	MOV	R0,#wBytesRemainingOnOEP0
+	MOV	A,@R0
+	INC	R0
+	ORL	A,@R0
+	JZ	?0062
+?0061:
+	CLR	A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+3
+	MOVX	@DPTR,A
+	MOV	R0,#bStatusAction
+	MOV	@R0,#2
+	SJMP	?0063
+?0062:
+	MOV	DPTR,#tEndPoint0DescriptorBlock+2
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+	MOV	R0,#bStatusAction
+	MOV	@R0,#0
+	LCALL	$REFFN OEP0SetLEDs
+?0063:
+	SJMP	?0064
+?0056:
+	MOV	DPTR,#tEndPoint0DescriptorBlock+2
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+	MOV	R0,#bStatusAction
+	MOV	@R0,#0
+?0064:
+	RET
+usbSendZeroLengthPacketOnIEP0:
+	MOV	R0,#wBytesRemainingOnIEP0
+	MOV	A,#255
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,A
+	MOV	R0,#bStatusAction
+	MOV	@R0,#0
+	CLR	A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+1
+	MOVX	@DPTR,A
+	RET
+usbSendDataPacketOnEP0:
+	MOV	R0,#pbIEP0Buffer
+	LCALL	?STO_R567_IR0_L20
+	MOV	R0,#$LOCBI usbSendDataPacketOnEP0+2
+	LCALL	?STO_R567_IR0_L20
+	MOV	DPTR,#tSetupPacket+7
+	MOVX	A,@DPTR
+	MOV	R4,A
+	MOV	DPTR,#tSetupPacket+6
+	MOVX	A,@DPTR
+	XCH	A,R4
+	MOV	R7,A
+	XCH	A,R4
+	MOV	R0,#$LOCBI usbSendDataPacketOnEP0+1
+	MOV	@R0,A
+	MOV	A,R7
+	DEC	R0
+	MOV	@R0,A
+	MOV	R0,#wBytesRemainingOnIEP0
+	MOV	A,@R0
+	MOV	R5,A
+	INC	R0
+	MOV	A,@R0
+	MOV	R0,#$LOCBI usbSendDataPacketOnEP0+1
+	CLR	C
+	SUBB	A,@R0
+	MOV	A,R5
+	DEC	R0
+	SUBB	A,@R0
+	JC	?0066
+?0065:
+	MOV	R0,#$LOCBI usbSendDataPacketOnEP0
+	MOV	A,@R0
+	MOV	R5,A
+	INC	R0
+	MOV	A,@R0
+	MOV	R0,#wBytesRemainingOnIEP0+1
+	MOV	@R0,A
+	MOV	A,R5
+	DEC	R0
+	MOV	@R0,A
+	MOV	R0,#bHostAskMoreDataThanAvailable
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,A
+	SJMP	?0067
+?0066:
+	MOV	R0,#bHostAskMoreDataThanAvailable
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	INC	A
+	MOV	@R0,A
+?0067:
+	LJMP	$REFFN usbSendNextPacketOnIEP0
+usbSendNextPacketOnIEP0:
+	MOV	R0,#wBytesRemainingOnIEP0+1
+	MOV	A,@R0
+	INC	A
+	JNZ	?0114
+	DEC	R0
+	MOV	A,@R0
+	INC	A
+	JNZ	$+5
+	LJMP	?0069
+?0114:
+?0068:
+	SETB	C
+	MOV	R0,#wBytesRemainingOnIEP0+1
+	MOV	A,@R0
+	SUBB	A,#8
+	DEC	R0
+	MOV	A,@R0
+	SUBB	A,#0
+	JC	?0071
+?0070:
+	MOV	R0,#wBytesRemainingOnIEP0+1
+	MOV	A,@R0
+	ADD	A,#248
+	MOV	@R0,A
+	DEC	R0
+	MOV	A,@R0
+	ADDC	A,#255
+	MOV	@R0,A
+	MOV	R0,#bStatusAction
+	MOV	@R0,#1
+	MOV	R0,#$LOCBI usbSendNextPacketOnIEP0
+	MOV	@R0,#8
+	SJMP	?0072
+?0071:
+	CLR	C
+	MOV	R0,#wBytesRemainingOnIEP0+1
+	MOV	A,@R0
+	SUBB	A,#8
+	DEC	R0
+	MOV	A,@R0
+	SUBB	A,#0
+	JNC	?0074
+?0073:
+	MOV	R0,#wBytesRemainingOnIEP0+1
+	MOV	A,@R0
+	MOV	R0,#$LOCBI usbSendNextPacketOnIEP0
+	MOV	@R0,A
+	MOV	R0,#wBytesRemainingOnIEP0
+	MOV	A,#255
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,A
+	MOV	R0,#bStatusAction
+	MOV	@R0,#0
+	SJMP	?0075
+?0074:
+	MOV	R0,#$LOCBI usbSendNextPacketOnIEP0
+	MOV	@R0,#8
+	MOV	R0,#bHostAskMoreDataThanAvailable+1
+	MOV	A,@R0
+	DEC	A
+	DEC	R0
+	ORL	A,@R0
+	JNZ	?0077
+?0076:
+	MOV	R0,#wBytesRemainingOnIEP0
+	CLR	A
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,A
+	MOV	R0,#bStatusAction
+	MOV	@R0,#1
+	SJMP	?0078
+?0077:
+	MOV	R0,#wBytesRemainingOnIEP0
+	MOV	A,#255
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,A
+	MOV	R0,#bStatusAction
+	MOV	@R0,#0
+?0078:
+?0075:
+?0072:
+	MOV	R0,#$LOCBI usbSendNextPacketOnIEP0+1
+	MOV	@R0,#0
+?0080:
+	MOV	R0,#$LOCBI usbSendNextPacketOnIEP0+1
+	MOV	A,@R0
+	CLR	C
+	MOV	R0,#$LOCBI usbSendNextPacketOnIEP0
+	SUBB	A,@R0
+	JNC	?0079
+?0081:
+	MOV	R0,#pbIEP0Buffer
+	LCALL	?LD_R567_POST_INC_R0_L17
+	LCALL	?LD_A_R567_L17
+	MOV	R4,A
+	MOV	R0,#$LOCBI usbSendNextPacketOnIEP0+1
+	MOV	A,@R0
+	ADD	A,#LOW(abIEP0Buffer)
+	MOV	DPL,A
+	CLR	A
+	ADDC	A,#HIGH(abIEP0Buffer)
+	MOV	DPH,A
+	MOV	A,R4
+	MOVX	@DPTR,A
+	MOV	R0,#$LOCBI usbSendNextPacketOnIEP0+1
+	INC	@R0
+	SJMP	?0080
+?0079:
+	MOV	R0,#$LOCBI usbSendNextPacketOnIEP0
+	MOV	A,@R0
+	MOV	DPTR,#tEndPoint0DescriptorBlock+1
+	MOVX	@DPTR,A
+	SJMP	?0083
+?0069:
+	MOV	R0,#bStatusAction
+	MOV	@R0,#0
+?0083:
+	RET
+SetupPacketInterruptHandler:
+	MOV	A,#128
+	MOV	DPTR,#tEndPoint0DescriptorBlock+1
+	MOVX	@DPTR,A
+	MOV	A,#128
+	MOV	DPTR,#tEndPoint0DescriptorBlock+3
+	MOVX	@DPTR,A
+	MOV	A,#4
+	MOV	DPTR,#65534
+	MOVX	@DPTR,A
+	MOV	DPTR,#tSetupPacket
+	MOVX	A,@DPTR
+	JNB	ACC.7,?0085
+?0084:
+	MOV	DPTR,#65532
+	MOVX	A,@DPTR
+	ORL	A,#1
+	MOVX	@DPTR,A
+	SJMP	?0086
+?0085:
+	MOV	DPTR,#65532
+	MOVX	A,@DPTR
+	ANL	A,#254
+	MOVX	@DPTR,A
+?0086:
+	MOV	R0,#bStatusAction
+	MOV	@R0,#0
+	LJMP	$REFFN usbDecodeAndProcessUsbRequest
+OEP0InterruptHandler:
+	CLR	A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+1
+	MOVX	@DPTR,A
+	MOV	R0,#bStatusAction
+	MOV	A,@R0
+	CJNE	A,#2,?0088
+?0087:
+	LCALL	$REFFN usbReceiveNextPacketOnOEP0
+	SJMP	?0089
+?0088:
+	MOV	DPTR,#tEndPoint0DescriptorBlock+2
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+?0089:
+	RET
+IEP0InterruptHandler:
+	CLR	A
+	MOV	DPTR,#tEndPoint0DescriptorBlock+3
+	MOVX	@DPTR,A
+	MOV	R0,#bStatusAction
+	MOV	A,@R0
+	DEC	A
+	JNZ	?0091
+?0090:
+	LCALL	$REFFN usbSendNextPacketOnIEP0
+	SJMP	?0092
+?0091:
+	MOV	R0,#bStatusAction
+	MOV	A,@R0
+	CJNE	A,#3,?0094
+?0093:
+	MOV	R0,#bUsbDeviceAddress
+	MOV	A,@R0
+	MOV	DPTR,#65535
+	MOVX	@DPTR,A
+	SJMP	?0095
+?0094:
+	MOV	DPTR,#tEndPoint0DescriptorBlock
+	MOVX	A,@DPTR
+	ORL	A,#8
+	MOVX	@DPTR,A
+?0095:
+?0092:
+	RET
+USBInterrupt:
+	PUSH	ACC
+	PUSH	B
+	PUSH	DPL
+	PUSH	DPH
+	PUSH	PSW
+	MOV	A,R0
+	PUSH	ACC
+	MOV	A,R1
+	PUSH	ACC
+	MOV	A,R2
+	PUSH	ACC
+	MOV	A,R3
+	PUSH	ACC
+	MOV	A,R4
+	PUSH	ACC
+	MOV	A,R5
+	PUSH	ACC
+	MOV	A,R6
+	PUSH	ACC
+	MOV	A,R7
+	PUSH	ACC
+	CLR	IE.7
+	MOV	DPTR,#65426
+	MOVX	A,@DPTR
+	LCALL	?A_V_SWITCH_L05
+	DW	?0099
+	DB	18
+	DW	?0099
+	DB	'"'
+	DW	?0100
+	DB	'0'
+	DW	?0101
+	DB	'2'
+	DW	?0103
+	DB	'8'
+	DW	?0104
+	DB	':'
+	DW	?0102
+	DB	'<'
+	DW	?0098
+	DB	'D'
+	DW	?0097
+	DB	'F'
+	DW	0
+	DW	?0105
+?0097:
+	CLR	A
+	MOV	DPTR,#65426
+	MOVX	@DPTR,A
+	LCALL	$REFFN OEP0InterruptHandler
+	SJMP	?0096
+?0098:
+	CLR	A
+	MOV	DPTR,#65426
+	MOVX	@DPTR,A
+	LCALL	$REFFN IEP0InterruptHandler
+	SJMP	?0096
+?0099:
+	CLR	A
+	MOV	DPTR,#65426
+	MOVX	@DPTR,A
+	LCALL	$REFFN IEP1InterruptHandler
+	SJMP	?0096
+?0100:
+	CLR	A
+	MOV	DPTR,#65426
+	MOVX	@DPTR,A
+	MOV	A,#1
+	MOV	DPTR,#65534
+	MOVX	@DPTR,A
+	LCALL	$REFFN SetupPacketInterruptHandler
+	SJMP	?0096
+?0101:
+	CLR	A
+	MOV	DPTR,#65426
+	MOVX	@DPTR,A
+	LCALL	$REFFN SetupPacketInterruptHandler
+	SJMP	?0096
+?0102:
+	CLR	A
+	MOV	DPTR,#65426
+	MOVX	@DPTR,A
+	MOV	A,#128
+	MOV	DPTR,#65534
+	MOVX	@DPTR,A
+	LCALL	$REFFN UsbReset
+	SJMP	?0096
+?0103:
+	CLR	A
+	MOV	DPTR,#65426
+	MOVX	@DPTR,A
+	MOV	A,#32
+	MOV	DPTR,#65534
+	MOVX	@DPTR,A
+	MOV	R0,#bSuspended
+	MOV	@R0,#0
+	SJMP	?0096
+?0104:
+	CLR	A
+	MOV	DPTR,#65426
+	MOVX	@DPTR,A
+	MOV	A,#64
+	MOV	DPTR,#65534
+	MOVX	@DPTR,A
+	MOV	R0,#bSuspended
+	MOV	@R0,#1
+	SJMP	?0096
+?0105:
+	CLR	A
+	MOV	DPTR,#65426
+	MOVX	@DPTR,A
+	SJMP	?0096
+?0096:
+	SETB	IE.7
+	POP	ACC
+	MOV	R7,A
+	POP	ACC
+	MOV	R6,A
+	POP	ACC
+	MOV	R5,A
+	POP	ACC
+	MOV	R4,A
+	POP	ACC
+	MOV	R3,A
+	POP	ACC
+	MOV	R2,A
+	POP	ACC
+	MOV	R1,A
+	POP	ACC
+	MOV	R0,A
+	POP	PSW
+	POP	DPH
+	POP	DPL
+	POP	B
+	POP	ACC
+	RETI
+P33Interrupt:
+	PUSH	ACC
+	PUSH	DPL
+	PUSH	DPH
+	MOV	A,R0
+	PUSH	ACC
+	MOV	DPTR,#65532
+	MOVX	A,@DPTR
+	ORL	A,#32
+	MOVX	@DPTR,A
+	MOV	R0,#bSuspended
+	MOV	@R0,#0
+	POP	ACC
+	MOV	R0,A
+	POP	DPH
+	POP	DPL
+	POP	ACC
+	RETI
+	RSEG	CONST
+tUsbRequestList:
+	DB	2
+	DB	3
+	DB	0
+	DB	0
+	DB	255
+	DB	0
+	DB	0
+	DB	0
+	DB	247
+	DB	HIGH $IFREF usbSetEndpointHalt,LOW $IFREF usbSetEndpointHalt
+	DB	2
+	DB	1
+	DB	0
+	DB	0
+	DB	255
+	DB	0
+	DB	0
+	DB	0
+	DB	247
+	DB	HIGH $IFREF usbClearEndpointHalt,LOW $IFREF usbClearEndpointHalt
+	DB	128
+	DB	8
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	1
+	DB	0
+	DB	255
+	DB	HIGH $IFREF usbGetConfiguration,LOW $IFREF usbGetConfiguration
+	DB	0
+	DB	9
+	DB	255
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	223
+	DB	HIGH $IFREF usbSetConfiguration,LOW $IFREF usbSetConfiguration
+	DB	128
+	DB	6
+	DB	255
+	DB	1
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	208
+	DB	HIGH $IFREF usbGetDeviceDescriptor,LOW $IFREF usbGetDeviceDescriptor
+	DB	128
+	DB	6
+	DB	255
+	DB	2
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	208
+	DB	HIGH $IFREF usbGetConfigurationDescriptor,LOW $IFREF usbGetConfigurationDescriptor
+	DB	129
+	DB	6
+	DB	255
+	DB	'!'
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	208
+	DB	HIGH $IFREF usbGetHIDDescriptor,LOW $IFREF usbGetHIDDescriptor
+	DB	128
+	DB	6
+	DB	255
+	DB	3
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	208
+	DB	HIGH $IFREF usbGetStringDescriptor,LOW $IFREF usbGetStringDescriptor
+	DB	129
+	DB	6
+	DB	255
+	DB	'"'
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	208
+	DB	HIGH $IFREF usbGetReportDescriptor,LOW $IFREF usbGetReportDescriptor
+	DB	'!'
+	DB	9
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	192
+	DB	HIGH $IFREF usbSetReport,LOW $IFREF usbSetReport
+	DB	'!'
+	DB	10
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	0
+	DB	0
+	DB	195
+	DB	HIGH $IFREF usbSetIdle,LOW $IFREF usbSetIdle
+	DB	'!'
+	DB	11
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	0
+	DB	0
+	DB	195
+	DB	HIGH $IFREF usbSetProtocol,LOW $IFREF usbSetProtocol
+	DB	161
+	DB	2
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	1
+	DB	0
+	DB	195
+	DB	HIGH $IFREF usbGetIdle,LOW $IFREF usbGetIdle
+	DB	161
+	DB	3
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	1
+	DB	0
+	DB	195
+	DB	HIGH $IFREF usbGetProtocol,LOW $IFREF usbGetProtocol
+	DB	129
+	DB	10
+	DB	0
+	DB	0
+	DB	255
+	DB	255
+	DB	1
+	DB	0
+	DB	243
+	DB	HIGH $IFREF usbGetInterface,LOW $IFREF usbGetInterface
+	DB	128
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	2
+	DB	0
+	DB	255
+	DB	HIGH $IFREF usbGetDeviceStatus,LOW $IFREF usbGetDeviceStatus
+	DB	129
+	DB	0
+	DB	0
+	DB	0
+	DB	255
+	DB	0
+	DB	2
+	DB	0
+	DB	247
+	DB	HIGH $IFREF usbGetInterfaceStatus,LOW $IFREF usbGetInterfaceStatus
+	DB	130
+	DB	0
+	DB	0
+	DB	0
+	DB	255
+	DB	0
+	DB	2
+	DB	0
+	DB	247
+	DB	HIGH $IFREF usbGetEndpointStatus,LOW $IFREF usbGetEndpointStatus
+	DB	0
+	DB	5
+	DB	255
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	223
+	DB	HIGH $IFREF usbSetAddress,LOW $IFREF usbSetAddress
+	DB	0
+	DB	3
+	DB	1
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	255
+	DB	HIGH $IFREF usbSetRemoteWakeup,LOW $IFREF usbSetRemoteWakeup
+	DB	0
+	DB	1
+	DB	1
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	255
+	DB	HIGH $IFREF usbClearRemoteWakeup,LOW $IFREF usbClearRemoteWakeup
+	DB	1
+	DB	11
+	DB	255
+	DB	0
+	DB	255
+	DB	0
+	DB	0
+	DB	0
+	DB	215
+	DB	HIGH $IFREF usbSetInterface,LOW $IFREF usbSetInterface
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	255
+	DB	0
+	DB	HIGH $IFREF usbNonStandardRequest,LOW $IFREF usbNonStandardRequest
+	COMMON	INTVEC
+	DS	3
+	DB	2
+	DB	HIGH(USBInterrupt),LOW(USBInterrupt)
+	DS	13
+	DB	2
+	DB	HIGH(P33Interrupt),LOW(P33Interrupt)
+	RSEG	I_UDATA
+bStatusAction:
+	DS	1
+bUsbDeviceAddress:
+	DS	1
+wBytesRemainingOnIEP0:
+	DS	2
+bHostAskMoreDataThanAvailable:
+	DS	2
+pbIEP0Buffer:
+	DS	3
+wBytesRemainingOnOEP0:
+	DS	2
+pbOEP0Buffer:
+	DS	3
+gbIdleRateL:
+	DS	1
+gbIdleRateH:
+	DS	1
+	RSEG	I_IDATA
+deviceReady:
+	DS	1
+bSuspended:
+	DS	1
+bConfigurationNumber:
+	DS	1
+bInterfaceNumber:
+	DS	1
+wDeviceFeatures:
+	DS	2
+gbProtocol:
+	DS	1
+	RSEG	I_CDATA
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DW	0
+	DB	1
+	RSEG	TUSB2136_SETUPPACKET_SEG
+tSetupPacket:
+	DS	8
+	RSEG	TUSB2136_EP0_EDB_SEG
+tEndPoint0DescriptorBlock:
+	DS	4
+	RSEG	TUSB2136_IEP_EDB_SEG
+tInputEndPointDescriptorBlock:
+	DS	24
+	RSEG	TUSB2136_OEP_EDB_SEG
+tOutputEndPointDescriptorBlock:
+	DS	24
+	RSEG	TUSB2136_IEP0BUFFER_SEG
+abIEP0Buffer:
+	DS	8
+	RSEG	TUSB2136_OEP0BUFFER_SEG
+abOEP0Buffer:
+	DS	8
+	RSEG	TUSB2136_DESC_SEG
+abDescriptor:
+	DS	18
+	RSEG	TUSB2136_OEP1_X_BUFFER_SEG
+pbXBufferAddress:
+	DS	64
+	RSEG	TUSB2136_OEP1_Y_BUFFER_SEG
+pbYBufferAddress:
+	DS	64
+	END

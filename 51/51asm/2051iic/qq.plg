@@ -1,0 +1,202 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+D:\My Documents\51asm\2051iic\qq.uv2
+Project File Date:  04/08/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling iic.c...
+IIC.C(17): error C202: 'P5DIR': undefined identifier
+IIC.C(18): error C202: 'P4DIR': undefined identifier
+IIC.C(19): error C202: 'P5OUT': undefined identifier
+IIC.C(20): error C202: 'P4OUT': undefined identifier
+IIC.C(25): error C202: 'P4OUT': undefined identifier
+IIC.C(26): error C202: 'P5OUT': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling iic.c...
+IIC.C(28): warning C206: 'asm': missing function-prototype
+IIC.C(28): error C267: 'asm': requires ANSI-style prototype
+Target not created
+Build target 'Target 1'
+compiling iic.c...
+IIC.C(28): error C272: '__asm' requires src-control to be active
+IIC.C(36): error C272: '__asm' requires src-control to be active
+IIC.C(55): error C272: '__asm' requires src-control to be active
+IIC.C(62): error C272: '__asm' requires src-control to be active
+IIC.C(64): error C272: '__asm' requires src-control to be active
+IIC.C(66): error C272: '__asm' requires src-control to be active
+IIC.C(67): error C272: '__asm' requires src-control to be active
+IIC.C(73): error C272: '__asm' requires src-control to be active
+IIC.C(75): error C272: '__asm' requires src-control to be active
+IIC.C(77): error C272: '__asm' requires src-control to be active
+IIC.C(78): error C272: '__asm' requires src-control to be active
+IIC.C(85): error C272: '__asm' requires src-control to be active
+IIC.C(88): error C272: '__asm' requires src-control to be active
+IIC.C(113): error C272: '__asm' requires src-control to be active
+IIC.C(115): error C272: '__asm' requires src-control to be active
+Target not created
+Build target 'Target 1'
+compiling iic.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_START?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_STOP?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_IIC_SEND_BYTE?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?IIC
+*** WARNING L10: CANNOT DETERMINE ROOT SEGMENT
+Program Size: data=8.0 xdata=0 code=168
+"qq" - 0 Error(s), 8 Warning(s).
+Build target 'Target 1'
+compiling iic.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_STOP?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_IIC_SEND_BYTE?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?IIC
+Program Size: data=9.0 xdata=0 code=191
+"qq" - 0 Error(s), 6 Warning(s).
+Build target 'Target 1'
+compiling iic.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_STOP?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_IIC_SEND_BYTE?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?IIC
+Program Size: data=9.0 xdata=0 code=191
+creating hex file from "qq"...
+"qq" - 0 Error(s), 6 Warning(s).
+Build target 'Target 1'
+compiling iic.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_IIC_SEND_BYTE?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?IIC
+Program Size: data=9.0 xdata=0 code=194
+creating hex file from "qq"...
+"qq" - 0 Error(s), 5 Warning(s).
+Build target 'Target 1'
+compiling iic.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_IIC_SEND_BYTE?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?IIC
+Program Size: data=9.0 xdata=0 code=188
+creating hex file from "qq"...
+"qq" - 0 Error(s), 5 Warning(s).
+Build target 'Target 1'
+compiling iic.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?IIC
+Program Size: data=9.0 xdata=0 code=204
+creating hex file from "qq"...
+"qq" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling iic.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?IIC
+Program Size: data=9.0 xdata=0 code=198
+creating hex file from "qq"...
+"qq" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling iic.c...
+IIC.C(137): error C141: syntax error near 'b', expected ')'
+IIC.C(140): error C202: 'b': undefined identifier
+IIC.C(145): error C141: syntax error near '*', expected ')'
+IIC.C(147): error C202: 'str': undefined identifier
+IIC.C(149): error C202: 'str': undefined identifier
+IIC.C(150): error C202: 'str': undefined identifier
+IIC.C(153): error C141: syntax error near 't', expected ')'
+IIC.C(155): error C141: syntax error near 'a'
+IIC.C(155): error C202: 'a': undefined identifier
+IIC.C(156): error C202: 't': undefined identifier
+IIC.C(158): error C202: 'a': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling iic.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INIT_SERIAL?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_PRINT_STR?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?IIC
+Program Size: data=9.0 xdata=0 code=304
+creating hex file from "qq"...
+"qq" - 0 Error(s), 6 Warning(s).
+Build target 'Target 1'
+compiling iic.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INIT_SERIAL?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_PRINT_STR?IIC
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?IIC
+Program Size: data=9.0 xdata=0 code=304
+creating hex file from "qq"...
+"qq" - 0 Error(s), 6 Warning(s).

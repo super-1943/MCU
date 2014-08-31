@@ -1,0 +1,356 @@
+   1               		.file	"1.c"
+   2               		.arch atmega8
+   3               	__SREG__ = 0x3f
+   4               	__SP_H__ = 0x3e
+   5               	__SP_L__ = 0x3d
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  17               	.Ltext0:
+  18               	.global	dataforprogram
+  19               		.section	.progmem.data,"a",@progbits
+  22               	dataforprogram:
+  23 0000 08        		.byte	8
+  24 0001 00        		.byte	0
+  25 0002 24        		.byte	36
+  26 0003 00        		.byte	0
+  27 0004 7F        		.byte	127
+  28 0005 C8        		.byte	-56
+  29 0006 7E        		.byte	126
+  30 0007 C8        		.byte	-56
+  31 0008 DE        		.byte	-34
+  32 0009 FE        		.byte	-2
+  33 000a DF        		.byte	-33
+  34 000b FA        		.byte	-6
+  35 000c 92        		.byte	-110
+  36 000d 01        		.byte	1
+  37 000e 00        		.byte	0
+  38 000f 2C        		.byte	44
+  39 0010 00        		.byte	0
+  40 0011 22        		.byte	34
+  41 0012 B1        		.byte	-79
+  42 0013 10        		.byte	16
+  43 0014 00        		.byte	0
+  44 0015 03        		.byte	3
+  45 0016 00        		.byte	0
+  46 0017 75        		.byte	117
+  47 0018 90        		.byte	-112
+  48 0019 01        		.byte	1
+  49 001a 12        		.byte	18
+  50 001b 00        		.byte	0
+  51 001c 24        		.byte	36
+  52 001d E5        		.byte	-27
+  53 001e 90        		.byte	-112
+  54 001f 25        		.byte	37
+  55 0020 E0        		.byte	-32
+  56 0021 F5        		.byte	-11
+  57 0022 90        		.byte	-112
+  58 0023 E5        		.byte	-27
+  59 0024 90        		.byte	-112
+  60 0025 70        		.byte	112
+  61 0026 F3        		.byte	-13
+  62 0027 DA        		.byte	-38
+  63 0028 05        		.byte	5
+  64 0029 00        		.byte	0
+  65 002a 13        		.byte	19
+  66 002b 00        		.byte	0
+  67 002c 75        		.byte	117
+  68 002d 90        		.byte	-112
+  69 002e 01        		.byte	1
+  70 002f 80        		.byte	-128
+  71 0030 EE        		.byte	-18
+  72 0031 74        		.byte	116
+  73 0032 03        		.byte	3
+  74 0033 00        		.byte	0
+  75 0034 00        		.byte	0
+  76 0035 00        		.byte	0
+  77 0036 02        		.byte	2
+  78 0037 00        		.byte	0
+  79 0038 18        		.byte	24
+  80 0039 E3        		.byte	-29
+  81 003a 0C        		.byte	12
+  82 003b 00        		.byte	0
+  83 003c 18        		.byte	24
+  84 003d 00        		.byte	0
+  85 003e 78        		.byte	120
+  86 003f 7F        		.byte	127
+  87 0040 E4        		.byte	-28
+  88 0041 F6        		.byte	-10
+  89 0042 D8        		.byte	-40
+  90 0043 FD        		.byte	-3
+  91 0044 75        		.byte	117
+  92 0045 81        		.byte	-127
+  93 0046 07        		.byte	7
+  94 0047 02        		.byte	2
+  95 0048 00        		.byte	0
+  96 0049 03        		.byte	3
+  97 004a 34        		.byte	52
+  98 004b 00        		.byte	0
+  99 004c 00        		.byte	0
+ 100 004d 00        		.byte	0
+ 101 004e 01        		.byte	1
+ 102 004f FF        		.byte	-1
+ 103               		.text
+ 104               	.global	initport
+ 106               	initport:
+ 107               	.LFB2:
+ 108               	.LM1:
+ 109               	/* prologue: frame size=0 */
+ 110               	/* prologue end (size=0) */
+ 111               	.LM2:
+ 112               	/* #APP */
+ 113 0000 0000      		NOP
+ 114               	.LM3:
+ 115               	/* #NOAPP */
+ 116 0002 8FEF      		ldi r24,lo8(-1)
+ 117 0004 87BB      		out 55-0x20,r24
+ 118               	.LM4:
+ 119 0006 84BB      		out 52-0x20,r24
+ 120               	.LM5:
+ 121 0008 81BB      		out 49-0x20,r24
+ 122               	.LM6:
+ 123 000a 18BA      		out 56-0x20,__zero_reg__
+ 124               	.LM7:
+ 125 000c 15BA      		out 53-0x20,__zero_reg__
+ 126               	.LM8:
+ 127 000e 12BA      		out 50-0x20,__zero_reg__
+ 128               	.LM9:
+ 129               	/* #APP */
+ 130 0010 0000      		NOP
+ 131               	/* #NOAPP */
+ 132               	/* epilogue: frame size=0 */
+ 133 0012 0895      		ret
+ 134               	/* epilogue end (size=1) */
+ 135               	/* function initport size 12 (11) */
+ 136               	.LFE2:
+ 138               	.global	delay
+ 140               	delay:
+ 141               	.LFB3:
+ 142               	.LM10:
+ 143               	/* prologue: frame size=0 */
+ 144               	/* prologue end (size=0) */
+ 145               	.L20:
+ 146               	.LM11:
+ 147 0014 0197      		sbiw r24,1
+ 148 0016 2FEF      		ldi r18,hi8(-1)
+ 149 0018 8F3F      		cpi r24,lo8(-1)
+ 150 001a 9207      		cpc r25,r18
+ 151 001c 61F0      		breq .L15
+ 152               	.LM12:
+ 153 001e 44E1      		ldi r20,lo8(20)
+ 154 0020 50E0      		ldi r21,hi8(20)
+ 155               	.L12:
+ 156               	.LM13:
+ 157 0022 24E6      		ldi r18,lo8(100)
+ 158 0024 30E0      		ldi r19,hi8(100)
+ 159               	.L11:
+ 160               	.LM14:
+ 161               	/* #APP */
+ 162 0026 0000      		NOP
+ 163               	.LM15:
+ 164               	/* #NOAPP */
+ 165 0028 2150      		subi r18,lo8(-(-1))
+ 166 002a 3040      		sbci r19,hi8(-(-1))
+ 167 002c E1F7      		brne .L11
+ 168               	.LM16:
+ 169 002e 4150      		subi r20,lo8(-(-1))
+ 170 0030 5040      		sbci r21,hi8(-(-1))
+ 171 0032 B9F7      		brne .L12
+ 172 0034 EFCF      		rjmp .L20
+ 173               	.L15:
+ 174 0036 0895      		ret
+ 175               	/* epilogue: frame size=0 */
+ 176               	/* epilogue: noreturn */
+ 177               	/* epilogue end (size=0) */
+ 178               	/* function delay size 23 (23) */
+ 179               	.LFE3:
+ 181               	.global	erasechip
+ 183               	erasechip:
+ 184               	.LFB4:
+ 185               	.LM17:
+ 186               	/* prologue: frame size=0 */
+ 187               	/* prologue end (size=0) */
+ 188               	.LM18:
+ 189 0038 E3DF      		rcall initport
+ 190               	.LM19:
+ 191 003a 82E0      		ldi r24,lo8(2)
+ 192 003c 85BB      		out 53-0x20,r24
+ 193               	.LM20:
+ 194 003e A89A      		sbi 53-0x20,0
+ 195               	.LM21:
+ 196 0040 81E0      		ldi r24,lo8(1)
+ 197 0042 90E0      		ldi r25,hi8(1)
+ 198 0044 E7DF      		rcall delay
+ 199               	.LM22:
+ 200 0046 A898      		cbi 53-0x20,0
+ 201               	.LM23:
+ 202 0048 8AE0      		ldi r24,lo8(10)
+ 203 004a 90E0      		ldi r25,hi8(10)
+ 204 004c E3DF      		rcall delay
+ 205               	.LM24:
+ 206 004e A89A      		sbi 53-0x20,0
+ 207               	/* epilogue: frame size=0 */
+ 208 0050 0895      		ret
+ 209               	/* epilogue end (size=1) */
+ 210               	/* function erasechip size 13 (12) */
+ 211               	.LFE4:
+ 213               	.global	writecode
+ 215               	writecode:
+ 216               	.LFB5:
+ 217               	.LM25:
+ 218               	/* prologue: frame size=0 */
+ 219               	/* prologue end (size=0) */
+ 220 0052 982F      		mov r25,r24
+ 221               	.LM26:
+ 222 0054 8CE1      		ldi r24,lo8(28)
+ 223 0056 85BB      		out 53-0x20,r24
+ 224               	.LM27:
+ 225 0058 98BB      		out 56-0x20,r25
+ 226               	.LM28:
+ 227 005a A89A      		sbi 53-0x20,0
+ 228               	.LM29:
+ 229 005c 81E0      		ldi r24,lo8(1)
+ 230 005e 90E0      		ldi r25,hi8(1)
+ 231 0060 D9DF      		rcall delay
+ 232               	.LM30:
+ 233 0062 A898      		cbi 53-0x20,0
+ 234               	.LM31:
+ 235 0064 81E0      		ldi r24,lo8(1)
+ 236 0066 90E0      		ldi r25,hi8(1)
+ 237 0068 D5DF      		rcall delay
+ 238               	.LM32:
+ 239 006a A89A      		sbi 53-0x20,0
+ 240               	.LM33:
+ 241 006c 18BA      		out 56-0x20,__zero_reg__
+ 242               	/* epilogue: frame size=0 */
+ 243 006e 0895      		ret
+ 244               	/* epilogue end (size=1) */
+ 245               	/* function writecode size 15 (14) */
+ 246               	.LFE5:
+ 248               	.global	readcode
+ 250               	readcode:
+ 251               	.LFB6:
+ 252               	.LM34:
+ 253               	/* prologue: frame size=0 */
+ 254               	/* prologue end (size=0) */
+ 255               	.LM35:
+ 256 0070 17BA      		out 55-0x20,__zero_reg__
+ 257               	.LM36:
+ 258 0072 18BA      		out 56-0x20,__zero_reg__
+ 259               	.LM37:
+ 260 0074 88E1      		ldi r24,lo8(24)
+ 261 0076 85BB      		out 53-0x20,r24
+ 262               	.LM38:
+ 263 0078 A89A      		sbi 53-0x20,0
+ 264               	.LM39:
+ 265 007a 8AE0      		ldi r24,lo8(10)
+ 266 007c 90E0      		ldi r25,hi8(10)
+ 267 007e CADF      		rcall delay
+ 268               	.LM40:
+ 269 0080 96B3      		in r25,54-0x20
+ 270               	.LM41:
+ 271 0082 8FEF      		ldi r24,lo8(-1)
+ 272 0084 87BB      		out 55-0x20,r24
+ 273               	.LM42:
+ 274 0086 892F      		mov r24,r25
+ 275 0088 9927      		clr r25
+ 276               	/* epilogue: frame size=0 */
+ 277 008a 0895      		ret
+ 278               	/* epilogue end (size=1) */
+ 279               	/* function readcode size 14 (13) */
+ 280               	.LFE6:
+ 282               	.global	readmark
+ 284               	readmark:
+ 285               	.LFB7:
+ 286               	.LM43:
+ 287               	/* prologue: frame size=0 */
+ 288               	/* prologue end (size=0) */
+ 289               	.LM44:
+ 290 008c 17BA      		out 55-0x20,__zero_reg__
+ 291               	.LM45:
+ 292 008e 15BA      		out 53-0x20,__zero_reg__
+ 293               	.LM46:
+ 294 0090 A89A      		sbi 53-0x20,0
+ 295               	.LM47:
+ 296 0092 8AE0      		ldi r24,lo8(10)
+ 297 0094 90E0      		ldi r25,hi8(10)
+ 298 0096 BEDF      		rcall delay
+ 299               	.LM48:
+ 300 0098 96B3      		in r25,54-0x20
+ 301               	.LM49:
+ 302 009a 8FEF      		ldi r24,lo8(-1)
+ 303 009c 87BB      		out 55-0x20,r24
+ 304               	.LM50:
+ 305 009e 892F      		mov r24,r25
+ 306 00a0 9927      		clr r25
+ 307               	/* epilogue: frame size=0 */
+ 308 00a2 0895      		ret
+ 309               	/* epilogue end (size=1) */
+ 310               	/* function readmark size 12 (11) */
+ 311               	.LFE7:
+ 313               	.global	main
+ 315               	main:
+ 316               	.LFB8:
+ 317               	.LM51:
+ 318               	/* prologue: frame size=0 */
+ 319 00a4 C0E0      		ldi r28,lo8(__stack - 0)
+ 320 00a6 D0E0      		ldi r29,hi8(__stack - 0)
+ 321 00a8 DEBF      		out __SP_H__,r29
+ 322 00aa CDBF      		out __SP_L__,r28
+ 323               	/* prologue end (size=4) */
+ 324               	.LM52:
+ 325 00ac C0E0      		ldi r28,lo8(dataforprogram)
+ 326 00ae D0E0      		ldi r29,hi8(dataforprogram)
+ 327               	.LM53:
+ 328 00b0 A7DF      		rcall initport
+ 329               	.LM54:
+ 330 00b2 C2DF      		rcall erasechip
+ 331               	.LM55:
+ 332 00b4 8091 0000 		lds r24,dataforprogram
+ 333               	.L33:
+ 334               	.LM56:
+ 335 00b8 8F3F      		cpi r24,lo8(-1)
+ 336 00ba 39F0      		breq .L32
+ 337               	.LM57:
+ 338 00bc 8991      		ld r24,Y+
+ 339 00be C9DF      		rcall writecode
+ 340               	.LM58:
+ 341 00c0 8AE0      		ldi r24,lo8(10)
+ 342 00c2 90E0      		ldi r25,hi8(10)
+ 343 00c4 A7DF      		rcall delay
+ 344 00c6 8881      		ld r24,Y
+ 345 00c8 F7CF      		rjmp .L33
+ 346               	.L32:
+ 347               	.LM59:
+ 348 00ca 8881      		ld r24,Y
+ 349 00cc C2DF      		rcall writecode
+ 350               	.L29:
+ 351               	.LM60:
+ 352 00ce FFCF      		rjmp .L29
+ 353               	/* epilogue: frame size=0 */
+ 354               	/* epilogue: noreturn */
+ 355               	/* epilogue end (size=0) */
+ 356               	/* function main size 22 (18) */
+ 357               	.LFE8:
+ 359               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 1.c
+                            *ABS*:0000003f __SREG__
+                            *ABS*:0000003e __SP_H__
+                            *ABS*:0000003d __SP_L__
+                            *ABS*:00000000 __tmp_reg__
+                            *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp/cco9aaaa.s:22     .progmem.data:00000000 dataforprogram
+C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp/cco9aaaa.s:106    .text:00000000 initport
+C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp/cco9aaaa.s:140    .text:00000014 delay
+C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp/cco9aaaa.s:183    .text:00000038 erasechip
+C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp/cco9aaaa.s:215    .text:00000052 writecode
+C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp/cco9aaaa.s:250    .text:00000070 readcode
+C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp/cco9aaaa.s:284    .text:0000008c readmark
+C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp/cco9aaaa.s:315    .text:000000a4 main
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+__stack

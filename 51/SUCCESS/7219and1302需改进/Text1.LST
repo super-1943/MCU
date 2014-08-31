@@ -1,0 +1,329 @@
+C51 COMPILER V8.02   TEXT1                                                                 12/07/2009 18:08:21 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <at89x51.h>
+   2          #include <intrins.h>
+   3          sbit DIN=P1^0;
+   4          sbit LOAD=P1^1;
+   5          sbit CLK=P1^2;
+   6          sbit _RST= P2^0;
+   7          sbit SCLK= P2^1;
+   8          sbit IO_DATA= P2^2;
+   9          typedef unsigned int uint;
+  10          sbit Flag=P3^2;
+  11          
+  12          //1302 Command define
+  13          #define SecondReadCommand 0x81        //秒单元，读
+  14          #define SecondWriteCommand 0x80       //秒单元，写
+  15          #define MinuteReadCommand 0x83            //分单元，读
+  16          #define MinuteWriteCommand 0x82           //分单元，写
+  17          #define HourReadCommand 0x85                    //时单元，读
+  18          #define HourWriteCommand 0x84                   //时单元，写
+  19          #define DateReadCommand 0x87                    //日单元，读
+  20          #define DateWriteCommand 0x86                   //日单元，写
+  21          #define MonthReadCommand 0x89                   //月单元，读
+  22          #define MonthWriteCommand 0x88                  //月单元，写
+  23          #define WeekReadCommand 0x8b                    //周单元，读
+  24          #define WeekWriteCommand 0x8a                   //周单元，写
+  25          #define YearReadCommand 0x8d                    //年单元，读
+  26          #define YearWriteCommand 0x8c                   //年单元，写
+  27          #define CtrlReadCommand 0x8f                    //控制单元，读
+  28          #define CtrlWriteCommand 0x8e                   //控制单元，写
+  29          #define ChargeReadCommand 0x91                  //充电单元，读
+  30          #define ChargeWriteCommand 0x90                 //充电单元，写
+  31          #define BatModeReadCommand 0xbf                 //批量模式单元，读
+  32          #define BatModeWriteCommand 0xbe                //批量模式单元，写
+  33          #define RamBatReadCommand 0xff                  //RAM批量读
+  34          #define RamBatWriteCommand 0xfe                 //RAM批量写
+  35          //special data
+  36          #define HoldClock 0x80                  //SecondWriteCommand 0x80 
+  37          #define GoClock 0x00                    //SecondWriteCommand 0x80 
+  38          #define WriteEnable 0x00                        //CtrlWriteCommand 0x8e         控制单元，写
+  39          #define WriteForbidden 0x80                     //CtrlWriteCommand 0x8e         控制单元，写
+  40          #define ChargeEnable 0xa0
+  41          #define ChargeDiodes1 0x04                      //1 diode
+  42          #define ChargeDiodes2 0x08                      //2 diodes
+  43          #define ChargeResistors0 0x00                   
+  44          #define ChargeResistors2 0x01
+  45          #define ChargeResistors4 0x02
+  46          #define ChargeResistors8 0x03
+  47          #define NoCharge 0x00
+  48          
+  49          
+  50          
+  51          void init1302(void)
+  52          {
+  53   1              _RST=0;
+  54   1              _nop_();
+  55   1              SCLK=0;
+C51 COMPILER V8.02   TEXT1                                                                 12/07/2009 18:08:21 PAGE 2   
+
+  56   1              _nop_();
+  57   1              
+  58   1      }
+  59          //向ds1302写入
+  60          void putchar(unsigned char d)
+  61          {
+  62   1              unsigned char i,t;
+  63   1              for(i=0;i<8;i++)
+  64   1              {
+  65   2                      t=d&0x01;
+  66   2                      d>>=1;
+  67   2                      if(t)
+  68   2                      {
+  69   3                              IO_DATA=1;
+  70   3                              SCLK=0;
+  71   3                              SCLK=1;
+  72   3                      }
+  73   2                      else
+  74   2                      {
+  75   3                              IO_DATA=0;
+  76   3                              SCLK=0;
+  77   3                              SCLK=1;
+  78   3                      }
+  79   2              }
+  80   1      }
+  81          void getchar(unsigned char *d)
+  82          {
+  83   1              unsigned char i,t=0;
+  84   1              bit s;
+  85   1              *d=0;
+  86   1              for(i=0;i<8;i++)
+  87   1              {
+  88   2                      t>>=1;
+  89   2                      SCLK=1;
+  90   2                      SCLK=0;
+  91   2                      _nop_();
+  92   2                      s=IO_DATA;
+  93   2                      if(s)
+  94   2                      {
+  95   3                              t|=0x80;
+  96   3                      }
+  97   2                      else
+  98   2                      {
+  99   3                              t&=0x7f;
+ 100   3                      }
+ 101   2              }
+ 102   1              *d=t;
+ 103   1      }
+ 104          
+ 105          void write1302(unsigned char com,unsigned char d)
+ 106          {
+ 107   1              init1302();
+ 108   1              _RST=1;
+ 109   1              _nop_();
+ 110   1              putchar(com);
+ 111   1              _nop_();
+ 112   1              putchar(d);
+ 113   1              _nop_();
+ 114   1              _RST=0;
+ 115   1      
+ 116   1      }
+ 117          unsigned char read1302(unsigned char com)
+C51 COMPILER V8.02   TEXT1                                                                 12/07/2009 18:08:21 PAGE 3   
+
+ 118          {
+ 119   1              unsigned char s;        
+ 120   1              init1302();
+ 121   1      
+ 122   1              _RST=1;
+ 123   1              _nop_();
+ 124   1              putchar(com);
+ 125   1              _nop_();
+ 126   1              getchar(&s);
+ 127   1              _nop_();
+ 128   1              _RST=0;
+ 129   1              return s;
+ 130   1      }
+ 131                          
+ 132          
+ 133          //7219 registers
+ 134          #define Dight0 0x01
+ 135          #define Dight1 0x02
+ 136          #define Dight2 0x03
+ 137          #define Dight3 0x04
+ 138          #define Dight4 0x05
+ 139          #define Dight5 0x06
+ 140          #define Dight6 0x07
+ 141          #define Dight7 0x08
+ 142          #define DecodeMode 0x09
+ 143          #define Intensity 0x0a
+ 144          #define ScanLimit 0x0b
+ 145          #define ShutDown 0x0c
+ 146          #define DisplayTest 0x0f
+ 147          
+ 148          //7219 special data
+ 149          #define ShutDownMode 0x00
+ 150          #define NormalOperation 0x01
+ 151          #define DecodeDight 0xdb
+ 152          #define IntensityGrade 0x0a
+ 153          #define ScanDight 0x07
+ 154          #define TestMode 0x01
+ 155          #define TestEnd 0x00
+ 156          unsigned char data DisBuffer[8]={0,0,0,0,0,0,0,0};
+ 157          unsigned char code display_list[]={0x7e,0x30,0x6d,0x79,0x33,0x5b,0x5f,0x70,0x7f,0x7b,
+ 158                                          /* 0     1    2    3    4    5    6    7    8    9    */
+ 159                                                                          0x77,0x1f,0x4e,0x3d,0x4f,0x47,0x67,0x3e,0xff,0x00};
+ 160                                                                          /*A    B    C    D    E     F   P    U    all  none*/
+ 161          
+ 162          void delay(unsigned char count)//delay 10ms
+ 163          {
+ 164   1          unsigned char j,k;
+ 165   1              while(count--)
+ 166   1              {
+ 167   2                      for(j=43;j;j--)
+ 168   2                      for(k=73;k;k--);
+ 169   2              }
+ 170   1      }
+ 171          
+ 172          void sendchar(unsigned char ch)
+ 173          {
+ 174   1          unsigned char i,temp;
+ 175   1              _nop_();
+ 176   1              for(i=0;i<8;i++)
+ 177   1              {
+ 178   2                      temp=ch&0x80;
+ 179   2                      ch=ch<<1;
+C51 COMPILER V8.02   TEXT1                                                                 12/07/2009 18:08:21 PAGE 4   
+
+ 180   2                      if(temp)
+ 181   2                      {
+ 182   3                              DIN=1;
+ 183   3                              CLK=0;
+ 184   3                              CLK=1;
+ 185   3                      }
+ 186   2                      else
+ 187   2                      {
+ 188   3                              DIN=0;
+ 189   3                              CLK=0;
+ 190   3                              CLK=1;
+ 191   3                      }
+ 192   2              }
+ 193   1      }
+ 194          
+ 195          
+ 196          void sendword(unsigned char addr,unsigned char num)
+ 197          {
+ 198   1              LOAD=0;
+ 199   1              _nop_();
+ 200   1              sendchar(addr);
+ 201   1              _nop_();
+ 202   1              sendchar(num);
+ 203   1              _nop_();
+ 204   1              LOAD=1;
+ 205   1      }
+ 206          
+ 207          void init7219(void )
+ 208          {
+ 209   1              sendword(ScanLimit,ScanDight);
+ 210   1              sendword(DecodeMode,DecodeDight);
+ 211   1              sendword(Intensity,IntensityGrade);
+ 212   1              sendword(ShutDown,NormalOperation);
+ 213   1      }
+ 214          
+ 215          void message(void) interrupt 0 using 1
+ 216          {
+ 217   1              Flag=~Flag;
+ 218   1              delay(100);delay(100);
+ 219   1      }
+ 220          void initmain(void)
+ 221          {
+ 222   1              IE=0x00;
+ 223   1              IP=0x00;
+ 224   1              TH0=0xd8;TL0=0xf0;
+ 225   1              TMOD=0x01;
+ 226   1              TCON=0x11;
+ 227   1              PSW=0x00;
+ 228   1              EA=1;
+ 229   1              EX0=1;
+ 230   1              IT0=0;
+ 231   1      }
+ 232                  
+ 233          void main()
+ 234          {
+ 235   1              unsigned char dat,temp;
+ 236   1              initmain();
+ 237   1              init7219();
+ 238   1              init1302();
+ 239   1              sendword(DisplayTest,TestMode);
+ 240   1              delay(0x64);
+ 241   1              delay(0x64);
+C51 COMPILER V8.02   TEXT1                                                                 12/07/2009 18:08:21 PAGE 5   
+
+ 242   1              sendword(DisplayTest,TestEnd);
+ 243   1              while(1)
+ 244   1              {
+ 245   2                      if(Flag==0){
+ 246   3                      delay(0x64);
+ 247   3                      delay(0x64);
+ 248   3                      dat=read1302(YearReadCommand);
+ 249   3                      temp=dat&0x0f;
+ 250   3                      sendword(Dight1,temp);
+ 251   3                      temp=dat&0xf0;
+ 252   3                      temp>>=4;
+ 253   3                      sendword(Dight0,temp);
+ 254   3                      dat=read1302(MonthReadCommand);
+ 255   3                      temp=dat&0x0f;
+ 256   3                      sendword(Dight4,temp);
+ 257   3                      temp=dat&0xf0;
+ 258   3                      temp>>=4;
+ 259   3                      sendword(Dight3,temp);
+ 260   3                      dat=read1302(DateReadCommand);
+ 261   3                      temp=dat&0x0f;
+ 262   3                      sendword(Dight7,temp);
+ 263   3                      temp=dat&0xf0;
+ 264   3                      temp>>=4;
+ 265   3                      sendword(Dight6,temp);
+ 266   3                      sendword(Dight5,0x00);
+ 267   3                      sendword(Dight2,0x00);}
+ 268   2      
+ 269   2                      else{
+ 270   3                      delay(0x64);
+ 271   3                      delay(0x64);
+ 272   3                      dat=read1302(HourReadCommand);
+ 273   3                      temp=dat&0x0f;
+ 274   3                      sendword(Dight1,temp);
+ 275   3                      temp=dat&0xf0;
+ 276   3                      temp>>=4;
+ 277   3                      sendword(Dight0,temp);
+ 278   3                      dat=read1302(MinuteReadCommand);
+ 279   3                      temp=dat&0x0f;
+ 280   3                      sendword(Dight4,temp);
+ 281   3                      temp=dat&0xf0;
+ 282   3                      temp>>=4;
+ 283   3                      sendword(Dight3,temp);
+ 284   3                      dat=read1302(SecondReadCommand);
+ 285   3                      temp=dat&0x0f;
+ 286   3                      sendword(Dight7,temp);
+ 287   3                      temp=dat&0xf0;
+ 288   3                      temp>>=4;
+ 289   3                      sendword(Dight6,temp);
+ 290   3                      sendword(Dight5,0x00);
+ 291   3                      sendword(Dight2,0x00);}
+ 292   2      
+ 293   2               }
+ 294   1      }
+ 295              
+ 296          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    513    ----
+   CONSTANT SIZE    =     20    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+C51 COMPILER V8.02   TEXT1                                                                 12/07/2009 18:08:21 PAGE 6   
+
+   DATA SIZE        =      8       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

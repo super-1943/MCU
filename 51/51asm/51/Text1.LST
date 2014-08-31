@@ -1,0 +1,30 @@
+A51 MACRO ASSEMBLER  TEXT1                                                                03/13/2010 18:33:29 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN Text1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE Text1.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     org 0000h
+0000 740F              2     mov a,#0fh
+0002 7990              3     mov R1,#090h
+0004 F7                4     mov @R1,a;
+0005 759055            5     mov 90h,#55h
+0008 0108              6     ajmp $
+                       7     end
+A51 MACRO ASSEMBLER  TEXT1                                                                03/13/2010 18:33:29 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

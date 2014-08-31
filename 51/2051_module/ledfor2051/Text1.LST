@@ -1,0 +1,51 @@
+C51 COMPILER V8.02   TEXT1                                                                 05/25/2009 20:41:26 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          unsigned char code table[]={
+   3          0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,
+   4          0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01,
+   5          0x00,0x00,0xff,0xff,0x00,0x00,0x00,0xff,
+   6          0xff,0x00,0x00,0x55,0xaa,0x55,0xaa,0x55,
+   7          0xaa,0x55,0xaa,0x55,0xaa,0x00,0x00,0x00,
+   8          0xff,0xff,0x00,0x00,0xff,0xff,0x00,0x00
+   9          };
+  10          void delay(void)
+  11          {
+  12   1              unsigned char i,j;
+  13   1              for(i=255;i;i--)
+  14   1              for(j=200;j;j--);
+  15   1      }
+  16          void main(void)
+  17          {
+  18   1              unsigned char i;
+  19   1              P1=0x00;
+  20   1              while(1)
+  21   1              {
+  22   2                      for(i=0;i<48;i++)
+  23   2                      {
+  24   3                              P1=~table[i];
+  25   3                              delay();
+  26   3                      }
+  27   2              }
+  28   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     31    ----
+   CONSTANT SIZE    =     48    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

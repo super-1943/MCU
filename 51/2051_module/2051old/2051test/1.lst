@@ -1,0 +1,239 @@
+   1               		.file	"1.c"
+   2               		.arch atmega8
+   3               	__SREG__ = 0x3f
+   4               	__SP_H__ = 0x3e
+   5               	__SP_L__ = 0x3d
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  17               	.Ltext0:
+  18               	.global	dataforprogram
+  19               		.section	.progmem.data,"a",@progbits
+  22               	dataforprogram:
+  23 0000 74        		.byte	116
+  24 0001 01        		.byte	1
+  25 0002 F5        		.byte	-11
+  26 0003 90        		.byte	-112
+  27 0004 11        		.byte	17
+  28 0005 0B        		.byte	11
+  29 0006 03        		.byte	3
+  30 0007 80        		.byte	-128
+  31 0008 F9        		.byte	-7
+  32 0009 80        		.byte	-128
+  33 000a F5        		.byte	-11
+  34 000b 79        		.byte	121
+  35 000c FF        		.byte	-1
+  36 000d 7A        		.byte	122
+  37 000e FF        		.byte	-1
+  38 000f DA        		.byte	-38
+  39 0010 FE        		.byte	-2
+  40 0011 D9        		.byte	-39
+  41 0012 FA        		.byte	-6
+  42 0013 22        		.byte	34
+  43               		.text
+  44               	.global	initport
+  46               	initport:
+  47               	.LFB2:
+  48               	.LM1:
+  49               	/* prologue: frame size=0 */
+  50               	/* prologue end (size=0) */
+  51               	.LM2:
+  52               	/* #APP */
+  53 0000 0000      		NOP
+  54               	.LM3:
+  55               	/* #NOAPP */
+  56 0002 8FEF      		ldi r24,lo8(-1)
+  57 0004 87BB      		out 55-0x20,r24
+  58               	.LM4:
+  59 0006 84BB      		out 52-0x20,r24
+  60               	.LM5:
+  61 0008 18BA      		out 56-0x20,__zero_reg__
+  62               	.LM6:
+  63 000a 15BA      		out 53-0x20,__zero_reg__
+  64               	.LM7:
+  65               	/* #APP */
+  66 000c 0000      		NOP
+  67               	/* #NOAPP */
+  68               	/* epilogue: frame size=0 */
+  69 000e 0895      		ret
+  70               	/* epilogue end (size=1) */
+  71               	/* function initport size 10 (9) */
+  72               	.LFE2:
+  74               	.global	delay
+  76               	delay:
+  77               	.LFB3:
+  78               	.LM8:
+  79               	/* prologue: frame size=0 */
+  80               	/* prologue end (size=0) */
+  81               	.L20:
+  82               	.LM9:
+  83 0010 0197      		sbiw r24,1
+  84 0012 2FEF      		ldi r18,hi8(-1)
+  85 0014 8F3F      		cpi r24,lo8(-1)
+  86 0016 9207      		cpc r25,r18
+  87 0018 61F0      		breq .L15
+  88               	.LM10:
+  89 001a 48EC      		ldi r20,lo8(200)
+  90 001c 50E0      		ldi r21,hi8(200)
+  91               	.L12:
+  92               	.LM11:
+  93 001e 2AE0      		ldi r18,lo8(10)
+  94 0020 30E0      		ldi r19,hi8(10)
+  95               	.L11:
+  96               	.LM12:
+  97               	/* #APP */
+  98 0022 0000      		NOP
+  99               	.LM13:
+ 100               	/* #NOAPP */
+ 101 0024 2150      		subi r18,lo8(-(-1))
+ 102 0026 3040      		sbci r19,hi8(-(-1))
+ 103 0028 E1F7      		brne .L11
+ 104               	.LM14:
+ 105 002a 4150      		subi r20,lo8(-(-1))
+ 106 002c 5040      		sbci r21,hi8(-(-1))
+ 107 002e B9F7      		brne .L12
+ 108 0030 EFCF      		rjmp .L20
+ 109               	.L15:
+ 110 0032 0895      		ret
+ 111               	/* epilogue: frame size=0 */
+ 112               	/* epilogue: noreturn */
+ 113               	/* epilogue end (size=0) */
+ 114               	/* function delay size 23 (23) */
+ 115               	.LFE3:
+ 117               	.global	erasechip
+ 119               	erasechip:
+ 120               	.LFB4:
+ 121               	.LM15:
+ 122               	/* prologue: frame size=0 */
+ 123               	/* prologue end (size=0) */
+ 124               	.LM16:
+ 125 0034 E5DF      		rcall initport
+ 126               	.LM17:
+ 127 0036 84E0      		ldi r24,lo8(4)
+ 128 0038 85BB      		out 53-0x20,r24
+ 129               	.LM18:
+ 130 003a A99A      		sbi 53-0x20,1
+ 131               	.LM19:
+ 132 003c 81E0      		ldi r24,lo8(1)
+ 133 003e 90E0      		ldi r25,hi8(1)
+ 134 0040 E7DF      		rcall delay
+ 135               	.LM20:
+ 136 0042 A998      		cbi 53-0x20,1
+ 137               	.LM21:
+ 138 0044 8AE0      		ldi r24,lo8(10)
+ 139 0046 90E0      		ldi r25,hi8(10)
+ 140 0048 E3DF      		rcall delay
+ 141               	.LM22:
+ 142 004a A99A      		sbi 53-0x20,1
+ 143               	/* epilogue: frame size=0 */
+ 144 004c 0895      		ret
+ 145               	/* epilogue end (size=1) */
+ 146               	/* function erasechip size 13 (12) */
+ 147               	.LFE4:
+ 149               	.global	writecode
+ 151               	writecode:
+ 152               	.LFB5:
+ 153               	.LM23:
+ 154               	/* prologue: frame size=0 */
+ 155               	/* prologue end (size=0) */
+ 156 004e 982F      		mov r25,r24
+ 157               	.LM24:
+ 158 0050 88E3      		ldi r24,lo8(56)
+ 159 0052 85BB      		out 53-0x20,r24
+ 160               	.LM25:
+ 161 0054 98BB      		out 56-0x20,r25
+ 162               	.LM26:
+ 163 0056 A99A      		sbi 53-0x20,1
+ 164               	.LM27:
+ 165 0058 81E0      		ldi r24,lo8(1)
+ 166 005a 90E0      		ldi r25,hi8(1)
+ 167 005c D9DF      		rcall delay
+ 168               	.LM28:
+ 169 005e A998      		cbi 53-0x20,1
+ 170               	.LM29:
+ 171 0060 81E0      		ldi r24,lo8(1)
+ 172 0062 90E0      		ldi r25,hi8(1)
+ 173 0064 D5DF      		rcall delay
+ 174               	.LM30:
+ 175 0066 A99A      		sbi 53-0x20,1
+ 176               	.LM31:
+ 177 0068 18BA      		out 56-0x20,__zero_reg__
+ 178               	.LM32:
+ 179 006a A898      		cbi 53-0x20,0
+ 180 006c 81E0      		ldi r24,lo8(1)
+ 181 006e 90E0      		ldi r25,hi8(1)
+ 182 0070 CFDF      		rcall delay
+ 183               	.LM33:
+ 184 0072 A89A      		sbi 53-0x20,0
+ 185 0074 81E0      		ldi r24,lo8(1)
+ 186 0076 90E0      		ldi r25,hi8(1)
+ 187 0078 CBDF      		rcall delay
+ 188               	.LM34:
+ 189 007a A898      		cbi 53-0x20,0
+ 190               	/* epilogue: frame size=0 */
+ 191 007c 0895      		ret
+ 192               	/* epilogue end (size=1) */
+ 193               	/* function writecode size 24 (23) */
+ 194               	.LFE5:
+ 196               	.global	main
+ 198               	main:
+ 199               	.LFB6:
+ 200               	.LM35:
+ 201               	/* prologue: frame size=0 */
+ 202 007e C0E0      		ldi r28,lo8(__stack - 0)
+ 203 0080 D0E0      		ldi r29,hi8(__stack - 0)
+ 204 0082 DEBF      		out __SP_H__,r29
+ 205 0084 CDBF      		out __SP_L__,r28
+ 206               	/* prologue end (size=4) */
+ 207               	.LM36:
+ 208 0086 C0E0      		ldi r28,lo8(dataforprogram)
+ 209 0088 D0E0      		ldi r29,hi8(dataforprogram)
+ 210               	.LM37:
+ 211 008a BADF      		rcall initport
+ 212               	.LM38:
+ 213 008c D3DF      		rcall erasechip
+ 214 008e 13E1      		ldi r17,lo8(19)
+ 215               	.L26:
+ 216               	.LBB2:
+ 217               	.LM39:
+ 218 0090 FE01      		movw r30,r28
+ 219               	/* #APP */
+ 220 0092 8491      		lpm r24, Z
+ 221               		
+ 222               	/* #NOAPP */
+ 223               	.LBE2:
+ 224 0094 DCDF      		rcall writecode
+ 225               	.LM40:
+ 226 0096 2196      		adiw r28,1
+ 227               	.LM41:
+ 228 0098 1150      		subi r17,lo8(-(-1))
+ 229 009a 17FF      		sbrs r17,7
+ 230 009c F9CF      		rjmp .L26
+ 231               	.L27:
+ 232               	.LM42:
+ 233 009e FFCF      		rjmp .L27
+ 234               	/* epilogue: frame size=0 */
+ 235               	/* epilogue: noreturn */
+ 236               	/* epilogue end (size=0) */
+ 237               	/* function main size 20 (16) */
+ 238               	.LFE6:
+ 240               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 1.c
+                            *ABS*:0000003f __SREG__
+                            *ABS*:0000003e __SP_H__
+                            *ABS*:0000003d __SP_L__
+                            *ABS*:00000000 __tmp_reg__
+                            *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\a\LOCALS~1\Temp/cciUaaaa.s:22     .progmem.data:00000000 dataforprogram
+C:\DOCUME~1\a\LOCALS~1\Temp/cciUaaaa.s:46     .text:00000000 initport
+C:\DOCUME~1\a\LOCALS~1\Temp/cciUaaaa.s:76     .text:00000010 delay
+C:\DOCUME~1\a\LOCALS~1\Temp/cciUaaaa.s:119    .text:00000034 erasechip
+C:\DOCUME~1\a\LOCALS~1\Temp/cciUaaaa.s:151    .text:0000004e writecode
+C:\DOCUME~1\a\LOCALS~1\Temp/cciUaaaa.s:198    .text:0000007e main
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+__stack

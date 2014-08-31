@@ -1,0 +1,51 @@
+<html>
+<body>
+<pre>
+<h1>礦ision3 Build Log</h1>
+<h2>Project:</h2>
+E:\AllProject\51\我的TUSB3210开发板\IIC_module\iic.uv2
+Project File Date:  02/05/2011
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?MAIN
+Program Size: data=78.0 xdata=0 code=1212
+creating hex file from "TUSB2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\IIC_module>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x000004A0.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 16 bytes at address 0x00000023.      Status: Writing 16 bytes at address 0x00000033.      Status: Writing 16 bytes at address 0x00000043.      Status: Writing 16 bytes at address 0x00000053.      Status: Writing 16 bytes at address 0x00000063.      Status: Writing 16 bytes at address 0x00000073.      Status: Writing 16 bytes at address 0x00000083.      Status: Writing 16 bytes at address 0x00000093.      Status: Writing 16 bytes at address 0x000000A3.      Status: Writing 16 bytes at address 0x000000B3.      Status: Writing 16 bytes at address 0x000000C3.      Status: Writing 16 bytes at address 0x000000D3.      Status: Writing 16 bytes at address 0x000000E3.      Status: Writing 5 bytes at address 0x000000F3.      Status: Writing 16 bytes at address 0x00000464.      Status: Writing 5 b
+dress 0x000001D8.      Status: Writing 16 bytes at address 0x00000286.      Status: Writing 16 bytes at address 0x00000296.      Status: Writing 16 bytes at address 0x000002A6.      Status: Writing 16 bytes at address 0x000002B6.      Status: Writing 16 bytes at address 0x000002C6.      Status: Writing 16 bytes at address 0x000002D6.      Status: Writing 16 bytes at address 0x000002E6.      Status: Writing 16 bytes at address 0x000002F6.      Status: Writing 16 bytes at address 0x00000306.      Status: Writing 8 bytes at address 0x00000316.      Status: Writing 16 bytes at address 0x00000422.      Status: Writing 9 bytes at address 0x00000432.      Status: Writing 16 bytes at address 0x0000043B.      Status: Writing 2 bytes at address 0x0000044B.      
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\IIC_MO~1>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"TUSB2136" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?MAIN
+Program Size: data=78.0 xdata=0 code=1161
+creating hex file from "TUSB2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\IIC_module>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x0000046D.      Status: Writing 16 bytes at address 0x000000ED.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 16 bytes at address 0x0000013D.      Status: Writing 16 bytes at address 0x0000014D.      Status: Writing 16 bytes at address 0x0000015D.      Status: Writing 16 bytes at address 0x0000016D.      Status: Writing 16 bytes at address 0x0000017D.      Status: Writing 16 bytes at address 0x0000018D.      Status: Writing 16 bytes at address 0x0000019D.      Status: Writing 16 bytes at address 0x000001AD.      Status: Writing 16 bytes at address 0x000001BD.      Status: Writing 5 bytes at address 0x000001CD.      Status: Writing 16 bytes at address 0x00000431.      Status: Writing 5 bytes at address 0x00000441.      Status: Writing 7 by
+ddress 0x0000030E.      Status: Writing 16 bytes at address 0x0000031E.      Status: Writing 16 bytes at address 0x0000032E.      Status: Writing 16 bytes at address 0x0000033E.      Status: Writing 16 bytes at address 0x0000034E.      Status: Writing 16 bytes at address 0x0000035E.      Status: Writing 16 bytes at address 0x0000036E.      Status: Writing 4 bytes at address 0x0000037E.      Status: Writing 16 bytes at address 0x000003EF.      Status: Writing 9 bytes at address 0x000003FF.      Status: Writing 16 bytes at address 0x00000408.      Status: Writing 2 bytes at address 0x00000418.      
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\IIC_MO~1>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"TUSB2136" - 0 Error(s), 1 Warning(s).

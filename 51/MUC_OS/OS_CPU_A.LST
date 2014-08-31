@@ -1,0 +1,342 @@
+A51 MACRO ASSEMBLER  OS_CPU_A                                                             05/17/2007 19:18:07 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.10
+OBJECT MODULE PLACED IN OS_CPU_A.OBJ
+ASSEMBLER INVOKED BY: d:\Keil\C51\BIN\A51.EXE OS_CPU_A.ASM SET(LARGE) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     
+                       2     
+                       3     
+                       4     
+                       5     
+                       6     
+                       7     
+                       8     
+                       9     
+                      10      NAME   OS_CPU_A
+                      11     
+                      12     ;  STACK                        NOTE
+                      13     ;  REENTRANT_STACK              REENTRANT FUNCTION STACK CONTENTS             
+                      14     ;  ?C_XBP+1                     REENTRANT_STACK POINT LOW
+                      15     ;  ?C_XBP                       REENTRANT_STACK POINT HIGH
+                      16     ;  SYSTEM STACK                 SYSTEM  STACK CONTENT
+                      17     ;  LENG                         SYSYTEM STACK LONG
+                      18     ;  ?OSSTKSTART                      *        ;CONTENT NO IMPORTANT
+                      19     
+                      20     
+                      21      ?PR?OSStartHighRdy?OS_CPU_A            SEGMENT CODE
+                      22      ?PR?OSCtxSw?OS_CPU_A                   SEGMENT CODE
+                      23      ?PR?OSIntCtxSw?OS_CPU_A                SEGMENT CODE
+                      24     
+                      25     
+                      26      EXTRN XDATA    (OSTCBHighRdy)
+                      27      EXTRN XDATA    (OSTCBCur)
+                      28      EXTRN XDATA    (OSPrioCur)
+                      29      EXTRN XDATA    (OSPrioHighRdy)
+                      30      EXTRN XDATA    (OSRunning)
+                      31      EXTRN CODE     (_?OSTaskSwHook)
+                      32      EXTRN DATA     (?C_XBP)           
+                      33     
+                      34      PUBLIC OSStartHighRdy
+                      35      PUBLIC OSCtxSw
+                      36      PUBLIC OSIntCtxSw
+  8000                37      XBPSTACKTOP EQU 07FFFH+1
+                      38     
+                      39             ?STACK SEGMENT IDATA
+----                  40             RSEG ?STACK
+0000                  41     OSStkBottom:
+  FFFF                42     OSStkStart IDATA OSStkBottom-1         ;sysytem sp start address,store contents first sp ad
+                             d 1 
+                      43     
+----                  44             RSEG ?PR?OSStartHighRdy?OS_CPU_A
+0000                  45     OSStartHighRdy:
+0000 120000   F       46             LCALL _?OSTaskSwHook         ;lcall void ostaskswhook(*ppdata)
+0003 758300   F       47             MOV DPH,#HIGH(OSRunning)
+0006 758200   F       48             MOV DPL,#LOW(OSRunning)      ;get osrunning's dptr
+0009 7401             49             MOV A,#1
+000B F0               50             MOVX @DPTR,A                 ;SET osrunning=1 
+                      51     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+000C D28C             52             SETB TR0      ;TICK TIME
+                      53     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      54     ;GET (OSTCKHIGHRDY->OSTCBSTKPTR) TO DPTR
+                      55     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+                      56     ;FIRST GET OSTCKHIGHRDY'S ADDRESS TO DPTR
+000E                  57     RESTORE_STACK_CONTENT:
+A51 MACRO ASSEMBLER  OS_CPU_A                                                             05/17/2007 19:18:07 PAGE     2
+
+000E 758300   F       58             MOV DPH,#HIGH(OSTCBHighRdy)
+0011 758200   F       59             MOV DPL,#LOW(OSTCBHighRdy)
+0014 E0               60             MOVX A,@DPTR
+0015 F5F0             61             MOV B,A
+0017 A3               62             INC DPTR
+0018 E0               63             MOVX A,@DPTR
+0019 85F083           64             MOV DPH,B
+001C F582             65             MOV DPL,A
+                      66     ;SECOND GET OSTCBSTKPTR'S ADDRESS TO DPTR
+001E E0               67             MOVX A,@DPTR
+001F F5F0             68             MOV B,A
+0021 A3               69             INC DPTR
+0022 E0               70             MOVX A,@DPTR
+0023 85F083           71             MOV DPH,B
+0026 F582             72             MOV DPL,A 
+                      73     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      74     ;restore new task stack contents
+                      75     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+0028 E0               76             MOVX A,@DPTR         ;GET NEW TASK STACK'SIZE
+0029 FF               77             MOV R7,A
+002A 7800     F       78             MOV R0,#OSStkStart   ;sysytem stack start address,is decided by keil
+002C                  79     RESTORE_STACK_CONTENTS:
+002C 08               80             INC R0
+002D A3               81             INC DPTR
+002E E0               82             MOVX A,@DPTR
+002F F6               83             MOV @R0,A
+0030 DFFA             84             DJNZ R7,RESTORE_STACK_CONTENTS
+                      85     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      86     ;calculate sp address sp=osstkstart+size
+                      87     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+0032 8881             88             MOV SP,R0
+                      89     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      90     ;RESTORE REENTRANT FUNCTION STACK CONTENTS
+                      91     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+0034                  92     RESTORE_REENTRANT_STACK_SIZE:
+0034 A3               93             INC DPTR
+0035 E0               94             MOVX A,@DPTR
+0036 F500     F       95             MOV ?C_XBP,A
+0038 A3               96             INC DPTR
+0039 E0               97             MOVX A,@DPTR
+003A F500     F       98             MOV ?C_XBP+1,A   ;RESTORE REENTRANT FUNCTION STACK POINT
+003C A3               99             INC DPTR
+003D A983            100             MOV R1,DPH
+003F A882            101             MOV R0,DPL
+0041 AB00     F      102             MOV R3,?C_XBP
+0043 AA00     F      103             MOV R2,?C_XBP+1
+0045                 104     RESTORE_REENTRANT_STACK:
+0045 EB              105             MOV A,R3
+0046 B48007          106             CJNE A,#80H,NEXT_RESTACK
+0049 EA              107             MOV A,R2
+004A B40003          108             CJNE A,#00H,NEXT_RESTACK    ;REENTRANT FUNCTION STACK TOP
+004D 020000   F      109             LJMP EXIT_RESTORE
+0050                 110     NEXT_RESTACK:
+0050 8983            111             MOV DPH,R1
+0052 8882            112             MOV DPL,R0
+0054 E0              113             MOVX A,@DPTR
+0055 A3              114             INC DPTR
+0056 A983            115             MOV R1,DPH
+0058 A882            116             MOV R0,DPL
+                     117     
+005A 8B83            118             MOV DPH,R3
+005C 8A82            119             MOV DPL,R2
+005E F0              120             MOVX @DPTR,A
+005F A3              121             INC DPTR
+0060 AB83            122             MOV R3,DPH
+0062 AA82            123             MOV R2,DPL
+A51 MACRO ASSEMBLER  OS_CPU_A                                                             05/17/2007 19:18:07 PAGE     3
+
+0064 020000   F      124             LJMP RESTORE_REENTRANT_STACK
+0067                 125     EXIT_RESTORE:        
+                     126     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+0067 D007            127             POP     07
+0069 D006            128             POP     06
+006B D005            129             POP     05
+006D D004            130             POP     04
+006F D003            131             POP     03
+0071 D002            132             POP     02
+0073 D001            133             POP     01
+0075 D000            134             POP     00
+0077 D0D0            135             POP     PSW
+0079 D082            136             POP     DPL
+007B D083            137             POP     DPH
+007D D0F0            138             POP     B
+007F D0E0            139             POP     ACC
+0081 D2AF            140             SETB    EA
+0083 32              141             RETI
+                     142     ;***************************************************
+----                 143             CSEG AT 001BH
+001B 020000   F      144             ljmp OSCtxSw
+----                 145             RSEG ?PR?OSCtxSw?OS_CPU_A
+0000                 146     OSCtxSw:
+                     147             USING 00H
+0000 C28F            148             CLR TF1
+0002 C2AF            149             CLR EA
+                     150     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                     151     ; push registers
+                     152     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+0004 C0E0            153             PUSH    ACC
+0006 C0F0            154             PUSH    B
+0008 C083            155             PUSH    DPH
+000A C082            156             PUSH    DPL
+000C C0D0            157             PUSH    PSW
+000E C000            158             PUSH    00
+0010 C001            159             PUSH    01
+0012 C002            160             PUSH    02
+0014 C003            161             PUSH    03
+0016 C004            162             PUSH    04
+0018 C005            163             PUSH    05
+001A C006            164             PUSH    06
+001C C007            165             PUSH    07 
+001E                 166     OSIntCtxSw_enter:
+                     167     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                     168     ;GET OSTCBCUR->OSTCBSTKPTR TO DPTR
+                     169     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+001E 758300   F      170             MOV DPH,#HIGH(OSTCBCur)
+0021 758200   F      171             MOV DPL,#LOW(OSTCBCur)
+0024 E0              172             MOVX A,@DPTR
+0025 F5F0            173             MOV B,A
+0027 A3              174             INC DPTR
+0028 E0              175             MOVX A,@DPTR
+0029 85F083          176             MOV DPH,B
+002C F582            177             MOV DPL,A
+002E E0              178             MOVX A,@DPTR
+002F F5F0            179             MOV B,A
+0031 A3              180             INC DPTR
+0032 E0              181             MOVX A,@DPTR
+0033 85F083          182             MOV DPH,B
+0036 F582            183             MOV DPL,A
+                     184     ;CALCULATE STACK SIZE
+0038 E581            185             MOV A,SP
+003A C3              186             CLR C
+003B 9400     F      187             SUBB A,#OSStkStart
+003D FF              188             MOV R7,A
+                     189     ;STORE STACK SIZE
+A51 MACRO ASSEMBLER  OS_CPU_A                                                             05/17/2007 19:18:07 PAGE     4
+
+003E F0              190             MOVX @DPTR,A
+                     191     ;STORE SYSTEM STACK CONTENTS TO USER STACK
+003F 7800     F      192             MOV R0,#OSStkStart
+0041                 193     STORE_STACK_CURRENT:
+0041 A3              194             INC DPTR
+0042 08              195             INC R0
+0043 E6              196             MOV A,@R0 
+0044 F0              197             MOVX @DPTR,A
+0045 DFFA            198             DJNZ R7,STORE_STACK_CURRENT
+                     199     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                     200     ;STORE REENTRANT FUNCTION STACK CONTENTS
+                     201     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+0047                 202     STORE_REENTRANT_STACK_SIZE:
+0047 A3              203             INC DPTR
+0048 E500     F      204             MOV A,?C_XBP
+004A F0              205             MOVX @DPTR,A
+004B A3              206             INC DPTR
+004C E500     F      207             MOV A,?C_XBP+1
+004E F0              208             MOVX @DPTR,A
+004F A3              209             INC DPTR
+0050 A983            210             MOV R1,DPH
+0052 A882            211             MOV R0,DPL
+0054 AB00     F      212             MOV R3,?C_XBP
+0056 AA00     F      213             MOV R2,?C_XBP+1
+0058                 214     STORE_REENTRANT_STACK:
+0058 EB              215             MOV A,R3
+0059 B48007          216             CJNE A,#80H,NEXT_STACK
+005C EA              217             MOV A,R2
+005D B40003          218             CJNE A,#00H,NEXT_STACK
+0060 020000   F      219             LJMP EXIT_STORE
+0063                 220     NEXT_STACK:
+0063 8B83            221             MOV DPH,R3
+0065 8A82            222             MOV DPL,R2
+0067 E0              223             MOVX A,@DPTR
+0068 A3              224             INC DPTR
+0069 AB83            225             MOV R3,DPH
+006B AA82            226             MOV R2,DPL
+                     227     
+006D 8983            228             MOV DPH,R1
+006F 8882            229             MOV DPL,R0
+0071 F0              230             MOVX @DPTR,A
+0072 A3              231             INC DPTR
+0073 A983            232             MOV R1,DPH
+0075 A882            233             MOV R0,DPL
+0077 020000   F      234             LJMP STORE_REENTRANT_STACK
+007A                 235     EXIT_STORE:        
+                     236     ;**************************************       
+007A 120000   F      237             LCALL _?OSTaskSwHook 
+                     238     ;OSTCBCur=OSTCBHighRdy
+007D 758300   F      239             MOV DPH,#HIGH(OSTCBHighRdy)
+0080 758200   F      240             MOV DPL,#LOW(OSTCBHighRdy)
+0083 E0              241             MOVX A,@DPTR
+0084 F5F0            242             MOV B,A
+0086 A3              243             INC DPTR
+0087 E0              244             MOVX A,@DPTR
+0088 F8              245             MOV R0,A
+                     246             
+0089 758300   F      247             MOV DPH,#HIGH(OSTCBCur)
+008C 758200   F      248             MOV DPL,#LOW(OSTCBCur)
+008F E5F0            249             MOV A,B
+0091 F0              250             MOVX @DPTR,A
+0092 E8              251             MOV A,R0
+0093 A3              252             INC DPTR
+0094 F0              253             MOVX @DPTR,A
+                     254     ; OSPrioCur = OSPrioHighRdy     
+0095 758300   F      255             MOV     DPH,#HIGH (OSPrioHighRdy)
+A51 MACRO ASSEMBLER  OS_CPU_A                                                             05/17/2007 19:18:07 PAGE     5
+
+0098 758200   F      256             MOV     DPL,#LOW  (OSPrioHighRdy)
+009B E0              257             MOVX    A,@DPTR
+                     258     
+009C 758300   F      259             MOV     DPH,#HIGH (OSPrioCur)
+009F 758200   F      260             MOV     DPL,#LOW  (OSPrioCur)
+00A2 F0              261             MOVX    @DPTR,A 
+00A3 020000   F      262             LJMP    RESTORE_STACK_CONTENT
+                     263     ;***************************************************
+----                 264             RSEG ?PR?OSIntCtxSw?OS_CPU_A
+0000                 265     OSIntCtxSw:
+0000 E581            266             MOV A,SP
+0002 240D            267             ADD A,#13  ;此最好SP加4就可
+0004 F581            268             MOV SP,A   ;从空闲任务进入时,堆栈少于15,应进行调整
+0006 020000   F      269             LJMP    OSIntCtxSw_enter
+                     270             END
+                             ;***************************************************                             
+A51 MACRO ASSEMBLER  OS_CPU_A                                                             05/17/2007 19:18:07 PAGE     6
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                       T Y P E  V A L U E   ATTRIBUTES
+
+?C_XBP . . . . . . . . . . .  D ADDR   -----       EXT
+?PR?OSCTXSW?OS_CPU_A . . . .  C SEG    00A6H       REL=UNIT
+?PR?OSINTCTXSW?OS_CPU_A. . .  C SEG    0009H       REL=UNIT
+?PR?OSSTARTHIGHRDY?OS_CPU_A.  C SEG    0084H       REL=UNIT
+?STACK . . . . . . . . . . .  I SEG    0000H       REL=UNIT
+ACC. . . . . . . . . . . . .  D ADDR   00E0H   A   
+B. . . . . . . . . . . . . .  D ADDR   00F0H   A   
+DPH. . . . . . . . . . . . .  D ADDR   0083H   A   
+DPL. . . . . . . . . . . . .  D ADDR   0082H   A   
+EA . . . . . . . . . . . . .  B ADDR   00A8H.7 A   
+EXIT_RESTORE . . . . . . . .  C ADDR   0067H   R   SEG=?PR?OSSTARTHIGHRDY?OS_CPU_A
+EXIT_STORE . . . . . . . . .  C ADDR   007AH   R   SEG=?PR?OSCTXSW?OS_CPU_A
+NEXT_RESTACK . . . . . . . .  C ADDR   0050H   R   SEG=?PR?OSSTARTHIGHRDY?OS_CPU_A
+NEXT_STACK . . . . . . . . .  C ADDR   0063H   R   SEG=?PR?OSCTXSW?OS_CPU_A
+OSCTXSW. . . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?OSCTXSW?OS_CPU_A
+OSINTCTXSW . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?OSINTCTXSW?OS_CPU_A
+OSINTCTXSW_ENTER . . . . . .  C ADDR   001EH   R   SEG=?PR?OSCTXSW?OS_CPU_A
+OSPRIOCUR. . . . . . . . . .  X ADDR   -----       EXT
+OSPRIOHIGHRDY. . . . . . . .  X ADDR   -----       EXT
+OSRUNNING. . . . . . . . . .  X ADDR   -----       EXT
+OSSTARTHIGHRDY . . . . . . .  C ADDR   0000H   R   SEG=?PR?OSSTARTHIGHRDY?OS_CPU_A
+OSSTKBOTTOM. . . . . . . . .  I ADDR   0000H   R   SEG=?STACK
+OSSTKSTART . . . . . . . . .  I ADDR   FFFFH   R   SEG=?STACK
+OSTCBCUR . . . . . . . . . .  X ADDR   -----       EXT
+OSTCBHIGHRDY . . . . . . . .  X ADDR   -----       EXT
+OS_CPU_A . . . . . . . . . .  N NUMB   -----       
+PSW. . . . . . . . . . . . .  D ADDR   00D0H   A   
+RESTORE_REENTRANT_STACK. . .  C ADDR   0045H   R   SEG=?PR?OSSTARTHIGHRDY?OS_CPU_A
+RESTORE_REENTRANT_STACK_SIZE  C ADDR   0034H   R   SEG=?PR?OSSTARTHIGHRDY?OS_CPU_A
+RESTORE_STACK_CONTENT. . . .  C ADDR   000EH   R   SEG=?PR?OSSTARTHIGHRDY?OS_CPU_A
+RESTORE_STACK_CONTENTS . . .  C ADDR   002CH   R   SEG=?PR?OSSTARTHIGHRDY?OS_CPU_A
+SP . . . . . . . . . . . . .  D ADDR   0081H   A   
+STORE_REENTRANT_STACK. . . .  C ADDR   0058H   R   SEG=?PR?OSCTXSW?OS_CPU_A
+STORE_REENTRANT_STACK_SIZE .  C ADDR   0047H   R   SEG=?PR?OSCTXSW?OS_CPU_A
+STORE_STACK_CURRENT. . . . .  C ADDR   0041H   R   SEG=?PR?OSCTXSW?OS_CPU_A
+TF1. . . . . . . . . . . . .  B ADDR   0088H.7 A   
+TR0. . . . . . . . . . . . .  B ADDR   0088H.4 A   
+XBPSTACKTOP. . . . . . . . .  N NUMB   8000H   A   
+_?OSTASKSWHOOK . . . . . . .  C ADDR   -----       EXT
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

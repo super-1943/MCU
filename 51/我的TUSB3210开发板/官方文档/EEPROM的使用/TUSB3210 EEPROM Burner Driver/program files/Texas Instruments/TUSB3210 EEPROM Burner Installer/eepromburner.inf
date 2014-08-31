@@ -1,0 +1,94 @@
+;
+; TI EEPROM Burner Driver INF
+;
+
+;
+; The .bin file listed under [SourceDisksFiles] and [DriverCopyFiles]
+; AND referenced under the [DriverHwAddReg] section (These values 
+; MUST match) is the Bin file the driver will read and download to 
+; the device.
+;
+; To change the name of the file that will be downloaded to the
+; device, not only change the value of the string 'FIRMWARE_FILENAME'
+; at the bottom of this file, but also in [DriverCopyFiles] and
+; [DriverHwAddReg] sections.
+;
+
+[Version]
+Signature=$CHICAGO$
+Class=USB
+LayoutFile=layout.inf
+Provider=%MFGNAME%
+
+[Manufacturer]
+%MFGNAME%=DeviceList
+
+;-----------------------------------------------------------------------------
+; Device directory
+;-----------------------------------------------------------------------------
+[DestinationDirs]
+DefaultDestDir=10,System32\Drivers
+DriverCopyFiles = 10,SYSTEM32\DRIVERS   ; WINDOWS\SYSTEM32\DRIVERS
+
+[SourceDisksFiles]
+EEPROMBurner.sys=1
+;%FIRMWARE_FILENAME%=1            ; This is the bin file that the driver
+                                 ; will read and download to the device
+[PreCopySection]
+HKR,,NoSetupUI,,1
+
+[SourceDisksNames]
+1=%INSTDISK%,,,
+
+[DeviceList]
+%DESCRIPTION%=DriverInstall,USB\VID_0451&PID_ebeb
+
+;------------------------------------------------------------------------------
+;  Windows 2000 Sections
+;------------------------------------------------------------------------------
+
+[DriverInstall.NT]
+CopyFiles=DriverCopyFiles
+
+[DriverCopyFiles]
+EEPROMBurner.SYS
+;eepromburner.BIN
+
+[DriverInstall.NT.Services]
+AddService=EEPROMBurner,2,DriverService
+
+[DriverService]
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%10%\system32\drivers\EEPROMBurner.sys
+
+[DriverInstall.nt.hw]
+AddReg=DriverHwAddReg
+
+[DriverHwAddReg]
+
+;------------------------------------------------------------------------------
+;  Windows 98 Sections
+;------------------------------------------------------------------------------
+
+[DriverInstall]
+AddReg=DriverAddReg
+CopyFiles=DriverCopyFiles
+
+[DriverAddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,EEPROMBurner.sys
+						
+[DriverInstall.hw]
+AddReg=DriverHwAddReg
+
+;------------------------------------------------------------------------------
+;  String Definitions
+;------------------------------------------------------------------------------
+
+[Strings]
+MFGNAME="Texas Instruments"
+INSTDISK="TI EEPROM Burner Install Disk"
+DESCRIPTION="TI TUSB3210 EEPROMBurner"
+

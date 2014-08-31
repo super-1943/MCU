@@ -1,0 +1,56 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: USBCryptDriver - Win32 Debug--------------------
+</h3>
+
+
+===== Building driver  ========
+==== DDK directory is: F:\WINDDK\2600
+======= DEBUG BUILD =======
+
+Using F:\USB\Sample\Driver as project root
+
+=========================================
+BUILD: Object root set to: ==> objchk_w2k
+BUILD: Adding /Y to COPYCMD so xcopy ops won't hang.
+BUILD: /i switch ignored
+BUILD: Compile and Link for i386
+BUILD: Examining f:\usb\sample\driver directory for files to compile.
+    f:\usb\sample\driver 
+BUILD: Building generated files in f:\usb\sample\driver
+BUILD: Compiling f:\usb\sample\driver directory
+Compiling - usbcryptdriver.rc for i386
+cl() : warning D4025 : overriding '/Z7' with '/Zi'
+Compiling - crmain.c for i386
+cl() : warning D4025 : overriding '/Z7' with '/Zi'
+Compiling - crpnp.c for i386
+cl() : warning D4025 : overriding '/Z7' with '/Zi'
+Compiling - crio.c for i386
+cl() : warning D4025 : overriding '/Z7' with '/Zi'
+Compiling - crconfig.c for i386
+cl() : warning D4025 : overriding '/Z7' with '/Zi'
+Compiling - crwmi.c for i386
+BUILD: Linking f:\usb\sample\driver directory
+Linking Executable - objchk_w2k\i386\usbcrypt.sys for i386
+BUILD: Done
+
+    11 files compiled - 5 Warnings
+    1 executable built
+ECHO is off.
+====================================
+Building browse information files
+Microsoft Browse Information Maintenance Utility Version 6.00.8168
+Copyright (C) Microsoft Corp 1990-1998. All rights reserved.
+
+ddkbuild complete
+
+
+
+<h3>Results</h3>
+USBCrypt.sys - 0 error(s), 5 warning(s)
+</pre>
+</body>
+</html>

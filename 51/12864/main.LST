@@ -1,0 +1,115 @@
+C51 COMPILER V8.02   MAIN                                                                  01/25/2009 17:07:51 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #define uchar unsigned char     //头文件 在程序中用uchar代替unsigned char
+   2          #define uint unsigned int
+   3          #include<reg51.h>  //源文件 源文件包含了变量以及函数的实体
+   4          #include<absacc.h>
+   5          #include <stdio.h> 
+   6          sbit E=P1^2; //液晶屏使能信号
+   7          sbit CS1=P1^3; //液晶屏左屏选通信号
+   8          sbit CS2=P1^4; //液晶屏右屏选通信号
+   9          sbit DI=P1^0;
+  10          uchar code chinese[ ]={   //定义数组
+  11          0x00,0x20,0x3F,0xF0,0x02,0x00,0x02,0x00,0x02,0x00,0x02,0x08,0x7F,0xFC,0x02,0x80,  //无
+  12          0x02,0x80,0x04,0x80,0x04,0x80,0x08,0x80,0x08,0x82,0x10,0x82,0x20,0x7E,0x40,0x00,
+  13          0x08,0x40,0x08,0x50,0x10,0x48,0x10,0x40,0x22,0x7C,0x7F,0xC0,0x08,0x44,0x10,0x7E,  //线
+  14          0x23,0xC0,0x7C,0x48,0x00,0x50,0x00,0x20,0x1C,0x60,0xE0,0x92,0x43,0x0A,0x00,0x06,
+  15          0x02,0x00,0x02,0x00,0x02,0x10,0x7F,0xF8,0x42,0x10,0x42,0x10,0x7F,0xF0,0x42,0x10,   //电
+  16          0x42,0x10,0x7F,0xF0,0x42,0x10,0x02,0x00,0x02,0x04,0x02,0x04,0x01,0xFC,0x00,0x00,
+  17          };
+  18          uchar code start[ ]={0,1,2};
+  19          void send_command_l(uchar d) //左屏控制信号//
+  20          {uchar data i;
+  21   1      DI=0; CS1=1; CS2=0;
+  22   1      P0=d; E=1;
+  23   1      for(i=5;i!=0;i--); E=0;
+  24   1      for(i=5;i!=0;i--); E=1; }
+  25          void send_data_l(uchar d) //左屏数据信号//
+  26          {uchar data i;
+  27   1      DI=1; CS1=1; CS2=0;
+  28   1      for(i=10;i!=0;i--); P0=d;
+  29   1      for(i=10;i!=0;i--); E=1;
+  30   1      for(i=10;i!=0;i--); E=0;
+  31   1      for(i=5; i!=0;i--); E=1; }
+  32          void send_command_r(uchar d) //右屏控制信号//
+  33          {uchar data i;
+  34   1      DI=0; CS1=0; CS2=1;P0=d; E=1;
+  35   1      for(i=5;i!=0;i--); E=0;
+  36   1      for(i=5;i!=0;i--); E=1; }
+  37          void send_data_r(uchar d)  //右屏数据信号//
+  38          {uchar data i;
+  39   1      DI=1; CS1=0; CS2=1;P0=d; E=1;
+  40   1      for(i=5;i!=0;i--); E=0; 
+  41   1      for(i=5;i!=0;i--); E=1; }
+  42          void display_output_word(uchar x,uchar y,uchar *p1,uchar lth,bit sign)
+  43          {uchar *p2;  //指向字库中某个字的地址
+  44   1      uchar idata i,j,k;  //字记录，用于设定下一个字的起始列,便于换行。
+  45   1      k=0;
+  46   1      for(j=0;j<lth;j++)
+  47   1      {if(*p1==255)  //回车换行
+  48   2      {x=x+2;  //移动到下一行
+  49   3      k=0;}  //字记录初始化
+  50   2      else  //无回车换行
+  51   2      {p2=&chinese;  //取字库首地址;保存在word.h中数组chinese
+  52   3       p2=p2+(*p1*32);  //移动到相应字所对应的地址
+  53   3          if((y+k*16)>63)  //右半屏
+  54   3               {send_command_r(x+184);
+  55   4                send_command_r(y+k*16);
+C51 COMPILER V8.02   MAIN                                                                  01/25/2009 17:07:51 PAGE 2   
+
+  56   4                      for(i=0;i<16;i++)  //显示上半字
+  57   4                      {if(sign==1)
+  58   5                       {send_data_r(*p2); p2++;}
+  59   5                       else
+  60   5                       { send_data_r(*p2^0xff);  //反色显示
+  61   6                        p2++; }}
+  62   4                send_command_r(x+184+1);
+  63   4                send_command_r(y+k*16);
+  64   4                      for(i=0;i<16;i++)  //显示下半字
+  65   4                      {if(sign==1)
+  66   5                       {send_data_r(*p2); p2++; }
+  67   5                   else
+  68   5                       {send_data_r(*p2^0xff); p2++; } }
+  69   4              k++; }  //字记录增一
+  70   3              else  //左半屏
+  71   3                {send_command_l(x+184);
+  72   4                 send_command_l(y+64+k*16);
+  73   4                       for(i=0;i<16;i++)  //显示上半字
+  74   4                       {if(sign==1)
+  75   5                        {send_data_l(*p2);  p2++; }
+  76   5                        else
+  77   5                        {send_data_l(*p2^0xff);       p2++; }}
+  78   4                 send_command_l(x+184+1);
+  79   4                 send_command_l(y+64+k*16);
+  80   4                       for(i=0;i<16;i++)  //显示下半字
+  81   4                       {if(sign==1)
+  82   5                        {send_data_l(*p2); p2++; }
+  83   5                        else
+  84   5                        {send_data_l(*p2^0xff); p2++; }}
+  85   4                      k++; } }    //字记录增一
+  86   2              p1++; } }   //数组指针后移向下一个字
+  87          void main(void)
+  88          { display_output_word(0,0,start,14,1);  //调用显示函数
+  89   1      while(1){;} 
+  90   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    491    ----
+   CONSTANT SIZE    =     99    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       9
+   IDATA SIZE       =   ----       3
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

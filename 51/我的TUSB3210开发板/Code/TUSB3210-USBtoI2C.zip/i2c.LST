@@ -1,0 +1,2089 @@
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE I2C
+OBJECT MODULE PLACED IN i2c.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE i2c.c BROWSE DEFINE(WORK_AROUND_192) DEBUG OBJECTEXTEND CODE
+
+line level    source
+
+   1          #include "reg52modified.h"
+   2          #include "types.h"
+   3          #include "tusb2136.h"
+   4          
+   5          extern WORD pmb_clk_low_stretch_timer;
+   6          extern BYTE previous_crc8;
+   7          extern bit PMBus_Busy; // 1 - busy; 0 - idle
+   8          extern bit PMBus_Group_Command_Busy; // 1 - busy; 0 - idle
+   9          extern bit Set_400KHz; // 1 for 400KHz; 0 for 100KHz
+  10          extern BYTE xdata pbOutBufferAddress[EP_MAX_PACKET_SIZE]; // ENDPOINT 1 OUT X buffer
+  11          
+  12          BYTE i2c_start(void);
+  13          BYTE i2c_restart(void);
+  14          BYTE i2c_stop(void);
+  15          BYTE i2c_write_bytes(BYTE num_of_bytes, BYTE * source_buf);
+  16          BYTE i2c_read_bytes(BYTE num_of_bytes, BYTE * destination_buf, BYTE nack_byte);
+  17          void i2c_reset(void);
+  18          
+  19          
+  20          BYTE volatile bdata i2c_bits;
+  21          sbit i2c_bit7 = i2c_bits ^ 7;
+  22          sbit i2c_bit6 = i2c_bits ^ 6;
+  23          sbit i2c_bit5 = i2c_bits ^ 5;
+  24          sbit i2c_bit4 = i2c_bits ^ 4;
+  25          sbit i2c_bit3 = i2c_bits ^ 3;
+  26          sbit i2c_bit2 = i2c_bits ^ 2;
+  27          sbit i2c_bit1 = i2c_bits ^ 1;
+  28          sbit i2c_bit0 = i2c_bits ^ 0;
+  29          BYTE delay_count;
+  30          
+  31          
+  32          
+  33          BYTE i2c_start(void)
+  34          {
+  35   1          PMB_DATA = 1; // set it high so that we can make it an input
+  36   1          DELAY_500NS;
+  37   1          if (!PMB_DATA) return ERROR; // PMB_DATA should never be held low by any slave
+  38   1      
+  39   1          PMB_CLK = 1;  // release it to high so that we can make it an input
+  40   1          DELAY_500NS;
+  41   1      
+  42   1          // each cycle of the while loop takes from 3us to 3.25us
+  43   1          while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+  44   1          {
+  45   2              pmb_clk_low_stretch_timer++;
+  46   2              if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low stretching
+  47   2          }
+  48   1      
+  49   1          // add (1.3us + 4us for bqxxxx) assuming that PMB_CLK was just released by a slave
+  50   1          // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+  51   1          // for (delay_count = 7; delay_count; delay_count--) _nop_();
+  52   1          DELAY_1000NS; // WW
+  53   1      
+  54   1          PMB_DATA = 0;
+  55   1      
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 2   
+
+  56   1          if (Set_400KHz)
+  57   1          {
+  58   2             DELAY_500NS;
+  59   2          }
+  60   1          else 
+  61   1          {
+  62   2             // Thd_sat = 4.3us + 4us for bqxxxx
+  63   2             // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+  64   2             // for (delay_count = 10; delay_count; delay_count--) _nop_();
+  65   2             for (delay_count = 5; delay_count; delay_count--) _nop_(); // WW
+  66   2          }
+  67   1      
+  68   1          PMB_CLK = 0;
+  69   1      
+  70   1          // Tlow + Tf - RET - LCALL = 4.3 + .3 - 2*.25 - 2*.25= 4.3us + 4us for bqxxxx
+  71   1          // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+  72   1          // for (delay_count = 10; delay_count; delay_count--) _nop_();
+  73   1          if (!Set_400KHz) 
+  74   1          {
+  75   2             for (delay_count = 3; delay_count; delay_count--) _nop_(); // WW
+  76   2          }
+  77   1      
+  78   1          return NO_ERROR; // success
+  79   1      }
+  80          
+  81          
+  82          BYTE i2c_restart(void)
+  83          {
+  84   1          PMB_DATA = 1;
+  85   1          DELAY_500NS;
+  86   1      
+  87   1          while (!PMB_DATA) // for "data-stretching" from slave bqxxxx
+  88   1          {
+  89   2              pmb_clk_low_stretch_timer++;
+  90   2              if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low stretching
+  91   2          }
+  92   1      
+  93   1          PMB_CLK = 1;  // release it to high so that we can make it an input
+  94   1          DELAY_500NS;
+  95   1      
+  96   1          // each cycle of the while loop takes from 3us to 3.25us
+  97   1          while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+  98   1          {
+  99   2              pmb_clk_low_stretch_timer++;
+ 100   2              if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low stretching
+ 101   2          }
+ 102   1      
+ 103   1          // add (1.3us + 4us for bqxxxx) assuming that PMB_CLK was just released by a slave
+ 104   1          // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 105   1          // for (delay_count = 7; delay_count; delay_count--) _nop_();
+ 106   1          DELAY_1000NS; // WW
+ 107   1      
+ 108   1          PMB_DATA = 0;
+ 109   1      
+ 110   1          if (Set_400KHz)
+ 111   1          {
+ 112   2             DELAY_500NS;
+ 113   2          }
+ 114   1          else 
+ 115   1          {
+ 116   2             // Thd_sat = 4.3us + 4us for bqxxxx
+ 117   2             // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 3   
+
+ 118   2             // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 119   2             for (delay_count = 5; delay_count; delay_count--) _nop_(); // WW
+ 120   2          }
+ 121   1      
+ 122   1          PMB_CLK = 0;
+ 123   1      
+ 124   1          // Tlow + Tf - RET - LCALL = 4.3 + .3 - 2*.25 - 2*.25= 4.3us + 4us for bqxxxx
+ 125   1          // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 126   1          // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 127   1          if (!Set_400KHz) 
+ 128   1          {
+ 129   2             for (delay_count = 3; delay_count; delay_count--) _nop_(); // WW
+ 130   2          }
+ 131   1      
+ 132   1          return NO_ERROR; // success
+ 133   1      }
+ 134          
+ 135          
+ 136          BYTE i2c_stop(void)
+ 137          {
+ 138   1          PMB_DATA = 0;
+ 139   1          DELAY_700NS;
+ 140   1      
+ 141   1          PMB_CLK = 1;
+ 142   1          DELAY_500NS;
+ 143   1      
+ 144   1          // each cycle of the while loop takes from 3us to 3.25us
+ 145   1          while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 146   1          {
+ 147   2              pmb_clk_low_stretch_timer++;
+ 148   2              if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low stretching
+ 149   2          }
+ 150   1      
+ 151   1          // Tsu_sto + Tr - .5 = 4.0 + 1.0 - .5 = 4.5us + 4us for bqxxxx
+ 152   1          // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 153   1          // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 154   1          if (!Set_400KHz) // for 100KHz only
+ 155   1          {
+ 156   2             for (delay_count = 5; delay_count; delay_count--) _nop_(); // WW
+ 157   2          }
+ 158   1      
+ 159   1          PMB_DATA = 1;
+ 160   1      
+ 161   1          // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 162   1          // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 163   1          if (!Set_400KHz) // for 100KHz only
+ 164   1          {
+ 165   2             for (delay_count = 4; delay_count; delay_count--) _nop_(); // WW
+ 166   2          }
+ 167   1      
+ 168   1          return NO_ERROR; // success
+ 169   1      }
+ 170          
+ 171          
+ 172          // function: write num_of_bytes of data to slave, whereas the data is from source_buf
+ 173          // return: 1 if fail
+ 174          //         0 if success
+ 175          BYTE i2c_write_bytes(BYTE num_of_bytes, BYTE * source_buf)
+ 176          {
+ 177   1          BYTE data i = 0;
+ 178   1          BYTE data j = num_of_bytes;
+ 179   1          BYTE data k;
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 4   
+
+ 180   1      
+ 181   1          if (Set_400KHz)
+ 182   1          {
+ 183   2              for (i=0; i < j; i++)
+ 184   2              {
+ 185   3                  i2c_bits = *source_buf;
+ 186   3          
+ 187   3                  PMB_DATA = i2c_bit7;        
+ 188   3                  DELAY_250NS; // Tsu_dat
+ 189   3                  PMB_CLK = 1;
+ 190   3                  DELAY_250NS;
+ 191   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 192   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 193   3                  {
+ 194   4                      pmb_clk_low_stretch_timer++;
+ 195   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 196   4                  }
+ 197   3                  PMB_CLK = 0;
+ 198   3          
+ 199   3                  DELAY_250NS;
+ 200   3                  PMB_DATA = i2c_bit6;
+ 201   3                  DELAY_250NS;
+ 202   3                  PMB_CLK = 1;
+ 203   3                  DELAY_250NS;
+ 204   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 205   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 206   3                  {
+ 207   4                      pmb_clk_low_stretch_timer++;
+ 208   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 209   4                  }
+ 210   3                  PMB_CLK = 0;
+ 211   3          
+ 212   3                  DELAY_250NS;
+ 213   3                  PMB_DATA = i2c_bit5;
+ 214   3                  DELAY_250NS;
+ 215   3                  PMB_CLK = 1;
+ 216   3                  DELAY_250NS;
+ 217   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 218   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 219   3                  {
+ 220   4                      pmb_clk_low_stretch_timer++;
+ 221   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 222   4                  }
+ 223   3                  PMB_CLK = 0;
+ 224   3          
+ 225   3                  DELAY_250NS;
+ 226   3                  PMB_DATA = i2c_bit4;
+ 227   3                  DELAY_250NS;
+ 228   3                  PMB_CLK = 1;
+ 229   3                  DELAY_250NS;
+ 230   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 231   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 232   3                  {
+ 233   4                      pmb_clk_low_stretch_timer++;
+ 234   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 235   4                  }
+ 236   3                  PMB_CLK = 0;
+ 237   3          
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 5   
+
+ 238   3                  DELAY_250NS;
+ 239   3                  PMB_DATA = i2c_bit3;
+ 240   3                  DELAY_250NS;
+ 241   3                  PMB_CLK = 1;
+ 242   3                  DELAY_250NS;
+ 243   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 244   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 245   3                  {
+ 246   4                      pmb_clk_low_stretch_timer++;
+ 247   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 248   4                  }
+ 249   3                  PMB_CLK = 0;
+ 250   3          
+ 251   3                  DELAY_250NS;
+ 252   3                  PMB_DATA = i2c_bit2;
+ 253   3                  DELAY_250NS;
+ 254   3                  PMB_CLK = 1;
+ 255   3                  DELAY_250NS;
+ 256   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 257   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 258   3                  {
+ 259   4                      pmb_clk_low_stretch_timer++;
+ 260   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 261   4                  }
+ 262   3                  PMB_CLK = 0;
+ 263   3          
+ 264   3                  DELAY_250NS;
+ 265   3                  PMB_DATA = i2c_bit1;
+ 266   3                  DELAY_250NS;
+ 267   3                  PMB_CLK = 1;
+ 268   3                  DELAY_250NS;
+ 269   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 270   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 271   3                  {
+ 272   4                      pmb_clk_low_stretch_timer++;
+ 273   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 274   4                  }
+ 275   3                  PMB_CLK = 0;
+ 276   3          
+ 277   3                  DELAY_250NS;
+ 278   3                  PMB_DATA = i2c_bit0;
+ 279   3                  DELAY_250NS;
+ 280   3                  PMB_CLK = 1;
+ 281   3                  DELAY_250NS;
+ 282   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 283   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 284   3                  {
+ 285   4                      pmb_clk_low_stretch_timer++;
+ 286   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 287   4                  }
+ 288   3                  PMB_CLK = 0;
+ 289   3          
+ 290   3                  DELAY_250NS;
+ 291   3                  PMB_DATA = 1; // release PMB_DATA for floating and configure it for input
+ 292   3                  DELAY_750NS;
+ 293   3                  PMB_CLK = 1;
+ 294   3                  DELAY_250NS;
+ 295   3                  // each cycle of the while loop takes from 3us to 3.25us
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 6   
+
+ 296   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 297   3                  {
+ 298   4                      pmb_clk_low_stretch_timer++;
+ 299   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 300   4                  }
+ 301   3                  if (PMB_DATA) return ERROR;
+ 302   3                  PMB_CLK = 0;
+ 303   3          
+ 304   3                  source_buf++;
+ 305   3              }
+ 306   2          }
+ 307   1          else // for 100KHz
+ 308   1          {
+ 309   2              for (i=0; i < j; i++)
+ 310   2              {
+ 311   3                  i2c_bits = *source_buf;
+ 312   3          
+ 313   3                  for (k=0; k<8; k++)
+ 314   3                  {
+ 315   4                      PMB_DATA = i2c_bit7;
+ 316   4              
+ 317   4                      // Tsu_dat
+ 318   4                      DELAY_300NS;
+ 319   4                      DELAY_500NS;
+ 320   4              
+ 321   4                      PMB_CLK = 1;
+ 322   4                      DELAY_500NS;
+ 323   4              
+ 324   4                      // each cycle of the while loop takes from 3us to 3.25us
+ 325   4                      while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 326   4                      {
+ 327   5                          pmb_clk_low_stretch_timer++;
+ 328   5                          if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low
+             - stretching
+ 329   5                      }
+ 330   4              
+ 331   4                      // Thigh + Tr - JNB = 4.0 + 1.0 - 2*.25 = 4.5us + 4us for bqxxxx
+ 332   4                      // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 333   4                      // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 334   4                      for (delay_count = 4; delay_count; delay_count--) _nop_(); // WW
+ 335   4              
+ 336   4                      PMB_CLK = 0;
+ 337   4              
+ 338   4                      // Thd_dat + Tf = .3 + .3 = .6us
+ 339   4                      i2c_bits <<= 1;
+ 340   4              
+ 341   4                      // Tlow - Thd_dat = 4.7 - .3 = 4.4us + 4us for bqxxxx
+ 342   4                      // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 343   4                      // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 344   4                      for (delay_count = 2; delay_count; delay_count--) _nop_(); // WW 
+ 345   4                  }
+ 346   3          
+ 347   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 348   3                  // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 349   3                  for (delay_count = 4; delay_count; delay_count--) _nop_(); // WW
+ 350   3          
+ 351   3                  PMB_DATA = 1; // release PMB_DATA for floating and configure it for input
+ 352   3          
+ 353   3                  // Tlow - Thd_dat = 4.7 - .3 = 4.4us + 4us for bqxxxx
+ 354   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 355   3                  // for (delay_count = 10; delay_count; delay_count--) _nop_();
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 7   
+
+ 356   3                  for (delay_count = 4; delay_count; delay_count--) _nop_(); // WW
+ 357   3          
+ 358   3                  PMB_CLK = 1;
+ 359   3                  DELAY_500NS;
+ 360   3          
+ 361   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 362   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 363   3                  {
+ 364   4                      pmb_clk_low_stretch_timer++;
+ 365   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 366   4                  }
+ 367   3          
+ 368   3                  if (PMB_DATA) return ERROR; // no slave ACK
+ 369   3                  // Thigh + Tr - JNB = 4.0 + 1.0 - 2*.25 = 4.5us + 4us for bqxxxx
+ 370   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 371   3                  // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 372   3                  for (delay_count = 3; delay_count; delay_count--) _nop_(); // WW
+ 373   3          
+ 374   3                  PMB_CLK = 0;
+ 375   3          
+ 376   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 377   3                  // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 378   3                  for (delay_count = 4; delay_count; delay_count--) _nop_(); // WW
+ 379   3                  
+ 380   3                  source_buf++;
+ 381   3              }
+ 382   2          }
+ 383   1      
+ 384   1          return NO_ERROR; // success
+ 385   1      }
+ 386          
+ 387          
+ 388          // function: read in num_of_bytes from slave and store the data pointed by destination_buf
+ 389          //           if nack_byte = 0xFF, need to do a NACK for the last byte; otherwise, do ACK for each byte.
+ 390          // return: 1 if fail
+ 391          //         0 if success
+ 392          BYTE i2c_read_bytes(BYTE num_of_bytes, BYTE * destination_buf, BYTE nack_byte)
+ 393          {
+ 394   1          BYTE data i = 0;
+ 395   1          BYTE data j = num_of_bytes;
+ 396   1          BYTE data k;
+ 397   1      
+ 398   1          PMB_DATA = 1; 
+ 399   1      
+ 400   1          if (Set_400KHz)
+ 401   1          {
+ 402   2              for (i=0; i < j; i++)
+ 403   2              {
+ 404   3                  PMB_CLK = 1;
+ 405   3                  DELAY_250NS;
+ 406   3          
+ 407   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 408   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 409   3                  {
+ 410   4                      pmb_clk_low_stretch_timer++;
+ 411   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 412   4                  }
+ 413   3          
+ 414   3                  // i2c_bit7 = PMB_DATA;
+ 415   3                  CY = PMB_DATA;
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 8   
+
+ 416   3          
+ 417   3                  PMB_CLK = 0;
+ 418   3                  i2c_bit7 = CY;
+ 419   3          
+ 420   3                  // Tlow + Tf = 4.7 + .3 = 5.0us + 4us for bqxxxx
+ 421   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 422   3                  // for (delay_count = 11; delay_count; delay_count--) _nop_();
+ 423   3                  DELAY_500NS; // for (delay_count = 5; delay_count; delay_count--) _nop_(); // WW
+ 424   3          
+ 425   3                  PMB_CLK = 1;
+ 426   3                  DELAY_250NS;
+ 427   3          
+ 428   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 429   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 430   3                  {
+ 431   4                      pmb_clk_low_stretch_timer++;
+ 432   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 433   4                  }
+ 434   3          
+ 435   3                  // i2c_bit6 = PMB_DATA;
+ 436   3                  CY = PMB_DATA;
+ 437   3          
+ 438   3                  PMB_CLK = 0;
+ 439   3                  i2c_bit6 = CY;
+ 440   3          
+ 441   3                  // Tlow + Tf = 4.7 + .3 = 5.0us + 4us for bqxxxx
+ 442   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 443   3                  // for (delay_count = 11; delay_count; delay_count--) _nop_();
+ 444   3                  DELAY_500NS; // for (delay_count = 5; delay_count; delay_count--) _nop_(); // WW
+ 445   3          
+ 446   3                  PMB_CLK = 1;
+ 447   3                  DELAY_250NS;
+ 448   3          
+ 449   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 450   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 451   3                  {
+ 452   4                      pmb_clk_low_stretch_timer++;
+ 453   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 454   4                  }
+ 455   3          
+ 456   3                  // i2c_bit5 = PMB_DATA;
+ 457   3                  CY = PMB_DATA;
+ 458   3          
+ 459   3                  PMB_CLK = 0;
+ 460   3                  i2c_bit5 = CY;
+ 461   3          
+ 462   3                  // Tlow + Tf = 4.7 + .3 = 5.0us + 4us for bqxxxx
+ 463   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 464   3                  // for (delay_count = 11; delay_count; delay_count--) _nop_();
+ 465   3                  DELAY_500NS; // for (delay_count = 5; delay_count; delay_count--) _nop_(); // WW
+ 466   3          
+ 467   3                  PMB_CLK = 1;
+ 468   3                  DELAY_250NS;
+ 469   3          
+ 470   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 471   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 472   3                  {
+ 473   4                      pmb_clk_low_stretch_timer++;
+ 474   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 9   
+
+ 475   4                  }
+ 476   3          
+ 477   3                  // i2c_bit4 = PMB_DATA;
+ 478   3                  CY = PMB_DATA;
+ 479   3          
+ 480   3                  PMB_CLK = 0;
+ 481   3                  i2c_bit4 = CY;
+ 482   3          
+ 483   3                  // Tlow + Tf = 4.7 + .3 = 5.0us + 4us for bqxxxx
+ 484   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 485   3                  // for (delay_count = 11; delay_count; delay_count--) _nop_();
+ 486   3                  DELAY_500NS; // for (delay_count = 5; delay_count; delay_count--) _nop_(); // WW
+ 487   3          
+ 488   3                  PMB_CLK = 1;
+ 489   3                  DELAY_250NS;
+ 490   3          
+ 491   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 492   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 493   3                  {
+ 494   4                      pmb_clk_low_stretch_timer++;
+ 495   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 496   4                  }
+ 497   3          
+ 498   3                  // i2c_bit3 = PMB_DATA;
+ 499   3                  CY = PMB_DATA;
+ 500   3          
+ 501   3                  PMB_CLK = 0;
+ 502   3                  i2c_bit3 = CY;
+ 503   3          
+ 504   3                  // Tlow + Tf = 4.7 + .3 = 5.0us + 4us for bqxxxx
+ 505   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 506   3                  // for (delay_count = 11; delay_count; delay_count--) _nop_();
+ 507   3                  DELAY_500NS; // for (delay_count = 5; delay_count; delay_count--) _nop_(); // WW
+ 508   3          
+ 509   3                  PMB_CLK = 1;
+ 510   3                  DELAY_250NS;
+ 511   3          
+ 512   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 513   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 514   3                  {
+ 515   4                      pmb_clk_low_stretch_timer++;
+ 516   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 517   4                  }
+ 518   3          
+ 519   3                  // i2c_bit2 = PMB_DATA;
+ 520   3                  CY = PMB_DATA;
+ 521   3          
+ 522   3                  PMB_CLK = 0;
+ 523   3                  i2c_bit2 = CY;
+ 524   3          
+ 525   3                  // Tlow + Tf = 4.7 + .3 = 5.0us + 4us for bqxxxx
+ 526   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 527   3                  // for (delay_count = 11; delay_count; delay_count--) _nop_();
+ 528   3                  DELAY_500NS; // for (delay_count = 5; delay_count; delay_count--) _nop_(); // WW
+ 529   3          
+ 530   3                  PMB_CLK = 1;
+ 531   3                  DELAY_250NS;
+ 532   3          
+ 533   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 534   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 10  
+
+ 535   3                  {
+ 536   4                      pmb_clk_low_stretch_timer++;
+ 537   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 538   4                  }
+ 539   3          
+ 540   3                  // i2c_bit1 = PMB_DATA;
+ 541   3                  CY = PMB_DATA;
+ 542   3          
+ 543   3                  PMB_CLK = 0;
+ 544   3                  i2c_bit1 = CY;
+ 545   3          
+ 546   3                  // Tlow + Tf = 4.7 + .3 = 5.0us + 4us for bqxxxx
+ 547   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 548   3                  // for (delay_count = 11; delay_count; delay_count--) _nop_();
+ 549   3                  DELAY_500NS; // for (delay_count = 5; delay_count; delay_count--) _nop_(); // WW
+ 550   3          
+ 551   3                  PMB_CLK = 1;
+ 552   3                  DELAY_250NS;
+ 553   3          
+ 554   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 555   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 556   3                  {
+ 557   4                      pmb_clk_low_stretch_timer++;
+ 558   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 559   4                  }
+ 560   3          
+ 561   3                  // i2c_bit0 = PMB_DATA;
+ 562   3                  CY = PMB_DATA;
+ 563   3          
+ 564   3                  PMB_CLK = 0;
+ 565   3                  i2c_bit0 = CY;
+ 566   3          
+ 567   3                  if ((i == (j-1)) && (nack_byte == 0xFF)) 
+ 568   3                      PMB_DATA = 1;  // do a NACK if the last byte has been read
+ 569   3                  else PMB_DATA = 0; // if not the last byte to read, pull PMB_DATA low to indicate a master ACK
+             - to slave
+ 570   3          
+ 571   3                  // Tlow + Tf - 4*.25 = 4.7 + .3 - 4*.25 = 4.0us + 4us for bqxxxx
+ 572   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 573   3                  // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 574   3                  DELAY_500NS; // for (delay_count = 4; delay_count; delay_count--) _nop_(); // WW
+ 575   3          
+ 576   3                  PMB_CLK = 1;
+ 577   3                  DELAY_250NS;
+ 578   3          
+ 579   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 580   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 581   3                  {
+ 582   4                      pmb_clk_low_stretch_timer++;
+ 583   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 584   4                  }
+ 585   3          
+ 586   3                  // Thigh + Tr - JNB = 4.0 + 1.0 - 2*.25 = 4.5us + 4us for bqxxxx
+ 587   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 588   3                  // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 589   3                  DELAY_500NS; // for (delay_count = 4; delay_count; delay_count--) _nop_(); // WW
+ 590   3          
+ 591   3                  PMB_CLK = 0;
+ 592   3          
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 11  
+
+ 593   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 594   3                  // for (delay_count = 20; delay_count; delay_count--) _nop_();
+ 595   3                  // for (delay_count = 8; delay_count; delay_count--) _nop_(); // WW
+ 596   3                  
+ 597   3                  *destination_buf = i2c_bits; // save it
+ 598   3                  destination_buf++; // read next byte
+ 599   3                  
+ 600   3                  PMB_DATA = 1; // release PMB_DATA to floating and become an input
+ 601   3              }
+ 602   2          }
+ 603   1          else
+ 604   1          {
+ 605   2              for (i=0; i < j; i++)
+ 606   2              {
+ 607   3                  for (k=0; k<8; k++)
+ 608   3                  {
+ 609   4                      i2c_bits <<= 1; 
+ 610   4          
+ 611   4                      PMB_CLK = 1;
+ 612   4                      DELAY_500NS;
+ 613   4              
+ 614   4                      // each cycle of the while loop takes from 3us to 3.25us
+ 615   4                      while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 616   4                      {
+ 617   5                          pmb_clk_low_stretch_timer++;
+ 618   5                          if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low
+             - stretching
+ 619   5                      }
+ 620   4          
+ 621   4                      // Tr - JNB = 1.0 - 2*.25 = .5us
+ 622   4                      DELAY_500NS;
+ 623   4                      i2c_bit0 = PMB_DATA;
+ 624   4              
+ 625   4                      // Thigh + Tr - JNB - MOV - .5 = 4.0 + 1.0 - 2*.25 - .25 - .5 = 3.75us + 4us for bqxxxx
+ 626   4                      // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 627   4                      // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 628   4                      for (delay_count = 4; delay_count; delay_count--) _nop_(); // WW
+ 629   4              
+ 630   4                      PMB_CLK = 0;
+ 631   4              
+ 632   4                      // Tlow + Tf = 4.7 + .3 = 5.0us + 4us for bqxxxx
+ 633   4                      // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 634   4                      // for (delay_count = 11; delay_count; delay_count--) _nop_();
+ 635   4                      for (delay_count = 2; delay_count; delay_count--) _nop_(); // WW
+ 636   4                  }
+ 637   3          
+ 638   3                  if ((i == (j-1)) && (nack_byte == 0xFF)) 
+ 639   3                      PMB_DATA = 1;  // do a NACK if the last byte has been read
+ 640   3                  else PMB_DATA = 0; // if not the last byte to read, pull PMB_DATA low to indicate a master ACK
+             - to slave
+ 641   3          
+ 642   3                  // Tlow + Tf - 4*.25 = 4.7 + .3 - 4*.25 = 4.0us + 4us for bqxxxx
+ 643   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 644   3                  // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 645   3                  for (delay_count = 4; delay_count; delay_count--) _nop_(); // WW
+ 646   3          
+ 647   3                  if ((i == (j-1)) && (nack_byte == 0xFF)) 
+ 648   3                      PMB_DATA = 1;  // do a NACK if the last byte has been read
+ 649   3                  else PMB_DATA = 0; // if not the last byte to read, pull PMB_DATA low to indicate a master ACK
+             - to slave
+ 650   3          
+ 651   3                  // Tlow + Tf - 4*.25 = 4.7 + .3 - 4*.25 = 4.0us + 4us for bqxxxx
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 12  
+
+ 652   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 653   3                  // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 654   3                  for (delay_count = 4; delay_count; delay_count--) _nop_(); // WW
+ 655   3          
+ 656   3                  PMB_CLK = 1;
+ 657   3                  DELAY_500NS;
+ 658   3          
+ 659   3                  // each cycle of the while loop takes from 3us to 3.25us
+ 660   3                  while (!PMB_CLK) // slave is holding down or stretching PMB_CLK
+ 661   3                  {
+ 662   4                      pmb_clk_low_stretch_timer++;
+ 663   4                      if (pmb_clk_low_stretch_timer > 8333) return ERROR; // 25ms timeout of PMBus clock low str
+             -etching
+ 664   4                  }
+ 665   3          
+ 666   3                  // Thigh + Tr - JNB = 4.0 + 1.0 - 2*.25 = 4.5us + 4us for bqxxxx
+ 667   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 668   3                  // for (delay_count = 10; delay_count; delay_count--) _nop_();
+ 669   3                  for (delay_count = 4; delay_count; delay_count--) _nop_(); // WW
+ 670   3          
+ 671   3                  PMB_CLK = 0;
+ 672   3          
+ 673   3                  // delay = delay_count X .75us + .5us; used for a delay longer than 1.5us
+ 674   3                  // for (delay_count = 20; delay_count; delay_count--) _nop_();
+ 675   3                  for (delay_count = 8; delay_count; delay_count--) _nop_(); // WW
+ 676   3                  
+ 677   3                  *destination_buf = i2c_bits; // save it
+ 678   3                  destination_buf++; // read next byte
+ 679   3                  
+ 680   3                  PMB_DATA = 1; // release PMB_DATA to floating and become an input
+ 681   3              }
+ 682   2          }
+ 683   1      
+ 684   1          return NO_ERROR; // success
+ 685   1      }
+ 686          
+ 687          
+ 688          void i2c_reset(void)
+ 689          {
+ 690   1          PMB_DATA = 1;      // release data to float or high
+ 691   1          DELAY_500NS;
+ 692   1          // WW while (!PMB_DATA); // slave(s) is holding down PMB_DATA
+ 693   1          PMB_CLK = 1;       // release clk to float or high
+ 694   1          DELAY_500NS;
+ 695   1          // WW while (!PMB_CLK);  // slave(s) is holding down PMB_CLK
+ 696   1      
+ 697   1          PMBus_Busy = 0;    // release PMBus
+ 698   1          PMBus_Group_Command_Busy = 0;
+ 699   1          previous_crc8 = 0; // this is for group command
+ 700   1      }
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 13  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION i2c_start (BEGIN)
+                                           ; SOURCE LINE # 33
+                                           ; SOURCE LINE # 34
+                                           ; SOURCE LINE # 35
+0000 D280              SETB    PMB_DATA
+                                           ; SOURCE LINE # 36
+0002 00                NOP     
+0003 00                NOP     
+                                           ; SOURCE LINE # 37
+0004 208003            JB      PMB_DATA,?C0001
+0007 7F01              MOV     R7,#01H
+0009 22                RET     
+000A         ?C0001:
+                                           ; SOURCE LINE # 39
+000A D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 40
+000C 00                NOP     
+000D 00                NOP     
+000E         ?C0003:
+                                           ; SOURCE LINE # 43
+000E 208114            JB      PMB_CLK,?C0004
+                                           ; SOURCE LINE # 44
+                                           ; SOURCE LINE # 45
+0011 0500        E     INC     pmb_clk_low_stretch_timer+01H
+0013 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+0015 7002              JNZ     ?C0178
+0017 0500        E     INC     pmb_clk_low_stretch_timer
+0019         ?C0178:
+                                           ; SOURCE LINE # 46
+0019 D3                SETB    C
+001A 948D              SUBB    A,#08DH
+001C E500        E     MOV     A,pmb_clk_low_stretch_timer
+001E 9420              SUBB    A,#020H
+0020 40EC              JC      ?C0003
+0022 7F01              MOV     R7,#01H
+0024 22                RET     
+                                           ; SOURCE LINE # 47
+0025         ?C0004:
+                                           ; SOURCE LINE # 52
+0025 00                NOP     
+0026 00                NOP     
+0027 00                NOP     
+0028 00                NOP     
+                                           ; SOURCE LINE # 54
+0029 C280              CLR     PMB_DATA
+                                           ; SOURCE LINE # 56
+002B 300004      E     JNB     Set_400KHz,?C0006
+                                           ; SOURCE LINE # 57
+                                           ; SOURCE LINE # 58
+002E 00                NOP     
+002F 00                NOP     
+                                           ; SOURCE LINE # 59
+0030 8007              SJMP    ?C0007
+0032         ?C0006:
+                                           ; SOURCE LINE # 61
+                                           ; SOURCE LINE # 65
+0032 750005      R     MOV     delay_count,#05H
+0035         ?C0008:
+0035 00                NOP     
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 14  
+
+0036 D500FC      R     DJNZ    delay_count,?C0008
+                                           ; SOURCE LINE # 66
+0039         ?C0007:
+                                           ; SOURCE LINE # 68
+0039 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 73
+003B 200007      E     JB      Set_400KHz,?C0011
+                                           ; SOURCE LINE # 74
+                                           ; SOURCE LINE # 75
+003E 750003      R     MOV     delay_count,#03H
+0041         ?C0012:
+0041 00                NOP     
+0042 D500FC      R     DJNZ    delay_count,?C0012
+                                           ; SOURCE LINE # 76
+0045         ?C0011:
+                                           ; SOURCE LINE # 78
+0045 7F00              MOV     R7,#00H
+                                           ; SOURCE LINE # 79
+0047         ?C0002:
+0047 22                RET     
+             ; FUNCTION i2c_start (END)
+
+             ; FUNCTION i2c_restart (BEGIN)
+                                           ; SOURCE LINE # 82
+                                           ; SOURCE LINE # 83
+                                           ; SOURCE LINE # 84
+0000 D280              SETB    PMB_DATA
+                                           ; SOURCE LINE # 85
+0002 00                NOP     
+0003 00                NOP     
+0004         ?C0015:
+                                           ; SOURCE LINE # 87
+0004 208014            JB      PMB_DATA,?C0016
+                                           ; SOURCE LINE # 88
+                                           ; SOURCE LINE # 89
+0007 0500        E     INC     pmb_clk_low_stretch_timer+01H
+0009 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+000B 7002              JNZ     ?C0179
+000D 0500        E     INC     pmb_clk_low_stretch_timer
+000F         ?C0179:
+                                           ; SOURCE LINE # 90
+000F D3                SETB    C
+0010 948D              SUBB    A,#08DH
+0012 E500        E     MOV     A,pmb_clk_low_stretch_timer
+0014 9420              SUBB    A,#020H
+0016 40EC              JC      ?C0015
+0018 7F01              MOV     R7,#01H
+001A 22                RET     
+                                           ; SOURCE LINE # 91
+001B         ?C0016:
+                                           ; SOURCE LINE # 93
+001B D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 94
+001D 00                NOP     
+001E 00                NOP     
+001F         ?C0019:
+                                           ; SOURCE LINE # 97
+001F 208114            JB      PMB_CLK,?C0020
+                                           ; SOURCE LINE # 98
+                                           ; SOURCE LINE # 99
+0022 0500        E     INC     pmb_clk_low_stretch_timer+01H
+0024 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 15  
+
+0026 7002              JNZ     ?C0180
+0028 0500        E     INC     pmb_clk_low_stretch_timer
+002A         ?C0180:
+                                           ; SOURCE LINE # 100
+002A D3                SETB    C
+002B 948D              SUBB    A,#08DH
+002D E500        E     MOV     A,pmb_clk_low_stretch_timer
+002F 9420              SUBB    A,#020H
+0031 40EC              JC      ?C0019
+0033 7F01              MOV     R7,#01H
+0035 22                RET     
+                                           ; SOURCE LINE # 101
+0036         ?C0020:
+                                           ; SOURCE LINE # 106
+0036 00                NOP     
+0037 00                NOP     
+0038 00                NOP     
+0039 00                NOP     
+                                           ; SOURCE LINE # 108
+003A C280              CLR     PMB_DATA
+                                           ; SOURCE LINE # 110
+003C 300004      E     JNB     Set_400KHz,?C0022
+                                           ; SOURCE LINE # 111
+                                           ; SOURCE LINE # 112
+003F 00                NOP     
+0040 00                NOP     
+                                           ; SOURCE LINE # 113
+0041 8007              SJMP    ?C0023
+0043         ?C0022:
+                                           ; SOURCE LINE # 115
+                                           ; SOURCE LINE # 119
+0043 750005      R     MOV     delay_count,#05H
+0046         ?C0024:
+0046 00                NOP     
+0047 D500FC      R     DJNZ    delay_count,?C0024
+                                           ; SOURCE LINE # 120
+004A         ?C0023:
+                                           ; SOURCE LINE # 122
+004A C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 127
+004C 200007      E     JB      Set_400KHz,?C0027
+                                           ; SOURCE LINE # 128
+                                           ; SOURCE LINE # 129
+004F 750003      R     MOV     delay_count,#03H
+0052         ?C0028:
+0052 00                NOP     
+0053 D500FC      R     DJNZ    delay_count,?C0028
+                                           ; SOURCE LINE # 130
+0056         ?C0027:
+                                           ; SOURCE LINE # 132
+0056 7F00              MOV     R7,#00H
+                                           ; SOURCE LINE # 133
+0058         ?C0018:
+0058 22                RET     
+             ; FUNCTION i2c_restart (END)
+
+             ; FUNCTION i2c_stop (BEGIN)
+                                           ; SOURCE LINE # 136
+                                           ; SOURCE LINE # 137
+                                           ; SOURCE LINE # 138
+0000 C280              CLR     PMB_DATA
+                                           ; SOURCE LINE # 139
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 16  
+
+0002 00                NOP     
+0003 00                NOP     
+0004 00                NOP     
+                                           ; SOURCE LINE # 141
+0005 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 142
+0007 00                NOP     
+0008 00                NOP     
+0009         ?C0031:
+                                           ; SOURCE LINE # 145
+0009 208114            JB      PMB_CLK,?C0032
+                                           ; SOURCE LINE # 146
+                                           ; SOURCE LINE # 147
+000C 0500        E     INC     pmb_clk_low_stretch_timer+01H
+000E E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+0010 7002              JNZ     ?C0181
+0012 0500        E     INC     pmb_clk_low_stretch_timer
+0014         ?C0181:
+                                           ; SOURCE LINE # 148
+0014 D3                SETB    C
+0015 948D              SUBB    A,#08DH
+0017 E500        E     MOV     A,pmb_clk_low_stretch_timer
+0019 9420              SUBB    A,#020H
+001B 40EC              JC      ?C0031
+001D 7F01              MOV     R7,#01H
+001F 22                RET     
+                                           ; SOURCE LINE # 149
+0020         ?C0032:
+                                           ; SOURCE LINE # 154
+0020 200007      E     JB      Set_400KHz,?C0035
+                                           ; SOURCE LINE # 155
+                                           ; SOURCE LINE # 156
+0023 750005      R     MOV     delay_count,#05H
+0026         ?C0036:
+0026 00                NOP     
+0027 D500FC      R     DJNZ    delay_count,?C0036
+                                           ; SOURCE LINE # 157
+002A         ?C0035:
+                                           ; SOURCE LINE # 159
+002A D280              SETB    PMB_DATA
+                                           ; SOURCE LINE # 163
+002C 200007      E     JB      Set_400KHz,?C0039
+                                           ; SOURCE LINE # 164
+                                           ; SOURCE LINE # 165
+002F 750004      R     MOV     delay_count,#04H
+0032         ?C0040:
+0032 00                NOP     
+0033 D500FC      R     DJNZ    delay_count,?C0040
+                                           ; SOURCE LINE # 166
+0036         ?C0039:
+                                           ; SOURCE LINE # 168
+0036 7F00              MOV     R7,#00H
+                                           ; SOURCE LINE # 169
+0038         ?C0034:
+0038 22                RET     
+             ; FUNCTION i2c_stop (END)
+
+             ; FUNCTION _i2c_write_bytes (BEGIN)
+                                           ; SOURCE LINE # 175
+;---- Variable 'source_buf' assigned to Register 'R1/R2/R3' ----
+;---- Variable 'num_of_bytes' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 176
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 17  
+
+                                           ; SOURCE LINE # 177
+;---- Variable 'i' assigned to Register 'R6' ----
+0000 E4                CLR     A
+0001 FE                MOV     R6,A
+                                           ; SOURCE LINE # 178
+;---- Variable 'j' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 181
+0002 200003      E     JB      Set_400KHz,$ + 6H
+0005 020000      R     LJMP    ?C0043
+                                           ; SOURCE LINE # 182
+                                           ; SOURCE LINE # 183
+0008         ?C0044:
+0008 EE                MOV     A,R6
+0009 C3                CLR     C
+000A 9F                SUBB    A,R7
+000B 4003              JC      $ + 5H
+000D 020000      R     LJMP    ?C0076
+                                           ; SOURCE LINE # 184
+                                           ; SOURCE LINE # 185
+0010 120000      E     LCALL   ?C?CLDPTR
+0013 F500        R     MOV     i2c_bits,A
+                                           ; SOURCE LINE # 187
+0015 A200        R     MOV     C,i2c_bit7
+0017 9280              MOV     PMB_DATA,C
+                                           ; SOURCE LINE # 188
+0019 00                NOP     
+                                           ; SOURCE LINE # 189
+001A D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 190
+001C 00                NOP     
+001D         ?C0047:
+                                           ; SOURCE LINE # 192
+001D 208114            JB      PMB_CLK,?C0048
+                                           ; SOURCE LINE # 193
+                                           ; SOURCE LINE # 194
+0020 0500        E     INC     pmb_clk_low_stretch_timer+01H
+0022 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+0024 7002              JNZ     ?C0182
+0026 0500        E     INC     pmb_clk_low_stretch_timer
+0028         ?C0182:
+                                           ; SOURCE LINE # 195
+0028 D3                SETB    C
+0029 948D              SUBB    A,#08DH
+002B E500        E     MOV     A,pmb_clk_low_stretch_timer
+002D 9420              SUBB    A,#020H
+002F 40EC              JC      ?C0047
+0031 7F01              MOV     R7,#01H
+0033 22                RET     
+                                           ; SOURCE LINE # 196
+0034         ?C0048:
+                                           ; SOURCE LINE # 197
+0034 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 199
+0036 00                NOP     
+                                           ; SOURCE LINE # 200
+0037 A200        R     MOV     C,i2c_bit6
+0039 9280              MOV     PMB_DATA,C
+                                           ; SOURCE LINE # 201
+003B 00                NOP     
+                                           ; SOURCE LINE # 202
+003C D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 203
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 18  
+
+003E 00                NOP     
+003F         ?C0051:
+                                           ; SOURCE LINE # 205
+003F 208114            JB      PMB_CLK,?C0052
+                                           ; SOURCE LINE # 206
+                                           ; SOURCE LINE # 207
+0042 0500        E     INC     pmb_clk_low_stretch_timer+01H
+0044 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+0046 7002              JNZ     ?C0183
+0048 0500        E     INC     pmb_clk_low_stretch_timer
+004A         ?C0183:
+                                           ; SOURCE LINE # 208
+004A D3                SETB    C
+004B 948D              SUBB    A,#08DH
+004D E500        E     MOV     A,pmb_clk_low_stretch_timer
+004F 9420              SUBB    A,#020H
+0051 40EC              JC      ?C0051
+0053 7F01              MOV     R7,#01H
+0055 22                RET     
+                                           ; SOURCE LINE # 209
+0056         ?C0052:
+                                           ; SOURCE LINE # 210
+0056 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 212
+0058 00                NOP     
+                                           ; SOURCE LINE # 213
+0059 A200        R     MOV     C,i2c_bit5
+005B 9280              MOV     PMB_DATA,C
+                                           ; SOURCE LINE # 214
+005D 00                NOP     
+                                           ; SOURCE LINE # 215
+005E D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 216
+0060 00                NOP     
+0061         ?C0054:
+                                           ; SOURCE LINE # 218
+0061 208114            JB      PMB_CLK,?C0055
+                                           ; SOURCE LINE # 219
+                                           ; SOURCE LINE # 220
+0064 0500        E     INC     pmb_clk_low_stretch_timer+01H
+0066 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+0068 7002              JNZ     ?C0184
+006A 0500        E     INC     pmb_clk_low_stretch_timer
+006C         ?C0184:
+                                           ; SOURCE LINE # 221
+006C D3                SETB    C
+006D 948D              SUBB    A,#08DH
+006F E500        E     MOV     A,pmb_clk_low_stretch_timer
+0071 9420              SUBB    A,#020H
+0073 40EC              JC      ?C0054
+0075 7F01              MOV     R7,#01H
+0077 22                RET     
+                                           ; SOURCE LINE # 222
+0078         ?C0055:
+                                           ; SOURCE LINE # 223
+0078 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 225
+007A 00                NOP     
+                                           ; SOURCE LINE # 226
+007B A200        R     MOV     C,i2c_bit4
+007D 9280              MOV     PMB_DATA,C
+                                           ; SOURCE LINE # 227
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 19  
+
+007F 00                NOP     
+                                           ; SOURCE LINE # 228
+0080 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 229
+0082 00                NOP     
+0083         ?C0057:
+                                           ; SOURCE LINE # 231
+0083 208114            JB      PMB_CLK,?C0058
+                                           ; SOURCE LINE # 232
+                                           ; SOURCE LINE # 233
+0086 0500        E     INC     pmb_clk_low_stretch_timer+01H
+0088 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+008A 7002              JNZ     ?C0185
+008C 0500        E     INC     pmb_clk_low_stretch_timer
+008E         ?C0185:
+                                           ; SOURCE LINE # 234
+008E D3                SETB    C
+008F 948D              SUBB    A,#08DH
+0091 E500        E     MOV     A,pmb_clk_low_stretch_timer
+0093 9420              SUBB    A,#020H
+0095 40EC              JC      ?C0057
+0097 7F01              MOV     R7,#01H
+0099 22                RET     
+                                           ; SOURCE LINE # 235
+009A         ?C0058:
+                                           ; SOURCE LINE # 236
+009A C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 238
+009C 00                NOP     
+                                           ; SOURCE LINE # 239
+009D A200        R     MOV     C,i2c_bit3
+009F 9280              MOV     PMB_DATA,C
+                                           ; SOURCE LINE # 240
+00A1 00                NOP     
+                                           ; SOURCE LINE # 241
+00A2 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 242
+00A4 00                NOP     
+00A5         ?C0060:
+                                           ; SOURCE LINE # 244
+00A5 208114            JB      PMB_CLK,?C0061
+                                           ; SOURCE LINE # 245
+                                           ; SOURCE LINE # 246
+00A8 0500        E     INC     pmb_clk_low_stretch_timer+01H
+00AA E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+00AC 7002              JNZ     ?C0186
+00AE 0500        E     INC     pmb_clk_low_stretch_timer
+00B0         ?C0186:
+                                           ; SOURCE LINE # 247
+00B0 D3                SETB    C
+00B1 948D              SUBB    A,#08DH
+00B3 E500        E     MOV     A,pmb_clk_low_stretch_timer
+00B5 9420              SUBB    A,#020H
+00B7 40EC              JC      ?C0060
+00B9 7F01              MOV     R7,#01H
+00BB 22                RET     
+                                           ; SOURCE LINE # 248
+00BC         ?C0061:
+                                           ; SOURCE LINE # 249
+00BC C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 251
+00BE 00                NOP     
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 20  
+
+                                           ; SOURCE LINE # 252
+00BF A200        R     MOV     C,i2c_bit2
+00C1 9280              MOV     PMB_DATA,C
+                                           ; SOURCE LINE # 253
+00C3 00                NOP     
+                                           ; SOURCE LINE # 254
+00C4 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 255
+00C6 00                NOP     
+00C7         ?C0063:
+                                           ; SOURCE LINE # 257
+00C7 208114            JB      PMB_CLK,?C0064
+                                           ; SOURCE LINE # 258
+                                           ; SOURCE LINE # 259
+00CA 0500        E     INC     pmb_clk_low_stretch_timer+01H
+00CC E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+00CE 7002              JNZ     ?C0187
+00D0 0500        E     INC     pmb_clk_low_stretch_timer
+00D2         ?C0187:
+                                           ; SOURCE LINE # 260
+00D2 D3                SETB    C
+00D3 948D              SUBB    A,#08DH
+00D5 E500        E     MOV     A,pmb_clk_low_stretch_timer
+00D7 9420              SUBB    A,#020H
+00D9 40EC              JC      ?C0063
+00DB 7F01              MOV     R7,#01H
+00DD 22                RET     
+                                           ; SOURCE LINE # 261
+00DE         ?C0064:
+                                           ; SOURCE LINE # 262
+00DE C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 264
+00E0 00                NOP     
+                                           ; SOURCE LINE # 265
+00E1 A200        R     MOV     C,i2c_bit1
+00E3 9280              MOV     PMB_DATA,C
+                                           ; SOURCE LINE # 266
+00E5 00                NOP     
+                                           ; SOURCE LINE # 267
+00E6 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 268
+00E8 00                NOP     
+00E9         ?C0066:
+                                           ; SOURCE LINE # 270
+00E9 208114            JB      PMB_CLK,?C0067
+                                           ; SOURCE LINE # 271
+                                           ; SOURCE LINE # 272
+00EC 0500        E     INC     pmb_clk_low_stretch_timer+01H
+00EE E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+00F0 7002              JNZ     ?C0188
+00F2 0500        E     INC     pmb_clk_low_stretch_timer
+00F4         ?C0188:
+                                           ; SOURCE LINE # 273
+00F4 D3                SETB    C
+00F5 948D              SUBB    A,#08DH
+00F7 E500        E     MOV     A,pmb_clk_low_stretch_timer
+00F9 9420              SUBB    A,#020H
+00FB 40EC              JC      ?C0066
+00FD 7F01              MOV     R7,#01H
+00FF 22                RET     
+                                           ; SOURCE LINE # 274
+0100         ?C0067:
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 21  
+
+                                           ; SOURCE LINE # 275
+0100 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 277
+0102 00                NOP     
+                                           ; SOURCE LINE # 278
+0103 A200        R     MOV     C,i2c_bit0
+0105 9280              MOV     PMB_DATA,C
+                                           ; SOURCE LINE # 279
+0107 00                NOP     
+                                           ; SOURCE LINE # 280
+0108 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 281
+010A 00                NOP     
+010B         ?C0069:
+                                           ; SOURCE LINE # 283
+010B 208114            JB      PMB_CLK,?C0070
+                                           ; SOURCE LINE # 284
+                                           ; SOURCE LINE # 285
+010E 0500        E     INC     pmb_clk_low_stretch_timer+01H
+0110 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+0112 7002              JNZ     ?C0189
+0114 0500        E     INC     pmb_clk_low_stretch_timer
+0116         ?C0189:
+                                           ; SOURCE LINE # 286
+0116 D3                SETB    C
+0117 948D              SUBB    A,#08DH
+0119 E500        E     MOV     A,pmb_clk_low_stretch_timer
+011B 9420              SUBB    A,#020H
+011D 40EC              JC      ?C0069
+011F 7F01              MOV     R7,#01H
+0121 22                RET     
+                                           ; SOURCE LINE # 287
+0122         ?C0070:
+                                           ; SOURCE LINE # 288
+0122 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 290
+0124 00                NOP     
+                                           ; SOURCE LINE # 291
+0125 D280              SETB    PMB_DATA
+                                           ; SOURCE LINE # 292
+0127 00                NOP     
+0128 00                NOP     
+0129 00                NOP     
+                                           ; SOURCE LINE # 293
+012A D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 294
+012C 00                NOP     
+012D         ?C0072:
+                                           ; SOURCE LINE # 296
+012D 208114            JB      PMB_CLK,?C0073
+                                           ; SOURCE LINE # 297
+                                           ; SOURCE LINE # 298
+0130 0500        E     INC     pmb_clk_low_stretch_timer+01H
+0132 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+0134 7002              JNZ     ?C0190
+0136 0500        E     INC     pmb_clk_low_stretch_timer
+0138         ?C0190:
+                                           ; SOURCE LINE # 299
+0138 D3                SETB    C
+0139 948D              SUBB    A,#08DH
+013B E500        E     MOV     A,pmb_clk_low_stretch_timer
+013D 9420              SUBB    A,#020H
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 22  
+
+013F 40EC              JC      ?C0072
+0141 7F01              MOV     R7,#01H
+0143 22                RET     
+                                           ; SOURCE LINE # 300
+0144         ?C0073:
+                                           ; SOURCE LINE # 301
+0144 308003            JNB     PMB_DATA,?C0075
+0147 7F01              MOV     R7,#01H
+0149 22                RET     
+014A         ?C0075:
+                                           ; SOURCE LINE # 302
+014A C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 304
+014C 7401              MOV     A,#01H
+014E 29                ADD     A,R1
+014F F9                MOV     R1,A
+0150 E4                CLR     A
+0151 3A                ADDC    A,R2
+0152 FA                MOV     R2,A
+                                           ; SOURCE LINE # 305
+0153 0E                INC     R6
+0154 020000      R     LJMP    ?C0044
+                                           ; SOURCE LINE # 306
+0157         ?C0043:
+                                           ; SOURCE LINE # 308
+                                           ; SOURCE LINE # 309
+0157 E4                CLR     A
+0158 FE                MOV     R6,A
+0159         ?C0077:
+0159 EE                MOV     A,R6
+015A C3                CLR     C
+015B 9F                SUBB    A,R7
+015C 4003              JC      $ + 5H
+015E 020000      R     LJMP    ?C0076
+                                           ; SOURCE LINE # 310
+                                           ; SOURCE LINE # 311
+0161 120000      E     LCALL   ?C?CLDPTR
+0164 F500        R     MOV     i2c_bits,A
+                                           ; SOURCE LINE # 313
+;---- Variable 'k' assigned to Register 'R5' ----
+0166 E4                CLR     A
+0167 FD                MOV     R5,A
+0168         ?C0080:
+                                           ; SOURCE LINE # 314
+                                           ; SOURCE LINE # 315
+0168 A200        R     MOV     C,i2c_bit7
+016A 9280              MOV     PMB_DATA,C
+                                           ; SOURCE LINE # 318
+016C 00                NOP     
+                                           ; SOURCE LINE # 319
+016D 00                NOP     
+016E 00                NOP     
+                                           ; SOURCE LINE # 321
+016F D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 322
+0171 00                NOP     
+0172 00                NOP     
+0173         ?C0083:
+                                           ; SOURCE LINE # 325
+0173 208114            JB      PMB_CLK,?C0084
+                                           ; SOURCE LINE # 326
+                                           ; SOURCE LINE # 327
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 23  
+
+0176 0500        E     INC     pmb_clk_low_stretch_timer+01H
+0178 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+017A 7002              JNZ     ?C0191
+017C 0500        E     INC     pmb_clk_low_stretch_timer
+017E         ?C0191:
+                                           ; SOURCE LINE # 328
+017E D3                SETB    C
+017F 948D              SUBB    A,#08DH
+0181 E500        E     MOV     A,pmb_clk_low_stretch_timer
+0183 9420              SUBB    A,#020H
+0185 40EC              JC      ?C0083
+0187 7F01              MOV     R7,#01H
+0189 22                RET     
+                                           ; SOURCE LINE # 329
+018A         ?C0084:
+                                           ; SOURCE LINE # 334
+018A 750004      R     MOV     delay_count,#04H
+018D         ?C0086:
+018D 00                NOP     
+018E D500FC      R     DJNZ    delay_count,?C0086
+0191         ?C0087:
+                                           ; SOURCE LINE # 336
+0191 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 339
+0193 E500        R     MOV     A,i2c_bits
+0195 25E0              ADD     A,ACC
+0197 F500        R     MOV     i2c_bits,A
+                                           ; SOURCE LINE # 344
+0199 750002      R     MOV     delay_count,#02H
+019C         ?C0089:
+019C 00                NOP     
+019D D500FC      R     DJNZ    delay_count,?C0089
+                                           ; SOURCE LINE # 345
+01A0         ?C0082:
+01A0 0D                INC     R5
+01A1 BD08C4            CJNE    R5,#08H,?C0080
+01A4         ?C0081:
+                                           ; SOURCE LINE # 349
+01A4 750004      R     MOV     delay_count,#04H
+01A7         ?C0092:
+01A7 00                NOP     
+01A8 D500FC      R     DJNZ    delay_count,?C0092
+01AB         ?C0093:
+                                           ; SOURCE LINE # 351
+01AB D280              SETB    PMB_DATA
+                                           ; SOURCE LINE # 356
+01AD 750004      R     MOV     delay_count,#04H
+01B0         ?C0095:
+01B0 00                NOP     
+01B1 D500FC      R     DJNZ    delay_count,?C0095
+01B4         ?C0096:
+                                           ; SOURCE LINE # 358
+01B4 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 359
+01B6 00                NOP     
+01B7 00                NOP     
+01B8         ?C0098:
+                                           ; SOURCE LINE # 362
+01B8 208114            JB      PMB_CLK,?C0099
+                                           ; SOURCE LINE # 363
+                                           ; SOURCE LINE # 364
+01BB 0500        E     INC     pmb_clk_low_stretch_timer+01H
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 24  
+
+01BD E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+01BF 7002              JNZ     ?C0192
+01C1 0500        E     INC     pmb_clk_low_stretch_timer
+01C3         ?C0192:
+                                           ; SOURCE LINE # 365
+01C3 D3                SETB    C
+01C4 948D              SUBB    A,#08DH
+01C6 E500        E     MOV     A,pmb_clk_low_stretch_timer
+01C8 9420              SUBB    A,#020H
+01CA 40EC              JC      ?C0098
+01CC 7F01              MOV     R7,#01H
+01CE 22                RET     
+                                           ; SOURCE LINE # 366
+01CF         ?C0099:
+                                           ; SOURCE LINE # 368
+01CF 308003            JNB     PMB_DATA,?C0101
+01D2 7F01              MOV     R7,#01H
+01D4 22                RET     
+01D5         ?C0101:
+                                           ; SOURCE LINE # 372
+01D5 750003      R     MOV     delay_count,#03H
+01D8         ?C0102:
+01D8 00                NOP     
+01D9 D500FC      R     DJNZ    delay_count,?C0102
+01DC         ?C0103:
+                                           ; SOURCE LINE # 374
+01DC C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 378
+01DE 750004      R     MOV     delay_count,#04H
+01E1         ?C0105:
+01E1 00                NOP     
+01E2 D500FC      R     DJNZ    delay_count,?C0105
+01E5         ?C0106:
+                                           ; SOURCE LINE # 380
+01E5 7401              MOV     A,#01H
+01E7 29                ADD     A,R1
+01E8 F9                MOV     R1,A
+01E9 E4                CLR     A
+01EA 3A                ADDC    A,R2
+01EB FA                MOV     R2,A
+                                           ; SOURCE LINE # 381
+01EC 0E                INC     R6
+01ED 020000      R     LJMP    ?C0077
+                                           ; SOURCE LINE # 382
+01F0         ?C0076:
+                                           ; SOURCE LINE # 384
+01F0 7F00              MOV     R7,#00H
+                                           ; SOURCE LINE # 385
+01F2         ?C0050:
+01F2 22                RET     
+             ; FUNCTION _i2c_write_bytes (END)
+
+             ; FUNCTION _i2c_read_bytes (BEGIN)
+                                           ; SOURCE LINE # 392
+;---- Variable 'destination_buf' assigned to Register 'R1/R2/R3' ----
+;---- Variable 'num_of_bytes' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 393
+                                           ; SOURCE LINE # 394
+;---- Variable 'i' assigned to Register 'R6' ----
+0000 E4                CLR     A
+0001 FE                MOV     R6,A
+                                           ; SOURCE LINE # 395
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 25  
+
+;---- Variable 'j' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 398
+0002 D280              SETB    PMB_DATA
+                                           ; SOURCE LINE # 400
+0004 200003      E     JB      Set_400KHz,$ + 6H
+0007 020000      R     LJMP    ?C0108
+                                           ; SOURCE LINE # 401
+                                           ; SOURCE LINE # 402
+000A         ?C0109:
+000A EE                MOV     A,R6
+000B C3                CLR     C
+000C 9F                SUBB    A,R7
+000D 4003              JC      $ + 5H
+000F 020000      R     LJMP    ?C0142
+                                           ; SOURCE LINE # 403
+                                           ; SOURCE LINE # 404
+0012 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 405
+0014 00                NOP     
+0015         ?C0112:
+                                           ; SOURCE LINE # 408
+0015 208114            JB      PMB_CLK,?C0113
+                                           ; SOURCE LINE # 409
+                                           ; SOURCE LINE # 410
+0018 0500        E     INC     pmb_clk_low_stretch_timer+01H
+001A E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+001C 7002              JNZ     ?C0193
+001E 0500        E     INC     pmb_clk_low_stretch_timer
+0020         ?C0193:
+                                           ; SOURCE LINE # 411
+0020 D3                SETB    C
+0021 948D              SUBB    A,#08DH
+0023 E500        E     MOV     A,pmb_clk_low_stretch_timer
+0025 9420              SUBB    A,#020H
+0027 40EC              JC      ?C0112
+0029 7F01              MOV     R7,#01H
+002B 22                RET     
+                                           ; SOURCE LINE # 412
+002C         ?C0113:
+                                           ; SOURCE LINE # 415
+002C A280              MOV     C,PMB_DATA
+                                           ; SOURCE LINE # 417
+002E C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 418
+0030 9200        R     MOV     i2c_bit7,C
+                                           ; SOURCE LINE # 423
+0032 00                NOP     
+0033 00                NOP     
+                                           ; SOURCE LINE # 425
+0034 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 426
+0036 00                NOP     
+0037         ?C0116:
+                                           ; SOURCE LINE # 429
+0037 208114            JB      PMB_CLK,?C0117
+                                           ; SOURCE LINE # 430
+                                           ; SOURCE LINE # 431
+003A 0500        E     INC     pmb_clk_low_stretch_timer+01H
+003C E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+003E 7002              JNZ     ?C0194
+0040 0500        E     INC     pmb_clk_low_stretch_timer
+0042         ?C0194:
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 26  
+
+                                           ; SOURCE LINE # 432
+0042 D3                SETB    C
+0043 948D              SUBB    A,#08DH
+0045 E500        E     MOV     A,pmb_clk_low_stretch_timer
+0047 9420              SUBB    A,#020H
+0049 40EC              JC      ?C0116
+004B 7F01              MOV     R7,#01H
+004D 22                RET     
+                                           ; SOURCE LINE # 433
+004E         ?C0117:
+                                           ; SOURCE LINE # 436
+004E A280              MOV     C,PMB_DATA
+                                           ; SOURCE LINE # 438
+0050 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 439
+0052 9200        R     MOV     i2c_bit6,C
+                                           ; SOURCE LINE # 444
+0054 00                NOP     
+0055 00                NOP     
+                                           ; SOURCE LINE # 446
+0056 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 447
+0058 00                NOP     
+0059         ?C0119:
+                                           ; SOURCE LINE # 450
+0059 208114            JB      PMB_CLK,?C0120
+                                           ; SOURCE LINE # 451
+                                           ; SOURCE LINE # 452
+005C 0500        E     INC     pmb_clk_low_stretch_timer+01H
+005E E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+0060 7002              JNZ     ?C0195
+0062 0500        E     INC     pmb_clk_low_stretch_timer
+0064         ?C0195:
+                                           ; SOURCE LINE # 453
+0064 D3                SETB    C
+0065 948D              SUBB    A,#08DH
+0067 E500        E     MOV     A,pmb_clk_low_stretch_timer
+0069 9420              SUBB    A,#020H
+006B 40EC              JC      ?C0119
+006D 7F01              MOV     R7,#01H
+006F 22                RET     
+                                           ; SOURCE LINE # 454
+0070         ?C0120:
+                                           ; SOURCE LINE # 457
+0070 A280              MOV     C,PMB_DATA
+                                           ; SOURCE LINE # 459
+0072 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 460
+0074 9200        R     MOV     i2c_bit5,C
+                                           ; SOURCE LINE # 465
+0076 00                NOP     
+0077 00                NOP     
+                                           ; SOURCE LINE # 467
+0078 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 468
+007A 00                NOP     
+007B         ?C0122:
+                                           ; SOURCE LINE # 471
+007B 208114            JB      PMB_CLK,?C0123
+                                           ; SOURCE LINE # 472
+                                           ; SOURCE LINE # 473
+007E 0500        E     INC     pmb_clk_low_stretch_timer+01H
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 27  
+
+0080 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+0082 7002              JNZ     ?C0196
+0084 0500        E     INC     pmb_clk_low_stretch_timer
+0086         ?C0196:
+                                           ; SOURCE LINE # 474
+0086 D3                SETB    C
+0087 948D              SUBB    A,#08DH
+0089 E500        E     MOV     A,pmb_clk_low_stretch_timer
+008B 9420              SUBB    A,#020H
+008D 40EC              JC      ?C0122
+008F 7F01              MOV     R7,#01H
+0091 22                RET     
+                                           ; SOURCE LINE # 475
+0092         ?C0123:
+                                           ; SOURCE LINE # 478
+0092 A280              MOV     C,PMB_DATA
+                                           ; SOURCE LINE # 480
+0094 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 481
+0096 9200        R     MOV     i2c_bit4,C
+                                           ; SOURCE LINE # 486
+0098 00                NOP     
+0099 00                NOP     
+                                           ; SOURCE LINE # 488
+009A D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 489
+009C 00                NOP     
+009D         ?C0125:
+                                           ; SOURCE LINE # 492
+009D 208114            JB      PMB_CLK,?C0126
+                                           ; SOURCE LINE # 493
+                                           ; SOURCE LINE # 494
+00A0 0500        E     INC     pmb_clk_low_stretch_timer+01H
+00A2 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+00A4 7002              JNZ     ?C0197
+00A6 0500        E     INC     pmb_clk_low_stretch_timer
+00A8         ?C0197:
+                                           ; SOURCE LINE # 495
+00A8 D3                SETB    C
+00A9 948D              SUBB    A,#08DH
+00AB E500        E     MOV     A,pmb_clk_low_stretch_timer
+00AD 9420              SUBB    A,#020H
+00AF 40EC              JC      ?C0125
+00B1 7F01              MOV     R7,#01H
+00B3 22                RET     
+                                           ; SOURCE LINE # 496
+00B4         ?C0126:
+                                           ; SOURCE LINE # 499
+00B4 A280              MOV     C,PMB_DATA
+                                           ; SOURCE LINE # 501
+00B6 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 502
+00B8 9200        R     MOV     i2c_bit3,C
+                                           ; SOURCE LINE # 507
+00BA 00                NOP     
+00BB 00                NOP     
+                                           ; SOURCE LINE # 509
+00BC D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 510
+00BE 00                NOP     
+00BF         ?C0128:
+                                           ; SOURCE LINE # 513
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 28  
+
+00BF 208114            JB      PMB_CLK,?C0129
+                                           ; SOURCE LINE # 514
+                                           ; SOURCE LINE # 515
+00C2 0500        E     INC     pmb_clk_low_stretch_timer+01H
+00C4 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+00C6 7002              JNZ     ?C0198
+00C8 0500        E     INC     pmb_clk_low_stretch_timer
+00CA         ?C0198:
+                                           ; SOURCE LINE # 516
+00CA D3                SETB    C
+00CB 948D              SUBB    A,#08DH
+00CD E500        E     MOV     A,pmb_clk_low_stretch_timer
+00CF 9420              SUBB    A,#020H
+00D1 40EC              JC      ?C0128
+00D3 7F01              MOV     R7,#01H
+00D5 22                RET     
+                                           ; SOURCE LINE # 517
+00D6         ?C0129:
+                                           ; SOURCE LINE # 520
+00D6 A280              MOV     C,PMB_DATA
+                                           ; SOURCE LINE # 522
+00D8 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 523
+00DA 9200        R     MOV     i2c_bit2,C
+                                           ; SOURCE LINE # 528
+00DC 00                NOP     
+00DD 00                NOP     
+                                           ; SOURCE LINE # 530
+00DE D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 531
+00E0 00                NOP     
+00E1         ?C0131:
+                                           ; SOURCE LINE # 534
+00E1 208114            JB      PMB_CLK,?C0132
+                                           ; SOURCE LINE # 535
+                                           ; SOURCE LINE # 536
+00E4 0500        E     INC     pmb_clk_low_stretch_timer+01H
+00E6 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+00E8 7002              JNZ     ?C0199
+00EA 0500        E     INC     pmb_clk_low_stretch_timer
+00EC         ?C0199:
+                                           ; SOURCE LINE # 537
+00EC D3                SETB    C
+00ED 948D              SUBB    A,#08DH
+00EF E500        E     MOV     A,pmb_clk_low_stretch_timer
+00F1 9420              SUBB    A,#020H
+00F3 40EC              JC      ?C0131
+00F5 7F01              MOV     R7,#01H
+00F7 22                RET     
+                                           ; SOURCE LINE # 538
+00F8         ?C0132:
+                                           ; SOURCE LINE # 541
+00F8 A280              MOV     C,PMB_DATA
+                                           ; SOURCE LINE # 543
+00FA C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 544
+00FC 9200        R     MOV     i2c_bit1,C
+                                           ; SOURCE LINE # 549
+00FE 00                NOP     
+00FF 00                NOP     
+                                           ; SOURCE LINE # 551
+0100 D281              SETB    PMB_CLK
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 29  
+
+                                           ; SOURCE LINE # 552
+0102 00                NOP     
+0103         ?C0134:
+                                           ; SOURCE LINE # 555
+0103 208114            JB      PMB_CLK,?C0135
+                                           ; SOURCE LINE # 556
+                                           ; SOURCE LINE # 557
+0106 0500        E     INC     pmb_clk_low_stretch_timer+01H
+0108 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+010A 7002              JNZ     ?C0200
+010C 0500        E     INC     pmb_clk_low_stretch_timer
+010E         ?C0200:
+                                           ; SOURCE LINE # 558
+010E D3                SETB    C
+010F 948D              SUBB    A,#08DH
+0111 E500        E     MOV     A,pmb_clk_low_stretch_timer
+0113 9420              SUBB    A,#020H
+0115 40EC              JC      ?C0134
+0117 7F01              MOV     R7,#01H
+0119 22                RET     
+                                           ; SOURCE LINE # 559
+011A         ?C0135:
+                                           ; SOURCE LINE # 562
+011A A280              MOV     C,PMB_DATA
+                                           ; SOURCE LINE # 564
+011C C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 565
+011E 9200        R     MOV     i2c_bit0,C
+                                           ; SOURCE LINE # 567
+0120 EF                MOV     A,R7
+0121 14                DEC     A
+0122 B50609            CJNE    A,AR6,?C0137
+0125 E500        R     MOV     A,nack_byte
+0127 B4FF04            CJNE    A,#0FFH,?C0137
+                                           ; SOURCE LINE # 568
+012A D280              SETB    PMB_DATA
+012C 8002              SJMP    ?C0138
+012E         ?C0137:
+                                           ; SOURCE LINE # 569
+012E C280              CLR     PMB_DATA
+0130         ?C0138:
+                                           ; SOURCE LINE # 574
+0130 00                NOP     
+0131 00                NOP     
+                                           ; SOURCE LINE # 576
+0132 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 577
+0134 00                NOP     
+0135         ?C0139:
+                                           ; SOURCE LINE # 580
+0135 208114            JB      PMB_CLK,?C0140
+                                           ; SOURCE LINE # 581
+                                           ; SOURCE LINE # 582
+0138 0500        E     INC     pmb_clk_low_stretch_timer+01H
+013A E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+013C 7002              JNZ     ?C0201
+013E 0500        E     INC     pmb_clk_low_stretch_timer
+0140         ?C0201:
+                                           ; SOURCE LINE # 583
+0140 D3                SETB    C
+0141 948D              SUBB    A,#08DH
+0143 E500        E     MOV     A,pmb_clk_low_stretch_timer
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 30  
+
+0145 9420              SUBB    A,#020H
+0147 40EC              JC      ?C0139
+0149 7F01              MOV     R7,#01H
+014B 22                RET     
+                                           ; SOURCE LINE # 584
+014C         ?C0140:
+                                           ; SOURCE LINE # 589
+014C 00                NOP     
+014D 00                NOP     
+                                           ; SOURCE LINE # 591
+014E C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 597
+0150 E500        R     MOV     A,i2c_bits
+0152 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 598
+0155 7401              MOV     A,#01H
+0157 29                ADD     A,R1
+0158 F9                MOV     R1,A
+0159 E4                CLR     A
+015A 3A                ADDC    A,R2
+015B FA                MOV     R2,A
+                                           ; SOURCE LINE # 600
+015C D280              SETB    PMB_DATA
+                                           ; SOURCE LINE # 601
+015E 0E                INC     R6
+015F 020000      R     LJMP    ?C0109
+                                           ; SOURCE LINE # 602
+0162         ?C0108:
+                                           ; SOURCE LINE # 604
+                                           ; SOURCE LINE # 605
+0162 E4                CLR     A
+0163 FE                MOV     R6,A
+0164         ?C0143:
+0164 EE                MOV     A,R6
+0165 C3                CLR     C
+0166 9F                SUBB    A,R7
+0167 4003              JC      $ + 5H
+0169 020000      R     LJMP    ?C0142
+                                           ; SOURCE LINE # 606
+                                           ; SOURCE LINE # 607
+;---- Variable 'k' assigned to Register 'R5' ----
+016C E4                CLR     A
+016D FD                MOV     R5,A
+016E         ?C0146:
+                                           ; SOURCE LINE # 608
+                                           ; SOURCE LINE # 609
+016E E500        R     MOV     A,i2c_bits
+0170 25E0              ADD     A,ACC
+0172 F500        R     MOV     i2c_bits,A
+                                           ; SOURCE LINE # 611
+0174 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 612
+0176 00                NOP     
+0177 00                NOP     
+0178         ?C0149:
+                                           ; SOURCE LINE # 615
+0178 208114            JB      PMB_CLK,?C0150
+                                           ; SOURCE LINE # 616
+                                           ; SOURCE LINE # 617
+017B 0500        E     INC     pmb_clk_low_stretch_timer+01H
+017D E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+017F 7002              JNZ     ?C0202
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 31  
+
+0181 0500        E     INC     pmb_clk_low_stretch_timer
+0183         ?C0202:
+                                           ; SOURCE LINE # 618
+0183 D3                SETB    C
+0184 948D              SUBB    A,#08DH
+0186 E500        E     MOV     A,pmb_clk_low_stretch_timer
+0188 9420              SUBB    A,#020H
+018A 40EC              JC      ?C0149
+018C 7F01              MOV     R7,#01H
+018E 22                RET     
+                                           ; SOURCE LINE # 619
+018F         ?C0150:
+                                           ; SOURCE LINE # 622
+018F 00                NOP     
+0190 00                NOP     
+                                           ; SOURCE LINE # 623
+0191 A280              MOV     C,PMB_DATA
+0193 9200        R     MOV     i2c_bit0,C
+                                           ; SOURCE LINE # 628
+0195 750004      R     MOV     delay_count,#04H
+0198         ?C0152:
+0198 00                NOP     
+0199 D500FC      R     DJNZ    delay_count,?C0152
+019C         ?C0153:
+                                           ; SOURCE LINE # 630
+019C C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 635
+019E 750002      R     MOV     delay_count,#02H
+01A1         ?C0155:
+01A1 00                NOP     
+01A2 D500FC      R     DJNZ    delay_count,?C0155
+                                           ; SOURCE LINE # 636
+01A5         ?C0148:
+01A5 0D                INC     R5
+01A6 BD08C5            CJNE    R5,#08H,?C0146
+01A9         ?C0147:
+                                           ; SOURCE LINE # 638
+01A9 EF                MOV     A,R7
+01AA 14                DEC     A
+01AB B50609            CJNE    A,AR6,?C0158
+01AE E500        R     MOV     A,nack_byte
+01B0 B4FF04            CJNE    A,#0FFH,?C0158
+                                           ; SOURCE LINE # 639
+01B3 D280              SETB    PMB_DATA
+01B5 8002              SJMP    ?C0159
+01B7         ?C0158:
+                                           ; SOURCE LINE # 640
+01B7 C280              CLR     PMB_DATA
+01B9         ?C0159:
+                                           ; SOURCE LINE # 645
+01B9 750004      R     MOV     delay_count,#04H
+01BC         ?C0160:
+01BC 00                NOP     
+01BD D500FC      R     DJNZ    delay_count,?C0160
+01C0         ?C0161:
+                                           ; SOURCE LINE # 647
+01C0 EF                MOV     A,R7
+01C1 14                DEC     A
+01C2 B50609            CJNE    A,AR6,?C0163
+01C5 E500        R     MOV     A,nack_byte
+01C7 B4FF04            CJNE    A,#0FFH,?C0163
+                                           ; SOURCE LINE # 648
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 32  
+
+01CA D280              SETB    PMB_DATA
+01CC 8002              SJMP    ?C0164
+01CE         ?C0163:
+                                           ; SOURCE LINE # 649
+01CE C280              CLR     PMB_DATA
+01D0         ?C0164:
+                                           ; SOURCE LINE # 654
+01D0 750004      R     MOV     delay_count,#04H
+01D3         ?C0165:
+01D3 00                NOP     
+01D4 D500FC      R     DJNZ    delay_count,?C0165
+01D7         ?C0166:
+                                           ; SOURCE LINE # 656
+01D7 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 657
+01D9 00                NOP     
+01DA 00                NOP     
+01DB         ?C0168:
+                                           ; SOURCE LINE # 660
+01DB 208114            JB      PMB_CLK,?C0169
+                                           ; SOURCE LINE # 661
+                                           ; SOURCE LINE # 662
+01DE 0500        E     INC     pmb_clk_low_stretch_timer+01H
+01E0 E500        E     MOV     A,pmb_clk_low_stretch_timer+01H
+01E2 7002              JNZ     ?C0203
+01E4 0500        E     INC     pmb_clk_low_stretch_timer
+01E6         ?C0203:
+                                           ; SOURCE LINE # 663
+01E6 D3                SETB    C
+01E7 948D              SUBB    A,#08DH
+01E9 E500        E     MOV     A,pmb_clk_low_stretch_timer
+01EB 9420              SUBB    A,#020H
+01ED 40EC              JC      ?C0168
+01EF 7F01              MOV     R7,#01H
+01F1 22                RET     
+                                           ; SOURCE LINE # 664
+01F2         ?C0169:
+                                           ; SOURCE LINE # 669
+01F2 750004      R     MOV     delay_count,#04H
+01F5         ?C0171:
+01F5 00                NOP     
+01F6 D500FC      R     DJNZ    delay_count,?C0171
+01F9         ?C0172:
+                                           ; SOURCE LINE # 671
+01F9 C281              CLR     PMB_CLK
+                                           ; SOURCE LINE # 675
+01FB 750008      R     MOV     delay_count,#08H
+01FE         ?C0174:
+01FE 00                NOP     
+01FF D500FC      R     DJNZ    delay_count,?C0174
+0202         ?C0175:
+                                           ; SOURCE LINE # 677
+0202 E500        R     MOV     A,i2c_bits
+0204 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 678
+0207 7401              MOV     A,#01H
+0209 29                ADD     A,R1
+020A F9                MOV     R1,A
+020B E4                CLR     A
+020C 3A                ADDC    A,R2
+020D FA                MOV     R2,A
+                                           ; SOURCE LINE # 680
+C51 COMPILER V8.02   I2C                                                                   07/21/2010 10:42:03 PAGE 33  
+
+020E D280              SETB    PMB_DATA
+                                           ; SOURCE LINE # 681
+0210 0E                INC     R6
+0211 020000      R     LJMP    ?C0143
+                                           ; SOURCE LINE # 682
+0214         ?C0142:
+                                           ; SOURCE LINE # 684
+0214 7F00              MOV     R7,#00H
+                                           ; SOURCE LINE # 685
+0216         ?C0115:
+0216 22                RET     
+             ; FUNCTION _i2c_read_bytes (END)
+
+             ; FUNCTION i2c_reset (BEGIN)
+                                           ; SOURCE LINE # 688
+                                           ; SOURCE LINE # 689
+                                           ; SOURCE LINE # 690
+0000 D280              SETB    PMB_DATA
+                                           ; SOURCE LINE # 691
+0002 00                NOP     
+0003 00                NOP     
+                                           ; SOURCE LINE # 693
+0004 D281              SETB    PMB_CLK
+                                           ; SOURCE LINE # 694
+0006 00                NOP     
+0007 00                NOP     
+                                           ; SOURCE LINE # 697
+0008 C200        E     CLR     PMBus_Busy
+                                           ; SOURCE LINE # 698
+000A C200        E     CLR     PMBus_Group_Command_Busy
+                                           ; SOURCE LINE # 699
+000C E4                CLR     A
+000D F500        E     MOV     previous_crc8,A
+                                           ; SOURCE LINE # 700
+000F 22                RET     
+             ; FUNCTION i2c_reset (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1268    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

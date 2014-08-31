@@ -1,0 +1,52 @@
+Added Component: Designator=C35(C0805)
+Added Component: Designator=C36(C0805)
+Added Component: Designator=C37(C0805)
+Added Component: Designator=C38(C0805)
+Added Component: Designator=C39(C0805)
+Added Component: Designator=JP_COM1(DSUB1.385-2H9)
+Added Component: Designator=U6(SOP16)
+Added Pin To Net: NetName=P3_0 Pin=U6-9
+Added Pin To Net: NetName=P3_1 Pin=U6-10
+Added Pin To Net: NetName=DSP_VDD Pin=C36-1
+Added Pin To Net: NetName=DSP_VDD Pin=U6-16
+Added Net: Name=DSP_VDD
+Added Pin To Net: NetName=DSP_VSS Pin=C36-2
+Added Pin To Net: NetName=DSP_VSS Pin=C37-1
+Added Pin To Net: NetName=DSP_VSS Pin=C39-1
+Added Pin To Net: NetName=DSP_VSS Pin=JP_COM1-5
+Added Pin To Net: NetName=DSP_VSS Pin=JP_COM1-10
+Added Pin To Net: NetName=DSP_VSS Pin=JP_COM1-11
+Added Pin To Net: NetName=DSP_VSS Pin=U6-15
+Added Net: Name=DSP_VSS
+Added Pin To Net: NetName=NetC35_1 Pin=C35-1
+Added Pin To Net: NetName=NetC35_1 Pin=U6-1
+Added Net: Name=NetC35_1
+Added Pin To Net: NetName=NetC35_2 Pin=C35-2
+Added Pin To Net: NetName=NetC35_2 Pin=U6-3
+Added Net: Name=NetC35_2
+Added Pin To Net: NetName=NetC37_2 Pin=C37-2
+Added Pin To Net: NetName=NetC37_2 Pin=U6-2
+Added Net: Name=NetC37_2
+Added Pin To Net: NetName=NetC38_1 Pin=C38-1
+Added Pin To Net: NetName=NetC38_1 Pin=U6-4
+Added Net: Name=NetC38_1
+Added Pin To Net: NetName=NetC38_2 Pin=C38-2
+Added Pin To Net: NetName=NetC38_2 Pin=U6-5
+Added Net: Name=NetC38_2
+Added Pin To Net: NetName=NetC39_2 Pin=C39-2
+Added Pin To Net: NetName=NetC39_2 Pin=U6-6
+Added Net: Name=NetC39_2
+Added Pin To Net: NetName=NetJP_COM1_2 Pin=JP_COM1-2
+Added Pin To Net: NetName=NetJP_COM1_2 Pin=U6-7
+Added Net: Name=NetJP_COM1_2
+Added Pin To Net: NetName=NetJP_COM1_3 Pin=JP_COM1-3
+Added Pin To Net: NetName=NetJP_COM1_3 Pin=U6-8
+Added Net: Name=NetJP_COM1_3
+Added Member To Class: ClassName=Sheet1 Member=Component C35 Cap
+Added Member To Class: ClassName=Sheet1 Member=Component C36 Cap
+Added Member To Class: ClassName=Sheet1 Member=Component C37 Cap
+Added Member To Class: ClassName=Sheet1 Member=Component C38 Cap
+Added Member To Class: ClassName=Sheet1 Member=Component C39 Cap
+Added Member To Class: ClassName=Sheet1 Member=Component JP_COM1 D Connector 9
+Added Member To Class: ClassName=Sheet1 Member=Component U6 MAX3232
+Added Room: Name=Sheet1

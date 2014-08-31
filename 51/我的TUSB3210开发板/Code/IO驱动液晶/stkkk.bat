@@ -1,0 +1,1 @@
+copy tusb2136.bin c:\windows\system32\drivers\ /Y

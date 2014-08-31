@@ -1,0 +1,644 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+C:\Documents and Settings\Administrator\×ÀÃæ\ds1302andhwand18B20\zh.uv2
+Project File Date:  04/02/2011
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling z.c...
+compiling 1302.c...
+compiling 1602.c...
+compiling hongwai.c...
+C:\KEIL\C51\INC\REG51.H(13): error C231: 'P0': redefinition
+C:\KEIL\C51\INC\REG51.H(14): error C231: 'P1': redefinition
+C:\KEIL\C51\INC\REG51.H(15): error C231: 'P2': redefinition
+C:\KEIL\C51\INC\REG51.H(16): error C231: 'P3': redefinition
+C:\KEIL\C51\INC\REG51.H(17): error C231: 'PSW': redefinition
+C:\KEIL\C51\INC\REG51.H(18): error C231: 'ACC': redefinition
+C:\KEIL\C51\INC\REG51.H(19): error C231: 'B': redefinition
+C:\KEIL\C51\INC\REG51.H(20): error C231: 'SP': redefinition
+C:\KEIL\C51\INC\REG51.H(21): error C231: 'DPL': redefinition
+C:\KEIL\C51\INC\REG51.H(22): error C231: 'DPH': redefinition
+C:\KEIL\C51\INC\REG51.H(23): error C231: 'PCON': redefinition
+C:\KEIL\C51\INC\REG51.H(24): error C231: 'TCON': redefinition
+C:\KEIL\C51\INC\REG51.H(25): error C231: 'TMOD': redefinition
+C:\KEIL\C51\INC\REG51.H(26): error C231: 'TL0': redefinition
+C:\KEIL\C51\INC\REG51.H(27): error C231: 'TL1': redefinition
+C:\KEIL\C51\INC\REG51.H(28): error C231: 'TH0': redefinition
+C:\KEIL\C51\INC\REG51.H(29): error C231: 'TH1': redefinition
+C:\KEIL\C51\INC\REG51.H(30): error C231: 'IE': redefinition
+C:\KEIL\C51\INC\REG51.H(31): error C231: 'IP': redefinition
+C:\KEIL\C51\INC\REG51.H(32): error C231: 'SCON': redefinition
+C:\KEIL\C51\INC\REG51.H(33): error C231: 'SBUF': redefinition
+C:\KEIL\C51\INC\REG51.H(38): error C231: 'CY': redefinition
+C:\KEIL\C51\INC\REG51.H(39): error C231: 'AC': redefinition
+C:\KEIL\C51\INC\REG51.H(40): error C231: 'F0': redefinition
+C:\KEIL\C51\INC\REG51.H(41): error C231: 'RS1': redefinition
+C:\KEIL\C51\INC\REG51.H(42): error C231: 'RS0': redefinition
+C:\KEIL\C51\INC\REG51.H(43): error C231: 'OV': redefinition
+C:\KEIL\C51\INC\REG51.H(44): error C231: 'P': redefinition
+C:\KEIL\C51\INC\REG51.H(47): error C231: 'TF1': redefinition
+C:\KEIL\C51\INC\REG51.H(48): error C231: 'TR1': redefinition
+C:\KEIL\C51\INC\REG51.H(49): error C231: 'TF0': redefinition
+C:\KEIL\C51\INC\REG51.H(50): error C231: 'TR0': redefinition
+C:\KEIL\C51\INC\REG51.H(51): error C231: 'IE1': redefinition
+C:\KEIL\C51\INC\REG51.H(52): error C231: 'IT1': redefinition
+C:\KEIL\C51\INC\REG51.H(53): error C231: 'IE0': redefinition
+C:\KEIL\C51\INC\REG51.H(54): error C231: 'IT0': redefinition
+C:\KEIL\C51\INC\REG51.H(57): error C231: 'EA': redefinition
+C:\KEIL\C51\INC\REG51.H(58): error C231: 'ES': redefinition
+C:\KEIL\C51\INC\REG51.H(59): error C231: 'ET1': redefinition
+C:\KEIL\C51\INC\REG51.H(60): error C231: 'EX1': redefinition
+C:\KEIL\C51\INC\REG51.H(61): error C231: 'ET0': redefinition
+C:\KEIL\C51\INC\REG51.H(62): error C231: 'EX0': redefinition
+C:\KEIL\C51\INC\REG51.H(65): error C231: 'PS': redefinition
+C:\KEIL\C51\INC\REG51.H(66): error C231: 'PT1': redefinition
+C:\KEIL\C51\INC\REG51.H(67): error C231: 'PX1': redefinition
+C:\KEIL\C51\INC\REG51.H(68): error C231: 'PT0': redefinition
+C:\KEIL\C51\INC\REG51.H(69): error C231: 'PX0': redefinition
+C:\KEIL\C51\INC\REG51.H(72): error C231: 'RD': redefinition
+C:\KEIL\C51\INC\REG51.H(73): error C231: 'WR': redefinition
+C:\KEIL\C51\INC\REG51.H(74): error C231: 'T1': redefinition
+C:\KEIL\C51\INC\REG51.H(75): error C231: 'T0': redefinition
+C:\KEIL\C51\INC\REG51.H(76): error C231: 'INT1': redefinition
+C:\KEIL\C51\INC\REG51.H(77): error C231: 'INT0': redefinition
+C:\KEIL\C51\INC\REG51.H(78): error C231: 'TXD': redefinition
+C:\KEIL\C51\INC\REG51.H(79): error C231: 'RXD': redefinition
+C:\KEIL\C51\INC\REG51.H(82): error C231: 'SM0': redefinition
+C:\KEIL\C51\INC\REG51.H(83): error C231: 'SM1': redefinition
+C:\KEIL\C51\INC\REG51.H(84): error C231: 'SM2': redefinition
+C:\KEIL\C51\INC\REG51.H(85): error C231: 'REN': redefinition
+C:\KEIL\C51\INC\REG51.H(86): error C231: 'TB8': redefinition
+C:\KEIL\C51\INC\REG51.H(87): error C231: 'RB8': redefinition
+C:\KEIL\C51\INC\REG51.H(88): error C231: 'TI': redefinition
+C:\KEIL\C51\INC\REG51.H(89): error C231: 'RI': redefinition
+compiling 18b20.c...
+Target not created
+Build target 'Target 1'
+compiling z.c...
+compiling 1302.c...
+compiling 1602.c...
+compiling hongwai.c...
+C:\KEIL\C51\INC\REG51.H(13): error C231: 'P0': redefinition
+C:\KEIL\C51\INC\REG51.H(14): error C231: 'P1': redefinition
+C:\KEIL\C51\INC\REG51.H(15): error C231: 'P2': redefinition
+C:\KEIL\C51\INC\REG51.H(16): error C231: 'P3': redefinition
+C:\KEIL\C51\INC\REG51.H(17): error C231: 'PSW': redefinition
+C:\KEIL\C51\INC\REG51.H(18): error C231: 'ACC': redefinition
+C:\KEIL\C51\INC\REG51.H(19): error C231: 'B': redefinition
+C:\KEIL\C51\INC\REG51.H(20): error C231: 'SP': redefinition
+C:\KEIL\C51\INC\REG51.H(21): error C231: 'DPL': redefinition
+C:\KEIL\C51\INC\REG51.H(22): error C231: 'DPH': redefinition
+C:\KEIL\C51\INC\REG51.H(23): error C231: 'PCON': redefinition
+C:\KEIL\C51\INC\REG51.H(24): error C231: 'TCON': redefinition
+C:\KEIL\C51\INC\REG51.H(25): error C231: 'TMOD': redefinition
+C:\KEIL\C51\INC\REG51.H(26): error C231: 'TL0': redefinition
+C:\KEIL\C51\INC\REG51.H(27): error C231: 'TL1': redefinition
+C:\KEIL\C51\INC\REG51.H(28): error C231: 'TH0': redefinition
+C:\KEIL\C51\INC\REG51.H(29): error C231: 'TH1': redefinition
+C:\KEIL\C51\INC\REG51.H(30): error C231: 'IE': redefinition
+C:\KEIL\C51\INC\REG51.H(31): error C231: 'IP': redefinition
+C:\KEIL\C51\INC\REG51.H(32): error C231: 'SCON': redefinition
+C:\KEIL\C51\INC\REG51.H(33): error C231: 'SBUF': redefinition
+C:\KEIL\C51\INC\REG51.H(38): error C231: 'CY': redefinition
+C:\KEIL\C51\INC\REG51.H(39): error C231: 'AC': redefinition
+C:\KEIL\C51\INC\REG51.H(40): error C231: 'F0': redefinition
+C:\KEIL\C51\INC\REG51.H(41): error C231: 'RS1': redefinition
+C:\KEIL\C51\INC\REG51.H(42): error C231: 'RS0': redefinition
+C:\KEIL\C51\INC\REG51.H(43): error C231: 'OV': redefinition
+C:\KEIL\C51\INC\REG51.H(44): error C231: 'P': redefinition
+C:\KEIL\C51\INC\REG51.H(47): error C231: 'TF1': redefinition
+C:\KEIL\C51\INC\REG51.H(48): error C231: 'TR1': redefinition
+C:\KEIL\C51\INC\REG51.H(49): error C231: 'TF0': redefinition
+C:\KEIL\C51\INC\REG51.H(50): error C231: 'TR0': redefinition
+C:\KEIL\C51\INC\REG51.H(51): error C231: 'IE1': redefinition
+C:\KEIL\C51\INC\REG51.H(52): error C231: 'IT1': redefinition
+C:\KEIL\C51\INC\REG51.H(53): error C231: 'IE0': redefinition
+C:\KEIL\C51\INC\REG51.H(54): error C231: 'IT0': redefinition
+C:\KEIL\C51\INC\REG51.H(57): error C231: 'EA': redefinition
+C:\KEIL\C51\INC\REG51.H(58): error C231: 'ES': redefinition
+C:\KEIL\C51\INC\REG51.H(59): error C231: 'ET1': redefinition
+C:\KEIL\C51\INC\REG51.H(60): error C231: 'EX1': redefinition
+C:\KEIL\C51\INC\REG51.H(61): error C231: 'ET0': redefinition
+C:\KEIL\C51\INC\REG51.H(62): error C231: 'EX0': redefinition
+C:\KEIL\C51\INC\REG51.H(65): error C231: 'PS': redefinition
+C:\KEIL\C51\INC\REG51.H(66): error C231: 'PT1': redefinition
+C:\KEIL\C51\INC\REG51.H(67): error C231: 'PX1': redefinition
+C:\KEIL\C51\INC\REG51.H(68): error C231: 'PT0': redefinition
+C:\KEIL\C51\INC\REG51.H(69): error C231: 'PX0': redefinition
+C:\KEIL\C51\INC\REG51.H(72): error C231: 'RD': redefinition
+C:\KEIL\C51\INC\REG51.H(73): error C231: 'WR': redefinition
+C:\KEIL\C51\INC\REG51.H(74): error C231: 'T1': redefinition
+C:\KEIL\C51\INC\REG51.H(75): error C231: 'T0': redefinition
+C:\KEIL\C51\INC\REG51.H(76): error C231: 'INT1': redefinition
+C:\KEIL\C51\INC\REG51.H(77): error C231: 'INT0': redefinition
+C:\KEIL\C51\INC\REG51.H(78): error C231: 'TXD': redefinition
+C:\KEIL\C51\INC\REG51.H(79): error C231: 'RXD': redefinition
+C:\KEIL\C51\INC\REG51.H(82): error C231: 'SM0': redefinition
+C:\KEIL\C51\INC\REG51.H(83): error C231: 'SM1': redefinition
+C:\KEIL\C51\INC\REG51.H(84): error C231: 'SM2': redefinition
+C:\KEIL\C51\INC\REG51.H(85): error C231: 'REN': redefinition
+C:\KEIL\C51\INC\REG51.H(86): error C231: 'TB8': redefinition
+C:\KEIL\C51\INC\REG51.H(87): error C231: 'RB8': redefinition
+C:\KEIL\C51\INC\REG51.H(88): error C231: 'TI': redefinition
+C:\KEIL\C51\INC\REG51.H(89): error C231: 'RI': redefinition
+compiling 18b20.c...
+Target not created
+Build target 'Target 1'
+compiling hongwai.c...
+C:\KEIL\C51\INC\REG51.H(13): error C231: 'P0': redefinition
+C:\KEIL\C51\INC\REG51.H(14): error C231: 'P1': redefinition
+C:\KEIL\C51\INC\REG51.H(15): error C231: 'P2': redefinition
+C:\KEIL\C51\INC\REG51.H(16): error C231: 'P3': redefinition
+C:\KEIL\C51\INC\REG51.H(17): error C231: 'PSW': redefinition
+C:\KEIL\C51\INC\REG51.H(18): error C231: 'ACC': redefinition
+C:\KEIL\C51\INC\REG51.H(19): error C231: 'B': redefinition
+C:\KEIL\C51\INC\REG51.H(20): error C231: 'SP': redefinition
+C:\KEIL\C51\INC\REG51.H(21): error C231: 'DPL': redefinition
+C:\KEIL\C51\INC\REG51.H(22): error C231: 'DPH': redefinition
+C:\KEIL\C51\INC\REG51.H(23): error C231: 'PCON': redefinition
+C:\KEIL\C51\INC\REG51.H(24): error C231: 'TCON': redefinition
+C:\KEIL\C51\INC\REG51.H(25): error C231: 'TMOD': redefinition
+C:\KEIL\C51\INC\REG51.H(26): error C231: 'TL0': redefinition
+C:\KEIL\C51\INC\REG51.H(27): error C231: 'TL1': redefinition
+C:\KEIL\C51\INC\REG51.H(28): error C231: 'TH0': redefinition
+C:\KEIL\C51\INC\REG51.H(29): error C231: 'TH1': redefinition
+C:\KEIL\C51\INC\REG51.H(30): error C231: 'IE': redefinition
+C:\KEIL\C51\INC\REG51.H(31): error C231: 'IP': redefinition
+C:\KEIL\C51\INC\REG51.H(32): error C231: 'SCON': redefinition
+C:\KEIL\C51\INC\REG51.H(33): error C231: 'SBUF': redefinition
+C:\KEIL\C51\INC\REG51.H(38): error C231: 'CY': redefinition
+C:\KEIL\C51\INC\REG51.H(39): error C231: 'AC': redefinition
+C:\KEIL\C51\INC\REG51.H(40): error C231: 'F0': redefinition
+C:\KEIL\C51\INC\REG51.H(41): error C231: 'RS1': redefinition
+C:\KEIL\C51\INC\REG51.H(42): error C231: 'RS0': redefinition
+C:\KEIL\C51\INC\REG51.H(43): error C231: 'OV': redefinition
+C:\KEIL\C51\INC\REG51.H(44): error C231: 'P': redefinition
+C:\KEIL\C51\INC\REG51.H(47): error C231: 'TF1': redefinition
+C:\KEIL\C51\INC\REG51.H(48): error C231: 'TR1': redefinition
+C:\KEIL\C51\INC\REG51.H(49): error C231: 'TF0': redefinition
+C:\KEIL\C51\INC\REG51.H(50): error C231: 'TR0': redefinition
+C:\KEIL\C51\INC\REG51.H(51): error C231: 'IE1': redefinition
+C:\KEIL\C51\INC\REG51.H(52): error C231: 'IT1': redefinition
+C:\KEIL\C51\INC\REG51.H(53): error C231: 'IE0': redefinition
+C:\KEIL\C51\INC\REG51.H(54): error C231: 'IT0': redefinition
+C:\KEIL\C51\INC\REG51.H(57): error C231: 'EA': redefinition
+C:\KEIL\C51\INC\REG51.H(58): error C231: 'ES': redefinition
+C:\KEIL\C51\INC\REG51.H(59): error C231: 'ET1': redefinition
+C:\KEIL\C51\INC\REG51.H(60): error C231: 'EX1': redefinition
+C:\KEIL\C51\INC\REG51.H(61): error C231: 'ET0': redefinition
+C:\KEIL\C51\INC\REG51.H(62): error C231: 'EX0': redefinition
+C:\KEIL\C51\INC\REG51.H(65): error C231: 'PS': redefinition
+C:\KEIL\C51\INC\REG51.H(66): error C231: 'PT1': redefinition
+C:\KEIL\C51\INC\REG51.H(67): error C231: 'PX1': redefinition
+C:\KEIL\C51\INC\REG51.H(68): error C231: 'PT0': redefinition
+C:\KEIL\C51\INC\REG51.H(69): error C231: 'PX0': redefinition
+C:\KEIL\C51\INC\REG51.H(72): error C231: 'RD': redefinition
+C:\KEIL\C51\INC\REG51.H(73): error C231: 'WR': redefinition
+C:\KEIL\C51\INC\REG51.H(74): error C231: 'T1': redefinition
+C:\KEIL\C51\INC\REG51.H(75): error C231: 'T0': redefinition
+C:\KEIL\C51\INC\REG51.H(76): error C231: 'INT1': redefinition
+C:\KEIL\C51\INC\REG51.H(77): error C231: 'INT0': redefinition
+C:\KEIL\C51\INC\REG51.H(78): error C231: 'TXD': redefinition
+C:\KEIL\C51\INC\REG51.H(79): error C231: 'RXD': redefinition
+C:\KEIL\C51\INC\REG51.H(82): error C231: 'SM0': redefinition
+C:\KEIL\C51\INC\REG51.H(83): error C231: 'SM1': redefinition
+C:\KEIL\C51\INC\REG51.H(84): error C231: 'SM2': redefinition
+C:\KEIL\C51\INC\REG51.H(85): error C231: 'REN': redefinition
+C:\KEIL\C51\INC\REG51.H(86): error C231: 'TB8': redefinition
+C:\KEIL\C51\INC\REG51.H(87): error C231: 'RB8': redefinition
+C:\KEIL\C51\INC\REG51.H(88): error C231: 'TI': redefinition
+C:\KEIL\C51\INC\REG51.H(89): error C231: 'RI': redefinition
+Target not created
+Build target 'Target 1'
+compiling z.c...
+compiling 1302.c...
+compiling 1602.c...
+compiling hongwai.c...
+C:\KEIL\C51\INC\REG51.H(13): error C231: 'P0': redefinition
+C:\KEIL\C51\INC\REG51.H(14): error C231: 'P1': redefinition
+C:\KEIL\C51\INC\REG51.H(15): error C231: 'P2': redefinition
+C:\KEIL\C51\INC\REG51.H(16): error C231: 'P3': redefinition
+C:\KEIL\C51\INC\REG51.H(17): error C231: 'PSW': redefinition
+C:\KEIL\C51\INC\REG51.H(18): error C231: 'ACC': redefinition
+C:\KEIL\C51\INC\REG51.H(19): error C231: 'B': redefinition
+C:\KEIL\C51\INC\REG51.H(20): error C231: 'SP': redefinition
+C:\KEIL\C51\INC\REG51.H(21): error C231: 'DPL': redefinition
+C:\KEIL\C51\INC\REG51.H(22): error C231: 'DPH': redefinition
+C:\KEIL\C51\INC\REG51.H(23): error C231: 'PCON': redefinition
+C:\KEIL\C51\INC\REG51.H(24): error C231: 'TCON': redefinition
+C:\KEIL\C51\INC\REG51.H(25): error C231: 'TMOD': redefinition
+C:\KEIL\C51\INC\REG51.H(26): error C231: 'TL0': redefinition
+C:\KEIL\C51\INC\REG51.H(27): error C231: 'TL1': redefinition
+C:\KEIL\C51\INC\REG51.H(28): error C231: 'TH0': redefinition
+C:\KEIL\C51\INC\REG51.H(29): error C231: 'TH1': redefinition
+C:\KEIL\C51\INC\REG51.H(30): error C231: 'IE': redefinition
+C:\KEIL\C51\INC\REG51.H(31): error C231: 'IP': redefinition
+C:\KEIL\C51\INC\REG51.H(32): error C231: 'SCON': redefinition
+C:\KEIL\C51\INC\REG51.H(33): error C231: 'SBUF': redefinition
+C:\KEIL\C51\INC\REG51.H(38): error C231: 'CY': redefinition
+C:\KEIL\C51\INC\REG51.H(39): error C231: 'AC': redefinition
+C:\KEIL\C51\INC\REG51.H(40): error C231: 'F0': redefinition
+C:\KEIL\C51\INC\REG51.H(41): error C231: 'RS1': redefinition
+C:\KEIL\C51\INC\REG51.H(42): error C231: 'RS0': redefinition
+C:\KEIL\C51\INC\REG51.H(43): error C231: 'OV': redefinition
+C:\KEIL\C51\INC\REG51.H(44): error C231: 'P': redefinition
+C:\KEIL\C51\INC\REG51.H(47): error C231: 'TF1': redefinition
+C:\KEIL\C51\INC\REG51.H(48): error C231: 'TR1': redefinition
+C:\KEIL\C51\INC\REG51.H(49): error C231: 'TF0': redefinition
+C:\KEIL\C51\INC\REG51.H(50): error C231: 'TR0': redefinition
+C:\KEIL\C51\INC\REG51.H(51): error C231: 'IE1': redefinition
+C:\KEIL\C51\INC\REG51.H(52): error C231: 'IT1': redefinition
+C:\KEIL\C51\INC\REG51.H(53): error C231: 'IE0': redefinition
+C:\KEIL\C51\INC\REG51.H(54): error C231: 'IT0': redefinition
+C:\KEIL\C51\INC\REG51.H(57): error C231: 'EA': redefinition
+C:\KEIL\C51\INC\REG51.H(58): error C231: 'ES': redefinition
+C:\KEIL\C51\INC\REG51.H(59): error C231: 'ET1': redefinition
+C:\KEIL\C51\INC\REG51.H(60): error C231: 'EX1': redefinition
+C:\KEIL\C51\INC\REG51.H(61): error C231: 'ET0': redefinition
+C:\KEIL\C51\INC\REG51.H(62): error C231: 'EX0': redefinition
+C:\KEIL\C51\INC\REG51.H(65): error C231: 'PS': redefinition
+C:\KEIL\C51\INC\REG51.H(66): error C231: 'PT1': redefinition
+C:\KEIL\C51\INC\REG51.H(67): error C231: 'PX1': redefinition
+C:\KEIL\C51\INC\REG51.H(68): error C231: 'PT0': redefinition
+C:\KEIL\C51\INC\REG51.H(69): error C231: 'PX0': redefinition
+C:\KEIL\C51\INC\REG51.H(72): error C231: 'RD': redefinition
+C:\KEIL\C51\INC\REG51.H(73): error C231: 'WR': redefinition
+C:\KEIL\C51\INC\REG51.H(74): error C231: 'T1': redefinition
+C:\KEIL\C51\INC\REG51.H(75): error C231: 'T0': redefinition
+C:\KEIL\C51\INC\REG51.H(76): error C231: 'INT1': redefinition
+C:\KEIL\C51\INC\REG51.H(77): error C231: 'INT0': redefinition
+C:\KEIL\C51\INC\REG51.H(78): error C231: 'TXD': redefinition
+C:\KEIL\C51\INC\REG51.H(79): error C231: 'RXD': redefinition
+C:\KEIL\C51\INC\REG51.H(82): error C231: 'SM0': redefinition
+C:\KEIL\C51\INC\REG51.H(83): error C231: 'SM1': redefinition
+C:\KEIL\C51\INC\REG51.H(84): error C231: 'SM2': redefinition
+C:\KEIL\C51\INC\REG51.H(85): error C231: 'REN': redefinition
+C:\KEIL\C51\INC\REG51.H(86): error C231: 'TB8': redefinition
+C:\KEIL\C51\INC\REG51.H(87): error C231: 'RB8': redefinition
+C:\KEIL\C51\INC\REG51.H(88): error C231: 'TI': redefinition
+C:\KEIL\C51\INC\REG51.H(89): error C231: 'RI': redefinition
+compiling 18b20.c...
+Target not created
+Build target 'Target 1'
+compiling z.c...
+1602.H(10): error C202: 'P0': undefined identifier
+compiling 1302.c...
+1602.H(10): error C202: 'P0': undefined identifier
+compiling 1602.c...
+1602.H(10): error C202: 'P0': undefined identifier
+1602.C(43): error C202: 'BF': undefined identifier
+1602.C(60): error C202: 'P0': undefined identifier
+1602.C(92): error C202: 'P0': undefined identifier
+compiling hongwai.c...
+C:\KEIL\C51\INC\REG51.H(14): error C231: 'P1': redefinition
+C:\KEIL\C51\INC\REG51.H(15): error C231: 'P2': redefinition
+C:\KEIL\C51\INC\REG51.H(16): error C231: 'P3': redefinition
+C:\KEIL\C51\INC\REG51.H(17): error C231: 'PSW': redefinition
+C:\KEIL\C51\INC\REG51.H(18): error C231: 'ACC': redefinition
+C:\KEIL\C51\INC\REG51.H(19): error C231: 'B': redefinition
+C:\KEIL\C51\INC\REG51.H(20): error C231: 'SP': redefinition
+C:\KEIL\C51\INC\REG51.H(21): error C231: 'DPL': redefinition
+C:\KEIL\C51\INC\REG51.H(22): error C231: 'DPH': redefinition
+C:\KEIL\C51\INC\REG51.H(23): error C231: 'PCON': redefinition
+C:\KEIL\C51\INC\REG51.H(24): error C231: 'TCON': redefinition
+C:\KEIL\C51\INC\REG51.H(25): error C231: 'TMOD': redefinition
+C:\KEIL\C51\INC\REG51.H(26): error C231: 'TL0': redefinition
+C:\KEIL\C51\INC\REG51.H(27): error C231: 'TL1': redefinition
+C:\KEIL\C51\INC\REG51.H(28): error C231: 'TH0': redefinition
+C:\KEIL\C51\INC\REG51.H(29): error C231: 'TH1': redefinition
+C:\KEIL\C51\INC\REG51.H(30): error C231: 'IE': redefinition
+C:\KEIL\C51\INC\REG51.H(31): error C231: 'IP': redefinition
+C:\KEIL\C51\INC\REG51.H(32): error C231: 'SCON': redefinition
+C:\KEIL\C51\INC\REG51.H(33): error C231: 'SBUF': redefinition
+C:\KEIL\C51\INC\REG51.H(38): error C231: 'CY': redefinition
+C:\KEIL\C51\INC\REG51.H(39): error C231: 'AC': redefinition
+C:\KEIL\C51\INC\REG51.H(40): error C231: 'F0': redefinition
+C:\KEIL\C51\INC\REG51.H(41): error C231: 'RS1': redefinition
+C:\KEIL\C51\INC\REG51.H(42): error C231: 'RS0': redefinition
+C:\KEIL\C51\INC\REG51.H(43): error C231: 'OV': redefinition
+C:\KEIL\C51\INC\REG51.H(44): error C231: 'P': redefinition
+C:\KEIL\C51\INC\REG51.H(47): error C231: 'TF1': redefinition
+C:\KEIL\C51\INC\REG51.H(48): error C231: 'TR1': redefinition
+C:\KEIL\C51\INC\REG51.H(49): error C231: 'TF0': redefinition
+C:\KEIL\C51\INC\REG51.H(50): error C231: 'TR0': redefinition
+C:\KEIL\C51\INC\REG51.H(51): error C231: 'IE1': redefinition
+C:\KEIL\C51\INC\REG51.H(52): error C231: 'IT1': redefinition
+C:\KEIL\C51\INC\REG51.H(53): error C231: 'IE0': redefinition
+C:\KEIL\C51\INC\REG51.H(54): error C231: 'IT0': redefinition
+C:\KEIL\C51\INC\REG51.H(57): error C231: 'EA': redefinition
+C:\KEIL\C51\INC\REG51.H(58): error C231: 'ES': redefinition
+C:\KEIL\C51\INC\REG51.H(59): error C231: 'ET1': redefinition
+C:\KEIL\C51\INC\REG51.H(60): error C231: 'EX1': redefinition
+C:\KEIL\C51\INC\REG51.H(61): error C231: 'ET0': redefinition
+C:\KEIL\C51\INC\REG51.H(62): error C231: 'EX0': redefinition
+C:\KEIL\C51\INC\REG51.H(65): error C231: 'PS': redefinition
+C:\KEIL\C51\INC\REG51.H(66): error C231: 'PT1': redefinition
+C:\KEIL\C51\INC\REG51.H(67): error C231: 'PX1': redefinition
+C:\KEIL\C51\INC\REG51.H(68): error C231: 'PT0': redefinition
+C:\KEIL\C51\INC\REG51.H(69): error C231: 'PX0': redefinition
+C:\KEIL\C51\INC\REG51.H(72): error C231: 'RD': redefinition
+C:\KEIL\C51\INC\REG51.H(73): error C231: 'WR': redefinition
+C:\KEIL\C51\INC\REG51.H(74): error C231: 'T1': redefinition
+C:\KEIL\C51\INC\REG51.H(75): error C231: 'T0': redefinition
+C:\KEIL\C51\INC\REG51.H(76): error C231: 'INT1': redefinition
+C:\KEIL\C51\INC\REG51.H(77): error C231: 'INT0': redefinition
+C:\KEIL\C51\INC\REG51.H(78): error C231: 'TXD': redefinition
+C:\KEIL\C51\INC\REG51.H(79): error C231: 'RXD': redefinition
+C:\KEIL\C51\INC\REG51.H(82): error C231: 'SM0': redefinition
+C:\KEIL\C51\INC\REG51.H(83): error C231: 'SM1': redefinition
+C:\KEIL\C51\INC\REG51.H(84): error C231: 'SM2': redefinition
+C:\KEIL\C51\INC\REG51.H(85): error C231: 'REN': redefinition
+C:\KEIL\C51\INC\REG51.H(86): error C231: 'TB8': redefinition
+C:\KEIL\C51\INC\REG51.H(87): error C231: 'RB8': redefinition
+C:\KEIL\C51\INC\REG51.H(88): error C231: 'TI': redefinition
+C:\KEIL\C51\INC\REG51.H(89): error C231: 'RI': redefinition
+compiling 18b20.c...
+1602.H(10): error C202: 'P0': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling z.c...
+1602.H(7): error C202: 'P2': undefined identifier
+1602.H(8): error C202: 'P2': undefined identifier
+1602.H(9): error C202: 'P2': undefined identifier
+1602.H(10): error C202: 'P0': undefined identifier
+1302.H(11): error C202: 'P1': undefined identifier
+1302.H(12): error C202: 'P1': undefined identifier
+1302.H(13): error C202: 'P1': undefined identifier
+1302.H(15): error C202: 'P3': undefined identifier
+1302.H(16): error C202: 'P3': undefined identifier
+1302.H(17): error C202: 'P3': undefined identifier
+1302.H(18): error C202: 'P3': undefined identifier
+1302.H(20): error C202: 'P3': undefined identifier
+18B20.H(9): error C202: 'P1': undefined identifier
+HONGWAI.H(13): error C202: 'P3': undefined identifier
+compiling 1302.c...
+1602.H(7): error C202: 'P2': undefined identifier
+1602.H(8): error C202: 'P2': undefined identifier
+1602.H(9): error C202: 'P2': undefined identifier
+1602.H(10): error C202: 'P0': undefined identifier
+1302.H(11): error C202: 'P1': undefined identifier
+1302.H(12): error C202: 'P1': undefined identifier
+1302.H(13): error C202: 'P1': undefined identifier
+1302.H(15): error C202: 'P3': undefined identifier
+1302.H(16): error C202: 'P3': undefined identifier
+1302.H(17): error C202: 'P3': undefined identifier
+1302.H(18): error C202: 'P3': undefined identifier
+1302.H(20): error C202: 'P3': undefined identifier
+HONGWAI.H(13): error C202: 'P3': undefined identifier
+1302.C(38): error C202: 'BEEP': undefined identifier
+1302.C(40): error C202: 'BEEP': undefined identifier
+1302.C(51): error C202: 'SCLK': undefined identifier
+1302.C(55): error C202: 'DATA': undefined identifier
+1302.C(57): error C202: 'SCLK': undefined identifier
+1302.C(59): error C202: 'SCLK': undefined identifier
+1302.C(70): error C202: 'RST': undefined identifier
+1302.C(71): error C202: 'SCLK': undefined identifier
+1302.C(72): error C202: 'RST': undefined identifier
+1302.C(76): error C202: 'SCLK': undefined identifier
+1302.C(77): error C202: 'RST': undefined identifier
+1302.C(89): error C202: 'DATA': undefined identifier
+1302.C(91): error C202: 'SCLK': undefined identifier
+1302.C(93): error C202: 'SCLK': undefined identifier
+1302.C(106): error C202: 'RST': undefined identifier
+1302.C(107): error C202: 'SCLK': undefined identifier
+1302.C(108): error C202: 'RST': undefined identifier
+1302.C(111): error C202: 'SCLK': undefined identifier
+1302.C(112): error C202: 'RST': undefined identifier
+1302.C(305): error C202: 'K1': undefined identifier
+1302.C(308): error C202: 'K1': undefined identifier
+1302.C(310): error C202: 'K1': undefined identifier
+1302.C(404): error C202: 'K2': undefined identifier
+1302.C(407): error C202: 'K2': undefined identifier
+1302.C(409): error C202: 'K2': undefined identifier
+1302.C(521): error C202: 'K3': undefined identifier
+1302.C(524): error C202: 'K3': undefined identifier
+1302.C(526): error C202: 'K3': undefined identifier
+1302.C(692): error C202: 'K4': undefined identifier
+1302.C(694): error C202: 'K4': undefined identifier
+1302.C(696): error C202: 'K4': undefined identifier
+1302.C(857): error C202: 'K1': undefined identifier
+1302.C(860): error C202: 'K1': undefined identifier
+1302.C(862): error C202: 'K1': undefined identifier
+compiling 1602.c...
+1602.H(7): error C202: 'P2': undefined identifier
+1602.H(8): error C202: 'P2': undefined identifier
+1602.H(9): error C202: 'P2': undefined identifier
+1602.H(10): error C202: 'P0': undefined identifier
+1602.C(36): error C202: 'RS': undefined identifier
+1602.C(37): error C202: 'RW': undefined identifier
+1602.C(38): error C202: 'E': undefined identifier
+1602.C(43): error C202: 'BF': undefined identifier
+1602.C(44): error C202: 'E': undefined identifier
+1602.C(54): error C202: 'RS': undefined identifier
+1602.C(55): error C202: 'RW': undefined identifier
+1602.C(56): error C202: 'E': undefined identifier
+1602.C(60): error C202: 'P0': undefined identifier
+1602.C(65): error C202: 'E': undefined identifier
+1602.C(70): error C202: 'E': undefined identifier
+1602.C(88): error C202: 'RS': undefined identifier
+1602.C(89): error C202: 'RW': undefined identifier
+1602.C(90): error C202: 'E': undefined identifier
+1602.C(92): error C202: 'P0': undefined identifier
+1602.C(97): error C202: 'E': undefined identifier
+1602.C(102): error C202: 'E': undefined identifier
+compiling hongwai.c...
+compiling 18b20.c...
+18B20.H(9): error C202: 'P1': undefined identifier
+1602.H(7): error C202: 'P2': undefined identifier
+1602.H(8): error C202: 'P2': undefined identifier
+1602.H(9): error C202: 'P2': undefined identifier
+1602.H(10): error C202: 'P0': undefined identifier
+1302.H(11): error C202: 'P1': undefined identifier
+1302.H(12): error C202: 'P1': undefined identifier
+1302.H(13): error C202: 'P1': undefined identifier
+1302.H(15): error C202: 'P3': undefined identifier
+1302.H(16): error C202: 'P3': undefined identifier
+1302.H(17): error C202: 'P3': undefined identifier
+1302.H(18): error C202: 'P3': undefined identifier
+1302.H(20): error C202: 'P3': undefined identifier
+18B20.C(26): error C202: 'BEEP': undefined identifier
+18B20.C(28): error C202: 'BEEP': undefined identifier
+18B20.C(35): error C202: 'DQ': undefined identifier
+18B20.C(37): error C202: 'DQ': undefined identifier
+18B20.C(39): error C202: 'DQ': undefined identifier
+18B20.C(42): error C202: 'DQ': undefined identifier
+18B20.C(44): error C202: 'DQ': undefined identifier
+18B20.C(56): error C202: 'DQ': undefined identifier
+18B20.C(58): error C202: 'DQ': undefined identifier
+18B20.C(60): error C202: 'DQ': undefined identifier
+18B20.C(74): error C202: 'DQ': undefined identifier
+18B20.C(75): error C202: 'DQ': undefined identifier
+18B20.C(78): error C202: 'DQ': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling z.c...
+compiling 1302.c...
+1602.H(7): error C202: 'P2': undefined identifier
+1602.H(8): error C202: 'P2': undefined identifier
+1602.H(9): error C202: 'P2': undefined identifier
+1602.H(10): error C202: 'P0': undefined identifier
+1302.H(11): error C202: 'P1': undefined identifier
+1302.H(12): error C202: 'P1': undefined identifier
+1302.H(13): error C202: 'P1': undefined identifier
+1302.H(15): error C202: 'P3': undefined identifier
+1302.H(16): error C202: 'P3': undefined identifier
+1302.H(17): error C202: 'P3': undefined identifier
+1302.H(18): error C202: 'P3': undefined identifier
+1302.H(20): error C202: 'P3': undefined identifier
+HONGWAI.H(13): error C202: 'P3': undefined identifier
+1302.C(38): error C202: 'BEEP': undefined identifier
+1302.C(40): error C202: 'BEEP': undefined identifier
+1302.C(51): error C202: 'SCLK': undefined identifier
+1302.C(55): error C202: 'DATA': undefined identifier
+1302.C(57): error C202: 'SCLK': undefined identifier
+1302.C(59): error C202: 'SCLK': undefined identifier
+1302.C(70): error C202: 'RST': undefined identifier
+1302.C(71): error C202: 'SCLK': undefined identifier
+1302.C(72): error C202: 'RST': undefined identifier
+1302.C(76): error C202: 'SCLK': undefined identifier
+1302.C(77): error C202: 'RST': undefined identifier
+1302.C(89): error C202: 'DATA': undefined identifier
+1302.C(91): error C202: 'SCLK': undefined identifier
+1302.C(93): error C202: 'SCLK': undefined identifier
+1302.C(106): error C202: 'RST': undefined identifier
+1302.C(107): error C202: 'SCLK': undefined identifier
+1302.C(108): error C202: 'RST': undefined identifier
+1302.C(111): error C202: 'SCLK': undefined identifier
+1302.C(112): error C202: 'RST': undefined identifier
+1302.C(305): error C202: 'K1': undefined identifier
+1302.C(308): error C202: 'K1': undefined identifier
+1302.C(310): error C202: 'K1': undefined identifier
+1302.C(404): error C202: 'K2': undefined identifier
+1302.C(407): error C202: 'K2': undefined identifier
+1302.C(409): error C202: 'K2': undefined identifier
+1302.C(521): error C202: 'K3': undefined identifier
+1302.C(524): error C202: 'K3': undefined identifier
+1302.C(526): error C202: 'K3': undefined identifier
+1302.C(692): error C202: 'K4': undefined identifier
+1302.C(694): error C202: 'K4': undefined identifier
+1302.C(696): error C202: 'K4': undefined identifier
+1302.C(857): error C202: 'K1': undefined identifier
+1302.C(860): error C202: 'K1': undefined identifier
+1302.C(862): error C202: 'K1': undefined identifier
+compiling 1602.c...
+1602.H(7): error C202: 'P2': undefined identifier
+1602.H(8): error C202: 'P2': undefined identifier
+1602.H(9): error C202: 'P2': undefined identifier
+1602.H(10): error C202: 'P0': undefined identifier
+1602.C(36): error C202: 'RS': undefined identifier
+1602.C(37): error C202: 'RW': undefined identifier
+1602.C(38): error C202: 'E': undefined identifier
+1602.C(43): error C202: 'BF': undefined identifier
+1602.C(44): error C202: 'E': undefined identifier
+1602.C(54): error C202: 'RS': undefined identifier
+1602.C(55): error C202: 'RW': undefined identifier
+1602.C(56): error C202: 'E': undefined identifier
+1602.C(60): error C202: 'P0': undefined identifier
+1602.C(65): error C202: 'E': undefined identifier
+1602.C(70): error C202: 'E': undefined identifier
+1602.C(88): error C202: 'RS': undefined identifier
+1602.C(89): error C202: 'RW': undefined identifier
+1602.C(90): error C202: 'E': undefined identifier
+1602.C(92): error C202: 'P0': undefined identifier
+1602.C(97): error C202: 'E': undefined identifier
+1602.C(102): error C202: 'E': undefined identifier
+compiling 18b20.c...
+18B20.H(9): error C202: 'P1': undefined identifier
+1602.H(7): error C202: 'P2': undefined identifier
+1602.H(8): error C202: 'P2': undefined identifier
+1602.H(9): error C202: 'P2': undefined identifier
+1602.H(10): error C202: 'P0': undefined identifier
+1302.H(11): error C202: 'P1': undefined identifier
+1302.H(12): error C202: 'P1': undefined identifier
+1302.H(13): error C202: 'P1': undefined identifier
+1302.H(15): error C202: 'P3': undefined identifier
+1302.H(16): error C202: 'P3': undefined identifier
+1302.H(17): error C202: 'P3': undefined identifier
+1302.H(18): error C202: 'P3': undefined identifier
+1302.H(20): error C202: 'P3': undefined identifier
+18B20.C(26): error C202: 'BEEP': undefined identifier
+18B20.C(28): error C202: 'BEEP': undefined identifier
+18B20.C(35): error C202: 'DQ': undefined identifier
+18B20.C(37): error C202: 'DQ': undefined identifier
+18B20.C(39): error C202: 'DQ': undefined identifier
+18B20.C(42): error C202: 'DQ': undefined identifier
+18B20.C(44): error C202: 'DQ': undefined identifier
+18B20.C(56): error C202: 'DQ': undefined identifier
+18B20.C(58): error C202: 'DQ': undefined identifier
+18B20.C(60): error C202: 'DQ': undefined identifier
+18B20.C(74): error C202: 'DQ': undefined identifier
+18B20.C(75): error C202: 'DQ': undefined identifier
+18B20.C(78): error C202: 'DQ': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling z.c...
+compiling 1302.c...
+compiling 1602.c...
+compiling hongwai.c...
+compiling 18b20.c...
+18B20.H(9): error C202: 'P1': undefined identifier
+18B20.C(35): error C202: 'DQ': undefined identifier
+18B20.C(37): error C202: 'DQ': undefined identifier
+18B20.C(39): error C202: 'DQ': undefined identifier
+18B20.C(42): error C202: 'DQ': undefined identifier
+18B20.C(44): error C202: 'DQ': undefined identifier
+18B20.C(56): error C202: 'DQ': undefined identifier
+18B20.C(58): error C202: 'DQ': undefined identifier
+18B20.C(60): error C202: 'DQ': undefined identifier
+18B20.C(74): error C202: 'DQ': undefined identifier
+18B20.C(75): error C202: 'DQ': undefined identifier
+18B20.C(78): error C202: 'DQ': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling z.c...
+compiling 18b20.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?HANYING_SHOW?1602
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?LCD_BUSYTEST?1602
+    CALLER1: ?PR?INT0?HONGWAI
+    CALLER2: ?C_C51STARTUP
+Program Size: data=39.4 xdata=0 code=6593
+creating hex file from "zh"...
+"zh" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling z.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DS1302_INT?1302
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DS1302_QLSHOW?1302
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?TIME_GET_SHOW?1302
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?C_INITSEG
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCD_INT?1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?HANYING_SHOW?1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?HW_DISP?HONGWAI
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?HW_INT?HONGWAI
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DS18B20_TEMPCONV?18B20
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DS18B20_GETTEMPERTURE?18B20
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DS18B20_DISPLAY_EXPLAIN?18B20
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DS18B20_DISPLAY_SYMBOL?18B20
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DS18B20_DISPLAY_DOT?18B20
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DS18B20_DISPLAY_CENT?18B20
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DS18B20_DISPLAY?18B20
+Program Size: data=60.3 xdata=0 code=6333
+creating hex file from "zh"...
+"zh" - 0 Error(s), 15 Warning(s).

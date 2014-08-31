@@ -1,0 +1,4938 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V7.51A/W32 for 8051               28/May/2010  14:43:50 /
+// Copyright 2004-2009 IAR Systems AB.                                        /
+// Time limited license: 20 days left                                         /
+//                                                                            /
+//    Core               =  plain                                             /
+//    Code model         =  near                                              /
+//    Data model         =  large                                             /
+//    Calling convention =  xdata reentrant                                   /
+//    Constant location  =  data                                              /
+//    Dptr setup         =  1,16                                              /
+//    Source file        =  E:\AllProject\51\Keyboard Firmware Source         /
+//                          Code\usb.c                                        /
+//    Command line       =  "E:\AllProject\51\Keyboard Firmware Source        /
+//                          Code\usb.c" -lC "E:\AllProject\51\Keyboard        /
+//                          Firmware Source Code\Debug\List\" -lA             /
+//                          "E:\AllProject\51\Keyboard Firmware Source        /
+//                          Code\Debug\List\" -o "E:\AllProject\51\Keyboard   /
+//                          Firmware Source Code\Debug\Obj\" -e               /
+//                          --char_is_signed --no_cse --no_unroll             /
+//                          --no_inline --no_code_motion --no_tbaa --debug    /
+//                          --core=plain --dptr=16,1 --data_model=large       /
+//                          --code_model=near --calling_convention=xdata_reen /
+//                          trant --place_constants=data --nr_virtual_regs 8  /
+//                          -I "C:\Program Files\IAR Systems\Embedded         /
+//                          Workbench 5.3 Evaluation version\8051\INC\" -I    /
+//                          "C:\Program Files\IAR Systems\Embedded Workbench  /
+//                          5.3 Evaluation version\8051\INC\CLIB\" -Ol        /
+//    List file          =  E:\AllProject\51\Keyboard Firmware Source         /
+//                          Code\Debug\List\usb.s51                           /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME usb
+
+        RTMODEL "__calling_convention", "xdata_reentrant"
+        RTMODEL "__code_model", "near"
+        RTMODEL "__core", "plain"
+        RTMODEL "__data_model", "large"
+        RTMODEL "__dptr_size", "16"
+        RTMODEL "__extended_stack", "disabled"
+        RTMODEL "__location_for_constants", "data"
+        RTMODEL "__number_of_dptrs", "1"
+        RTMODEL "__rt_version", "1"
+
+        RSEG DOVERLAY:DATA:NOROOT(0)
+        RSEG IOVERLAY:IDATA:NOROOT(0)
+        RSEG ISTACK:IDATA:NOROOT(0)
+        RSEG PSTACK:XDATA:NOROOT(0)
+        RSEG XSTACK:XDATA:NOROOT(0)
+
+        EXTERN ?ALLOC_XSTACK8
+        EXTERN ?CALL_IND
+        EXTERN ?DEALLOC_XSTACK8
+        EXTERN ?FUNC_ENTER_XDATA
+        EXTERN ?FUNC_LEAVE_XDATA
+        EXTERN ?INTERRUPT_ENTER_XSP
+        EXTERN ?INTERRUPT_LEAVE_XSP
+        EXTERN ?UC_SWITCH_DENSE
+        EXTERN ?UC_SWITCH_SPARSE
+        EXTERN ?V0
+        EXTERN ?XSP
+        EXTERN __INIT_XDATA_I
+        EXTERN __INIT_XDATA_Z
+
+        PUBWEAK `??P33Interrupt??INTVEC 19`
+        PUBWEAK `??USBInterrupt??INTVEC 3`
+        PUBLIC IEP0InterruptHandler
+        FUNCTION IEP0InterruptHandler,021203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC OEP0InterruptHandler
+        FUNCTION OEP0InterruptHandler,021203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC P33Interrupt
+        FUNCTION P33Interrupt,0233H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 4, STACK
+        PUBLIC SetupPacketInterruptHandler
+        FUNCTION SetupPacketInterruptHandler,021203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC USBInterrupt
+        FUNCTION USBInterrupt,0a1233H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 15, STACK
+        PUBWEAK _A_IE
+        PUBLIC abDescriptor
+        PUBLIC abIEP0Buffer
+        PUBLIC abOEP0Buffer
+        PUBLIC bConfigurationNumber
+        PUBLIC bHostAskMoreDataThanAvailable
+        PUBLIC bInterfaceNumber
+        PUBLIC bStatusAction
+        PUBLIC bSuspended
+        PUBLIC bUsbDeviceAddress
+        PUBLIC deviceReady
+        PUBLIC gbIdleRateH
+        PUBLIC gbIdleRateL
+        PUBLIC gbProtocol
+        PUBLIC pbIEP0Buffer
+        PUBLIC pbOEP0Buffer
+        PUBLIC pbXBufferAddress
+        PUBLIC pbYBufferAddress
+        PUBLIC tEndPoint0DescriptorBlock
+        PUBLIC tInputEndPointDescriptorBlock
+        PUBLIC tOutputEndPointDescriptorBlock
+        PUBLIC tSetupPacket
+        PUBLIC tUsbRequestList
+        PUBLIC usbClearEndpointHalt
+        FUNCTION usbClearEndpointHalt,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbClearRemoteWakeup
+        FUNCTION usbClearRemoteWakeup,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbDecodeAndProcessUsbRequest
+        FUNCTION usbDecodeAndProcessUsbRequest,0201H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME XSTACK, 11, STACK
+        PUBLIC usbGetConfiguration
+        FUNCTION usbGetConfiguration,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbGetConfigurationDescriptor
+        FUNCTION usbGetConfigurationDescriptor,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME XSTACK, 9, STACK
+        PUBLIC usbGetDeviceDescriptor
+        FUNCTION usbGetDeviceDescriptor,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME XSTACK, 9, STACK
+        PUBLIC usbGetDeviceStatus
+        FUNCTION usbGetDeviceStatus,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbGetEndpointStatus
+        FUNCTION usbGetEndpointStatus,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME XSTACK, 2, STACK
+        PUBLIC usbGetHIDDescriptor
+        FUNCTION usbGetHIDDescriptor,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME XSTACK, 9, STACK
+        PUBLIC usbGetIdle
+        FUNCTION usbGetIdle,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbGetInterface
+        FUNCTION usbGetInterface,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbGetInterfaceStatus
+        FUNCTION usbGetInterfaceStatus,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME XSTACK, 2, STACK
+        PUBLIC usbGetProtocol
+        FUNCTION usbGetProtocol,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbGetReportDescriptor
+        FUNCTION usbGetReportDescriptor,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbGetStringDescriptor
+        FUNCTION usbGetStringDescriptor,0a1603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME XSTACK, 9, STACK
+        PUBLIC usbNonStandardRequest
+        FUNCTION usbNonStandardRequest,021603H
+        ARGFRAME XSTACK, 0, STACK
+        PUBLIC usbReceiveDataPacketOnEP0
+        FUNCTION usbReceiveDataPacketOnEP0,0203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbReceiveNextPacketOnOEP0
+        FUNCTION usbReceiveNextPacketOnOEP0,021203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME XSTACK, 9, STACK
+        PUBLIC usbSendDataPacketOnEP0
+        FUNCTION usbSendDataPacketOnEP0,021203H
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbSendNextPacketOnIEP0
+        FUNCTION usbSendNextPacketOnIEP0,0203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME XSTACK, 9, STACK
+        PUBLIC usbSendZeroLengthPacketOnIEP0
+        FUNCTION usbSendZeroLengthPacketOnIEP0,0203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbSetAddress
+        FUNCTION usbSetAddress,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbSetConfiguration
+        FUNCTION usbSetConfiguration,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbSetEndpointHalt
+        FUNCTION usbSetEndpointHalt,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbSetIdle
+        FUNCTION usbSetIdle,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbSetInterface
+        FUNCTION usbSetInterface,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbSetProtocol
+        FUNCTION usbSetProtocol,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbSetRemoteWakeup
+        FUNCTION usbSetRemoteWakeup,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbSetReport
+        FUNCTION usbSetReport,021603H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC usbStallEndpoint0
+        FUNCTION usbStallEndpoint0,0203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC wBytesRemainingOnIEP0
+        PUBLIC wBytesRemainingOnOEP0
+        PUBLIC wDeviceFeatures
+        
+        CFI Names cfiNames0
+        CFI StackFrame CFA_SP SP IDATA
+        CFI StackFrame CFA_PSP16 PSP16 XDATA
+        CFI StackFrame CFA_XSP16 XSP16 XDATA
+        CFI StaticOverlayFrame CFA_IOVERLAY IOVERLAY
+        CFI StaticOverlayFrame CFA_DOVERLAY DOVERLAY
+        CFI Resource `PSW.CY`:1, `B.BR0`:1, `B.BR1`:1, `B.BR2`:1, `B.BR3`:1
+        CFI Resource `B.BR4`:1, `B.BR5`:1, `B.BR6`:1, `B.BR7`:1, `VB.BR8`:1
+        CFI Resource `VB.BR9`:1, `VB.BR10`:1, `VB.BR11`:1, `VB.BR12`:1
+        CFI Resource `VB.BR13`:1, `VB.BR14`:1, `VB.BR15`:1, VB:8, B:8, A:8
+        CFI Resource PSW:8, DPL0:8, DPH0:8, R0:8, R1:8, R2:8, R3:8, R4:8, R5:8
+        CFI Resource R6:8, R7:8, V0:8, V1:8, V2:8, V3:8, V4:8, V5:8, V6:8, V7:8
+        CFI Resource SP:8, PSPH:8, PSPL:8, PSP16:16, XSPH:8, XSPL:8, XSP16:16
+        CFI VirtualResource ?RET:16, ?RET_HIGH:8, ?RET_LOW:8
+        CFI ResourceParts PSP16 PSPH, PSPL
+        CFI ResourceParts XSP16 XSPH, XSPL
+        CFI ResourceParts ?RET ?RET_HIGH, ?RET_LOW
+        CFI EndNames cfiNames0
+        
+        CFI Common cfiCommon0 Using cfiNames0
+        CFI CodeAlign 1
+        CFI DataAlign -1
+        CFI ReturnAddress ?RET CODE
+        CFI CFA_DOVERLAY Used
+        CFI CFA_IOVERLAY Used
+        CFI CFA_SP SP+-2
+        CFI CFA_PSP16 PSP16+0
+        CFI CFA_XSP16 XSP16+0
+        CFI `PSW.CY` SameValue
+        CFI `B.BR0` SameValue
+        CFI `B.BR1` SameValue
+        CFI `B.BR2` SameValue
+        CFI `B.BR3` SameValue
+        CFI `B.BR4` SameValue
+        CFI `B.BR5` SameValue
+        CFI `B.BR6` SameValue
+        CFI `B.BR7` SameValue
+        CFI `VB.BR8` SameValue
+        CFI `VB.BR9` SameValue
+        CFI `VB.BR10` SameValue
+        CFI `VB.BR11` SameValue
+        CFI `VB.BR12` SameValue
+        CFI `VB.BR13` SameValue
+        CFI `VB.BR14` SameValue
+        CFI `VB.BR15` SameValue
+        CFI VB SameValue
+        CFI B Undefined
+        CFI A Undefined
+        CFI PSW SameValue
+        CFI DPL0 SameValue
+        CFI DPH0 SameValue
+        CFI R0 Undefined
+        CFI R1 Undefined
+        CFI R2 Undefined
+        CFI R3 Undefined
+        CFI R4 Undefined
+        CFI R5 Undefined
+        CFI R6 SameValue
+        CFI R7 SameValue
+        CFI V0 SameValue
+        CFI V1 SameValue
+        CFI V2 SameValue
+        CFI V3 SameValue
+        CFI V4 SameValue
+        CFI V5 SameValue
+        CFI V6 SameValue
+        CFI V7 SameValue
+        CFI PSPH Undefined
+        CFI PSPL Undefined
+        CFI XSPH Undefined
+        CFI XSPL Undefined
+        CFI ?RET Concat
+        CFI ?RET_HIGH Frame(CFA_SP, 2)
+        CFI ?RET_LOW Frame(CFA_SP, 1)
+        CFI EndCommon cfiCommon0
+        
+        
+        CFI Common cfiCommon1 Using cfiNames0
+        CFI CodeAlign 1
+        CFI DataAlign -1
+        CFI ReturnAddress ?RET CODE
+        CFI CFA_DOVERLAY Used
+        CFI CFA_IOVERLAY Used
+        CFI CFA_SP SP+-2
+        CFI CFA_PSP16 PSP16+0
+        CFI CFA_XSP16 XSP16+0
+        CFI `PSW.CY` SameValue
+        CFI `B.BR0` SameValue
+        CFI `B.BR1` SameValue
+        CFI `B.BR2` SameValue
+        CFI `B.BR3` SameValue
+        CFI `B.BR4` SameValue
+        CFI `B.BR5` SameValue
+        CFI `B.BR6` SameValue
+        CFI `B.BR7` SameValue
+        CFI `VB.BR8` SameValue
+        CFI `VB.BR9` SameValue
+        CFI `VB.BR10` SameValue
+        CFI `VB.BR11` SameValue
+        CFI `VB.BR12` SameValue
+        CFI `VB.BR13` SameValue
+        CFI `VB.BR14` SameValue
+        CFI `VB.BR15` SameValue
+        CFI VB SameValue
+        CFI B SameValue
+        CFI A SameValue
+        CFI PSW SameValue
+        CFI DPL0 SameValue
+        CFI DPH0 SameValue
+        CFI R0 SameValue
+        CFI R1 SameValue
+        CFI R2 SameValue
+        CFI R3 SameValue
+        CFI R4 SameValue
+        CFI R5 SameValue
+        CFI R6 SameValue
+        CFI R7 SameValue
+        CFI V0 SameValue
+        CFI V1 SameValue
+        CFI V2 SameValue
+        CFI V3 SameValue
+        CFI V4 SameValue
+        CFI V5 SameValue
+        CFI V6 SameValue
+        CFI V7 SameValue
+        CFI PSPH Undefined
+        CFI PSPL Undefined
+        CFI XSPH Undefined
+        CFI XSPL Undefined
+        CFI ?RET Concat
+        CFI ?RET_HIGH Frame(CFA_SP, 2)
+        CFI ?RET_LOW Frame(CFA_SP, 1)
+        CFI EndCommon cfiCommon1
+        
+P33Interrupt        SYMBOL "P33Interrupt"
+`??P33Interrupt??INTVEC 19` SYMBOL "??INTVEC 19", P33Interrupt
+USBInterrupt        SYMBOL "USBInterrupt"
+`??USBInterrupt??INTVEC 3` SYMBOL "??INTVEC 3", USBInterrupt
+
+        EXTERN strlen
+        FUNCTION strlen,0202H
+        ARGFRAME ISTACK, 1, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN OEP0SetLEDs
+        FUNCTION OEP0SetLEDs,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN IEP1InterruptHandler
+        FUNCTION IEP1InterruptHandler,0202H
+        ARGFRAME ISTACK, 15, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN UsbReset
+        FUNCTION UsbReset,0202H
+        ARGFRAME ISTACK, 15, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN abromConfigurationDescriptorGroup
+        EXTERN abromDeviceDescriptor
+        EXTERN abromReportDescriptor
+        EXTERN bLED
+        EXTERN fncOffset
+        EXTERN funcDefs
+
+// E:\AllProject\51\Keyboard Firmware Source Code\usb.c
+//    1 /******************************************************************************
+//    2  *                         VAULT INFORMATION SERVICES                         *
+//    3  *                          TEXAS INSTRUMENTS, INC.                           *
+//    4  *----------------------------------------------------------------------------*
+//    5  *                     "USB Handler for TUSB2136 Demo App"                    *
+//    6  *                                                                            * 
+//    7  * Programmed by: Craig Steiner, VIS (csteiner@vaultbbs.com)                  * 
+//    8  * Develop Date:  30/Sep/2000                                                 *  
+//    9  *----------------------------------------------------------------------------*
+//   10  * Description: This module is a component of the TUSB2136 Demo App.  It      *
+//   11  *   handles all USB-related operation functions such as USB request          *
+//   12  *   handlers, interrupts, etc.  Functions related to USB initialization      *
+//   13  *   may be found in usbinit.c                                                * 
+//   14  *                                                                            *
+//   15  * Modified by Jim Chen 2001/01/03:                                           *
+//   16  *   1. total 102 keys                                                        *
+//   17  *   2. can work in Mac                                                       *
+//   18  *   3. use scanline8, scanline9 and return 0x40 as suspend key               *
+//   19  *   4. added usbSetIdle(void), void usbSetProtocol(void) for Mac             *
+//   20  *                                                                            *
+//   21  * Modified by Jim Chen 2001/01/19:                                           *
+//   22  *   1. fixed bug in high speed Mac                                           *
+//   23  *                                                                            *
+//   24  * Modified by Jim Chen 2001/01/31:                                           *
+//   25  *   1. added usbGetIdle and usbGetProtocol for passing HIDView optional      *
+//   26  *      commands                                                              *
+//   27  *                                                                            *
+//   28  * Modified by Jim Chen 2001/05/20:                                           *
+//   29  *   1. fix bug on                                                            *
+//   30  *      USB_REQ_SET_INTERFACE mapping usbSetInterface of tUsbRequestList      *
+//   31  ******************************************************************************/
+//   32 
+//   33 #include <io51.h>
+
+        ASEGN SFR_AN:DATA:NOROOT,0a8H
+// union <unnamed> volatile __sfr _A_IE
+_A_IE:
+        DS 1
+//   34 #include "types.h"
+//   35 #include "tusb2136.h"
+//   36 #include "usb.h"
+//   37 #include "delay.h"
+//   38 
+//   39 /***************************************************************************
+//   40  * Section:    TUSB2136 Segment Definitions                                *
+//   41  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//   42  * Description: This section of code assigns certain variables to defined  *
+//   43  *    mapped memory addresses in the TUSB2136.  The mapped memory symbols  *
+//   44  *    used in the dataset() pragmas are found in the .XCL file for the     * 
+//   45  *    project.                                                             *  
+//   46  ***************************************************************************/
+//   47 
+//   48 #pragma dataseg=TUSB2136_SETUPPACKET_SEG
+
+        RSEG TUSB2136_SETUPPACKET_SEG:XDATA:REORDER:NOROOT(0)
+//   49 __no_init tDEVICE_REQUEST tSetupPacket;
+tSetupPacket:
+        DS 8
+//   50 #pragma dataseg= default
+//   51 
+//   52 #pragma dataseg=TUSB2136_EP0_EDB_SEG
+
+        RSEG TUSB2136_EP0_EDB_SEG:XDATA:REORDER:NOROOT(0)
+//   53 __no_init tEDB0 tEndPoint0DescriptorBlock;
+tEndPoint0DescriptorBlock:
+        DS 4
+//   54 #pragma dataseg= default
+//   55 
+//   56 #pragma dataseg=TUSB2136_IEP_EDB_SEG
+
+        RSEG TUSB2136_IEP_EDB_SEG:XDATA:REORDER:NOROOT(0)
+//   57 __no_init tEDB tInputEndPointDescriptorBlock[3];
+tInputEndPointDescriptorBlock:
+        DS 24
+//   58 #pragma dataseg= default
+//   59 
+//   60 #pragma dataseg=TUSB2136_OEP_EDB_SEG
+
+        RSEG TUSB2136_OEP_EDB_SEG:XDATA:REORDER:NOROOT(0)
+//   61 __no_init tEDB tOutputEndPointDescriptorBlock[3];
+tOutputEndPointDescriptorBlock:
+        DS 24
+//   62 #pragma dataseg= default
+//   63 
+//   64 #pragma dataseg=TUSB2136_IEP0BUFFER_SEG
+
+        RSEG TUSB2136_IEP0BUFFER_SEG:XDATA:REORDER:NOROOT(0)
+//   65 __no_init BYTE abIEP0Buffer[EP0_MAX_PACKET_SIZE];
+abIEP0Buffer:
+        DS 8
+//   66 #pragma dataseg= default
+//   67 
+//   68 #pragma dataseg=TUSB2136_OEP0BUFFER_SEG
+
+        RSEG TUSB2136_OEP0BUFFER_SEG:XDATA:REORDER:NOROOT(0)
+//   69 __no_init BYTE abOEP0Buffer[EP0_MAX_PACKET_SIZE];
+abOEP0Buffer:
+        DS 8
+//   70 #pragma dataseg= default
+//   71 
+//   72 #pragma dataseg=TUSB2136_DESC_SEG             // 0xfe00
+
+        RSEG TUSB2136_DESC_SEG:XDATA:REORDER:NOROOT(0)
+//   73 __no_init BYTE abDescriptor[SIZEOF_DEVICE_DESCRIPTOR];
+abDescriptor:
+        DS 18
+//   74 //BYTE abConfigurationDescriptorGroup[SIZEOF_BOOTCODE_CONFIG_DESC_GROUP];
+//   75 //BYTE abStringDescriptor[SIZEOF_BOOTCODE_STRING_DESC_GROUP];
+//   76 #pragma dataseg= default
+//   77 
+//   78 #pragma dataseg=TUSB2136_OEP1_X_BUFFER_SEG    // 0xfd80
+
+        RSEG TUSB2136_OEP1_X_BUFFER_SEG:XDATA:REORDER:NOROOT(0)
+//   79 __no_init BYTE pbXBufferAddress[EP_MAX_PACKET_SIZE];
+pbXBufferAddress:
+        DS 64
+//   80 #pragma dataseg= default
+//   81 
+//   82 #pragma dataseg=TUSB2136_OEP1_Y_BUFFER_SEG    // 0xfdc0
+
+        RSEG TUSB2136_OEP1_Y_BUFFER_SEG:XDATA:REORDER:NOROOT(0)
+//   83 __no_init BYTE pbYBufferAddress[EP_MAX_PACKET_SIZE];
+pbYBufferAddress:
+        DS 64
+//   84 #pragma dataseg= default
+//   85 
+//   86 /***************************************************************************
+//   87  * Section:    Declarations                                                *
+//   88  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//   89  * Description: This section of the code declares global and external      *
+//   90  *    variables, as well as functions, etc.                                *
+//   91  ***************************************************************************/
+//   92 
+//   93 // EXTERNAL DECLARATIONS 
+//   94 extern BYTE code abromReportDescriptor[SIZEOF_REPORT_DESCRIPTOR];
+//   95 extern void setLEDs(BYTE bData); // From 8255.c
+//   96 extern unsigned char intFlags; // From keyboard.c
+//   97 extern unsigned char otherFlags; // From keyboard.c
+//   98 extern void IEP1InterruptHandler(void); // From keyboard.c
+//   99 extern void UsbReset(void); // From usbinit.c
+//  100 extern void OEP0SetLEDs(void);
+//  101 extern BYTE bLED;
+//  102 extern struct FUNCDEF_STRUCT code funcDefs[17]; // From vidpid.c
+//  103 extern unsigned char fncOffset; // From vidpid.c
+//  104 extern BYTE code abromReportDescriptor[SIZEOF_REPORT_DESCRIPTOR];
+//  105 extern BYTE code abromConfigurationDescriptorGroup[SIZEOF_BOOTCODE_CONFIG_DESC_GROUP];
+//  106 extern BYTE code abromDeviceDescriptor[SIZEOF_DEVICE_DESCRIPTOR];
+//  107 extern BYTE strlen(char *string); // From support.c
+//  108 
+//  109 
+//  110 
+//  111 // GLOBAL VARIABLE DECLARATIONS
+//  112 
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  113 BYTE deviceReady = FALSE;		// Indicates whether the device has been
+deviceReady:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+//  114 								// properly initialized on the USB bus.
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  115 BYTE bSuspended = FALSE;		// Indicates whether the device is suspended or not
+bSuspended:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  116 BYTE bStatusAction;				// Indicates the current state of sending
+bStatusAction:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+//  117 								// receiving data packets.
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  118 BYTE bUsbDeviceAddress;			// The device's USB address.
+bUsbDeviceAddress:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  119 WORD wBytesRemainingOnIEP0;     // For endpoint zero transmitter only
+wBytesRemainingOnIEP0:
+        DS 2
+        REQUIRE __INIT_XDATA_Z
+//  120                                 // Holds count of bytes remaining to be
+//  121                                 // transmitted by endpoint 0.  A value
+//  122                                 // of 0 means that a 0-length data packet
+//  123                                 // A value of 0xFFFF means that transfer
+//  124                                 // is complete.
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  125 BOOL bHostAskMoreDataThanAvailable;
+bHostAskMoreDataThanAvailable:
+        DS 2
+        REQUIRE __INIT_XDATA_Z
+//  126                                 // If host ask more data then TUSB2136 has
+//  127                                 // It will send one zero-length packet
+//  128                                 // if the asked lenght is a multiple of
+//  129                                 // max. size of endpoint 0
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  130 PBYTE pbIEP0Buffer;             // A buffer pointer to input end point 0
+pbIEP0Buffer:
+        DS 2
+        REQUIRE __INIT_XDATA_Z
+//  131                                 // Data sent back to host is copied from
+//  132                                 // this pointed memory location
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  133 BYTE bConfigurationNumber = 0;  // Set to 1 when USB device has been
+bConfigurationNumber:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+//  134                                 // configured, set to 0 when unconfigured
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  135 BYTE bInterfaceNumber = 0;		// The interface number selected
+bInterfaceNumber:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  136 WORD wDeviceFeatures = 0;		// The device features
+wDeviceFeatures:
+        DS 2
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  137 WORD wBytesRemainingOnOEP0;     // For endpoint zero transmitter only
+wBytesRemainingOnOEP0:
+        DS 2
+        REQUIRE __INIT_XDATA_Z
+//  138                                 // Holds count of bytes remaining to be
+//  139                                 // received by endpoint 0.  A value
+//  140                                 // of 0 means that a 0-length data packet
+//  141                                 // A value of 0xFFFF means that transfer
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  142 PBYTE pbOEP0Buffer;             // A buffer pointer to output end point 0
+pbOEP0Buffer:
+        DS 2
+        REQUIRE __INIT_XDATA_Z
+//  143                                 // Data sent from host is copied to
+//  144                                 // this pointed memory location
+//  145                                 // is complete.
+//  146 
+//  147 #define usbClearOEP0ByteCount tEndPoint0DescriptorBlock.bOEPBCNT = 0x00
+//  148 #define usbStallOEP0          tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL
+//  149 
+//  150 void usbReceiveDataPacketOnEP0(PBYTE pbBuffer);
+//  151 void usbStallEndpoint0(void);
+//  152 void usbSendZeroLengthPacketOnIEP0(void);
+//  153 void usbSendNextPacketOnIEP0(void);
+//  154 void usbSendDataPacketOnEP0(PBYTE pbBuffer);
+//  155 
+//  156 
+//  157 
+//  158 
+//  159 /***************************************************************************
+//  160  * Section:    USB REQUEST FUNCTIONS                                       *
+//  161  * Programmer: Craig Steiner (csteiner@vaultbbs.com) based on code by      *
+//  162  *             Lobo Tai (lobotai@ti.com)                                   *
+//  163  * Description: The functions in this section of code are called by the    *
+//  164  *    usbDecodeAndProcessUsbRequest function when a Setup packet is        *
+//  165  *    received.  Each function handles a specific USB/Class/Endpoint       *
+//  166  *    function.                                                            *
+//  167  ***************************************************************************/
+//  168 
+//  169 // The Get/Set configuration functions allow the host to select one of various
+//  170 // configurations that the keyboard may support.  This firmware only supports
+//  171 // one configuration, but the following functions allow the firmware to accept
+//  172 // any given configuration number.  The code, as-is, will function identically
+//  173 // in any given configuration, but additional configurations may be supported
+//  174 // by simply adding support for the configurations, presumably in keyboard.c.
+//  175 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  176 void usbGetConfiguration(void)
+usbGetConfiguration:
+        CFI Block cfiBlock0 Using cfiCommon0
+        CFI Function usbGetConfiguration
+//  177 {
+        FUNCALL usbGetConfiguration, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  178     wBytesRemainingOnIEP0 = 1;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x1
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  179     usbSendDataPacketOnEP0((PBYTE) &bConfigurationNumber);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     R2,#(bConfigurationNumber & 0xff)
+        MOV     R3,#((bConfigurationNumber >> 8) & 0xff)
+        LCALL   usbSendDataPacketOnEP0
+//  180 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock0
+//  181 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  182 void usbSetConfiguration(void)
+usbSetConfiguration:
+        CFI Block cfiBlock1 Using cfiCommon0
+        CFI Function usbSetConfiguration
+//  183 {
+        FUNCALL usbSetConfiguration, usbSendZeroLengthPacketOnIEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  184     usbStallOEP0;
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 2)
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+//  185     bConfigurationNumber = tSetupPacket.bValueL;
+        MOV     DPTR,#(tSetupPacket + 2)
+        MOVX    A,@DPTR
+        MOV     DPTR,#bConfigurationNumber
+        MOVX    @DPTR,A
+//  186     usbSendZeroLengthPacketOnIEP0();
+        ; Setup parameters for call to function usbSendZeroLengthPacketOnIEP0
+        LCALL   usbSendZeroLengthPacketOnIEP0
+//  187 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock1
+//  188 
+//  189 // The Set_Report request is sent by the host to a typical HID device,
+//  190 // such as this keyboard, to update the LEDs that correspond to the
+//  191 // scroll lock, caps lock, and num lock.  When the Set_Report setup
+//  192 // packet is received, we initiate a "Receive Data Packet" sequence
+//  193 // since the actual 1-byte data value will be in the following
+//  194 // packet on OEP0.  Thus we initicate that we will receive 1 byte
+//  195 // (since the LED data is contained in a single byte) and we
+//  196 // instruct the receive routine to receive the data at the address
+//  197 // at which the bLED variable is located.  Thus bLed will automatically
+//  198 // be updated with the new value after the transfer is completed.
+//  199 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  200 void usbSetReport(void)
+usbSetReport:
+        CFI Block cfiBlock2 Using cfiCommon0
+        CFI Function usbSetReport
+//  201 {
+        FUNCALL usbSetReport, usbReceiveDataPacketOnEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  202     wBytesRemainingOnOEP0 = 1;
+        MOV     DPTR,#wBytesRemainingOnOEP0
+        MOV     A,#0x1
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  203     usbReceiveDataPacketOnEP0((PBYTE) &bLED);
+        ; Setup parameters for call to function usbReceiveDataPacketOnEP0
+        MOV     R2,#(bLED & 0xff)
+        MOV     R3,#((bLED >> 8) & 0xff)
+        LCALL   usbReceiveDataPacketOnEP0
+//  204 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock2
+//  205 
+//  206 // The following functions are called at initial device enumeration, and are used
+//  207 // to obtain the device, configuration, and string descriptors from the
+//  208 // device.
+//  209 
+//  210 //extern unsigned char s0123; // The s0132 value read from VIDSTA at boot time
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  211 void usbGetDeviceDescriptor(void)
+usbGetDeviceDescriptor:
+        CFI Block cfiBlock3 Using cfiCommon0
+        CFI Function usbGetDeviceDescriptor
+//  212 {
+        FUNCALL usbGetDeviceDescriptor, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?FUNC_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+//  213 	BYTE bTemp;
+//  214 	// Copy the DEVICE DESCRIPTOR from program "ROM" to XRAM
+//  215     for(bTemp=0;bTemp<SIZEOF_DEVICE_DESCRIPTOR;bTemp++)
+        MOV     R2,#0x0
+        SJMP    ??usbGetDeviceDescriptor_0
+//  216         abDescriptor[bTemp] = abromDeviceDescriptor[bTemp];
+??usbGetDeviceDescriptor_1:
+        MOV     ?V0 + 0,R2
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abromDeviceDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abromDeviceDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R2
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R2
+??usbGetDeviceDescriptor_0:
+        MOV     A,R2
+        CLR     C
+        SUBB    A,#0x12
+        JC      ??usbGetDeviceDescriptor_1
+//  217 
+//  218 	// Modify the FUNCTION VID/PID and firmware version using our selected value
+//  219 //	abDescriptor[OFFSET_DEVICE_DESCRIPTOR_VID_L] = s0123;
+//  220 	abDescriptor[OFFSET_DEVICE_DESCRIPTOR_VID_L] = (funcDefs[fncOffset].fncVID & 0xFF);
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 5) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 5) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     DPTR,#(abDescriptor + 8)
+        MOVX    @DPTR,A
+//  221 	abDescriptor[OFFSET_DEVICE_DESCRIPTOR_VID_H] = ((funcDefs[fncOffset].fncVID & 0xFF00) >> 8);	
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 5) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 5) >> 8) & 0xff)
+        MOV     DPH,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R1,A
+        MOV     A,R1
+        MOV     DPTR,#(abDescriptor + 9)
+        MOVX    @DPTR,A
+//  222 	abDescriptor[OFFSET_DEVICE_DESCRIPTOR_PID_L] = (funcDefs[fncOffset].fncPID & 0xFF);
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 7) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 7) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     DPTR,#(abDescriptor + 10)
+        MOVX    @DPTR,A
+//  223 	abDescriptor[OFFSET_DEVICE_DESCRIPTOR_PID_H] = ((funcDefs[fncOffset].fncPID & 0xFF00) >> 8);	
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 7) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 7) >> 8) & 0xff)
+        MOV     DPH,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R1,A
+        MOV     A,R1
+        MOV     DPTR,#(abDescriptor + 11)
+        MOVX    @DPTR,A
+//  224 	abDescriptor[OFFSET_DEVICE_DESCRIPTOR_VER_L] = (funcDefs[fncOffset].fncRevision & 0xFF);
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 9) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 9) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     DPTR,#(abDescriptor + 12)
+        MOVX    @DPTR,A
+//  225 	abDescriptor[OFFSET_DEVICE_DESCRIPTOR_VER_H] = ((funcDefs[fncOffset].fncRevision & 0xFF00) >> 8);	
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 9) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 9) >> 8) & 0xff)
+        MOV     DPH,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R1,A
+        MOV     A,R1
+        MOV     DPTR,#(abDescriptor + 13)
+        MOVX    @DPTR,A
+//  226 	if(funcDefs[fncOffset].mfgDescription == NULL )
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 11) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 11) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     R0,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R1,A
+        MOV     A,#0x0
+        XRL     A,R0
+        JNZ     ??usbGetDeviceDescriptor_2
+        MOV     A,#0x0
+        XRL     A,R1
+??usbGetDeviceDescriptor_2:
+        JNZ     ??usbGetDeviceDescriptor_3
+//  227 		abDescriptor[OFFSET_DEVICE_DESCRIPTOR_IMFG] = 0x00;
+        MOV     A,#0x0
+        MOV     DPTR,#(abDescriptor + 14)
+        MOVX    @DPTR,A
+//  228 	if(funcDefs[fncOffset].prodDescription == NULL )
+??usbGetDeviceDescriptor_3:
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 13) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 13) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     R0,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R1,A
+        MOV     A,#0x0
+        XRL     A,R0
+        JNZ     ??usbGetDeviceDescriptor_4
+        MOV     A,#0x0
+        XRL     A,R1
+??usbGetDeviceDescriptor_4:
+        JNZ     ??usbGetDeviceDescriptor_5
+//  229 		abDescriptor[OFFSET_DEVICE_DESCRIPTOR_IPROD] = 0x00;
+        MOV     A,#0x0
+        MOV     DPTR,#(abDescriptor + 15)
+        MOVX    @DPTR,A
+//  230 	if(funcDefs[fncOffset].serialNumber == NULL )
+??usbGetDeviceDescriptor_5:
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 15) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 15) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     R0,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R1,A
+        MOV     A,#0x0
+        XRL     A,R0
+        JNZ     ??usbGetDeviceDescriptor_6
+        MOV     A,#0x0
+        XRL     A,R1
+??usbGetDeviceDescriptor_6:
+        JNZ     ??usbGetDeviceDescriptor_7
+//  231 		abDescriptor[OFFSET_DEVICE_DESCRIPTOR_ISN] = 0x00;
+        MOV     A,#0x0
+        MOV     DPTR,#(abDescriptor + 16)
+        MOVX    @DPTR,A
+//  232 
+//  233     usbClearOEP0ByteCount;
+??usbGetDeviceDescriptor_7:
+        MOV     A,#0x0
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 3)
+        MOVX    @DPTR,A
+//  234     wBytesRemainingOnIEP0 = SIZEOF_DEVICE_DESCRIPTOR;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x12
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  235     usbSendDataPacketOnEP0((PBYTE)&abDescriptor);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     R2,#(abDescriptor & 0xff)
+        MOV     R3,#((abDescriptor >> 8) & 0xff)
+        LCALL   usbSendDataPacketOnEP0
+//  236     
+//  237     // Once the Device Descriptor has been sent, the device can essentially
+//  238     // function.  Thus we enable the deviceReady variable so that the main
+//  239     // code in keyboard.c knows that it can begin the service loop.
+//  240 	deviceReady = TRUE;    
+        MOV     A,#0x1
+        MOV     DPTR,#deviceReady
+        MOVX    @DPTR,A
+//  241 }
+        MOV     R7,#0x2
+        LJMP    ?FUNC_LEAVE_XDATA
+        CFI EndBlock cfiBlock3
+//  242 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  243 void usbGetHIDDescriptor(void)
+usbGetHIDDescriptor:
+        CFI Block cfiBlock4 Using cfiCommon0
+        CFI Function usbGetHIDDescriptor
+//  244 {
+        FUNCALL usbGetHIDDescriptor, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?FUNC_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+//  245 	BYTE bTemp;
+//  246 	// Copy the DEVICE DESCRIPTOR from program "ROM" to XRAM
+//  247     for(bTemp=0;bTemp<SIZEOF_DEVICE_DESCRIPTOR;bTemp++)
+        MOV     R2,#0x0
+        SJMP    ??usbGetHIDDescriptor_0
+//  248         abDescriptor[bTemp] = abromConfigurationDescriptorGroup[SIZEOF_CONFIG_DESCRIPTOR+SIZEOF_INTERFACE_DESCRIPTOR + bTemp];
+??usbGetHIDDescriptor_1:
+        MOV     ?V0 + 0,R2
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#((abromConfigurationDescriptorGroup + 18) & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#(((abromConfigurationDescriptorGroup + 18) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R2
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R2
+??usbGetHIDDescriptor_0:
+        MOV     A,R2
+        CLR     C
+        SUBB    A,#0x12
+        JC      ??usbGetHIDDescriptor_1
+//  249 
+//  250     usbClearOEP0ByteCount;
+        MOV     A,#0x0
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 3)
+        MOVX    @DPTR,A
+//  251     wBytesRemainingOnIEP0 = SIZEOF_KEYBD_HID_DESCRIPTOR;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x9
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  252     usbSendDataPacketOnEP0((PBYTE)&abDescriptor);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     R2,#(abDescriptor & 0xff)
+        MOV     R3,#((abDescriptor >> 8) & 0xff)
+        LCALL   usbSendDataPacketOnEP0
+//  253 }
+        MOV     R7,#0x2
+        LJMP    ?FUNC_LEAVE_XDATA
+        CFI EndBlock cfiBlock4
+//  254 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  255 void usbGetConfigurationDescriptor(void)
+usbGetConfigurationDescriptor:
+        CFI Block cfiBlock5 Using cfiCommon0
+        CFI Function usbGetConfigurationDescriptor
+//  256 {
+        FUNCALL usbGetConfigurationDescriptor, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?FUNC_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+//  257 	BYTE bTemp;
+//  258 	// Copy the DEVICE DESCRIPTOR from program "ROM" to XRAM
+//  259     for(bTemp=0;bTemp<SIZEOF_BOOTCODE_CONFIG_DESC_GROUP;bTemp++)
+        MOV     R2,#0x0
+        SJMP    ??usbGetConfigurationDescriptor_0
+//  260         abDescriptor[bTemp] = abromConfigurationDescriptorGroup[bTemp];
+??usbGetConfigurationDescriptor_1:
+        MOV     ?V0 + 0,R2
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abromConfigurationDescriptorGroup & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abromConfigurationDescriptorGroup >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R2
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R2
+??usbGetConfigurationDescriptor_0:
+        MOV     A,R2
+        CLR     C
+        SUBB    A,#0x22
+        JC      ??usbGetConfigurationDescriptor_1
+//  261 
+//  262     usbClearOEP0ByteCount;
+        MOV     A,#0x0
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 3)
+        MOVX    @DPTR,A
+//  263     wBytesRemainingOnIEP0 = SIZEOF_BOOTCODE_CONFIG_DESC_GROUP;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x22
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  264     usbSendDataPacketOnEP0((PBYTE)&abDescriptor);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     R2,#(abDescriptor & 0xff)
+        MOV     R3,#((abDescriptor >> 8) & 0xff)
+        LCALL   usbSendDataPacketOnEP0
+//  265 }
+        MOV     R7,#0x2
+        LJMP    ?FUNC_LEAVE_XDATA
+        CFI EndBlock cfiBlock5
+//  266 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  267 void usbGetStringDescriptor(void)
+usbGetStringDescriptor:
+        CFI Block cfiBlock6 Using cfiCommon0
+        CFI Function usbGetStringDescriptor
+//  268 {
+        FUNCALL usbGetStringDescriptor, strlen
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 1, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL usbGetStringDescriptor, strlen
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 1, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL usbGetStringDescriptor, strlen
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 1, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL usbGetStringDescriptor, strlen
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 1, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL usbGetStringDescriptor, strlen
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 1, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL usbGetStringDescriptor, strlen
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 1, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL usbGetStringDescriptor, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?FUNC_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+//  269 //    WORD bIndex;
+//  270    	BYTE bTemp;
+//  271    	BYTE stringOffset = 0;
+        MOV     R6,#0x0
+//  272 
+//  273     usbClearOEP0ByteCount;
+        MOV     A,#0x0
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 3)
+        MOVX    @DPTR,A
+//  274 
+//  275 	switch(tSetupPacket.bValueL)
+        MOV     DPTR,#(tSetupPacket + 2)
+        MOVX    A,@DPTR
+        LCALL   ?UC_SWITCH_DENSE
+`?<Jumptable for usbGetStringDescriptor>_0`:
+        DATA
+        DB        0
+        DB        3
+        DW        ??usbGetStringDescriptor_0
+        DW        ??usbGetStringDescriptor_1
+        DW        ??usbGetStringDescriptor_2
+        DW        ??usbGetStringDescriptor_3
+        DW        ??usbGetStringDescriptor_4
+        CODE
+//  276 		{
+//  277 		case 0: // LANGUAGE ID
+//  278 			abDescriptor[0] = 4; // Length of language descriptor ID
+??usbGetStringDescriptor_1:
+        MOV     A,#0x4
+        MOV     DPTR,#abDescriptor
+        MOVX    @DPTR,A
+//  279 			abDescriptor[1] = 3; // LANGID tag
+        MOV     A,#0x3
+        MOV     DPTR,#(abDescriptor + 1)
+        MOVX    @DPTR,A
+//  280 			abDescriptor[2] = 0x09; // Low byte of 0x0409 (English)
+        MOV     A,#0x9
+        MOV     DPTR,#(abDescriptor + 2)
+        MOVX    @DPTR,A
+//  281 			abDescriptor[3] = 0x04; // High byte of 0x0409 (English)
+        MOV     A,#0x4
+        MOV     DPTR,#(abDescriptor + 3)
+        MOVX    @DPTR,A
+        LJMP    ??usbGetStringDescriptor_0
+//  282 			break;
+//  283 		case 1: // MANUFACTURER DESCRIPTION
+//  284 			abDescriptor[stringOffset++] = strlen(funcDefs[fncOffset].mfgDescription) * 2 + 2; // Length of this string
+??usbGetStringDescriptor_2:
+        MOV     B,#0x2
+        PUSH    B
+        CFI CFA_SP SP+-1
+        ; Setup parameters for call to function strlen
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 11) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 11) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     R2,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R3,A
+        LCALL   strlen
+        MOV     A,R1
+        POP     B
+        CFI CFA_SP SP+0
+        MUL     AB
+        ADD     A,#0x2
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  285 			abDescriptor[stringOffset++] = DESC_TYPE_STRING; // String descriptor type
+        MOV     A,#0x3
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  286 			for(bTemp = 0; bTemp < strlen(funcDefs[fncOffset].mfgDescription);bTemp++)
+        MOV     R7,#0x0
+        SJMP    ??usbGetStringDescriptor_5
+//  287 				{
+//  288 				abDescriptor[stringOffset++] = funcDefs[fncOffset].mfgDescription[bTemp]; // Insert the character from the string
+??usbGetStringDescriptor_6:
+        MOV     A,R7
+        MOV     R2,A
+        MOV     R3,#0x0
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R4,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R4
+        MOV     R4,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R4
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 11) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 11) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        ADD     A,R2
+        MOV     R4,A
+        INC     DPTR
+        CLR     A
+        MOVC    A,@A+DPTR
+        ADDC    A,R3
+        MOV     DPL,R4
+        MOV     DPH,A
+        MOVX    A,@DPTR
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  289 				abDescriptor[stringOffset++] = 0x00; // Insert a trailing 00h for Unicode representation
+        MOV     A,#0x0
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  290 				}
+        INC     R7
+??usbGetStringDescriptor_5:
+        MOV     A,R7
+        PUSH    A
+        CFI CFA_SP SP+-1
+        ; Setup parameters for call to function strlen
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 11) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 11) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     R2,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R3,A
+        LCALL   strlen
+        MOV     A,R1
+        MOV     R2,A
+        POP     A
+        CFI CFA_SP SP+0
+        CLR     C
+        SUBB    A,R2
+        JNC     $+5
+        LJMP    ??usbGetStringDescriptor_6
+        LJMP    ??usbGetStringDescriptor_0
+//  291 			break;
+//  292 		case 2: // PRODUCT DESCRIPTION
+//  293 			abDescriptor[stringOffset++] = strlen(funcDefs[fncOffset].prodDescription) * 2 + 2;  // Length of this string
+??usbGetStringDescriptor_3:
+        MOV     B,#0x2
+        PUSH    B
+        CFI CFA_SP SP+-1
+        ; Setup parameters for call to function strlen
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 13) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 13) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     R2,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R3,A
+        LCALL   strlen
+        MOV     A,R1
+        POP     B
+        CFI CFA_SP SP+0
+        MUL     AB
+        ADD     A,#0x2
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  294 			abDescriptor[stringOffset++] = DESC_TYPE_STRING; // String descriptor type
+        MOV     A,#0x3
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  295 			for(bTemp = 0; bTemp < strlen(funcDefs[fncOffset].prodDescription);bTemp++)
+        MOV     R7,#0x0
+        SJMP    ??usbGetStringDescriptor_7
+//  296 				{
+//  297 				abDescriptor[stringOffset++] = funcDefs[fncOffset].prodDescription[bTemp]; // Insert the character from the string
+??usbGetStringDescriptor_8:
+        MOV     A,R7
+        MOV     R2,A
+        MOV     R3,#0x0
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R4,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R4
+        MOV     R4,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R4
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 13) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 13) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        ADD     A,R2
+        MOV     R4,A
+        INC     DPTR
+        CLR     A
+        MOVC    A,@A+DPTR
+        ADDC    A,R3
+        MOV     DPL,R4
+        MOV     DPH,A
+        MOVX    A,@DPTR
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  298 				abDescriptor[stringOffset++] = 0x00; // Insert a trailing 00h for Unicode representation
+        MOV     A,#0x0
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  299 				}
+        INC     R7
+??usbGetStringDescriptor_7:
+        MOV     A,R7
+        PUSH    A
+        CFI CFA_SP SP+-1
+        ; Setup parameters for call to function strlen
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 13) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 13) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     R2,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R3,A
+        LCALL   strlen
+        MOV     A,R1
+        MOV     R2,A
+        POP     A
+        CFI CFA_SP SP+0
+        CLR     C
+        SUBB    A,R2
+        JNC     $+5
+        LJMP    ??usbGetStringDescriptor_8
+        LJMP    ??usbGetStringDescriptor_0
+//  300 			break;
+//  301 		case 3: // SERIAL NUMBER
+//  302 			abDescriptor[stringOffset++] = strlen(funcDefs[fncOffset].serialNumber) * 2 + 2;  // Length of this string
+??usbGetStringDescriptor_4:
+        MOV     B,#0x2
+        PUSH    B
+        CFI CFA_SP SP+-1
+        ; Setup parameters for call to function strlen
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 15) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 15) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     R2,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R3,A
+        LCALL   strlen
+        MOV     A,R1
+        POP     B
+        CFI CFA_SP SP+0
+        MUL     AB
+        ADD     A,#0x2
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  303 			abDescriptor[stringOffset++] = DESC_TYPE_STRING; // String descriptor type
+        MOV     A,#0x3
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  304 			for(bTemp = 0; bTemp < strlen(funcDefs[fncOffset].serialNumber);bTemp++)
+        MOV     R7,#0x0
+        SJMP    ??usbGetStringDescriptor_9
+//  305 				{
+//  306 				abDescriptor[stringOffset++] = funcDefs[fncOffset].serialNumber[bTemp]; // Insert the character from the string	
+??usbGetStringDescriptor_10:
+        MOV     A,R7
+        MOV     R2,A
+        MOV     R3,#0x0
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R4,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R4
+        MOV     R4,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R4
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 15) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 15) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        ADD     A,R2
+        MOV     R4,A
+        INC     DPTR
+        CLR     A
+        MOVC    A,@A+DPTR
+        ADDC    A,R3
+        MOV     DPL,R4
+        MOV     DPH,A
+        MOVX    A,@DPTR
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  307 				abDescriptor[stringOffset++] = 0x00; // Insert a trailing 00h for Unicode representation
+        MOV     A,#0x0
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R6
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abDescriptor & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abDescriptor >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R6
+//  308 				}
+        INC     R7
+??usbGetStringDescriptor_9:
+        MOV     A,R7
+        PUSH    A
+        CFI CFA_SP SP+-1
+        ; Setup parameters for call to function strlen
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((funcDefs + 15) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((funcDefs + 15) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     R2,A
+        MOV     A,#0x1
+        MOVC    A,@A+DPTR
+        MOV     R3,A
+        LCALL   strlen
+        MOV     A,R1
+        MOV     R2,A
+        POP     A
+        CFI CFA_SP SP+0
+        CLR     C
+        SUBB    A,R2
+        JNC     $+5
+        LJMP    ??usbGetStringDescriptor_10
+//  309 			break;
+//  310 		default:
+//  311 				break;
+//  312 		}
+//  313 
+//  314 #ifdef XX
+//  315     bIndex = 0x00;
+//  316     while(tSetupPacket.bValueL-- >  0x00) 
+//  317     	bIndex += abStringDescriptor[bIndex];
+//  318 
+//  319 	// Copy the STRING DESCRIPTOR from program "ROM" to XRAM
+//  320 	bStrLen = 
+//  321     for(bTemp=0;bTemp<SIZEOF_BOOTCODE_CONFIG_DESC_GROUP;bTemp++)
+//  322         abDescriptor[bTemp] = abromConfigurationDescriptorGroup[bTemp];
+//  323 #endif    	
+//  324     wBytesRemainingOnIEP0 = abDescriptor[0];
+??usbGetStringDescriptor_0:
+        MOV     DPTR,#abDescriptor
+        MOVX    A,@DPTR
+        MOV     R1,#0x0
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,R1
+        MOVX    @DPTR,A
+//  325     usbSendDataPacketOnEP0((PBYTE)&abDescriptor);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     R2,#(abDescriptor & 0xff)
+        MOV     R3,#((abDescriptor >> 8) & 0xff)
+        LCALL   usbSendDataPacketOnEP0
+//  326 }
+        MOV     R7,#0x2
+        LJMP    ?FUNC_LEAVE_XDATA
+        CFI EndBlock cfiBlock6
+//  327 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  328 void usbGetReportDescriptor(void)
+usbGetReportDescriptor:
+        CFI Block cfiBlock7 Using cfiCommon0
+        CFI Function usbGetReportDescriptor
+//  329 {
+        FUNCALL usbGetReportDescriptor, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  330     usbClearOEP0ByteCount;
+        MOV     A,#0x0
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 3)
+        MOVX    @DPTR,A
+//  331     wBytesRemainingOnIEP0 = SIZEOF_REPORT_DESCRIPTOR;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x3f
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  332     usbSendDataPacketOnEP0((PBYTE)&abromReportDescriptor);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     R2,#(abromReportDescriptor & 0xff)
+        MOV     R3,#((abromReportDescriptor >> 8) & 0xff)
+        LCALL   usbSendDataPacketOnEP0
+//  333 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock7
+//  334 
+//  335 // Support of the following two functions is optional.  Supporting these
+//  336 // features allows the host to set the Idle rate.  By default, an HID
+//  337 // device should always report the current status of the keys, even
+//  338 // if they haven't changed.  However, to save bandwidth, Windows will
+//  339 // attempt to set the Idle rate to 0 which means the firmware should
+//  340 // only report keypresses when their state changes.
+//  341 
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  342 BYTE gbIdleRateL;
+gbIdleRateL:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//  343 BYTE gbIdleRateH;
+gbIdleRateH:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  344 void usbSetIdle(void)
+usbSetIdle:
+        CFI Block cfiBlock8 Using cfiCommon0
+        CFI Function usbSetIdle
+//  345 {
+        FUNCALL usbSetIdle, usbSendZeroLengthPacketOnIEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  346 //    usbStallOEP0;
+//  347     gbIdleRateL = tSetupPacket.bValueL;
+        MOV     DPTR,#(tSetupPacket + 2)
+        MOVX    A,@DPTR
+        MOV     DPTR,#gbIdleRateL
+        MOVX    @DPTR,A
+//  348     gbIdleRateH = tSetupPacket.bValueH;
+        MOV     DPTR,#(tSetupPacket + 3)
+        MOVX    A,@DPTR
+        MOV     DPTR,#gbIdleRateH
+        MOVX    @DPTR,A
+//  349     usbSendZeroLengthPacketOnIEP0();
+        ; Setup parameters for call to function usbSendZeroLengthPacketOnIEP0
+        LCALL   usbSendZeroLengthPacketOnIEP0
+//  350 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock8
+//  351 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  352 void usbGetIdle(void)
+usbGetIdle:
+        CFI Block cfiBlock9 Using cfiCommon0
+        CFI Function usbGetIdle
+//  353 {
+        FUNCALL usbGetIdle, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  354     wBytesRemainingOnIEP0 = 1;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x1
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  355     usbSendDataPacketOnEP0(&gbIdleRateH);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     R2,#(gbIdleRateH & 0xff)
+        MOV     R3,#((gbIdleRateH >> 8) & 0xff)
+        LCALL   usbSendDataPacketOnEP0
+//  356 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock9
+//  357 
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA
+//  358 BYTE gbProtocol=1; // default is report protocol
+gbProtocol:
+        DS 1
+        REQUIRE `?<Initializer for gbProtocol>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  359 void usbSetProtocol(void)
+usbSetProtocol:
+        CFI Block cfiBlock10 Using cfiCommon0
+        CFI Function usbSetProtocol
+//  360 {
+        FUNCALL usbSetProtocol, usbSendZeroLengthPacketOnIEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  361 //    usbStallOEP0;
+//  362     gbProtocol = tSetupPacket.bValueL;
+        MOV     DPTR,#(tSetupPacket + 2)
+        MOVX    A,@DPTR
+        MOV     DPTR,#gbProtocol
+        MOVX    @DPTR,A
+//  363     usbSendZeroLengthPacketOnIEP0();
+        ; Setup parameters for call to function usbSendZeroLengthPacketOnIEP0
+        LCALL   usbSendZeroLengthPacketOnIEP0
+//  364 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock10
+//  365 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  366 void usbGetProtocol(void)
+usbGetProtocol:
+        CFI Block cfiBlock11 Using cfiCommon0
+        CFI Function usbGetProtocol
+//  367 {
+        FUNCALL usbGetProtocol, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  368     wBytesRemainingOnIEP0 = 1;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x1
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  369     usbSendDataPacketOnEP0(&gbProtocol);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     R2,#(gbProtocol & 0xff)
+        MOV     R3,#((gbProtocol >> 8) & 0xff)
+        LCALL   usbSendDataPacketOnEP0
+//  370 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock11
+//  371 
+//  372 // The Get/Set Interface, like the Get/Set Configuration, don't really
+//  373 // serve any real purpose in this firmware, but they are handled so
+//  374 // that modifications to the code may be made easily.  As-is, the host
+//  375 // may Set any interface number, and a Get Interface request will simply
+//  376 // return the value previously Set.
+//  377 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  378 void usbGetInterface(void)
+usbGetInterface:
+        CFI Block cfiBlock12 Using cfiCommon0
+        CFI Function usbGetInterface
+//  379 {
+        FUNCALL usbGetInterface, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  380     wBytesRemainingOnIEP0 = 1;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x1
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  381     usbSendDataPacketOnEP0((PBYTE) &bInterfaceNumber);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     R2,#(bInterfaceNumber & 0xff)
+        MOV     R3,#((bInterfaceNumber >> 8) & 0xff)
+        LCALL   usbSendDataPacketOnEP0
+//  382 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock12
+//  383 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  384 void usbSetInterface(void)
+usbSetInterface:
+        CFI Block cfiBlock13 Using cfiCommon0
+        CFI Function usbSetInterface
+//  385 {
+        FUNCALL usbSetInterface, usbSendZeroLengthPacketOnIEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  386     usbStallOEP0;                             // control write without data stage
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 2)
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+//  387     bInterfaceNumber = tSetupPacket.bIndexL;
+        MOV     DPTR,#(tSetupPacket + 4)
+        MOVX    A,@DPTR
+        MOV     DPTR,#bInterfaceNumber
+        MOVX    @DPTR,A
+//  388     usbSendZeroLengthPacketOnIEP0();
+        ; Setup parameters for call to function usbSendZeroLengthPacketOnIEP0
+        LCALL   usbSendZeroLengthPacketOnIEP0
+//  389 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock13
+//  390 
+//  391 // The GetDeviceStatus function is used to obtain the status of the
+//  392 // device.  The status is essentially the Remote Wakeup status as 
+//  393 // well as the "Self-powered" indicator.  The value returned by
+//  394 // GetDeviceStatus is modified by the SetRemoteWakeup and
+//  395 // ClearRemoteWakeup requests.
+//  396 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  397 void usbGetDeviceStatus(void)
+usbGetDeviceStatus:
+        CFI Block cfiBlock14 Using cfiCommon0
+        CFI Function usbGetDeviceStatus
+//  398 {
+        FUNCALL usbGetDeviceStatus, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  399     wBytesRemainingOnIEP0 = 2;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x2
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  400 	usbSendDataPacketOnEP0((PBYTE) &wDeviceFeatures);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     R2,#(wDeviceFeatures & 0xff)
+        MOV     R3,#((wDeviceFeatures >> 8) & 0xff)
+        LCALL   usbSendDataPacketOnEP0
+//  401 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock14
+//  402 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  403 void usbSetRemoteWakeup(void)
+usbSetRemoteWakeup:
+        CFI Block cfiBlock15 Using cfiCommon0
+        CFI Function usbSetRemoteWakeup
+//  404 {
+        FUNCALL usbSetRemoteWakeup, usbSendZeroLengthPacketOnIEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  405 	bUSBCTL |= USBCTL_RWE;
+        MOV     DPTR,#-0x4
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+//  406 	wDeviceFeatures |= 0x0200;
+        MOV     DPTR,#wDeviceFeatures
+        MOVX    A,@DPTR
+        ORL     A,#0x0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        ORL     A,#0x2
+        MOVX    @DPTR,A
+//  407     usbStallOEP0;
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 2)
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+//  408     usbSendZeroLengthPacketOnIEP0();
+        ; Setup parameters for call to function usbSendZeroLengthPacketOnIEP0
+        LCALL   usbSendZeroLengthPacketOnIEP0
+//  409 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock15
+//  410 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  411 void usbClearRemoteWakeup(void)
+usbClearRemoteWakeup:
+        CFI Block cfiBlock16 Using cfiCommon0
+        CFI Function usbClearRemoteWakeup
+//  412 {
+        FUNCALL usbClearRemoteWakeup, usbSendZeroLengthPacketOnIEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  413 	bUSBCTL &= ~USBCTL_RWE;
+        MOV     DPTR,#-0x4
+        MOVX    A,@DPTR
+        CLR     0xE0 /* A   */.3
+        MOVX    @DPTR,A
+//  414 	wDeviceFeatures &= ~0x0200;
+        MOV     DPTR,#wDeviceFeatures
+        MOVX    A,@DPTR
+        ANL     A,#0xff
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        ANL     A,#0xfd
+        MOVX    @DPTR,A
+//  415     usbStallOEP0;
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 2)
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+//  416     usbSendZeroLengthPacketOnIEP0();
+        ; Setup parameters for call to function usbSendZeroLengthPacketOnIEP0
+        LCALL   usbSendZeroLengthPacketOnIEP0
+//  417 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock16
+//  418 
+//  419 // The GetInterfaceStatus always returns a 0 as a 2-byte value.
+//  420 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  421 void usbGetInterfaceStatus(void)
+usbGetInterfaceStatus:
+        CFI Block cfiBlock17 Using cfiCommon0
+        CFI Function usbGetInterfaceStatus
+//  422 {
+        FUNCALL usbGetInterfaceStatus, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 2, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 2, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 2
+        MOV     A,#-0x2
+        LCALL   ?ALLOC_XSTACK8
+        CFI CFA_XSP16 add(XSP16, 2)
+//  423 	WORD wStatusBuffer = 0x00;    	
+        MOV     DPL,?XSP + 0
+        MOV     DPH,?XSP + 1
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  424     usbStallOEP0;
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 2)
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+//  425     wBytesRemainingOnIEP0 = 2;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x2
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  426 	usbSendDataPacketOnEP0((PBYTE) &wStatusBuffer);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     DPL,?XSP + 0
+        MOV     DPH,?XSP + 1
+        MOV     R2,DPL
+        MOV     R3,DPH
+        LCALL   usbSendDataPacketOnEP0
+//  427 }
+        MOV     A,#0x2
+        LCALL   ?DEALLOC_XSTACK8
+        CFI CFA_XSP16 XSP16+0
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock17
+//  428 
+//  429 // The SetAddress request allows the host to assign an address to this device.
+//  430 // The device starts with an address of 00h, as do all USB devices, until
+//  431 // the host specifically assigns it another address.  This code handles that
+//  432 // assignment.
+//  433 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  434 void usbSetAddress(void)
+usbSetAddress:
+        CFI Block cfiBlock18 Using cfiCommon0
+        CFI Function usbSetAddress
+//  435 {
+        FUNCALL usbSetAddress, usbSendZeroLengthPacketOnIEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL usbSetAddress, usbStallEndpoint0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  436     if(tSetupPacket.bValueL < 128)
+        MOV     DPTR,#(tSetupPacket + 2)
+        MOVX    A,@DPTR
+        CLR     C
+        SUBB    A,#-0x80
+        JNC     ??usbSetAddress_0
+//  437     	{
+//  438         bFUNADR = tSetupPacket.bValueL;
+        MOV     DPTR,#(tSetupPacket + 2)
+        MOVX    A,@DPTR
+        MOV     DPTR,#-0x1
+        MOVX    @DPTR,A
+//  439         bUsbDeviceAddress = tSetupPacket.bValueL;
+        MOV     DPTR,#(tSetupPacket + 2)
+        MOVX    A,@DPTR
+        MOV     DPTR,#bUsbDeviceAddress
+        MOVX    @DPTR,A
+//  440         bStatusAction = STATUS_ACTION_SET_ADDRESS;
+        MOV     A,#0x3
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+//  441         usbSendZeroLengthPacketOnIEP0();
+        ; Setup parameters for call to function usbSendZeroLengthPacketOnIEP0
+        LCALL   usbSendZeroLengthPacketOnIEP0
+        SJMP    ??usbSetAddress_1
+//  442     	}
+//  443     else 
+//  444     	usbStallEndpoint0();
+??usbSetAddress_0:
+        ; Setup parameters for call to function usbStallEndpoint0
+        LCALL   usbStallEndpoint0
+//  445 }
+??usbSetAddress_1:
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock18
+//  446 
+//  447 // The SetEndpointHalt allows the USB host to instruct the device to stop sending
+//  448 // information on IEP1, which is how the firmware delivers keystrokes to the host.
+//  449 // This is used mostly if a device goes crazy and starts sending too much data,
+//  450 // this allows the host to shut the endpoint down.  All we do is set or clear
+//  451 // the endpoint enable bit appropriately.  The GetEndpointStatus request reports
+//  452 // the status of the endpoint which is affected by Set/Clear EndpointHalt requests.
+//  453 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  454 void usbSetEndpointHalt(void)
+usbSetEndpointHalt:
+        CFI Block cfiBlock19 Using cfiCommon0
+        CFI Function usbSetEndpointHalt
+//  455 {
+        FUNCALL usbSetEndpointHalt, usbSendZeroLengthPacketOnIEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  456 	tInputEndPointDescriptorBlock[0].bEPCNF &= ~EPCNF_UBME;
+        MOV     DPTR,#tInputEndPointDescriptorBlock
+        MOVX    A,@DPTR
+        CLR     0xE0 /* A   */.7
+        MOVX    @DPTR,A
+//  457     usbSendZeroLengthPacketOnIEP0();
+        ; Setup parameters for call to function usbSendZeroLengthPacketOnIEP0
+        LCALL   usbSendZeroLengthPacketOnIEP0
+//  458 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock19
+//  459 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  460 void usbClearEndpointHalt(void)
+usbClearEndpointHalt:
+        CFI Block cfiBlock20 Using cfiCommon0
+        CFI Function usbClearEndpointHalt
+//  461 {
+        FUNCALL usbClearEndpointHalt, usbSendZeroLengthPacketOnIEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  462 	tInputEndPointDescriptorBlock[0].bEPCNF |= EPCNF_UBME;	
+        MOV     DPTR,#tInputEndPointDescriptorBlock
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.7
+        MOVX    @DPTR,A
+//  463     usbSendZeroLengthPacketOnIEP0();
+        ; Setup parameters for call to function usbSendZeroLengthPacketOnIEP0
+        LCALL   usbSendZeroLengthPacketOnIEP0
+//  464 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock20
+//  465 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  466 void usbGetEndpointStatus(void)
+usbGetEndpointStatus:
+        CFI Block cfiBlock21 Using cfiCommon0
+        CFI Function usbGetEndpointStatus
+//  467 {
+        FUNCALL usbGetEndpointStatus, usbSendDataPacketOnEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 2, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 2, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 2
+        MOV     A,#-0x2
+        LCALL   ?ALLOC_XSTACK8
+        CFI CFA_XSP16 add(XSP16, 2)
+//  468 	WORD wEndpointStatus = 0x0100;
+        MOV     DPL,?XSP + 0
+        MOV     DPH,?XSP + 1
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x1
+        MOVX    @DPTR,A
+//  469 	if(tInputEndPointDescriptorBlock[0].bEPCNF & EPCNF_UBME)
+        MOV     DPTR,#tInputEndPointDescriptorBlock
+        MOVX    A,@DPTR
+        MOV     C,0xE0 /* A   */.7
+        JNC     ??usbGetEndpointStatus_0
+//  470 		wEndpointStatus = 0x0000;
+        MOV     DPL,?XSP + 0
+        MOV     DPH,?XSP + 1
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  471 
+//  472     wBytesRemainingOnIEP0 = 2;
+??usbGetEndpointStatus_0:
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x2
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  473 	usbSendDataPacketOnEP0((PBYTE) &wEndpointStatus);
+        ; Setup parameters for call to function usbSendDataPacketOnEP0
+        MOV     DPL,?XSP + 0
+        MOV     DPH,?XSP + 1
+        MOV     R2,DPL
+        MOV     R3,DPH
+        LCALL   usbSendDataPacketOnEP0
+//  474 }
+        MOV     A,#0x2
+        LCALL   ?DEALLOC_XSTACK8
+        CFI CFA_XSP16 XSP16+0
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock21
+//  475 
+//  476 // Any non-standard or unrecognized request will arrive at the following
+//  477 // function by default.  We automatically stall the endpoint to indicate
+//  478 // it's an invalid or unrecognized request.
+//  479 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  480 void usbNonStandardRequest(void)
+usbNonStandardRequest:
+        CFI Block cfiBlock22 Using cfiCommon0
+        CFI Function usbNonStandardRequest
+//  481 {
+        FUNCALL usbNonStandardRequest, usbStallEndpoint0
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        ; Saved register size: 0
+        ; Auto size: 0
+//  482 	usbStallEndpoint0();
+        ; Setup parameters for call to function usbStallEndpoint0
+        LCALL   usbStallEndpoint0
+//  483 }
+        RET
+        CFI EndBlock cfiBlock22
+//  484 
+//  485 /***************************************************************************
+//  486  * Section:    REQUEST STRUCTURE                                           *
+//  487  * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+//  488  * Description: This section of code defines the structure of the lookup   *
+//  489  *    table which determines which 'C' function should be called for each  *
+//  490  *    supported USB request.                                               * 
+//  491  ***************************************************************************/
+//  492 
+//  493 typedef struct _tDEVICE_REQUEST_COMPARE
+//  494 {
+//  495     BYTE    bmRequestType;              // See bit definitions below
+//  496     BYTE    bRequest;                   // See value definitions below
+//  497     BYTE    bValueL;                    // Meaning varies with request type
+//  498     BYTE    bValueH;                    // Meaning varies with request type
+//  499     BYTE    bIndexL;                    // Meaning varies with request type
+//  500     BYTE    bIndexH;                    // Meaning varies with request type
+//  501     BYTE    bLengthL;                   // Number of bytes of data to transfer (LSByte)
+//  502     BYTE    bLengthH;                   // Number of bytes of data to transfer (MSByte)
+//  503     BYTE    bCompareMask;               // MSB is bRequest, if set 1, bRequest should be matched, LSB is bLengthH
+//  504     VOID    (*pUsbFunction)();      // function pointer
+//  505 } tDEVICE_REQUEST_COMPARE, *ptDEVICE_REQUEST_COMPARE;
+//  506 
+//  507 /***************************************************************************
+//  508  * Section:    USB REQUEST TABLE                                           *
+//  509  * Programmer: Craig Steiner (csteiner@vaultbbs.com) based on code by      *
+//  510  *             Lobo Tai (lobotai@ti.com)                                   *
+//  511  * Description: This section of code defines the lookup table, using the   *
+//  512  *    structure defined in the previous section of code.  The values of    *
+//  513  *    the constants used in this structure are defined in usb.h.           * 
+//  514  * Structure of Table:                                                     * 
+//  515  *    bmRequestType: Indicates the type of request.  This is a bit-mapped  * 
+//  516  *          variable defined in the USB spec.  The bits of this variable   * 
+//  517  *          have the following purpose, and are defined in usb.h.          * 
+//  518  *          Bit 7: Data Direction (0=Host to Device, 1=Device to Host)     * 
+//  519  *          Bit 6-5: Type of request (00=Standard, 01=Class, 10=Vendor)    * 
+//  520  *          Bit 4-0: Recipient (00000=Device, 00001=Interface,             *
+//  521  *                              00010=Endpoint, 00011=Other                *
+//  522  *    bRequest: Indicates the request ID (Get descriptor, Get Status, Get  *
+//  523  *              feature, etc.).  These are defined in the USB and HID spec *
+//  524  *              and are declared in usb.h.                                 *
+//  525  *    bValueL/H: Additional values, purpose varies with request.           *
+//  526  *    bIndexL/H: Additional values, purpose varies with request.           *
+//  527  *    bLengthL/H: Number of bytes to transfer to or from host.             *
+//  528  *    bCompareMask: Indicates which of the above bytes should be compared  *
+//  529  *               to determine the function to call.  For example, the mask *
+//  530  *               0x80 means only bmRequestType must match. 0xC0 means      *
+//  531  *               both bmRequestType and bRequest must match.  If this      *
+//  532  *               variable is 0x00, as is the case in the last entry in the *
+//  533  *               table, then no bytes are compared and, thus, ANY packet   *
+//  534  *               will pass the comparsion stage.  This technique is used   *
+//  535  *               in the last entry of the table as an "else" condition     *
+//  536  *               so that any requests that haven't been handled by that    *
+//  537  *               point are handled by the usbNonStandardRequest function.  *
+//  538  ***************************************************************************/
+//  539 
+
+        RSEG CODE_C:CODE:REORDER:NOROOT(0)
+        DATA
+//  540 code tDEVICE_REQUEST_COMPARE tUsbRequestList[] =
+tUsbRequestList:
+        DB 2, 3, 0, 0, 255, 0, 0, 0, 247
+        DW usbSetEndpointHalt
+        DB 2, 1, 0, 0, 255, 0, 0, 0, 247
+        DW usbClearEndpointHalt
+        DB 128, 8, 0, 0, 0, 0, 1, 0, 255
+        DW usbGetConfiguration
+        DB 0, 9, 255, 0, 0, 0, 0, 0, 223
+        DW usbSetConfiguration
+        DB 128, 6, 255, 1, 255, 255, 255, 255, 208
+        DW usbGetDeviceDescriptor
+        DB 128, 6, 255, 2, 255, 255, 255, 255, 208
+        DW usbGetConfigurationDescriptor
+        DB 129, 6, 255, 33, 255, 255, 255, 255, 208
+        DW usbGetHIDDescriptor
+        DB 128, 6, 255, 3, 255, 255, 255, 255, 208
+        DW usbGetStringDescriptor
+        DB 129, 6, 255, 34, 255, 255, 255, 255, 208
+        DW usbGetReportDescriptor
+        DB 33, 9, 255, 255, 255, 255, 255, 255, 192
+        DW usbSetReport
+        DB 33, 10, 255, 255, 255, 255, 0, 0, 195
+        DW usbSetIdle
+        DB 33, 11, 255, 255, 255, 255, 0, 0, 195
+        DW usbSetProtocol
+        DB 161, 2, 255, 255, 255, 255, 1, 0, 195
+        DW usbGetIdle
+        DB 161, 3, 255, 255, 255, 255, 1, 0, 195
+        DW usbGetProtocol
+        DB 129, 10, 0, 0, 255, 255, 1, 0, 243
+        DW usbGetInterface
+        DB 128, 0, 0, 0, 0, 0, 2, 0, 255
+        DW usbGetDeviceStatus
+        DB 129, 0, 0, 0, 255, 0, 2, 0, 247
+        DW usbGetInterfaceStatus
+        DB 130, 0, 0, 0, 255, 0, 2, 0, 247
+        DW usbGetEndpointStatus
+        DB 0, 5, 255, 0, 0, 0, 0, 0, 223
+        DW usbSetAddress
+        DB 0, 3, 1, 0, 0, 0, 0, 0, 255
+        DW usbSetRemoteWakeup
+        DB 0, 1, 1, 0, 0, 0, 0, 0, 255
+        DW usbClearRemoteWakeup
+        DB 1, 11, 255, 0, 255, 0, 0, 0, 215
+        DW usbSetInterface
+        DB 255, 255, 255, 255, 255, 255, 255, 255, 0
+        DW usbNonStandardRequest
+//  541 {
+//  542     // SET ENDPOINT FEATURE
+//  543     USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_ENDPOINT,
+//  544     USB_REQ_SET_FEATURE,
+//  545     FEATURE_ENDPOINT_STALL,0x00,
+//  546     0xff,0x00,
+//  547     0x00,0x00,
+//  548     0xf7,&usbSetEndpointHalt,
+//  549 
+//  550     // CLEAR ENDPOINT FEATURE
+//  551     USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_ENDPOINT,
+//  552     USB_REQ_CLEAR_FEATURE,
+//  553     FEATURE_ENDPOINT_STALL,0x00,
+//  554     0xff,0x00,
+//  555     0x00,0x00,
+//  556     0xf7,&usbClearEndpointHalt,
+//  557 
+//  558     // GET CONFIGURATION
+//  559     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+//  560     USB_REQ_GET_CONFIGURATION,
+//  561     0x00,0x00,
+//  562     0x00,0x00,
+//  563     0x01,0x00,
+//  564     0xff,&usbGetConfiguration,
+//  565 
+//  566     // SET CONFIGURATION
+//  567     USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+//  568     USB_REQ_SET_CONFIGURATION,
+//  569     0xff,0x00,
+//  570     0x00,0x00,
+//  571     0x00,0x00,
+//  572     0xdf,&usbSetConfiguration,
+//  573 
+//  574     // GET DEVICE DESCRIPTOR
+//  575     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+//  576     USB_REQ_GET_DESCRIPTOR,
+//  577     0xff,DESC_TYPE_DEVICE,                  // bValueL is index and bValueH is type
+//  578     0xff,0xff,
+//  579     0xff,0xff,
+//  580     0xd0,&usbGetDeviceDescriptor,
+//  581 
+//  582     // GET CONFIGURATION DESCRIPTOR
+//  583     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+//  584     USB_REQ_GET_DESCRIPTOR,
+//  585     0xff,DESC_TYPE_CONFIG,                  // bValueL is index and bValueH is type
+//  586     0xff,0xff,
+//  587     0xff,0xff,
+//  588     0xd0,&usbGetConfigurationDescriptor,
+//  589 
+//  590     // GET HID DESCRIPTOR
+//  591     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_INTERFACE,
+//  592     USB_REQ_GET_DESCRIPTOR,
+//  593     0xff,DESC_TYPE_HID,                  // bValueL is index and bValueH is type
+//  594     0xff,0xff,
+//  595     0xff,0xff,
+//  596     0xd0,&usbGetHIDDescriptor,
+//  597 
+//  598     // GET STRING DESCRIPTOR
+//  599     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+//  600     USB_REQ_GET_DESCRIPTOR,
+//  601     0xff,DESC_TYPE_STRING,                  // bValueL is index and bValueH is type
+//  602     0xff,0xff,
+//  603     0xff,0xff,
+//  604     0xd0,&usbGetStringDescriptor,
+//  605 
+//  606     // GET REPORT DESCRIPTOR
+//  607     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_INTERFACE,
+//  608     USB_REQ_GET_DESCRIPTOR,
+//  609     0xff,DESC_TYPE_REPORT,                 // bValueL is index and bValueH is type
+//  610     0xff,0xff,
+//  611     0xff,0xff,
+//  612     0xd0,&usbGetReportDescriptor,
+//  613 
+//  614     // SET REPORT
+//  615     USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+//  616     USB_REQ_SET_REPORT,
+//  617     0xff,0xFF,                 // bValueL is index and bValueH is type
+//  618     0xff,0xff,
+//  619     0xff,0xff,
+//  620     0xC0,&usbSetReport,
+//  621 
+//  622     // SET IDLE
+//  623     USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+//  624     USB_REQ_SET_IDLE,
+//  625     0xff,0xFF,                  // bValueL is index and bValueH is type
+//  626     0xff,0xff,
+//  627     0x00,0x00,
+//  628     0xc3,&usbSetIdle,
+//  629 
+//  630     // SET PROTOCOL
+//  631     USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+//  632     USB_REQ_SET_PROTOCOL,
+//  633     0xff,0xFF,                  // bValueL is index and bValueH is type
+//  634     0xff,0xff,
+//  635     0x00,0x00,
+//  636     0xc3,&usbSetProtocol,
+//  637 
+//  638     // GET IDLE
+//  639     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+//  640     USB_REQ_GET_IDLE,
+//  641     0xff,0xFF,                  // bValueL is index and bValueH is type
+//  642     0xff,0xff,
+//  643     0x01,0x00,
+//  644     0xc3,&usbGetIdle,
+//  645 
+//  646     // GET PROTOCOL
+//  647     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+//  648     USB_REQ_GET_PROTOCOL,
+//  649     0xff,0xFF,                  // bValueL is index and bValueH is type
+//  650     0xff,0xff,
+//  651     0x01,0x00,
+//  652     0xc3,&usbGetProtocol,
+//  653 
+//  654     // GET INTERFACE
+//  655     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_INTERFACE,
+//  656     USB_REQ_GET_INTERFACE,
+//  657     0x00,0x00,
+//  658     0xff,0xff,
+//  659     0x01,0x00,
+//  660     0xf3,&usbGetInterface,
+//  661 
+//  662     // GET DEVICE STATUS
+//  663     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+//  664     USB_REQ_GET_STATUS,
+//  665     0x00,0x00,
+//  666     0x00,0x00,
+//  667     0x02,0x00,
+//  668     0xff,&usbGetDeviceStatus,
+//  669 
+//  670     // GET INTERFACE STATUS
+//  671     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_INTERFACE,
+//  672     USB_REQ_GET_STATUS,
+//  673     0x00,0x00,
+//  674     0xff,0x00,
+//  675     0x02,0x00,
+//  676     0xf7,&usbGetInterfaceStatus,
+//  677 
+//  678     // GET ENDPOINT STATUS
+//  679     USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_ENDPOINT,
+//  680     USB_REQ_GET_STATUS,
+//  681     0x00,0x00,
+//  682     0xff,0x00,
+//  683     0x02,0x00,
+//  684     0xf7,&usbGetEndpointStatus,
+//  685 
+//  686     // SET ADDRESS
+//  687     USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+//  688     USB_REQ_SET_ADDRESS,
+//  689     0xff,0x00,
+//  690     0x00,0x00,
+//  691     0x00,0x00,
+//  692     0xdf,&usbSetAddress,
+//  693 
+//  694     // SET DEVICE FEATURE
+//  695     USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+//  696     USB_REQ_SET_FEATURE,
+//  697     FEATURE_REMOTE_WAKEUP,0x00,           // feature selector
+//  698     0x00,0x00,
+//  699     0x00,0x00,
+//  700     0xff,&usbSetRemoteWakeup, // df, setDeviceFeature
+//  701     
+//  702 	// CLEAR DEVICE FEATURE
+//  703     USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+//  704     USB_REQ_CLEAR_FEATURE,
+//  705     FEATURE_REMOTE_WAKEUP,0x00,
+//  706     0x00,0x00,
+//  707     0x00,0x00,
+//  708     0xff,&usbClearRemoteWakeup,
+//  709 
+//  710     // SET INTERFACE FEATURE
+//  711     USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_INTERFACE,
+//  712     USB_REQ_SET_INTERFACE,
+//  713     0xff,0x00,                      // alternative setting
+//  714     0xff,0x00,                      // interface number
+//  715     0x00,0x00,
+//  716     0xd7,&usbSetInterface,
+//  717 
+//  718 	// END OF LIST CATCH-ALL REQUEST: 
+//  719 	// This will match any USB request sicne bCompareMask is 0x00.
+//  720     0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,
+//  721     0x00,&usbNonStandardRequest
+//  722 };
+//  723 
+//  724 /***************************************************************************
+//  725  * Function:   UsbDecodeAndProcessUsbRequest()                             *
+//  726  * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+//  727  * Description: This function is called when a USB request has been        *
+//  728  *    received.  It searches the tUsbRequestList[] structure defined in    * 
+//  729  *    the previous section for a request that matches a given entry in     * 
+//  730  *    the table and, when matched, executes the corresponding function.    *  
+//  731  ***************************************************************************/
+//  732 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  733 VOID usbDecodeAndProcessUsbRequest()
+usbDecodeAndProcessUsbRequest:
+        CFI Block cfiBlock23 Using cfiCommon0
+        CFI Function usbDecodeAndProcessUsbRequest
+//  734 {
+        MOV     A,#-0xb
+        LCALL   ?FUNC_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 11)
+        ; Saved register size: 11
+        ; Auto size: 0
+//  735     BYTE bMask,bResult,bTemp;
+//  736     BYTE *pbUsbRequestList;                 // save code space
+//  737 
+//  738 
+//  739 	// We initialize the pbUsbRequestList pointer to the beginning of the
+//  740 	// tUsbRequestList[] so that we can subsequently traverse the table
+//  741 	// by incrementing the pbUsbRequestList pointer.
+//  742     pbUsbRequestList = (PBYTE) &tUsbRequestList[0];
+        MOV     R0,#(tUsbRequestList & 0xff)
+        MOV     R1,#((tUsbRequestList >> 8) & 0xff)
+        SJMP    ??usbDecodeAndProcessUsbRequest_0
+//  743 
+//  744 	// Cycle indefinitely until we've found an entry in the tUsbRequestList[]
+//  745 	// table.  Since the last entry in the table has a 0x00 mask, we'll
+//  746 	// *always* find a match, so this cycle will always exit.
+//  747     while(1)
+//  748     	{
+//  749         bResult = 0x00;
+//  750         bMask   = 0x80;
+//  751 
+//  752         // We cycle through fields 0 through 7, which correspond to the 8 fields
+//  753         // in each entry of tUsbRequestList.  If the given byte in the packet
+//  754         // we just receive is equal to the corresponding byte in the table, we
+//  755         // set that bit in the result, indicating a byte which matched.  Otherwise,
+//  756         // we don't set the bit which means that byte didn't match.
+//  757         for(bTemp = 0; bTemp < 8; bTemp++)
+//  758         	{
+//  759             if(*(pbEP0_SETUP_ADDRESS+bTemp) == *(pbUsbRequestList+bTemp)) 
+//  760             	bResult |= bMask;
+//  761 			bMask = bMask >> 1;
+//  762 	        }
+//  763 
+//  764         // At this point, bResult holds 8 bits which indicate whether each of the
+//  765         // bytes in the packet matched the corresponding bytes in the tUsbRequestList[]
+//  766         // table.  We then AND the mask value in the table with the result so that
+//  767         // we only are comparing the bits required in the mask.  If the resulting
+//  768         // value is equal to the mask, that means that all significant bytes match.
+//  769         // This is done since any bit that is clear in the mask is a "don't care", so
+//  770         // the AND makes sure we don't reject a "valid" comparison beause a don't 
+//  771         // care bit actually matched.
+//  772         if((*(pbUsbRequestList+bTemp) & bResult) == *(pbUsbRequestList+bTemp)) 
+//  773         	break;
+//  774 
+//  775         // If we haven't found a matching entry yet, we advenced the pointer to point
+//  776         // to the next entry in the table, and keep looking.
+//  777         pbUsbRequestList += sizeof(tDEVICE_REQUEST_COMPARE);
+??usbDecodeAndProcessUsbRequest_1:
+        MOV     A,R0
+        ADD     A,#0xb
+        MOV     R0,A
+        MOV     A,R1
+        ADDC    A,#0x0
+        MOV     R1,A
+??usbDecodeAndProcessUsbRequest_0:
+        MOV     ?V0 + 1,#0x0
+        MOV     R6,#-0x80
+        MOV     ?V0 + 0,#0x0
+        SJMP    ??usbDecodeAndProcessUsbRequest_2
+??usbDecodeAndProcessUsbRequest_3:
+        MOV     ?V0 + 2,?V0 + 0
+        MOV     ?V0 + 3,#0x0
+        MOV     A,?V0 + 2
+        ADD     A,#0x0
+        MOV     DPL,A
+        MOV     A,?V0 + 3
+        ADDC    A,#-0x1
+        MOV     DPH,A
+        MOVX    A,@DPTR
+        MOV     R2,A
+        RLC     A
+        SUBB    A,0xE0 /* A   */
+        MOV     R3,A
+        MOV     ?V0 + 2,?V0 + 0
+        MOV     ?V0 + 3,#0x0
+        MOV     A,R0
+        ADD     A,?V0 + 2
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,?V0 + 3
+        MOV     DPH,A
+        MOVX    A,@DPTR
+        MOV     R5,#0x0
+        XRL     A,R2
+        JNZ     ??usbDecodeAndProcessUsbRequest_4
+        MOV     A,R5
+        XRL     A,R3
+??usbDecodeAndProcessUsbRequest_4:
+        JNZ     ??usbDecodeAndProcessUsbRequest_5
+        MOV     A,R6
+        ORL     ?V0 + 1,A
+??usbDecodeAndProcessUsbRequest_5:
+        MOV     A,R6
+        CLR     C
+        RRC     A
+        MOV     R6,A
+        INC     ?V0 + 0
+??usbDecodeAndProcessUsbRequest_2:
+        MOV     A,?V0 + 0
+        CLR     C
+        SUBB    A,#0x8
+        JC      ??usbDecodeAndProcessUsbRequest_3
+        MOV     ?V0 + 2,?V0 + 0
+        MOV     ?V0 + 3,#0x0
+        MOV     A,R0
+        ADD     A,?V0 + 2
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,?V0 + 3
+        MOV     DPH,A
+        MOVX    A,@DPTR
+        ANL     A,?V0 + 1
+        MOV     R2,A
+        MOV     ?V0 + 1,#0x0
+        MOV     A,R0
+        ADD     A,?V0 + 0
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,?V0 + 1
+        MOV     DPH,A
+        MOVX    A,@DPTR
+        XRL     A,R2
+        JNZ     ??usbDecodeAndProcessUsbRequest_1
+//  778     	}
+//  779 
+//  780     // We check to see if any more setup packet(s) have been received and, if so, we
+//  781     // anbandon this one to hanlde the next one.
+//  782     if(bUSBSTA & (USBSTA_SETUP | USBSTA_STPOW) != 0x00) 
+        MOV     DPTR,#-0x2
+        MOVX    A,@DPTR
+        MOV     C,0xE0 /* A   */.0
+        JC      ??usbDecodeAndProcessUsbRequest_6
+//  783     	return;
+//  784 
+//  785 	// If we've reached this point of the function, we've found the function that should
+//  786 	// be called given the current request.  So we call it...
+//  787 	((ptDEVICE_REQUEST_COMPARE)pbUsbRequestList)->pUsbFunction();
+        ; Setup parameters for indirect call
+        MOV     DPL,R0
+        MOV     DPH,R1
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        MOVX    A,@DPTR
+        MOV     R0,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        MOV     DPH,A
+        MOV     DPL,R0
+        LCALL   ?CALL_IND
+//  788 }
+??usbDecodeAndProcessUsbRequest_6:
+        MOV     R7,#0x4
+        LJMP    ?FUNC_LEAVE_XDATA
+        CFI EndBlock cfiBlock23
+//  789 
+//  790 /***************************************************************************
+//  791  * Function:   usbStallEndpoint0()                                         *
+//  792  * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+//  793  * Description: Sets the STALL flag on both IEP0 and OEP0.  Often called   *
+//  794  *    to reflect an error condition.                                       *
+//  795  ***************************************************************************/
+//  796 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  797 void usbStallEndpoint0(void)
+usbStallEndpoint0:
+        CFI Block cfiBlock24 Using cfiCommon0
+        CFI Function usbStallEndpoint0
+//  798 {
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  799     tEndPoint0DescriptorBlock.bIEPCNFG |= EPCNF_STALL;
+        MOV     DPTR,#tEndPoint0DescriptorBlock
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+//  800     tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL;
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 2)
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+//  801 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock24
+//  802 
+//  803 /***************************************************************************
+//  804  * Function:   usbReceiveDataPacketOnEP0 / ReceiveNextPacket               *
+//  805  * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+//  806  * Description: These two functions, together, are used to receive a data  *
+//  807  *    payload on the OEP0 endpoint.  The reception is first initiated by   *
+//  808  *    calling usbReceiveDataPacketOnEP0 and indicating the address that the*
+//  809  *    received data should be placed in.  As each data packet is received, *
+//  810  *    the usbReceiveNextPacketOnOEP0 will be called to process the packet  *
+//  811  *    and determine if the packet received was the last packet, or if there*
+//  812  *    are more packets coming.                                             * 
+//  813  ***************************************************************************/
+//  814 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  815 void usbReceiveDataPacketOnEP0(PBYTE pbBuffer)
+usbReceiveDataPacketOnEP0:
+        CFI Block cfiBlock25 Using cfiCommon0
+        CFI Function usbReceiveDataPacketOnEP0
+//  816 {
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  817     pbOEP0Buffer = pbBuffer;
+        MOV     DPTR,#pbOEP0Buffer
+        MOV     A,R2
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,R3
+        MOVX    @DPTR,A
+//  818     wBytesRemainingOnOEP0 = (WORD)(tSetupPacket.bLengthH << 8) | (WORD)tSetupPacket.bLengthL;
+        MOV     DPTR,#(tSetupPacket + 7)
+        MOVX    A,@DPTR
+        MOV     R0,A
+        CLR     A
+        XCH     A,R0
+        MOV     R1,A
+        MOV     DPTR,#(tSetupPacket + 6)
+        MOVX    A,@DPTR
+        MOV     R3,#0x0
+        ORL     A,R0
+        MOV     R0,A
+        MOV     A,R3
+        ORL     A,R1
+        MOV     R1,A
+        MOV     DPTR,#wBytesRemainingOnOEP0
+        MOV     A,R0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,R1
+        MOVX    @DPTR,A
+//  819     bStatusAction = STATUS_ACTION_DATA_OUT;
+        MOV     A,#0x2
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+//  820     usbClearOEP0ByteCount;            
+        MOV     A,#0x0
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 3)
+        MOVX    @DPTR,A
+//  821 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock25
+//  822 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  823 void usbReceiveNextPacketOnOEP0(void)
+usbReceiveNextPacketOnOEP0:
+        CFI Block cfiBlock26 Using cfiCommon0
+        CFI Function usbReceiveNextPacketOnOEP0
+//  824 {
+        FUNCALL usbReceiveNextPacketOnOEP0, OEP0SetLEDs
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?FUNC_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+//  825     BYTE bIndex,bByte;
+//  826 
+//  827 	// First we must determine how many bytes were received in this data
+//  828 	// packet.  We AND it with EPBCT_BYTECNT_MASK so that a NAK condition
+//  829 	// will return "0 bytes."
+//  830     bByte = tEndPoint0DescriptorBlock.bOEPBCNT & EPBCT_BYTECNT_MASK;
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 3)
+        MOVX    A,@DPTR
+        ANL     A,#0x7f
+        MOV     R2,A
+//  831 
+//  832 	// If the number of bytes remaining to be received is greater than
+//  833 	// or equal to the number of bytes received in this packet then
+//  834 	// we handle the packet.  However, if we received more bytes than
+//  835 	// we had expected we simply ignore the packet since it is
+//  836 	// presumably erroneous.
+//  837     if(wBytesRemainingOnOEP0 >= (WORD)bByte)
+        MOV     DPTR,#wBytesRemainingOnOEP0
+        MOV     ?V0 + 0,R2
+        MOV     ?V0 + 1,#0x0
+        CLR     C
+        MOVX    A,@DPTR
+        SUBB    A,?V0 + 0
+        INC     DPTR
+        MOVX    A,@DPTR
+        SUBB    A,?V0 + 1
+        JNC     $+5
+        LJMP    ??usbReceiveNextPacketOnOEP0_0
+//  838     	{
+//  839 		// For each of the bytes received, we copy the value received to the
+//  840 		// next position in the buffer we set aside for the OEP0 data.
+//  841         for(bIndex=0;bIndex<bByte;bIndex++)
+        MOV     R3,#0x0
+        SJMP    ??usbReceiveNextPacketOnOEP0_1
+//  842             *pbOEP0Buffer++ = abOEP0Buffer[bIndex];
+??usbReceiveNextPacketOnOEP0_2:
+        MOV     ?V0 + 0,R3
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abOEP0Buffer & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abOEP0Buffer >> 8) & 0xff)
+        MOV     DPH,A
+        MOVX    A,@DPTR
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     DPTR,#pbOEP0Buffer
+        MOVX    A,@DPTR
+        MOV     R0,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        MOV     DPH,A
+        MOV     DPL,R0
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        MOV     DPTR,#pbOEP0Buffer
+        MOVX    A,@DPTR
+        ADD     A,#0x1
+        MOV     R0,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        ADDC    A,#0x0
+        MOV     R1,A
+        MOV     DPTR,#pbOEP0Buffer
+        MOV     A,R0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,R1
+        MOVX    @DPTR,A
+        INC     R3
+??usbReceiveNextPacketOnOEP0_1:
+        MOV     A,R3
+        CLR     C
+        SUBB    A,R2
+        JC      ??usbReceiveNextPacketOnOEP0_2
+//  843 
+//  844 		// We now reduce the number of bytes remaining by the number of bytes
+//  845 		// received in this packet.                              
+//  846         wBytesRemainingOnOEP0 -= (WORD)bByte;
+        MOV     ?V0 + 0,R2
+        MOV     ?V0 + 1,#0x0
+        MOV     DPTR,#wBytesRemainingOnOEP0
+        CLR     C
+        MOVX    A,@DPTR
+        SUBB    A,?V0 + 0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        SUBB    A,?V0 + 1
+        MOVX    @DPTR,A
+//  847 
+//  848         // If there are still more bytes to be received in additional packets (i.e.,
+//  849 		// wBytesRemainingOnOEP0 is greater than zero), we clear the byte count and
+//  850 		// reestablish bStatusAction to indicate that we are still in a DATA_OUT
+//  851 		// condition.
+//  852         if(wBytesRemainingOnOEP0 > 0)
+        MOV     DPTR,#wBytesRemainingOnOEP0
+        MOVX    A,@DPTR
+        XRL     A,#0x0
+        JNZ     ??usbReceiveNextPacketOnOEP0_3
+        INC     DPTR
+        MOVX    A,@DPTR
+        XRL     A,#0x0
+??usbReceiveNextPacketOnOEP0_3:
+        JZ      ??usbReceiveNextPacketOnOEP0_4
+//  853         	{
+//  854             usbClearOEP0ByteCount;        
+        MOV     A,#0x0
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 3)
+        MOVX    @DPTR,A
+//  855             bStatusAction = STATUS_ACTION_DATA_OUT;
+        MOV     A,#0x2
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+        SJMP    ??usbReceiveNextPacketOnOEP0_5
+//  856         	}
+//  857         else
+//  858         	{
+//  859         	// If we aren't expecting any more data bytes, we terminate the OEP0
+//  860         	// transaction by stalling OEP0 and setting the bStatusAction condition
+//  861         	// to "Nothing."  Since in this firmware the only USB function that
+//  862         	// includes a subsequent data payload is the Set_Report function, we
+//  863         	// automatically update the keyboard LEDs with the new value.  If
+//  864         	// additional features are added that expect data payloads, calling
+//  865         	// the OEP0SetLeds() function when a Set_Report request was not
+//  866         	// received will cause no harm.
+//  867             usbStallOEP0;
+??usbReceiveNextPacketOnOEP0_4:
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 2)
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+//  868             bStatusAction = STATUS_ACTION_NOTHING;        
+        MOV     A,#0x0
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+//  869 			OEP0SetLEDs();
+        ; Setup parameters for call to function OEP0SetLEDs
+        LCALL   OEP0SetLEDs
+        SJMP    ??usbReceiveNextPacketOnOEP0_5
+//  870         	}
+//  871     	}
+//  872     else
+//  873     	{
+//  874     	// If the packet we received include more data than we expected, we ignore
+//  875     	// the entire packet and abort the transfer.  This is accomplished by
+//  876     	// stalling OEP0 and resetting the bStatusAction condition to "Nothing."
+//  877         usbStallOEP0;
+??usbReceiveNextPacketOnOEP0_0:
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 2)
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+//  878         bStatusAction = STATUS_ACTION_NOTHING;
+        MOV     A,#0x0
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+//  879     	}
+//  880 }
+??usbReceiveNextPacketOnOEP0_5:
+        MOV     R7,#0x2
+        LJMP    ?FUNC_LEAVE_XDATA
+        CFI EndBlock cfiBlock26
+//  881 
+//  882 /***************************************************************************
+//  883  * Function:   usbSendZeroLengthPacketOnIEP0()                             *
+//  884  * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+//  885  * Description: Sends a 0-lengthg packet back to the host on IEP0. Often   *
+//  886  *    called to acknowledge a packet received from the host that requires  *
+//  887  *    no data in the reply, just an acknowledgement of receipt.            *
+//  888  ***************************************************************************/
+//  889 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  890 void usbSendZeroLengthPacketOnIEP0(void)
+usbSendZeroLengthPacketOnIEP0:
+        CFI Block cfiBlock27 Using cfiCommon0
+        CFI Function usbSendZeroLengthPacketOnIEP0
+//  891 {
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  892     wBytesRemainingOnIEP0 = NO_MORE_DATA;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#-0x1
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#-0x1
+        MOVX    @DPTR,A
+//  893     bStatusAction = STATUS_ACTION_NOTHING;
+        MOV     A,#0x0
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+//  894     tEndPoint0DescriptorBlock.bIEPBCNT = 0x00;
+        MOV     A,#0x0
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 1)
+        MOVX    @DPTR,A
+//  895 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock27
+//  896 
+//  897 /***************************************************************************
+//  898  * Function:   usbSendDataPacketOnEPO / SendNext                           *
+//  899  * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+//  900  * Description: These two functions, together, are responsible for sending *
+//  901  *    data packets back to the host on IEPO.  The transfer is initiated by *
+//  902  *    first calling usbSendDataPacketOnEP0 and indicating the address of   *
+//  903  *    the buffer to send.  This initiates the transfer and sends the first *
+//  904  *    packet of data.  If there is more data than can be sent in the first *
+//  905  *    packet, the usbSendNextPacketOnIEP0 function is called to send       *
+//  906  *    subsequent packets of data when an interrupt indicates the previous  *
+//  907  *    packet has been sent.                                                *
+//  908  ***************************************************************************/
+//  909 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  910 void usbSendDataPacketOnEP0(PBYTE pbBuffer)
+usbSendDataPacketOnEP0:
+        CFI Block cfiBlock28 Using cfiCommon0
+        CFI Function usbSendDataPacketOnEP0
+//  911 {
+        FUNCALL usbSendDataPacketOnEP0, usbSendNextPacketOnIEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  912     WORD wTemp;
+//  913 
+//  914     pbIEP0Buffer = pbBuffer;
+        MOV     DPTR,#pbIEP0Buffer
+        MOV     A,R2
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,R3
+        MOVX    @DPTR,A
+//  915 
+//  916     wTemp = (WORD)(tSetupPacket.bLengthH << 8) | (WORD)tSetupPacket.bLengthL;
+        MOV     DPTR,#(tSetupPacket + 7)
+        MOVX    A,@DPTR
+        MOV     R0,A
+        CLR     A
+        XCH     A,R0
+        MOV     R1,A
+        MOV     DPTR,#(tSetupPacket + 6)
+        MOVX    A,@DPTR
+        MOV     R3,#0x0
+        ORL     A,R0
+        MOV     R0,A
+        MOV     A,R3
+        ORL     A,R1
+        MOV     R1,A
+//  917 
+//  918     // Limit transfer size to wLength if needed
+//  919     // this prevent USB device sending 'more than require' data back to host
+//  920     if(wBytesRemainingOnIEP0 >= wTemp)
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        CLR     C
+        MOVX    A,@DPTR
+        SUBB    A,R0
+        INC     DPTR
+        MOVX    A,@DPTR
+        SUBB    A,R1
+        JC      ??usbSendDataPacketOnEP0_0
+//  921     	{
+//  922         wBytesRemainingOnIEP0 = wTemp;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,R0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,R1
+        MOVX    @DPTR,A
+//  923         bHostAskMoreDataThanAvailable = FALSE;
+        MOV     DPTR,#bHostAskMoreDataThanAvailable
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+        SJMP    ??usbSendDataPacketOnEP0_1
+//  924         }
+//  925 	else
+//  926 		{ 
+//  927 		bHostAskMoreDataThanAvailable = TRUE;
+??usbSendDataPacketOnEP0_0:
+        MOV     DPTR,#bHostAskMoreDataThanAvailable
+        MOV     A,#0x1
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  928 		}
+//  929 
+//  930     usbSendNextPacketOnIEP0();
+??usbSendDataPacketOnEP0_1:
+        ; Setup parameters for call to function usbSendNextPacketOnIEP0
+        LCALL   usbSendNextPacketOnIEP0
+//  931 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock28
+//  932 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  933 void usbSendNextPacketOnIEP0(void)
+usbSendNextPacketOnIEP0:
+        CFI Block cfiBlock29 Using cfiCommon0
+        CFI Function usbSendNextPacketOnIEP0
+//  934 {
+        MOV     A,#-0x9
+        LCALL   ?FUNC_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+//  935     BYTE bPacketSize,bIndex;
+//  936 
+//  937     // First check if there are bytes remaining to be transferred
+//  938     if(wBytesRemainingOnIEP0 != NO_MORE_DATA)
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOVX    A,@DPTR
+        XRL     A,#0xff
+        JNZ     ??usbSendNextPacketOnIEP0_0
+        INC     DPTR
+        MOVX    A,@DPTR
+        XRL     A,#0xff
+??usbSendNextPacketOnIEP0_0:
+        JNZ     $+5
+        LJMP    ??usbSendNextPacketOnIEP0_1
+//  939     	{
+//  940         if(wBytesRemainingOnIEP0 > EP0_MAX_PACKET_SIZE)
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        CLR     C
+        MOVX    A,@DPTR
+        SUBB    A,#0x9
+        INC     DPTR
+        MOVX    A,@DPTR
+        SUBB    A,#0x0
+        JC      ??usbSendNextPacketOnIEP0_2
+//  941         	{
+//  942             // More bytes are remaining than will fit in one packet
+//  943             // there will be More IN Stage
+//  944             bPacketSize = EP0_MAX_PACKET_SIZE;
+        MOV     R3,#0x8
+//  945             wBytesRemainingOnIEP0 -= EP0_MAX_PACKET_SIZE;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOVX    A,@DPTR
+        ADD     A,#-0x8
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        ADDC    A,#-0x1
+        MOVX    @DPTR,A
+//  946             bStatusAction = STATUS_ACTION_DATA_IN;
+        MOV     A,#0x1
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+        SJMP    ??usbSendNextPacketOnIEP0_3
+//  947         	}
+//  948         else if (wBytesRemainingOnIEP0 < EP0_MAX_PACKET_SIZE)
+??usbSendNextPacketOnIEP0_2:
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        CLR     C
+        MOVX    A,@DPTR
+        SUBB    A,#0x8
+        INC     DPTR
+        MOVX    A,@DPTR
+        SUBB    A,#0x0
+        JNC     ??usbSendNextPacketOnIEP0_4
+//  949         	{
+//  950             // The remaining data will fit in one packet.
+//  951             // This case will properly handle wBytesRemainingOnIEP0 == 0
+//  952             bPacketSize = (BYTE)wBytesRemainingOnIEP0;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOVX    A,@DPTR
+        MOV     R3,A
+//  953             wBytesRemainingOnIEP0 = NO_MORE_DATA;        // No more data need to be Txed
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#-0x1
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#-0x1
+        MOVX    @DPTR,A
+//  954             bStatusAction = STATUS_ACTION_NOTHING;
+        MOV     A,#0x0
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+        SJMP    ??usbSendNextPacketOnIEP0_3
+//  955         	}
+//  956         else
+//  957         	{
+//  958             // wBytesRemainingOnIEP0 == EP0_MAX_PACKET_SIZE
+//  959             bPacketSize = EP0_MAX_PACKET_SIZE;
+??usbSendNextPacketOnIEP0_4:
+        MOV     R3,#0x8
+//  960             if(bHostAskMoreDataThanAvailable == TRUE)
+        MOV     DPTR,#bHostAskMoreDataThanAvailable
+        MOVX    A,@DPTR
+        XRL     A,#0x1
+        JNZ     ??usbSendNextPacketOnIEP0_5
+        INC     DPTR
+        MOVX    A,@DPTR
+        XRL     A,#0x0
+??usbSendNextPacketOnIEP0_5:
+        JNZ     ??usbSendNextPacketOnIEP0_6
+//  961             	{
+//  962                 wBytesRemainingOnIEP0 = 0;
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#0x0
+        MOVX    @DPTR,A
+//  963                 bStatusAction = STATUS_ACTION_DATA_IN;
+        MOV     A,#0x1
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+        SJMP    ??usbSendNextPacketOnIEP0_3
+//  964             	}
+//  965             else
+//  966             	{ 
+//  967                 wBytesRemainingOnIEP0 = NO_MORE_DATA;
+??usbSendNextPacketOnIEP0_6:
+        MOV     DPTR,#wBytesRemainingOnIEP0
+        MOV     A,#-0x1
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,#-0x1
+        MOVX    @DPTR,A
+//  968                 bStatusAction = STATUS_ACTION_NOTHING;
+        MOV     A,#0x0
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+//  969             	}
+//  970         	}
+//  971 
+//  972         for(bIndex=0; bIndex<bPacketSize; bIndex++) 
+??usbSendNextPacketOnIEP0_3:
+        MOV     R2,#0x0
+        SJMP    ??usbSendNextPacketOnIEP0_7
+//  973             abIEP0Buffer[bIndex] = *pbIEP0Buffer++;
+??usbSendNextPacketOnIEP0_8:
+        MOV     DPTR,#pbIEP0Buffer
+        MOVX    A,@DPTR
+        MOV     R0,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        MOV     DPH,A
+        MOV     DPL,R0
+        MOVX    A,@DPTR
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R2
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(abIEP0Buffer & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((abIEP0Buffer >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        MOV     DPTR,#pbIEP0Buffer
+        MOVX    A,@DPTR
+        ADD     A,#0x1
+        MOV     R0,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        ADDC    A,#0x0
+        MOV     R1,A
+        MOV     DPTR,#pbIEP0Buffer
+        MOV     A,R0
+        MOVX    @DPTR,A
+        INC     DPTR
+        MOV     A,R1
+        MOVX    @DPTR,A
+        INC     R2
+??usbSendNextPacketOnIEP0_7:
+        MOV     A,R2
+        CLR     C
+        SUBB    A,R3
+        JC      ??usbSendNextPacketOnIEP0_8
+//  974 
+//  975         tEndPoint0DescriptorBlock.bIEPBCNT = bPacketSize;   // & EPBCT_BYTECNT_MASK;
+        MOV     A,R3
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 1)
+        MOVX    @DPTR,A
+        SJMP    ??usbSendNextPacketOnIEP0_9
+//  976 	  	}
+//  977     else
+//  978     	{
+//  979     	bStatusAction = STATUS_ACTION_NOTHING;
+??usbSendNextPacketOnIEP0_1:
+        MOV     A,#0x0
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+//  980     	}
+//  981 }
+??usbSendNextPacketOnIEP0_9:
+        MOV     R7,#0x2
+        LJMP    ?FUNC_LEAVE_XDATA
+        CFI EndBlock cfiBlock29
+//  982 
+//  983 /***************************************************************************
+//  984  * Function:   SetupPacketInterruptHandler()                               *
+//  985  * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+//  986  * Description: This function is called by the UsbInterrupt function when  *
+//  987  *    a setup packet is received.  This function immediately sets both     * 
+//  988  *    OEP0 and IEP0 to a NAK state, sets the bUSBCTL to send/receive based *
+//  989  *    on the direction of the request, then proceeds to call  the          *
+//  990  *    usbDecodeAndProcessUsbRequest() function which determines which      *
+//  991  *    function should be called to handle the given USB request.           *  
+//  992  ***************************************************************************/
+//  993 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  994 void SetupPacketInterruptHandler(void)
+SetupPacketInterruptHandler:
+        CFI Block cfiBlock30 Using cfiCommon0
+        CFI Function SetupPacketInterruptHandler
+//  995 {
+        FUNCALL SetupPacketInterruptHandler, usbDecodeAndProcessUsbRequest
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  996     // Hardware clears STALL in both data endpoints once valid setup packet is
+//  997     // received.  NAK both data endpoints.
+//  998     tEndPoint0DescriptorBlock.bIEPBCNT  = EPBCNT_NAK;
+        MOV     A,#-0x80
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 1)
+        MOVX    @DPTR,A
+//  999     tEndPoint0DescriptorBlock.bOEPBCNT  = EPBCNT_NAK;
+        MOV     A,#-0x80
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 3)
+        MOVX    @DPTR,A
+// 1000     
+// 1001     bUSBSTA = USBSTA_SETUP; // from now, hardware will refer NAK bit in I/OEPBCNT
+        MOV     A,#0x4
+        MOV     DPTR,#-0x2
+        MOVX    @DPTR,A
+// 1002 
+// 1003     // Copy the MSB of bmRequestType to DIR bit of USBCTL to indicate the
+// 1004     // direction of the transfer.
+// 1005     if((tSetupPacket.bmRequestType & USB_REQ_TYPE_INPUT) == USB_REQ_TYPE_INPUT)
+        MOV     DPTR,#tSetupPacket
+        MOVX    A,@DPTR
+        MOV     C,0xE0 /* A   */.7
+        JNC     ??SetupPacketInterruptHandler_0
+// 1006         bUSBCTL |= USBCTL_DIR;
+        MOV     DPTR,#-0x4
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.0
+        MOVX    @DPTR,A
+        SJMP    ??SetupPacketInterruptHandler_1
+// 1007     else 
+// 1008     	bUSBCTL &= ~USBCTL_DIR;
+??SetupPacketInterruptHandler_0:
+        MOV     DPTR,#-0x4
+        MOVX    A,@DPTR
+        CLR     0xE0 /* A   */.0
+        MOVX    @DPTR,A
+// 1009 
+// 1010 	// Clear the bStatusAction to indicate that, at this point, nothing is 
+// 1011 	// happening (it may be set to DATA_OUT by specific functions that
+// 1012 	// expect a DATA packet following the setup packet).
+// 1013     bStatusAction = STATUS_ACTION_NOTHING;
+??SetupPacketInterruptHandler_1:
+        MOV     A,#0x0
+        MOV     DPTR,#bStatusAction
+        MOVX    @DPTR,A
+// 1014 
+// 1015 	// Call the function that determines which function should be called to
+// 1016 	// handle the specific USB request.
+// 1017     usbDecodeAndProcessUsbRequest();
+        ; Setup parameters for call to function usbDecodeAndProcessUsbRequest
+        LCALL   usbDecodeAndProcessUsbRequest
+// 1018 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock30
+// 1019 
+// 1020 /***************************************************************************
+// 1021  * Function:   OEP0InterruptHandler()                                      *
+// 1022  * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+// 1023  * Description: This function is called by the UsbInterrupt function when  *
+// 1024  *    a USB interrupt is called by OEP0.  This will happen once a data     *
+// 1025  *    transfer has been initialized by a USB function handler by calling   *
+// 1026  *    usbReceiveDataPacketOnEP0.                                           *
+// 1027  ***************************************************************************/
+// 1028 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+// 1029 void OEP0InterruptHandler(void)
+OEP0InterruptHandler:
+        CFI Block cfiBlock31 Using cfiCommon0
+        CFI Function OEP0InterruptHandler
+// 1030 {
+        FUNCALL OEP0InterruptHandler, usbReceiveNextPacketOnOEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+// 1031 	// We clear the IEP0 byte count since we have nothing to send out.
+// 1032     tEndPoint0DescriptorBlock.bIEPBCNT = 0x00;
+        MOV     A,#0x0
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 1)
+        MOVX    @DPTR,A
+// 1033 
+// 1034 	// We now handle the interrupt based on the bStatusAction condition.
+// 1035 	// If we are in a DATA_OUT condition, we call the usbReceiveNextPacketOnEP0
+// 1036 	// function to copy the data payload to its correct buffer.  If we are
+// 1037 	// not expecting any data on OEP0, we set the stall flag to stall the
+// 1038 	// endpoint and abort any additional data that may otherwise be
+// 1039 	// sent.
+// 1040     if(bStatusAction == STATUS_ACTION_DATA_OUT) 
+        MOV     DPTR,#bStatusAction
+        MOVX    A,@DPTR
+        XRL     A,#0x2
+        JNZ     ??OEP0InterruptHandler_0
+// 1041     	usbReceiveNextPacketOnOEP0(); // Handle this data packet
+        ; Setup parameters for call to function usbReceiveNextPacketOnOEP0
+        LCALL   usbReceiveNextPacketOnOEP0
+        SJMP    ??OEP0InterruptHandler_1
+// 1042     else 
+// 1043     	tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL; // We weren't expecting data
+??OEP0InterruptHandler_0:
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 2)
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+// 1044 }
+??OEP0InterruptHandler_1:
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock31
+// 1045 
+// 1046 /***************************************************************************
+// 1047  * Function:   IEP0InterruptHandler()                                      *
+// 1048  * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+// 1049  * Description: This function is called by the UsbInterrupt function when  *
+// 1050  *    a USB interrupt is caused by IEP0.  This will happen once the data   *
+// 1051  *    sent by calling usbSendNextPacketOnIEP0 and means the previous data  *
+// 1052  *    packet has been sent.  At that point, there are two conditions:      *
+// 1053  *    either there is more data to send or there isn't.  If there is, we   *
+// 1054  *    call usbSendNextPacketOnIEP0 to send the next packet of data.  If    *
+// 1055  *    there isn't anymore data, we stall.  However, if the bStatusAction   *
+// 1056  *    condition indicates that we were changing the devices address, we    *
+// 1057  *    do so at this point.                                                 *
+// 1058  ***************************************************************************/
+// 1059 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+// 1060 void IEP0InterruptHandler(void)
+IEP0InterruptHandler:
+        CFI Block cfiBlock32 Using cfiCommon0
+        CFI Function IEP0InterruptHandler
+// 1061 {
+        FUNCALL IEP0InterruptHandler, usbSendNextPacketOnIEP0
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+// 1062 	// We clear the OEP0 byte count since we are not expecting any data.
+// 1063     tEndPoint0DescriptorBlock.bOEPBCNT = 0x00;
+        MOV     A,#0x0
+        MOV     DPTR,#(tEndPoint0DescriptorBlock + 3)
+        MOVX    @DPTR,A
+// 1064 
+// 1065 	// We now handle the interrupt based on the bStatusAction condition.
+// 1066 	// If we are in a DATA_IN condition, we call the usbSendNextPacketOnIEP0  
+// 1067 	// function to send the next data payload packet.  If we are in a
+// 1068 	// Set Address mode, we modify the address.  In any other case, we've
+// 1069 	// sent all teh data we had to send, so we stall the endpoint to indicate
+// 1070 	// there is no more data to send.
+// 1071     if(bStatusAction == STATUS_ACTION_DATA_IN) 
+        MOV     DPTR,#bStatusAction
+        MOVX    A,@DPTR
+        XRL     A,#0x1
+        JNZ     ??IEP0InterruptHandler_0
+// 1072     	usbSendNextPacketOnIEP0(); // Send the next data packet
+        ; Setup parameters for call to function usbSendNextPacketOnIEP0
+        LCALL   usbSendNextPacketOnIEP0
+        SJMP    ??IEP0InterruptHandler_1
+// 1073     else if(bStatusAction == STATUS_ACTION_SET_ADDRESS) 
+??IEP0InterruptHandler_0:
+        MOV     DPTR,#bStatusAction
+        MOVX    A,@DPTR
+        XRL     A,#0x3
+        JNZ     ??IEP0InterruptHandler_2
+// 1074     	bFUNADR = bUsbDeviceAddress; // Set the device's address
+        MOV     DPTR,#bUsbDeviceAddress
+        MOVX    A,@DPTR
+        MOV     DPTR,#-0x1
+        MOVX    @DPTR,A
+        SJMP    ??IEP0InterruptHandler_1
+// 1075     else 
+// 1076     	tEndPoint0DescriptorBlock.bIEPCNFG |= EPCNF_STALL; // No more data to send
+??IEP0InterruptHandler_2:
+        MOV     DPTR,#tEndPoint0DescriptorBlock
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.3
+        MOVX    @DPTR,A
+// 1077 }
+??IEP0InterruptHandler_1:
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock32
+// 1078 
+// 1079 /***************************************************************************
+// 1080  * Function:   USBInterrupt                                                *
+// 1081  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+// 1082  * Description: Handles the USB interrupts generated by the USB sectiob of *
+// 1083  *    the part.  This is actually External 0 interrupt on the 8051 at      *
+// 1084  *    0x0003 in memory, but is used exclusively for USB interrupts on the  *
+// 1085  *    TUSB2136.                                                            * 
+// 1086  *                                                                         * 
+// 1087  * Note: VECINT is cleared after being handled successfully so that the    * 
+// 1088  *       next USB-related interrupt is made available to the handler.      *  
+// 1089  ***************************************************************************/
+// 1090 
+// 1091 #pragma vector=0x0003
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+// 1092 __interrupt void USBInterrupt(void)
+USBInterrupt:
+        CFI Block cfiBlock33 Using cfiCommon1
+        CFI Function USBInterrupt
+// 1093 {
+        FUNCALL USBInterrupt, OEP0InterruptHandler
+        LOCFRAME ISTACK, 15, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 15, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL USBInterrupt, IEP0InterruptHandler
+        LOCFRAME ISTACK, 15, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 15, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL USBInterrupt, IEP1InterruptHandler
+        LOCFRAME ISTACK, 15, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 15, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL USBInterrupt, SetupPacketInterruptHandler
+        LOCFRAME ISTACK, 15, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 15, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL USBInterrupt, SetupPacketInterruptHandler
+        LOCFRAME ISTACK, 15, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 15, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL USBInterrupt, UsbReset
+        LOCFRAME ISTACK, 15, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 15, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    A
+        CFI A Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        MOV     A,#-0xe
+        LCALL   ?INTERRUPT_ENTER_XSP
+        CFI B load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI PSW load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI R5 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R4 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI R3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI R2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI R1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI R0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI CFA_XSP16 add(XSP16, 14)
+        ; Saved register size: 15
+        ; Auto size: 0
+// 1094 	// Disable all interrupts because this is critical code
+// 1095 	IE_bit.EA = DISABLE;
+        CLR     0xa8.7
+// 1096 
+// 1097 	// Select the appropriate interrupt handler depending on the VECINT value
+// 1098     switch (bVECINT)
+        MOV     DPTR,#-0x6e
+        MOVX    A,@DPTR
+        LCALL   ?UC_SWITCH_SPARSE
+`?<Jumptable for USBInterrupt>_0`:
+        DATA
+        DB        0
+        DB        9
+        DB        18
+        DW        ??USBInterrupt_0
+        DB        34
+        DW        ??USBInterrupt_0
+        DB        48
+        DW        ??USBInterrupt_1
+        DB        50
+        DW        ??USBInterrupt_2
+        DB        56
+        DW        ??USBInterrupt_3
+        DB        58
+        DW        ??USBInterrupt_4
+        DB        60
+        DW        ??USBInterrupt_5
+        DB        68
+        DW        ??USBInterrupt_6
+        DB        70
+        DW        ??USBInterrupt_7
+        DW        ??USBInterrupt_8
+        CODE
+// 1099     	{
+// 1100 		case VECINT_OUTPUT_ENDPOINT0:
+// 1101 			bVECINT  = 0x00;
+??USBInterrupt_7:
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6e
+        MOVX    @DPTR,A
+// 1102 			OEP0InterruptHandler();
+        ; Setup parameters for call to function OEP0InterruptHandler
+        LCALL   OEP0InterruptHandler
+        SJMP    ??USBInterrupt_9
+// 1103 			break;
+// 1104 
+// 1105         case VECINT_INPUT_ENDPOINT0:
+// 1106 			bVECINT  = 0x00;
+??USBInterrupt_6:
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6e
+        MOVX    @DPTR,A
+// 1107 			IEP0InterruptHandler();
+        ; Setup parameters for call to function IEP0InterruptHandler
+        LCALL   IEP0InterruptHandler
+        SJMP    ??USBInterrupt_9
+// 1108 			break;
+// 1109 
+// 1110 		case VECINT_INPUT_ENDPOINT1:
+// 1111 		case 0x12:
+// 1112 			bVECINT = 0x00;
+??USBInterrupt_0:
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6e
+        MOVX    @DPTR,A
+// 1113 			IEP1InterruptHandler();
+        ; Setup parameters for call to function IEP1InterruptHandler
+        LCALL   IEP1InterruptHandler
+        SJMP    ??USBInterrupt_9
+// 1114 			break;
+// 1115 
+// 1116         case VECINT_STPOW_PACKET_RECEIVED:
+// 1117 			bVECINT  = 0x00;
+??USBInterrupt_1:
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6e
+        MOVX    @DPTR,A
+// 1118 			bUSBSTA = USBSTA_STPOW;
+        MOV     A,#0x1
+        MOV     DPTR,#-0x2
+        MOVX    @DPTR,A
+// 1119 			SetupPacketInterruptHandler();
+        ; Setup parameters for call to function SetupPacketInterruptHandler
+        LCALL   SetupPacketInterruptHandler
+        SJMP    ??USBInterrupt_9
+// 1120 			break;
+// 1121 
+// 1122         case VECINT_SETUP_PACKET_RECEIVED:
+// 1123         // hardware will NAK data stage, no matter NAK bit in I/OEPBCNT
+// 1124 
+// 1125 			bVECINT  = 0x00;
+??USBInterrupt_2:
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6e
+        MOVX    @DPTR,A
+// 1126 //			bUSBSTA = USBSTA_SETUP; // from now, hardware will refer NAK bit in I/OEPBCNT
+// 1127 			SetupPacketInterruptHandler();
+        ; Setup parameters for call to function SetupPacketInterruptHandler
+        LCALL   SetupPacketInterruptHandler
+        SJMP    ??USBInterrupt_9
+// 1128 			break;
+// 1129 
+// 1130         case VECINT_RSTR_INTERRUPT:
+// 1131 			bVECINT  = 0x00;
+??USBInterrupt_5:
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6e
+        MOVX    @DPTR,A
+// 1132 			bUSBSTA = USBSTA_RSTR;
+        MOV     A,#-0x80
+        MOV     DPTR,#-0x2
+        MOVX    @DPTR,A
+// 1133 			UsbReset();
+        ; Setup parameters for call to function UsbReset
+        LCALL   UsbReset
+        SJMP    ??USBInterrupt_9
+// 1134 			break;
+// 1135 		
+// 1136 		case VECINT_RESR_INTERRUPT:
+// 1137 			bVECINT = 0x00;
+??USBInterrupt_3:
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6e
+        MOVX    @DPTR,A
+// 1138 			bUSBSTA = USBSTA_RESR;
+        MOV     A,#0x20
+        MOV     DPTR,#-0x2
+        MOVX    @DPTR,A
+// 1139 			bSuspended = FALSE;
+        MOV     A,#0x0
+        MOV     DPTR,#bSuspended
+        MOVX    @DPTR,A
+        SJMP    ??USBInterrupt_9
+// 1140 			break;
+// 1141 		
+// 1142 		case VECINT_SUSR_INTERRUPT:
+// 1143 			bVECINT = 0x00;
+??USBInterrupt_4:
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6e
+        MOVX    @DPTR,A
+// 1144 			bUSBSTA = USBSTA_SUSR;
+        MOV     A,#0x40
+        MOV     DPTR,#-0x2
+        MOVX    @DPTR,A
+// 1145 			bSuspended = TRUE;
+        MOV     A,#0x1
+        MOV     DPTR,#bSuspended
+        MOVX    @DPTR,A
+        SJMP    ??USBInterrupt_9
+// 1146 			break;
+// 1147 
+// 1148 		default:
+// 1149 			bVECINT  = 0x00;
+??USBInterrupt_8:
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6e
+        MOVX    @DPTR,A
+// 1150 			break;
+// 1151 		}
+// 1152 
+// 1153 	// End of ciritical code section, reenable interrupts
+// 1154     IE_bit.EA = ENABLE;
+??USBInterrupt_9:
+        SETB    0xa8.7
+// 1155 }
+        MOV     R7,#0x1
+        LJMP    ?INTERRUPT_LEAVE_XSP
+        CFI EndBlock cfiBlock33
+        REQUIRE _A_IE
+// 1156 #pragma vector=0x0013
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+// 1157 __interrupt void P33Interrupt(void)
+P33Interrupt:
+        CFI Block cfiBlock34 Using cfiCommon1
+        CFI Function P33Interrupt
+// 1158 {
+        PUSH    A
+        CFI A Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    PSW
+        CFI PSW Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 6)
+        CFI CFA_SP SP+-6
+        ; Saved register size: 4
+        ; Auto size: 0
+// 1159 	// Disable all interrupts because this is critical code
+// 1160 
+// 1161 	bUSBCTL |= USBCTL_RWUP;
+        MOV     DPTR,#-0x4
+        MOVX    A,@DPTR
+        SETB    0xE0 /* A   */.5
+        MOVX    @DPTR,A
+// 1162 	bSuspended = FALSE;
+        MOV     A,#0x0
+        MOV     DPTR,#bSuspended
+        MOVX    @DPTR,A
+// 1163 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-5
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-4
+        POP     PSW
+        CFI PSW SameValue
+        CFI CFA_SP SP+-3
+        POP     A
+        CFI A SameValue
+        CFI CFA_SP SP+-2
+        RETI
+        CFI EndBlock cfiBlock34
+
+        COMMON INTVEC:CODE:ROOT(0)
+        ORG 3
+`??USBInterrupt??INTVEC 3`:
+        LJMP       (USBInterrupt)
+
+        COMMON INTVEC:CODE:ROOT(0)
+        ORG 19
+`??P33Interrupt??INTVEC 19`:
+        LJMP       (P33Interrupt)
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+        DATA
+`?<Initializer for gbProtocol>`:
+        DB 1
+
+        END
+// 
+//   253 bytes in segment CODE_C
+//     6 bytes in segment INTVEC
+// 3 351 bytes in segment NEAR_CODE
+//     1 byte  in segment SFR_AN
+//    18 bytes in segment TUSB2136_DESC_SEG
+//     4 bytes in segment TUSB2136_EP0_EDB_SEG
+//     8 bytes in segment TUSB2136_IEP0BUFFER_SEG
+//    24 bytes in segment TUSB2136_IEP_EDB_SEG
+//     8 bytes in segment TUSB2136_OEP0BUFFER_SEG
+//    64 bytes in segment TUSB2136_OEP1_X_BUFFER_SEG
+//    64 bytes in segment TUSB2136_OEP1_Y_BUFFER_SEG
+//    24 bytes in segment TUSB2136_OEP_EDB_SEG
+//     8 bytes in segment TUSB2136_SETUPPACKET_SEG
+//     1 byte  in segment XDATA_I
+//     1 byte  in segment XDATA_ID
+//    20 bytes in segment XDATA_Z
+// 
+// 3 605 bytes of CODE  memory (+ 6 bytes shared)
+//     0 bytes of DATA  memory (+ 1 byte  shared)
+//   243 bytes of XDATA memory
+//
+//Errors: none
+//Warnings: none

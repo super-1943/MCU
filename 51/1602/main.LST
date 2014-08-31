@@ -1,0 +1,167 @@
+C51 COMPILER V7.00  MAIN                                                                   11/09/2008 15:12:23 PAGE 1   
+
+
+C51 COMPILER V7.00, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include<reg51.h>
+   2          #include"intrins.h"
+   3          //**************************宏定义***********************************
+   4          #define uchar unsigned char 
+   5          #define uint unsigned int
+   6          
+   7          #define L 0
+   8          #define H 1
+   9          #define NOP _nop_()
+  10          
+  11          uchar date[9];
+  12          uchar time[9];
+  13          uchar temp,temph,templ;
+  14          uchar Tempx[9];
+  15          
+  16          
+  17          //bit d;
+  18          sbit rs=P2^2; //4
+  19          sbit rw=P2^1; //5
+  20          sbit e =P2^0; //6
+  21          
+  22          sbit DQ=P2^3;
+  23          
+  24          void delay(unsigned int t);
+  25          
+  26          //*************************1602驱动程序**********************************
+  27          //功能：1602液晶显示
+  28          //日期: 2008.9.
+  29          //************************************************************************
+  30          
+  31          //***************检测忙信号***********************
+  32          unsigned char busy()
+  33          {
+  34   1              rs=0;
+  35   1              rw=1;   _nop_();
+  36   1              e=1;    _nop_();        
+  37   1              e=0;
+  38   1              return P0;              
+  39   1      }
+  40          
+  41          //**************写命令*************************
+  42          void write_cmd(unsigned char cmd)
+  43          {
+  44   1              e=0;    NOP;
+  45   1              rs=L;   NOP;
+  46   1              rw=L;   NOP;    
+  47   1              P1=cmd; NOP;    
+  48   1              e=1;    NOP;    
+  49   1              e=0;    NOP;
+  50   1              busy();
+  51   1      }
+  52          
+  53          //*************写数据**************************
+  54          void write_dat(unsigned char dat)
+  55          {
+C51 COMPILER V7.00  MAIN                                                                   11/09/2008 15:12:23 PAGE 2   
+
+  56   1              e=0;    NOP;
+  57   1              rs=H;   NOP;
+  58   1              rw=L;   NOP;    
+  59   1              P1=dat; NOP;    
+  60   1              e=1;    NOP;
+  61   1              e=0;    NOP;
+  62   1              busy();
+  63   1      }
+  64          
+  65          
+  66          
+  67          //*****************写字符串**********************
+  68          void show(unsigned char * str)
+  69          {
+  70   1              while(*str!='\0')
+  71   1              {
+  72   2                      write_dat(*str);
+  73   2                      str++;
+  74   2              }
+  75   1      }
+  76          
+  77          
+  78          void goxy(unsigned char y,unsigned char x)
+  79          {
+  80   1              if(y==1)
+  81   1                      write_cmd(0x80|x);
+  82   1              if(y==2)
+  83   1                      write_cmd(x-(0x40));
+  84   1      
+  85   1      }
+  86          
+  87          void init_1602()
+  88          {
+  89   1              e=0;
+  90   1              delay(15);
+  91   1              write_cmd(0x38);
+  92   1              delay(5);
+  93   1              write_cmd(0x38);
+  94   1              delay(5);
+  95   1              write_cmd(0x38);        
+  96   1              write_cmd(0x38);NOP;
+  97   1              write_cmd(0x08);NOP;                            //    open up display 
+  98   1              write_cmd(0x06);NOP;                            //    set up guangbiao
+  99   1              write_cmd(0x0c);NOP;                            //     display clear
+ 100   1              write_cmd(0x01);NOP;
+ 101   1      }
+ 102          
+ 103          //***********************1302驱动程序******************************
+ 104          //功能：时间程序
+ 105          //日期: 2008.9.
+ 106          //****************************************************************      
+ 107          void delay(unsigned int t)             //t毫秒
+ 108          {
+ 109   1              unsigned char i;
+ 110   1              while(t--)
+ 111   1              {
+ 112   2              for(i=0;i<125;i++);
+ 113   2              }
+ 114   1      }
+ 115          
+ 116          
+ 117          
+C51 COMPILER V7.00  MAIN                                                                   11/09/2008 15:12:23 PAGE 3   
+
+ 118          
+ 119          
+ 120          
+ 121          
+ 122          
+ 123          //**************************主函数********************************
+ 124          void main()
+ 125          {
+ 126   1      
+ 127   1              init_1602();
+ 128   1      
+ 129   1              //initDisplay();
+ 130   1      
+ 131   1              delay(500);
+ 132   1      
+ 133   1              goxy(1,0);
+ 134   1              write_cmd(0x01);
+ 135   1              show("zhaoyongke");
+ 136   1              goxy(2,0);
+ 137   1              show(" www.ysu.edu.cn ");
+ 138   1              delay(4000);
+ 139   1              while(1);
+ 140   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    231    ----
+   CONSTANT SIZE    =     28    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     30    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

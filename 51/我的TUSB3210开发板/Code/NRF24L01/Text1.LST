@@ -1,0 +1,184 @@
+C51 COMPILER V8.02   TEXT1                                                                 06/05/2011 20:09:24 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "serial.h"
+   3          #include "wireless.h"
+   4          extern void init_NRF24L01(void);
+   5          extern uint SPI_RW(uint u);
+   6          extern void SetRX_Mode(void);
+   7          extern uint SPI_RW_Reg(uchar reg, uchar value);
+   8          extern uint SPI_Write_Buf(uchar reg, uchar *pBuf, uchar uchars);
+   9          extern unsigned char nRF24L01_RxPacket(unsigned char* rx_buf);
+  10          extern void nRF24L01_TxPacket(unsigned char * tx_buf);
+  11          
+  12          sbit CE=P2^0;
+  13          sbit CSN=P2^1;
+  14          sbit SCK=P2^2;
+  15          sbit MOSI=P2^3;
+  16          sbit MISO=P2^4;
+  17          sbit IRQ=P2^5;
+  18          
+  19          unsigned char buffer[8]={7,8,9,3,3,2,1,0};
+  20          /*
+  21          sbit W_CE=P2^0;
+  22          sbit W_CSN=P2^1;
+  23          sbit W_SCK=P2^2;
+  24          sbit W_MOSI=P2^3;
+  25          sbit W_MISO=P2^4;
+  26          sbit W_IRQ=P2^5;
+  27          
+  28          #define CMD_R_REG(r)    (r&0x1f)        
+  29          #define CMD_W_REG(r)    (0x20+(r&0x1f))
+  30          #define CMD_R_RX                0x61
+  31          #define CMD_W_TX                0xa0
+  32          #define FLUSH_TX                0xe1
+  33          #define FLUSH_RX                0xe2
+  34          #define REUSE_TX                0xe3
+  35          #define ACTIVATE                0x50
+  36          #define R_RX_WID                0x60
+  37          #define W_ACK(p)                (0xa8+(p&0x7))
+  38          #define W_TX_NAK                0xb0
+  39          #define NOP                             0xff
+  40          
+  41          volatile unsigned char count=0;
+  42          
+  43          void init_io(void)
+  44          {
+  45                  W_CE=0;
+  46                  W_CSN=1;
+  47                  W_MISO=1;
+  48                  W_IRQ=1;
+  49                  W_CE=0;
+  50                  W_SCK=0;
+  51          }
+  52          
+  53          
+  54          unsigned char spi_byte(unsigned char b)
+  55          {
+C51 COMPILER V8.02   TEXT1                                                                 06/05/2011 20:09:24 PAGE 2   
+
+  56                  unsigned char i;
+  57                  unsigned char ret=0;
+  58                  for(i=0;i<8;i++)
+  59                  {
+  60                          ret<<=1;
+  61                          if(b&0x80)
+  62                          {
+  63                                  W_MOSI=1;
+  64                          }
+  65                          else
+  66                          {
+  67                                  W_MOSI=0;
+  68                          }
+  69                          W_SCK=1;
+  70                          if(W_MISO)
+  71                          {
+  72                                  ret|=0x01;
+  73                          }
+  74                          W_SCK=0;
+  75          
+  76                          
+  77          
+  78                          b<<=1;
+  79                  }
+  80          }
+  81          
+  82          unsigned char read_status(void)
+  83          {
+  84                  unsigned char t;
+  85                  W_CSN=0;
+  86                  t=spi_byte(NOP);
+  87                  W_CSN=1;
+  88                  return t;
+  89          }
+  90          unsigned char get_tx_addr(unsigned char *buf)
+  91          {
+  92                  unsigned char i,ret;
+  93                  W_CSN=0;
+  94                  ret=spi_byte(CMD_R_REG(0x10));
+  95                  for(i=0;i<5;i++)
+  96                  {
+  97                          buf[i]=spi_byte(NOP);
+  98                  }       
+  99                  W_CSN=1;
+ 100                  
+ 101          }*/
+ 102          void delay_ms(unsigned int k)
+ 103          {
+ 104   1              unsigned char i,j;
+ 105   1              for(;k;k--)
+ 106   1              for(i=20;i;i--)
+ 107   1              for(j=100;j;j--);
+ 108   1      }
+ 109          
+ 110          
+ 111          void main(void)
+ 112          {
+ 113   1              unsigned char tmp;
+ 114   1              P0=0x55;
+ 115   1              init_NRF24L01() ;                                //NRF24L01初始化配置
+ 116   1      //      init_io();
+ 117   1              rs232_init();
+C51 COMPILER V8.02   TEXT1                                                                 06/05/2011 20:09:24 PAGE 3   
+
+ 118   1              rs232_printstr("Hello world!\r\n");
+ 119   1              delay_ms(1000);
+ 120   1      //      get_tx_addr(buffer);
+ 121   1      //      for(tmp=0;tmp<5;tmp++)
+ 122   1              {
+ 123   2      //              rs232_printhex(buffer[tmp]);
+ 124   2              }
+ 125   1              CE=0;                   //StandBy I模式 
+ 126   1              SPI_RW_Reg(WRITE_REG + CONFIG, 0x0f); //接收
+ 127   1              CE=1;            //置高CE，激发数据接收
+ 128   1              delay_ms(500);
+ 129   1              CSN=0;
+ 130   1              tmp=SPI_RW(0xff);
+ 131   1              CSN=1;
+ 132   1              rs232_printhex(tmp);
+ 133   1              while(1)
+ 134   1              {
+ 135   2                      P0^=0xff;
+ 136   2                      IRQ=1;
+ 137   2                      CSN=0;
+ 138   2                      SPI_RW(CD);      // select register
+ 139   2                      tmp=SPI_RW(0);             // ..and write value to it..
+ 140   2                      CSN=1;
+ 141   2                      rs232_printstr("载波检测：");
+ 142   2                      rs232_printhex(tmp);
+ 143   2                      rs232_printstr("\r\n");
+ 144   2      //              nRF24L01_TxPacket(buffer);      // Transmit Tx buffer data
+ 145   2      //              delay_ms(500);
+ 146   2      //              while(IRQ);
+ 147   2                      CSN=0;
+ 148   2                      tmp=SPI_RW(0xff);
+ 149   2                      CSN=1;
+ 150   2                      rs232_printstr("状态检测：");
+ 151   2                      rs232_printhex(tmp);
+ 152   2                      rs232_printstr("\r\n");
+ 153   2                      SPI_RW_Reg(WRITE_REG+STATUS,0XFF);
+ 154   2      //              while(!IRQ);
+ 155   2      //              delay_ms(1000);
+ 156   2              }
+ 157   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    171    ----
+   CONSTANT SIZE    =     40    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

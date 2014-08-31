@@ -1,0 +1,278 @@
+<html>
+<body>
+<pre>
+<h1>礦ision3 Build Log</h1>
+<h2>Project:</h2>
+C:\Documents and Settings\Administrator\桌面\standardproject\standard.uv2
+Project File Date:  07/18/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=63
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000033.      Status: Writing 16 bytes at address 0x0000001F.      Status: Writing 3 bytes at address 0x0000002F.      Status: Writing 1 bytes at address 0x00000032.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 12 bytes at address 0x00000013.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=68
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000038.      Status: Writing 16 bytes at address 0x00000024.      Status: Writing 3 bytes at address 0x00000034.      Status: Writing 1 bytes at address 0x00000037.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 1 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=10.0 xdata=0 code=68
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000038.      Status: Writing 16 bytes at address 0x00000024.      Status: Writing 3 bytes at address 0x00000034.      Status: Writing 1 bytes at address 0x00000037.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 1 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=68
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000038.      Status: Writing 16 bytes at address 0x00000024.      Status: Writing 3 bytes at address 0x00000034.      Status: Writing 1 bytes at address 0x00000037.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 1 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=68
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000038.      Status: Writing 16 bytes at address 0x00000024.      Status: Writing 3 bytes at address 0x00000034.      Status: Writing 1 bytes at address 0x00000037.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 1 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=68
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000038.      Status: Writing 16 bytes at address 0x00000024.      Status: Writing 3 bytes at address 0x00000034.      Status: Writing 1 bytes at address 0x00000037.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 1 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=68
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000038.      Status: Writing 16 bytes at address 0x00000024.      Status: Writing 3 bytes at address 0x00000034.      Status: Writing 1 bytes at address 0x00000037.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 1 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=68
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000038.      Status: Writing 16 bytes at address 0x00000024.      Status: Writing 3 bytes at address 0x00000034.      Status: Writing 1 bytes at address 0x00000037.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 1 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=68
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000038.      Status: Writing 16 bytes at address 0x00000024.      Status: Writing 3 bytes at address 0x00000034.      Status: Writing 1 bytes at address 0x00000037.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 1 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=68
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000038.      Status: Writing 16 bytes at address 0x00000024.      Status: Writing 3 bytes at address 0x00000034.      Status: Writing 1 bytes at address 0x00000037.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 1 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=68
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000038.      Status: Writing 16 bytes at address 0x00000024.      Status: Writing 3 bytes at address 0x00000034.      Status: Writing 1 bytes at address 0x00000037.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 1 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=67
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000037.      Status: Writing 16 bytes at address 0x00000023.      Status: Writing 3 bytes at address 0x00000033.      Status: Writing 1 bytes at address 0x00000036.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=83
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000047.      Status: Writing 16 bytes at address 0x00000033.      Status: Writing 3 bytes at address 0x00000043.      Status: Writing 1 bytes at address 0x00000046.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 16 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=83
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000047.      Status: Writing 16 bytes at address 0x00000033.      Status: Writing 3 bytes at address 0x00000043.      Status: Writing 1 bytes at address 0x00000046.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 16 bytes at address 0x00000023.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=61
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000031.      Status: Writing 16 bytes at address 0x0000001D.      Status: Writing 3 bytes at address 0x0000002D.      Status: Writing 1 bytes at address 0x00000030.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 10 bytes at address 0x00000013.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+C:\Documents and Settings\Administrator\桌面\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 0 Warning(s).

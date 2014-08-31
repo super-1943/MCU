@@ -1,0 +1,20 @@
+<html>
+<body>
+<pre>
+<h1>µVision2 Build Log</h1>
+<h2>Project:</h2>
+C:\Documents and Settings\Master\×ÀÃæ\TUSB3210\keiltest\keiltest.uv2
+Project File Date:  01/18/2011
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling keiltest.c...
+linking...
+Program Size: data=9.0 xdata=0 code=16
+"keiltest" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling keiltest.c...
+linking...
+Program Size: data=9.0 xdata=0 code=20
+"keiltest" - 0 Error(s), 0 Warning(s).

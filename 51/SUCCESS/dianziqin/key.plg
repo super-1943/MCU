@@ -1,0 +1,83 @@
+<html>
+<body>
+<pre>
+<h1>礦ision2 Build Log</h1>
+<h2>Project:</h2>
+D:\个人工程文件夹\kkkProject\dianziqin\key.uv2
+Project File Date:  11/18/2008
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling a.c...
+A.C(1): error C100: unprintable character 0xB5 skipped
+A.C(1): error C100: unprintable character 0xE7 skipped
+A.C(1): error C100: unprintable character 0xD7 skipped
+A.C(1): error C100: unprintable character 0xD3 skipped
+A.C(1): error C100: unprintable character 0xC7 skipped
+A.C(1): error C100: unprintable character 0xD9 skipped
+A.C(1): error C100: unprintable character 0xB3 skipped
+A.C(1): error C100: unprintable character 0xCC skipped
+A.C(1): error C100: unprintable character 0xD0 skipped
+A.C(1): error C100: unprintable character 0xF2 skipped
+A.C(1): error C141: syntax error near ';'
+A.C(2): error C100: unprintable character 0xB9 skipped
+A.C(2): error C100: unprintable character 0xA6 skipped
+A.C(2): error C100: unprintable character 0xC4 skipped
+A.C(2): error C100: unprintable character 0xDC skipped
+A.C(2): error C100: unprintable character 0xB0 skipped
+A.C(2): error C100: unprintable character 0xB4 skipped
+A.C(2): error C100: unprintable character 0xB5 skipped
+A.C(2): error C100: unprintable character 0xBD skipped
+A.C(2): error C100: unprintable character 0xBA skipped
+A.C(2): error C100: unprintable character 0xC5 skipped
+A.C(2): error C100: unprintable character 0xBC skipped
+A.C(2): error C100: unprintable character 0xFC skipped
+A.C(2): error C100: unprintable character 0xB7 skipped
+A.C(2): error C100: unprintable character 0xD6 skipped
+A.C(2): error C100: unprintable character 0xB1 skipped
+A.C(2): error C100: unprintable character 0xF0 skipped
+A.C(2): error C100: unprintable character 0xB7 skipped
+A.C(2): error C100: unprintable character 0xA2 skipped
+A.C(2): error C100: unprintable character 0xB3 skipped
+A.C(2): error C100: unprintable character 0xF6 skipped
+A.C(2): error C100: unprintable character 0xB8 skipped
+A.C(2): error C100: unprintable character 0xF6 skipped
+A.C(2): error C100: unprintable character 0xBB skipped
+A.C(2): error C100: unprintable character 0xF9 skipped
+A.C(2): error C100: unprintable character 0xB1 skipped
+A.C(2): error C100: unprintable character 0xBE skipped
+A.C(2): error C100: unprintable character 0xD2 skipped
+A.C(2): error C100: unprintable character 0xF4 skipped
+A.C(2): error C100: unprintable character 0xBD skipped
+A.C(2): error C100: unprintable character 0xDA skipped
+A.C(3): error C100: unprintable character 0xB0 skipped
+A.C(3): error C100: unprintable character 0xB4 skipped
+A.C(3): error C100: unprintable character 0xBA skipped
+A.C(3): error C100: unprintable character 0xC5 skipped
+A.C(3): error C100: unprintable character 0xB8 skipped
+A.C(3): error C100: unprintable character 0xE8 skipped
+A.C(3): error C100: unprintable character 0xC7 skipped
+A.C(3): error C100: unprintable character 0xFA skipped
+A.C(3): error C100: unprintable character 0xBC skipped
+A.C(3): error C100: unprintable character 0xFC skipped
+A.C(3): error C141: syntax error near ')'
+A.C(3): error C100: unprintable character 0xD1 skipped
+A.C(3): error C100: unprintable character 0xDD skipped
+A.C(3): error C100: unprintable character 0xD7 skipped
+A.C(3): error C100: unprintable character 0xE0 skipped
+A.C(3): error C100: unprintable character 0xD2 skipped
+A.C(3): error C100: unprintable character 0xBB skipped
+A.C(3): error C100: unprintable character 0xCA skipped
+A.C(3): error C100: unprintable character 0xD7 skipped
+A.C(3): error C100: unprintable character 0xC0 skipped
+A.C(3): error C100: unprintable character 0xD6 skipped
+A.C(3): error C100: unprintable character 0xC7 skipped
+A.C(3): error C100: unprintable character 0xFA skipped
+A.C(4): error C129: missing ';' before 'EQU'
+Target not created
+Build target 'Target 1'
+assembling a.asm...
+linking...
+Program Size: data=8.0 xdata=0 code=574
+creating hex file from "key"...
+"key" - 0 Error(s), 0 Warning(s).

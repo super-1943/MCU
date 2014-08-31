@@ -1,0 +1,74 @@
+A51 MACRO ASSEMBLER  07_8255À_Ω”LED¥”1¡¡µΩ9G                                              05/09/2009 23:05:33 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN .\07 8255À˘Ω”LED¥”1¡¡µΩ9G.obj
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE E:\C”Ô—‘æ´»∑∂® ±≥¬¿œ ¶\07 8255À˘Ω”LED¥”1¡¡µΩ9G.asm SET(SMALL) DEBUG PRINT(
+                      .\07 8255À˘Ω”LED¥”1¡¡µΩ9G.lst) OBJECT(.\07 8255À˘Ω”LED¥”1¡¡µΩ9G.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+  8FFF                 1     PORTA   EQU     8FFFH                   ;8255Aø⁄µÿ÷∑
+  9FFF                 2     PORTB   EQU     9FFFH                   ;8255Bø⁄µÿ÷∑
+  AFFF                 3     PORTC   EQU     0AFFFH                  ;8255Cø⁄µÿ÷∑
+  BFFF                 4     CADDR   EQU     0BFFFH                  ;8255øÿ÷∆◊÷µÿ÷∑
+0000                   5             ORG 0000H
+0000 802E              6             JMP MAIN
+0030                   7             ORG 0030H
+0030 7480              8     MAIN:   MOV     A,#80H                  ;∑Ω Ω0
+0032 90BFFF            9             MOV     DPTR,#CADDR
+0035 F0               10             MOVX    @DPTR,A                 ;…Ë÷√8255π§◊˜∑Ω Ω       
+0036 909FFF           11             MOV DPTR,#PORTB
+0039 747F             12             MOV A,#7FH                      ;—°÷–”“±ﬂµ⁄“ª∏ˆ∆ﬂ∂Œ¬Îπ‹ 
+003B F0               13             MOVX @DPTR ,A
+003C 7800             14     LOOP:   MOV     R0,#00H                 ;…Ë÷√œ‘ æ ≥ı÷µ            
+003E 790A             15             mov r1,#0AH                     ;…Ë÷√—≠ª∑±‰¡ø
+0040 E8               16     LOOP1:  MOV      A,R0
+0041 900050           17             mov dptr ,#TAB
+0044 93               18             movc a,@a+dptr
+0045 908FFF           19     OUTPUT: MOV     DPTR,#PORTA    
+0048 F0               20             MOVX    @DPTR,A                 ;œ‘ æ¬ÎÀÕPAø⁄œ‘ æ
+0049 115A             21             CALL    DELAY
+004B 08               22             INC  R0                         ;÷∏œÚœ¬“ª∏ˆœ‘ æ 
+004C D9F2             23             djnz r1,LOOP1
+004E 80EC             24             JMP LOOP
+0050 3F065B4F         25     tab:db 3FH,06H,5BH,4FH,66H,6DH,7DH,07H,7FH,6FH;'0''1''2''3''4''5''6''7''8''9'              
+                                  
+0054 666D7D07                
+0058 7F6F                    
+005A 7D05             26     DELAY: MOV R5,#5
+005C 7FFF             27     D3:mov r7,#255
+005E 7EFF             28     d1:mov r6,#255
+0060 DEFE             29     d2:djnz r6,d2
+0062 DFFA             30     djnz r7,d1
+0064 DDF6             31     DJNZ R5,D3
+0066 22               32     ret
+                      33     end
+                             
+A51 MACRO ASSEMBLER  07_8255À_Ω”LED¥”1¡¡µΩ9G                                              05/09/2009 23:05:33 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+CADDR. . . . . . .  N NUMB   BFFFH   A   
+D1 . . . . . . . .  C ADDR   005EH   A   
+D2 . . . . . . . .  C ADDR   0060H   A   
+D3 . . . . . . . .  C ADDR   005CH   A   
+DELAY. . . . . . .  C ADDR   005AH   A   
+LOOP . . . . . . .  C ADDR   003CH   A   
+LOOP1. . . . . . .  C ADDR   0040H   A   
+MAIN . . . . . . .  C ADDR   0030H   A   
+OUTPUT . . . . . .  C ADDR   0045H   A   
+PORTA. . . . . . .  N NUMB   8FFFH   A   
+PORTB. . . . . . .  N NUMB   9FFFH   A   
+PORTC. . . . . . .  N NUMB   AFFFH   A   
+TAB. . . . . . . .  C ADDR   0050H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

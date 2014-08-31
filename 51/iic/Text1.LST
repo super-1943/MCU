@@ -1,0 +1,257 @@
+C51 COMPILER V8.02   TEXT1                                                                 07/10/2009 00:32:12 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          /*
+   3          sbit SCL=P1^6;
+   4          sbit SDA=P1^7;
+   5          #define ADREAD 0xd1
+   6          #define ADWRITE 0xd0
+   7          void delay(void)
+   8          {
+   9                  ;
+  10          }
+  11          
+  12          void iic_start(void)
+  13          {
+  14                  SCL=1;
+  15                  delay();
+  16                  SDA=0;
+  17                  delay();
+  18                  SCL=0;
+  19                  delay();
+  20          }
+  21          
+  22          void iic_stop(void)
+  23          {
+  24                  SDA=0;
+  25                  delay();
+  26                  SCL=1;
+  27                  delay();
+  28                  SDA=1;
+  29                  delay();
+  30                  SCL=0;
+  31                  delay();
+  32          }
+  33          
+  34          void init(void)
+  35          {
+  36                  SCL=0;
+  37                  iic_stop();
+  38          }
+  39          
+  40          bit iic_clock(void)
+  41          {
+  42                  bit sample;
+  43                  SCL=1;
+  44                  delay();
+  45                  sample=SDA;
+  46                  SCL=0;
+  47                  delay();
+  48                  return (sample);
+  49          }
+  50          
+  51          bit iic_send(unsigned char d)
+  52          {
+  53                  unsigned char i;
+  54                  for(i=0;i<8;i++)
+  55                  {
+C51 COMPILER V8.02   TEXT1                                                                 07/10/2009 00:32:12 PAGE 2   
+
+  56                          SDA=(bit)(d&0x80);
+  57                          d<<=1;
+  58                          iic_clock();
+  59                  }
+  60                  SDA=1;
+  61                  return(~iic_clock());
+  62          }
+  63          
+  64          unsigned char iic_receive(void)
+  65          {
+  66                  unsigned char d=0;
+  67                  register unsigned char i;
+  68                  for(i=0;i<8;i++)
+  69                  {
+  70                          d*=2;
+  71                          if(iic_clock())
+  72                          d++;
+  73                  }
+  74                  return d;
+  75          }
+  76          
+  77          void iic_ack(void)
+  78          {
+  79                  SDA=0;
+  80                  iic_clock();
+  81                  SDA=1;
+  82          }*/
+  83          #include <reg51.h>
+  84          #include <intrins.h>
+  85          
+  86          #define ACK 0x00
+  87          #define NACK 0x01
+  88          #define ADREAD 0xd1
+  89          #define ADWRITE 0xd0
+  90          sbit SCL=P1^6;
+  91          sbit SDA=P1^7;
+  92          unsigned char tab[10];
+  93          void start_iic(void);
+  94          void stop_iic(void);
+  95          unsigned char send1byte(unsigned char b);
+  96          void readnbyte(unsigned char *d,unsigned char n);
+  97          void delay(unsigned char i);
+  98          void main(void)
+  99          {
+ 100   1              unsigned char i=0x01;
+ 101   1              delay(10);
+ 102   1              start_iic();
+ 103   1              if(send1byte(0xd1)==ACK)
+ 104   1              {
+ 105   2                      readnbyte(tab,9);
+ 106   2              }
+ 107   1              stop_iic();
+ 108   1              start_iic();
+ 109   1      //      if(send1byte(0xd0)==ACK)
+ 110   1              {
+ 111   2      //              for(i=0;i<55 && !send1byte(i);i++);
+ 112   2              }
+ 113   1      //      stop_iic();
+ 114   1      //      start_iic();
+ 115   1              if(send1byte(0xd0)==ACK)
+ 116   1              {
+ 117   2      //              send1byte(0x00);
+C51 COMPILER V8.02   TEXT1                                                                 07/10/2009 00:32:12 PAGE 3   
+
+ 118   2                      send1byte(0x07);
+ 119   2                      send1byte(0x10);
+ 120   2              }
+ 121   1              stop_iic();
+ 122   1      //      start_iic();
+ 123   1      //      if(send1byte(0xd1)==ACK)
+ 124   1      //      {
+ 125   1      //              readnbyte(tab,9);
+ 126   1      //      }
+ 127   1      ///     stop_iic();
+ 128   1              while(1)
+ 129   1              {
+ 130   2      
+ 131   2      
+ 132   2              }
+ 133   1      }
+ 134          void start_iic(void)
+ 135          {
+ 136   1              SCL=0;
+ 137   1              SCL=1;
+ 138   1              SDA=1;
+ 139   1              _nop_();
+ 140   1              SDA=0;
+ 141   1      }
+ 142          void stop_iic(void)
+ 143          {
+ 144   1              SCL=0;
+ 145   1              SCL=1;
+ 146   1              SDA=0;
+ 147   1              _nop_();
+ 148   1              SDA=1;
+ 149   1      }
+ 150          unsigned char send1byte(unsigned char b)
+ 151          {
+ 152   1              unsigned char i;
+ 153   1              for(i=0;i<8;i++)
+ 154   1              {
+ 155   2                      SCL=0;
+ 156   2                      if(b&0x80)
+ 157   2                      {
+ 158   3                              SDA=1;
+ 159   3                      }
+ 160   2                      else
+ 161   2                      {
+ 162   3                              SDA=0;
+ 163   3                      }
+ 164   2                      SCL=1;
+ 165   2                      _nop_();
+ 166   2                      b<<=1;
+ 167   2              }
+ 168   1              SCL=0;
+ 169   1              _nop_();
+ 170   1              SDA=1;
+ 171   1              _nop_();
+ 172   1              SCL=1;
+ 173   1              if(SDA==1)
+ 174   1              {
+ 175   2                      return NACK;
+ 176   2              }
+ 177   1              else
+ 178   1                      return ACK;
+ 179   1      }
+C51 COMPILER V8.02   TEXT1                                                                 07/10/2009 00:32:12 PAGE 4   
+
+ 180          void readnbyte(unsigned char * d,unsigned char n)
+ 181          {
+ 182   1              unsigned char i,t;
+ 183   1              while(n--)
+ 184   1              {
+ 185   2                      t=0x00;
+ 186   2                      for(i=0;i<8;i++)
+ 187   2                      {
+ 188   3                              t<<=1;
+ 189   3                              SCL=0;
+ 190   3                              _nop_();
+ 191   3                              SCL=1;
+ 192   3                              _nop_();
+ 193   3                              if(SDA)
+ 194   3                              {
+ 195   4                                      t|=0x01;
+ 196   4                              }
+ 197   3                      }
+ 198   2                      *d++=t;
+ 199   2                      if(n==0)
+ 200   2                      {
+ 201   3                              SCL=0;
+ 202   3                              SDA=1;
+ 203   3                              SCL=1;
+ 204   3                              SCL=0;
+ 205   3                              SDA=1;
+ 206   3                      }
+ 207   2                      else
+ 208   2                      {
+ 209   3                              SCL=0;
+ 210   3                              SDA=0;
+ 211   3                              SCL=1;
+ 212   3                              SCL=0;
+ 213   3                              SDA=1;
+ 214   3                      }
+ 215   2              }
+ 216   1      
+ 217   1      
+ 218   1      }
+ 219          
+ 220          void delay(unsigned char i)
+ 221          {
+ 222   1              unsigned char j,k;
+ 223   1              while(i--)
+ 224   1              {
+ 225   2                      for(j=200;j;j--)
+ 226   2                      for(k=155;k;k--);
+ 227   2              }
+ 228   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    214    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     10       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

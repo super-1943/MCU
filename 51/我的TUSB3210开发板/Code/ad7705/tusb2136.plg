@@ -1,0 +1,763 @@
+<html>
+<body>
+<pre>
+<h1>礦ision3 Build Log</h1>
+<h2>Project:</h2>
+E:\AllProject\51\我的TUSB3210开发板\ad7705\ku.uv2
+Project File Date:  06/05/2011
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(113): warning C280: 'tmp': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_INIT?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTHEX?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INIT_NRF24L01?WIRELESS
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_NRF24L01_TXPACKET?WIRELESS
+Program Size: data=55.0 xdata=0 code=659
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 10 bytes at address 0x000001EC.      Status: Writing 16 bytes at address 0x0000025A.      Status: Writing 3 bytes at address 0x0000026A.      Status: Writing 1 bytes at address 0x0000026D.      Status: Writing 5 bytes at address 0x00000289.      Status: Writing 5 bytes at address 0x0000028E.      Status: Writing 16 bytes at address 0x0000020F.      Status: Writing 9 bytes at address 0x0000021F.      Status: Writing 7 bytes at address 0x00000279.      Status: Writing 1 bytes at address 0x00000280.      Status: Writing 8 bytes at address 0x00000281.      Status: Writing 16 bytes at address 0x000001C4.      Status: Writing 16 bytes at address 0x000001D4.      Status: Writing 8 bytes at address 0x000001E4.      Status: Writing 2 bytes at address 0x00000129.      Status: Writing 16 bytes at address 0x0000012B.      Status: Writing 16 bytes at address 0x0000013B.      Status: Writing 16 bytes at 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(51): warning C280: 'tmp': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SPI_RWBYTE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INIT_SPI?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_INIT?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTHEX?SERIAL
+Program Size: data=21.0 xdata=0 code=393
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 10 bytes at address 0x0000015B.      Status: Writing 16 bytes at address 0x000000F6.      Status: Writing 14 bytes at address 0x00000106.      Status: Writing 1 bytes at address 0x00000114.      Status: Writing 9 bytes at address 0x00000166.      Status: Writing 16 bytes at address 0x00000147.      Status: Writing 3 bytes at address 0x00000157.      Status: Writing 1 bytes at address 0x0000015A.      Status: Writing 5 bytes at address 0x0000017F.      Status: Writing 5 bytes at address 0x00000184.      Status: Writing 16 bytes at address 0x00000115.      Status: Writing 9 bytes at address 0x00000125.      Status: Writing 7 bytes at address 0x0000016F.      Status: Writing 1 bytes at address 0x00000176.      Status: Writing 8 bytes at address 0x00000177.      Status: Writing 16 bytes at address 0x000000CE.      Status: Writing 16 bytes at address 0x000000DE.      Status: Writing 8 bytes at a
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(51): warning C280: 'tmp': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_INIT?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTHEX?SERIAL
+Program Size: data=21.0 xdata=0 code=409
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 10 bytes at address 0x00000170.      Status: Writing 7 bytes at address 0x000000F6.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 14 bytes at address 0x0000010D.      Status: Writing 1 bytes at address 0x0000011B.      Status: Writing 9 bytes at address 0x0000017B.      Status: Writing 16 bytes at address 0x0000014E.      Status: Writing 3 bytes at address 0x0000015E.      Status: Writing 1 bytes at address 0x00000161.      Status: Writing 14 bytes at address 0x00000162.      Status: Writing 5 bytes at address 0x00000194.      Status: Writing 16 bytes at address 0x0000011C.      Status: Writing 9 bytes at address 0x0000012C.      Status: Writing 7 bytes at address 0x00000184.      Status: Writing 1 bytes at address 0x0000018B.      Status: Writing 8 bytes at address 0x0000018C.      Status: Writing 16 bytes at address 0x000000CE.      Status: Writing 16 bytes at 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 5 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(57): warning C206: 'spi_writebyte': missing function-prototype
+TEXT1.C(57): error C267: 'spi_writebyte': requires ANSI-style prototype
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_INIT?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+Program Size: data=21.0 xdata=0 code=428
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 10 bytes at address 0x00000183.      Status: Writing 5 bytes at address 0x000000F6.      Status: Writing 16 bytes at address 0x000000FB.      Status: Writing 14 bytes at address 0x0000010B.      Status: Writing 1 bytes at address 0x00000119.      Status: Writing 9 bytes at address 0x0000018E.      Status: Writing 16 bytes at address 0x0000016F.      Status: Writing 3 bytes at address 0x0000017F.      Status: Writing 1 bytes at address 0x00000182.      Status: Writing 16 bytes at address 0x0000011A.      Status: Writing 16 bytes at address 0x0000012A.      Status: Writing 3 bytes at address 0x0000013A.      Status: Writing 5 bytes at address 0x000001A7.      Status: Writing 16 bytes at address 0x0000013D.      Status: Writing 9 bytes at address 0x0000014D.      Status: Writing 7 bytes at address 0x00000197.      Status: Writing 1 bytes at address 0x0000019E.      Status: Writing 8 bytes at a
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+Program Size: data=21.0 xdata=0 code=448
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 8 bytes at address 0x000001A3.      Status: Writing 10 bytes at address 0x0000018F.      Status: Writing 5 bytes at address 0x00000125.      Status: Writing 16 bytes at address 0x0000012A.      Status: Writing 14 bytes at address 0x0000013A.      Status: Writing 1 bytes at address 0x00000148.      Status: Writing 9 bytes at address 0x0000019A.      Status: Writing 16 bytes at address 0x0000017B.      Status: Writing 3 bytes at address 0x0000018B.      Status: Writing 1 bytes at address 0x0000018E.      Status: Writing 16 bytes at address 0x000000CE.      Status: Writing 16 bytes at address 0x000000DE.      Status: Writing 15 bytes at address 0x000000EE.      Status: Writing 5 bytes at address 0x000001BB.      Status: Writing 16 bytes at address 0x00000149.      Status: Writing 9 bytes at address 0x00000159.      Status: Writing 7 bytes at address 0x000001AB.      Status: Writing 1 bytes at 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+Text1.c(10): error C301: identifier expected
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+Program Size: data=21.0 xdata=0 code=451
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 8 bytes at address 0x000001A6.      Status: Writing 10 bytes at address 0x00000192.      Status: Writing 7 bytes at address 0x00000126.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 14 bytes at address 0x0000013D.      Status: Writing 1 bytes at address 0x0000014B.      Status: Writing 9 bytes at address 0x0000019D.      Status: Writing 16 bytes at address 0x0000017E.      Status: Writing 3 bytes at address 0x0000018E.      Status: Writing 1 bytes at address 0x00000191.      Status: Writing 16 bytes at address 0x000000CE.      Status: Writing 16 bytes at address 0x000000DE.      Status: Writing 16 bytes at address 0x000000EE.      Status: Writing 5 bytes at address 0x000001BE.      Status: Writing 16 bytes at address 0x0000014C.      Status: Writing 9 bytes at address 0x0000015C.      Status: Writing 7 bytes at address 0x000001AE.      Status: Writing 1 bytes at 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+Program Size: data=21.0 xdata=0 code=503
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x000001C3.      Status: Writing 10 bytes at address 0x000001CE.      Status: Writing 5 bytes at address 0x00000138.      Status: Writing 16 bytes at address 0x0000013D.      Status: Writing 14 bytes at address 0x0000014D.      Status: Writing 1 bytes at address 0x0000015B.      Status: Writing 9 bytes at address 0x000001D9.      Status: Writing 16 bytes at address 0x000001AF.      Status: Writing 3 bytes at address 0x000001BF.      Status: Writing 1 bytes at address 0x000001C2.      Status: Writing 16 bytes at address 0x0000015C.      Status: Writing 16 bytes at address 0x0000016C.      Status: Writing 1 bytes at address 0x0000017C.      Status: Writing 16 bytes at address 0x0000008F.      Status: Writing 16 bytes at address 0x0000009F.      Status: Writing 16 bytes at address 0x000000AF.      Status: Writing 16 bytes at address 0x000000BF.      Status: Writing 2 bytes 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+Program Size: data=21.0 xdata=0 code=513
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x000001CD.      Status: Writing 10 bytes at address 0x000001D8.      Status: Writing 5 bytes at address 0x00000163.      Status: Writing 16 bytes at address 0x00000168.      Status: Writing 14 bytes at address 0x00000178.      Status: Writing 1 bytes at address 0x00000186.      Status: Writing 9 bytes at address 0x000001E3.      Status: Writing 16 bytes at address 0x000001B9.      Status: Writing 3 bytes at address 0x000001C9.      Status: Writing 1 bytes at address 0x000001CC.      Status: Writing 16 bytes at address 0x00000110.      Status: Writing 16 bytes at address 0x00000120.      Status: Writing 11 bytes at address 0x00000130.      Status: Writing 16 bytes at address 0x0000008F.      Status: Writing 16 bytes at address 0x0000009F.      Status: Writing 16 bytes at address 0x000000AF.      Status: Writing 16 bytes at address 0x000000BF.      Status: Writing 2 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(80): warning C206: 'rs232_printint': missing function-prototype
+TEXT1.C(80): error C267: 'rs232_printint': requires ANSI-style prototype
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling serial.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTHEX?SERIAL
+Program Size: data=22.0 xdata=0 code=671
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x0000026B.      Status: Writing 10 bytes at address 0x00000276.      Status: Writing 7 bytes at address 0x000001FB.      Status: Writing 16 bytes at address 0x00000202.      Status: Writing 14 bytes at address 0x00000212.      Status: Writing 1 bytes at address 0x00000220.      Status: Writing 9 bytes at address 0x00000281.      Status: Writing 16 bytes at address 0x00000257.      Status: Writing 3 bytes at address 0x00000267.      Status: Writing 1 bytes at address 0x0000026A.      Status: Writing 16 bytes at address 0x00000221.      Status: Writing 13 bytes at address 0x00000231.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 16 bytes at address 0x0000013D.      Status: Writing 16 byte
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTHEX?SERIAL
+Program Size: data=22.0 xdata=0 code=681
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000275.      Status: Writing 10 bytes at address 0x00000280.      Status: Writing 16 bytes at address 0x000001D6.      Status: Writing 1 bytes at address 0x000001E6.      Status: Writing 16 bytes at address 0x000001E7.      Status: Writing 14 bytes at address 0x000001F7.      Status: Writing 1 bytes at address 0x00000205.      Status: Writing 9 bytes at address 0x0000028B.      Status: Writing 16 bytes at address 0x00000261.      Status: Writing 3 bytes at address 0x00000271.      Status: Writing 1 bytes at address 0x00000274.      Status: Writing 16 bytes at address 0x0000022E.      Status: Writing 10 bytes at address 0x0000023E.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 16 byte
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(62): warning C280: 'tmp': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTHEX?SERIAL
+Program Size: data=23.0 xdata=0 code=660
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000260.      Status: Writing 10 bytes at address 0x0000026B.      Status: Writing 7 bytes at address 0x000001F0.      Status: Writing 16 bytes at address 0x000001F7.      Status: Writing 14 bytes at address 0x00000207.      Status: Writing 1 bytes at address 0x00000215.      Status: Writing 9 bytes at address 0x00000276.      Status: Writing 16 bytes at address 0x0000024C.      Status: Writing 3 bytes at address 0x0000025C.      Status: Writing 1 bytes at address 0x0000025F.      Status: Writing 16 bytes at address 0x00000216.      Status: Writing 13 bytes at address 0x00000226.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 16 bytes at address 0x0000013D.      Status: Writing 7 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(62): warning C280: 'tmp': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTHEX?SERIAL
+Program Size: data=23.0 xdata=0 code=663
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000263.      Status: Writing 10 bytes at address 0x0000026E.      Status: Writing 7 bytes at address 0x000001F3.      Status: Writing 16 bytes at address 0x000001FA.      Status: Writing 14 bytes at address 0x0000020A.      Status: Writing 1 bytes at address 0x00000218.      Status: Writing 9 bytes at address 0x00000279.      Status: Writing 16 bytes at address 0x0000024F.      Status: Writing 3 bytes at address 0x0000025F.      Status: Writing 1 bytes at address 0x00000262.      Status: Writing 16 bytes at address 0x00000219.      Status: Writing 13 bytes at address 0x00000229.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 16 bytes at address 0x0000013D.      Status: Writing 10 byte
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(62): warning C280: 'tmp': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTHEX?SERIAL
+Program Size: data=23.0 xdata=0 code=656
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x0000025C.      Status: Writing 10 bytes at address 0x00000267.      Status: Writing 7 bytes at address 0x000001EC.      Status: Writing 16 bytes at address 0x000001F3.      Status: Writing 14 bytes at address 0x00000203.      Status: Writing 1 bytes at address 0x00000211.      Status: Writing 9 bytes at address 0x00000272.      Status: Writing 16 bytes at address 0x00000248.      Status: Writing 3 bytes at address 0x00000258.      Status: Writing 1 bytes at address 0x0000025B.      Status: Writing 16 bytes at address 0x00000212.      Status: Writing 13 bytes at address 0x00000222.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 16 bytes at address 0x0000013D.      Status: Writing 3 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(62): warning C280: 'tmp': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTHEX?SERIAL
+Program Size: data=23.0 xdata=0 code=653
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000259.      Status: Writing 10 bytes at address 0x00000264.      Status: Writing 7 bytes at address 0x000001E9.      Status: Writing 16 bytes at address 0x000001F0.      Status: Writing 14 bytes at address 0x00000200.      Status: Writing 1 bytes at address 0x0000020E.      Status: Writing 9 bytes at address 0x0000026F.      Status: Writing 16 bytes at address 0x00000245.      Status: Writing 3 bytes at address 0x00000255.      Status: Writing 1 bytes at address 0x00000258.      Status: Writing 16 bytes at address 0x0000020F.      Status: Writing 13 bytes at address 0x0000021F.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 16 bytes at address 0x0000013D.      Status: Writing 5 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=635
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000247.      Status: Writing 10 bytes at address 0x00000252.      Status: Writing 7 bytes at address 0x000001D7.      Status: Writing 16 bytes at address 0x000001DE.      Status: Writing 14 bytes at address 0x000001EE.      Status: Writing 1 bytes at address 0x000001FC.      Status: Writing 9 bytes at address 0x0000025D.      Status: Writing 16 bytes at address 0x00000233.      Status: Writing 3 bytes at address 0x00000243.      Status: Writing 1 bytes at address 0x00000246.      Status: Writing 16 bytes at address 0x000001FD.      Status: Writing 13 bytes at address 0x0000020D.      Status: Writing 16 bytes at address 0x0000013C.      Status: Writing 16 bytes at address 0x0000014C.      Status: Writing 16 bytes at address 0x0000015C.      Status: Writing 14 bytes at address 0x0000016C.      Status: Writing 5 bytes at address 0x00000276.      Status: Writing 16 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=652
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000258.      Status: Writing 10 bytes at address 0x00000263.      Status: Writing 7 bytes at address 0x00000205.      Status: Writing 16 bytes at address 0x0000020C.      Status: Writing 14 bytes at address 0x0000021C.      Status: Writing 1 bytes at address 0x0000022A.      Status: Writing 9 bytes at address 0x0000026E.      Status: Writing 16 bytes at address 0x00000244.      Status: Writing 3 bytes at address 0x00000254.      Status: Writing 1 bytes at address 0x00000257.      Status: Writing 16 bytes at address 0x000001DE.      Status: Writing 16 bytes at address 0x000001EE.      Status: Writing 7 bytes at address 0x000001FE.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 5 bytes 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling Text1.c...
+compiling serial.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=642
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x0000024E.      Status: Writing 10 bytes at address 0x00000259.      Status: Writing 7 bytes at address 0x000001DE.      Status: Writing 16 bytes at address 0x000001E5.      Status: Writing 14 bytes at address 0x000001F5.      Status: Writing 1 bytes at address 0x00000203.      Status: Writing 9 bytes at address 0x00000264.      Status: Writing 16 bytes at address 0x0000023A.      Status: Writing 3 bytes at address 0x0000024A.      Status: Writing 1 bytes at address 0x0000024D.      Status: Writing 16 bytes at address 0x00000204.      Status: Writing 13 bytes at address 0x00000214.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 5 bytes at address 0x0000013D.      Status: Writing 5 bytes 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=642
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x0000024E.      Status: Writing 10 bytes at address 0x00000259.      Status: Writing 7 bytes at address 0x000001DE.      Status: Writing 16 bytes at address 0x000001E5.      Status: Writing 14 bytes at address 0x000001F5.      Status: Writing 1 bytes at address 0x00000203.      Status: Writing 9 bytes at address 0x00000264.      Status: Writing 16 bytes at address 0x0000023A.      Status: Writing 3 bytes at address 0x0000024A.      Status: Writing 1 bytes at address 0x0000024D.      Status: Writing 16 bytes at address 0x00000204.      Status: Writing 13 bytes at address 0x00000214.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 5 bytes at address 0x0000013D.      Status: Writing 5 bytes 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=642
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x0000024E.      Status: Writing 10 bytes at address 0x00000259.      Status: Writing 7 bytes at address 0x000001DE.      Status: Writing 16 bytes at address 0x000001E5.      Status: Writing 14 bytes at address 0x000001F5.      Status: Writing 1 bytes at address 0x00000203.      Status: Writing 9 bytes at address 0x00000264.      Status: Writing 16 bytes at address 0x0000023A.      Status: Writing 3 bytes at address 0x0000024A.      Status: Writing 1 bytes at address 0x0000024D.      Status: Writing 16 bytes at address 0x00000204.      Status: Writing 13 bytes at address 0x00000214.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 5 bytes at address 0x0000013D.      Status: Writing 5 bytes 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=635
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000247.      Status: Writing 10 bytes at address 0x00000252.      Status: Writing 7 bytes at address 0x000001D7.      Status: Writing 16 bytes at address 0x000001DE.      Status: Writing 14 bytes at address 0x000001EE.      Status: Writing 1 bytes at address 0x000001FC.      Status: Writing 9 bytes at address 0x0000025D.      Status: Writing 16 bytes at address 0x00000233.      Status: Writing 3 bytes at address 0x00000243.      Status: Writing 1 bytes at address 0x00000246.      Status: Writing 16 bytes at address 0x000001FD.      Status: Writing 13 bytes at address 0x0000020D.      Status: Writing 16 bytes at address 0x0000013C.      Status: Writing 16 bytes at address 0x0000014C.      Status: Writing 16 bytes at address 0x0000015C.      Status: Writing 14 bytes at address 0x0000016C.      Status: Writing 5 bytes at address 0x00000276.      Status: Writing 16 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=635
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000247.      Status: Writing 10 bytes at address 0x00000252.      Status: Writing 7 bytes at address 0x000001D7.      Status: Writing 16 bytes at address 0x000001DE.      Status: Writing 14 bytes at address 0x000001EE.      Status: Writing 1 bytes at address 0x000001FC.      Status: Writing 9 bytes at address 0x0000025D.      Status: Writing 16 bytes at address 0x00000233.      Status: Writing 3 bytes at address 0x00000243.      Status: Writing 1 bytes at address 0x00000246.      Status: Writing 16 bytes at address 0x000001FD.      Status: Writing 13 bytes at address 0x0000020D.      Status: Writing 16 bytes at address 0x0000013C.      Status: Writing 16 bytes at address 0x0000014C.      Status: Writing 16 bytes at address 0x0000015C.      Status: Writing 14 bytes at address 0x0000016C.      Status: Writing 5 bytes at address 0x00000276.      Status: Writing 16 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=635
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000247.      Status: Writing 10 bytes at address 0x00000252.      Status: Writing 7 bytes at address 0x000001D7.      Status: Writing 16 bytes at address 0x000001DE.      Status: Writing 14 bytes at address 0x000001EE.      Status: Writing 1 bytes at address 0x000001FC.      Status: Writing 9 bytes at address 0x0000025D.      Status: Writing 16 bytes at address 0x00000233.      Status: Writing 3 bytes at address 0x00000243.      Status: Writing 1 bytes at address 0x00000246.      Status: Writing 16 bytes at address 0x000001FD.      Status: Writing 13 bytes at address 0x0000020D.      Status: Writing 16 bytes at address 0x0000013C.      Status: Writing 16 bytes at address 0x0000014C.      Status: Writing 16 bytes at address 0x0000015C.      Status: Writing 14 bytes at address 0x0000016C.      Status: Writing 5 bytes at address 0x00000276.      Status: Writing 16 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=635
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000247.      Status: Writing 10 bytes at address 0x00000252.      Status: Writing 7 bytes at address 0x000001D7.      Status: Writing 16 bytes at address 0x000001DE.      Status: Writing 14 bytes at address 0x000001EE.      Status: Writing 1 bytes at address 0x000001FC.      Status: Writing 9 bytes at address 0x0000025D.      Status: Writing 16 bytes at address 0x00000233.      Status: Writing 3 bytes at address 0x00000243.      Status: Writing 1 bytes at address 0x00000246.      Status: Writing 16 bytes at address 0x000001FD.      Status: Writing 13 bytes at address 0x0000020D.      Status: Writing 16 bytes at address 0x0000013C.      Status: Writing 16 bytes at address 0x0000014C.      Status: Writing 16 bytes at address 0x0000015C.      Status: Writing 14 bytes at address 0x0000016C.      Status: Writing 5 bytes at address 0x00000276.      Status: Writing 16 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=635
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000247.      Status: Writing 10 bytes at address 0x00000252.      Status: Writing 7 bytes at address 0x000001D7.      Status: Writing 16 bytes at address 0x000001DE.      Status: Writing 14 bytes at address 0x000001EE.      Status: Writing 1 bytes at address 0x000001FC.      Status: Writing 9 bytes at address 0x0000025D.      Status: Writing 16 bytes at address 0x00000233.      Status: Writing 3 bytes at address 0x00000243.      Status: Writing 1 bytes at address 0x00000246.      Status: Writing 16 bytes at address 0x000001FD.      Status: Writing 13 bytes at address 0x0000020D.      Status: Writing 16 bytes at address 0x0000013C.      Status: Writing 16 bytes at address 0x0000014C.      Status: Writing 16 bytes at address 0x0000015C.      Status: Writing 14 bytes at address 0x0000016C.      Status: Writing 5 bytes at address 0x00000276.      Status: Writing 16 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=635
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000247.      Status: Writing 10 bytes at address 0x00000252.      Status: Writing 7 bytes at address 0x000001D7.      Status: Writing 16 bytes at address 0x000001DE.      Status: Writing 14 bytes at address 0x000001EE.      Status: Writing 1 bytes at address 0x000001FC.      Status: Writing 9 bytes at address 0x0000025D.      Status: Writing 16 bytes at address 0x00000233.      Status: Writing 3 bytes at address 0x00000243.      Status: Writing 1 bytes at address 0x00000246.      Status: Writing 16 bytes at address 0x000001FD.      Status: Writing 13 bytes at address 0x0000020D.      Status: Writing 16 bytes at address 0x0000013C.      Status: Writing 16 bytes at address 0x0000014C.      Status: Writing 16 bytes at address 0x0000015C.      Status: Writing 14 bytes at address 0x0000016C.      Status: Writing 5 bytes at address 0x00000276.      Status: Writing 16 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=635
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000247.      Status: Writing 10 bytes at address 0x00000252.      Status: Writing 7 bytes at address 0x000001D7.      Status: Writing 16 bytes at address 0x000001DE.      Status: Writing 14 bytes at address 0x000001EE.      Status: Writing 1 bytes at address 0x000001FC.      Status: Writing 9 bytes at address 0x0000025D.      Status: Writing 16 bytes at address 0x00000233.      Status: Writing 3 bytes at address 0x00000243.      Status: Writing 1 bytes at address 0x00000246.      Status: Writing 16 bytes at address 0x000001FD.      Status: Writing 13 bytes at address 0x0000020D.      Status: Writing 16 bytes at address 0x0000013C.      Status: Writing 16 bytes at address 0x0000014C.      Status: Writing 16 bytes at address 0x0000015C.      Status: Writing 14 bytes at address 0x0000016C.      Status: Writing 5 bytes at address 0x00000276.      Status: Writing 16 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=635
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x00000247.      Status: Writing 10 bytes at address 0x00000252.      Status: Writing 7 bytes at address 0x000001D7.      Status: Writing 16 bytes at address 0x000001DE.      Status: Writing 14 bytes at address 0x000001EE.      Status: Writing 1 bytes at address 0x000001FC.      Status: Writing 9 bytes at address 0x0000025D.      Status: Writing 16 bytes at address 0x00000233.      Status: Writing 3 bytes at address 0x00000243.      Status: Writing 1 bytes at address 0x00000246.      Status: Writing 16 bytes at address 0x000001FD.      Status: Writing 13 bytes at address 0x0000020D.      Status: Writing 16 bytes at address 0x0000013C.      Status: Writing 16 bytes at address 0x0000014C.      Status: Writing 16 bytes at address 0x0000015C.      Status: Writing 14 bytes at address 0x0000016C.      Status: Writing 5 bytes at address 0x00000276.      Status: Writing 16 bytes
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=638
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x0000024A.      Status: Writing 10 bytes at address 0x00000255.      Status: Writing 7 bytes at address 0x000001DA.      Status: Writing 16 bytes at address 0x000001E1.      Status: Writing 14 bytes at address 0x000001F1.      Status: Writing 1 bytes at address 0x000001FF.      Status: Writing 9 bytes at address 0x00000260.      Status: Writing 16 bytes at address 0x00000236.      Status: Writing 3 bytes at address 0x00000246.      Status: Writing 1 bytes at address 0x00000249.      Status: Writing 16 bytes at address 0x00000200.      Status: Writing 13 bytes at address 0x00000210.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 1 bytes at address 0x0000013D.      Status: Writing 5 bytes 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+Program Size: data=23.0 xdata=0 code=638
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x0000024A.      Status: Writing 10 bytes at address 0x00000255.      Status: Writing 7 bytes at address 0x000001DA.      Status: Writing 16 bytes at address 0x000001E1.      Status: Writing 14 bytes at address 0x000001F1.      Status: Writing 1 bytes at address 0x000001FF.      Status: Writing 9 bytes at address 0x00000260.      Status: Writing 16 bytes at address 0x00000236.      Status: Writing 3 bytes at address 0x00000246.      Status: Writing 1 bytes at address 0x00000249.      Status: Writing 16 bytes at address 0x00000200.      Status: Writing 13 bytes at address 0x00000210.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 1 bytes at address 0x0000013D.      Status: Writing 5 bytes 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling Text1.c...
+compiling serial.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTHEX?SERIAL
+Program Size: data=23.0 xdata=0 code=638
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 11 bytes at address 0x0000024A.      Status: Writing 10 bytes at address 0x00000255.      Status: Writing 7 bytes at address 0x000001DA.      Status: Writing 16 bytes at address 0x000001E1.      Status: Writing 14 bytes at address 0x000001F1.      Status: Writing 1 bytes at address 0x000001FF.      Status: Writing 9 bytes at address 0x00000260.      Status: Writing 16 bytes at address 0x00000236.      Status: Writing 3 bytes at address 0x00000246.      Status: Writing 1 bytes at address 0x00000249.      Status: Writing 16 bytes at address 0x00000200.      Status: Writing 13 bytes at address 0x00000210.      Status: Writing 16 bytes at address 0x000000FD.      Status: Writing 16 bytes at address 0x0000010D.      Status: Writing 16 bytes at address 0x0000011D.      Status: Writing 16 bytes at address 0x0000012D.      Status: Writing 1 bytes at address 0x0000013D.      Status: Writing 5 bytes 
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTINT?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PRINTHEX?SERIAL
+Program Size: data=23.0 xdata=0 code=626
+creating hex file from "tusb2136"...
+User command #1: stkkk.bat
+E:\AllProject\51\我的TUSB3210开发板\ad7705>HEX2BIN.EXE tusb2136.hex tusb2136.bin 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 8 bytes at address 0x00000255.      Status: Writing 10 bytes at address 0x00000241.      Status: Writing 7 bytes at address 0x000001D1.      Status: Writing 16 bytes at address 0x000001D8.      Status: Writing 14 bytes at address 0x000001E8.      Status: Writing 1 bytes at address 0x000001F6.      Status: Writing 9 bytes at address 0x0000024C.      Status: Writing 16 bytes at address 0x0000022D.      Status: Writing 3 bytes at address 0x0000023D.      Status: Writing 1 bytes at address 0x00000240.      Status: Writing 16 bytes at address 0x000001F7.      Status: Writing 13 bytes at address 0x00000207.      Status: Writing 16 bytes at address 0x0000013C.      Status: Writing 16 bytes at address 0x0000014C.      Status: Writing 16 bytes at address 0x0000015C.      Status: Writing 8 bytes at address 0x0000016C.      Status: Writing 5 bytes at address 0x0000026D.      Status: Writing 16 bytes a
+Status: HEX to BIN conversion was successful.
+E:\ALLPRO~1\51\??TU~1\ad7705>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"tusb2136" - 0 Error(s), 4 Warning(s).

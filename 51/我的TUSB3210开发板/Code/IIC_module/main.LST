@@ -1,0 +1,107 @@
+C51 COMPILER V8.02   MAIN                                                                  05/07/2011 15:25:07 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "serial.h"
+   3          #include "iic.h"
+   4          
+   5          unsigned char code array[]={
+   6          0x36,0x21,0x02,0x04,0x00,0x00,0x00,0x00,0x00,0x00,0x02,0x4D,0x00,0x10,0x10,0x02,0x00,0x3F,0xE4,0xFB,
+   7          0xF5,0x80,0x7F,0xE8,0x7E,0x03,0x12,0x00,0x2B,0xE4,0xFB,0x12,0x00,0x25,0xBB,0xFF,0xF9,0x7B,0xFF,0xEB,
+   8          0xD3,0x94,0x00,0x40,0xEF,0x12,0x00,0x25,0x1B,0x80,0xF4,0x8B,0x80,0x7F,0x01,0x7E,0x00,0xEF,0x4E,0x60,
+   9          0x0F,0x7D,0x14,0x7C,0x64,0xDC,0xFE,0xDD,0xFA,0xEF,0x1F,0x70,0xF0,0x1E,0x80,0xED,0x22,0x78,0x7F,0xE4,
+  10          0xF6,0xD8,0xFD,0x75,0x81,0x07,0x02,0x00,0x03,0x00,0x00,0x00};
+  11          unsigned char idata buffer[50];
+  12          
+  13          void delay_ms(unsigned int k)
+  14          {
+  15   1              unsigned char i,j;
+  16   1              for(;k;k--)
+  17   1              for(i=20;i;i--)
+  18   1              for(j=100;j;j--);
+  19   1      }
+  20          void load_program(void)
+  21          {
+  22   1              unsigned int i,len,count;
+  23   1              len=sizeof(array);
+  24   1              rs232_printstr("\r\nThe program has ");
+  25   1              rs232_printhex(len);
+  26   1              rs232_printstr("bytes .\r\n");
+  27   1              for(count=0;count<=len-16;count+=16)
+  28   1              {
+  29   2                      rs232_printstr("向AT24C08写入以下内容：");
+  30   2                      for(i=0;i<16;i++)
+  31   2                      {
+  32   3                              rs232_printhex(array[i+count]);
+  33   3                      }
+  34   2                      rs232_printstr("\r\n");
+  35   2                      write_content(DEV_ADDR,count,16,array+count);
+  36   2                      delay_ms(100);
+  37   2              }
+  38   1              rs232_printstr("向AT24C08写入以下内容：");
+  39   1              i=count;
+  40   1              for(;count<len;count++)
+  41   1              {
+  42   2                      rs232_printhex(array[count]);
+  43   2              }               
+  44   1              rs232_printstr("\r\n");
+  45   1              write_content(DEV_ADDR,i,len%16,array+i);
+  46   1              delay_ms(100);  
+  47   1      }
+  48          
+  49          void main(void)
+  50          {
+  51   1              unsigned char i;
+  52   1              unsigned int addr=0;
+  53   1              rs232_init();
+  54   1              rs232_printstr("Hello world!\r\n");
+  55   1              while(1)
+C51 COMPILER V8.02   MAIN                                                                  05/07/2011 15:25:07 PAGE 2   
+
+  56   1              {
+  57   2                      if(addr>0x3ff)
+  58   2                      {
+  59   3                              addr=0;
+  60   3                      }
+  61   2                      if((P3&0x08)==0)//K3
+  62   2                      {
+  63   3                              P0=0xff;
+  64   3                              read_content(DEV_ADDR,addr,16,buffer);
+  65   3                              for(i=0;i<16;i++)
+  66   3                              {
+  67   4                                      rs232_printhex(buffer[i]);
+  68   4                              }
+  69   3                              addr+=16;
+  70   3                              rs232_printstr("\r\n");
+  71   3                              delay_ms(100);
+  72   3                      }
+  73   2                      else if((P3&0x04)==0)
+  74   2                      {
+  75   3                              load_program();         
+  76   3                      }
+  77   2                      else
+  78   2                      {
+  79   3                              P0=0x55;
+  80   3                      }
+  81   2              }
+  82   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    874    ----
+   CONSTANT SIZE    =    229    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      27
+   IDATA SIZE       =     50    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,154 @@
+C51 COMPILER V8.02   TEXT1                                                                 01/21/2009 17:03:22 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <at89x51.h>
+   2          #include <intrins.h>
+   3          sbit LOAD=P1^0;
+   4          sbit DIN=P1^1;
+   5          sbit CLK=P1^2;
+   6          
+   7          #define D0 0x01
+   8          #define D1 0x02
+   9          #define D2 0x03
+  10          #define D3 0x04
+  11          #define D4 0x05
+  12          #define D5 0x06
+  13          #define D6 0x07
+  14          #define D7 0x08
+  15          
+  16          #define DecodeMode 0x09
+  17          #define Intensity 0x0a
+  18          #define ScanLimit 0x0b
+  19          #define ShutDown 0x0c
+  20          #define DisplayTest 0x0f
+  21          
+  22          #define ShutDownMode 0x00
+  23          #define NormalOperation 0x01
+  24          #define DecodeDight 0xff
+  25          #define IntensityGrade 0x0a
+  26          #define ScanDight 0x07
+  27          #define TestMode 0x01
+  28          #define TestEnd 0x00
+  29          unsigned char data DisBuffer[8]={0,0,0,0,0,0,0,0};
+  30          unsigned char code display_list[]={0x7e,0x30,0x6d,0x79,0x33,0x5b,0x5f,0x70,0x7f,0x7b,
+  31                                          /* 0     1    2    3    4    5    6    7    8    9    */
+  32                                                                          0x77,0x1f,0x4e,0x3d,0x4f,0x47,0x67,0x3e,0xff,0x00};
+  33                                                                          /*A  B     C    D    E     F   P    U    all  none*/
+  34          
+  35          void delay(unsigned char count)
+  36          {
+  37   1          unsigned char j,k;
+  38   1              while(count--)
+  39   1              {
+  40   2                      for(j=43;j;j--)
+  41   2                      for(k=73;k;k--);
+  42   2              }
+  43   1      }
+  44          
+  45          void sendchar(unsigned char ch)
+  46          {
+  47   1          unsigned char i,temp;
+  48   1              _nop_();
+  49   1              for(i=0;i<8;i++)
+  50   1              {
+  51   2                      temp=ch&0x80;
+  52   2                      ch=ch<<1;
+  53   2                      if(temp)
+  54   2                      {
+  55   3                              DIN=1;
+C51 COMPILER V8.02   TEXT1                                                                 01/21/2009 17:03:22 PAGE 2   
+
+  56   3                              CLK=0;
+  57   3                              CLK=1;
+  58   3                      }
+  59   2                      else
+  60   2                      {
+  61   3                              DIN=0;
+  62   3                              CLK=0;
+  63   3                              CLK=1;
+  64   3                      }
+  65   2              }
+  66   1      }
+  67          
+  68          
+  69          void sendword(unsigned char addr,unsigned char num)
+  70          {
+  71   1              LOAD=0;
+  72   1              _nop_();
+  73   1              sendchar(addr);
+  74   1              _nop_();
+  75   1              sendchar(num);
+  76   1              _nop_();
+  77   1              LOAD=1;
+  78   1      }
+  79          
+  80          void init7219(void )
+  81          {
+  82   1              sendword(ScanLimit,ScanDight);
+  83   1              sendword(DecodeMode,DecodeDight);
+  84   1              sendword(Intensity,IntensityGrade);
+  85   1              sendword(ShutDown,NormalOperation);
+  86   1      }
+  87          
+  88          void initmain(void)
+  89          {
+  90   1              IE=0x00;
+  91   1              IP=0x00;
+  92   1              TH0=0xd8;TL0=0xf0;
+  93   1              TMOD=0x01;
+  94   1              TCON=0x11;
+  95   1              PSW=0x00;
+  96   1      }
+  97          
+  98          void main(void)
+  99          {
+ 100   1              initmain();
+ 101   1              init7219();
+ 102   1              sendword(DisplayTest,TestMode);
+ 103   1              delay(0x64);
+ 104   1              delay(0x64);
+ 105   1              sendword(DisplayTest,TestEnd);
+ 106   1              while(1)
+ 107   1              {
+ 108   2                      unsigned char i,j;
+ 109   2                      for(i=0;i<=9;i++)
+ 110   2                      {
+ 111   3                              delay(0x64);
+ 112   3                              delay(0x64);
+ 113   3                              init7219();
+ 114   3                              for(j=0;j<8;j++)
+ 115   3                              DisBuffer[j]=i;
+ 116   3                              for(j=1;j<=8;j++)
+ 117   3                              sendword(j,DisBuffer[j-1]);
+C51 COMPILER V8.02   TEXT1                                                                 01/21/2009 17:03:22 PAGE 3   
+
+ 118   3                       }
+ 119   2               }
+ 120   1      
+ 121   1      
+ 122   1      
+ 123   1       }
+ 124          
+ 125          
+ 126          
+ 127          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    205    ----
+   CONSTANT SIZE    =     20    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

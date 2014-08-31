@@ -1,0 +1,4 @@
+"Text1.obj" 
+TO "1" Rtx51 
+RAMSIZE(256) 
+CODE( 0X0000-0XFFFF )

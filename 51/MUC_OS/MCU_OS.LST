@@ -1,0 +1,137 @@
+C51 COMPILER V8.02   MCU_OS                                                                07/25/2010 11:06:15 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MCU_OS
+OBJECT MODULE PLACED IN MCU_OS.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE MCU_OS.C LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1           /*********************************************************************************
+   2           移植在MCU8051 LARGE MODE 下的UCOS实时操作系统，可以建立多个任务，完全可以应运于
+   3           产品开发中，每个任务均拥有自己的堆栈
+   4           DEVELOP BY LUNHUI ZHANG
+   5           DATE 04/24/2007
+   6           QQ 33380451
+   7           http://mcu_os.21ic.org/
+   8           NOTE:已通过10多分钟的软件模拟调试测试，系统运行正常
+   9          **********************************************************************************/
+  10          #include "includes.h"
+*** WARNING C318 IN LINE 18 OF includes.h: can't open file '..\ucos_ii.h'
+  11          /*********************************************************************************/
+  12          #define N_TASKS              3
+  13          OS_STK xdata TaskStack1[CPU_MAX_STK_SIZE];
+  14          OS_STK xdata TaskStack2[CPU_MAX_STK_SIZE];
+  15          OS_STK xdata TaskStack3[CPU_MAX_STK_SIZE];
+  16          
+  17          OS_EVENT xdata    *AckMbox;                    //Message mailboxes for Tasks #2 and #3
+*** ERROR C129 IN LINE 17 OF MCU_OS.C: missing ';' before 'xdata'
+  18          OS_EVENT xdata    *TxMbox;
+  19          /*********************************************************************************/
+  20          typedef unsigned char uchar;
+  21          typedef unsigned  int  uint;
+  22          typedef unsigned long ulong;
+  23          //uchar x,y,z;
+  24          /*********************************************************************************/
+  25          void SerialInitial(void)
+  26               {
+  27                 PCON=0x80;         //备频
+  28                     T2CON=0x30;        //设置T2为波特率发生器
+  29                     RCAP2H=0x0FF;          //57600 @ 24MHz: 24000000/(32*(65536-(RCAP2H,RCAP2L)))
+  30                     RCAP2L=0x0FB;
+  31                     TH2=0xFf;          //32.768M的晶振，250000的波特率。32.768M=fch;24M=fdh;16M=feh
+  32                     TL2=0xFB;         
+  33                     RI=0;                        
+  34                     TI=0;
+  35                     TR2=1;
+  36                 SCON = 0x52;      
+  37                 PCON = 0x80;
+  38                 TCON = 0x40;     
+  39                                                                           }
+  40          /*********************************************************************************/
+  41          void InterruptInitial(void)
+  42               {
+  43                TMOD |= 0x11;
+  44                TH0 = 0x70;
+  45                TL0 = 0x00;          //T0用于做时针节拍中断
+  46                /* TR0 is set in OSStart() */
+  47                ET0 = 1;
+  48                /*T1TIME*/
+  49                TH1=0x00;
+  50                TL1=0x00;           //用于模拟软中断，实现任务切换
+  51                ET1=1;
+  52                PT0=1;              //提升优先级至最高
+  53                                                           }
+C51 COMPILER V8.02   MCU_OS                                                                07/25/2010 11:06:15 PAGE 2   
+
+  54          /*********************************************************************************/
+  55          void task1(void *ppdata)reentrant
+  56               {
+  57                uchar txmsg;
+  58                INT8U err;
+  59                ppdata=ppdata;
+  60                
+  61                txmsg='A';
+  62                for(;;)
+  63                   {
+  64                    //OSTimeDly(1);
+  65                    //OSTimeDlyHMSM(0,0,1,0);
+  66                    OSMboxPost(TxMbox, (void xdata*)&txmsg);      /* Send message to Task #5                        
+             -    */
+  67                    OSMboxPend(AckMbox, 0, &err);        
+  68                    //printf("%c",x);
+  69                    printf("Hello,welcome!\n");
+  70                                                  }
+  71                                                    }
+  72          /*********************************************************************************/
+  73          void task2(void *ppdata)reentrant
+  74               {
+  75                uchar *rxmsg; 
+  76                char y;
+  77                INT8U err;
+  78                ppdata=ppdata;
+  79                //y='B';
+  80                for(;;)
+  81                   {
+  82                    rxmsg = (char *)OSMboxPend(TxMbox, 0, &err); 
+  83                    y=*rxmsg;
+  84                    printf("%c",y);
+  85                    printf("This is my first RTOS,very good!\n");
+  86                    OSMboxPost(AckMbox, (void xdata*)1);
+  87                    OSTimeDlyHMSM(0,0,2,0);     
+  88          
+  89                                                                  }
+  90                                                                    }
+  91          /*********************************************************************************/
+  92          void task3(void *ppdata)reentrant
+  93               {
+  94                uchar z;
+  95                ppdata=ppdata;
+  96                z='C';
+  97                for(;;)
+  98                   {
+  99                    //OSTimeDly(5);
+ 100                    OSTimeDlyHMSM(0,0,1,0);
+ 101                    printf("%c",z);
+ 102                    printf("If you feel very good,welcome to http:\/\/mcu_os.21ic.org.\n");
+ 103                                                                           }
+ 104                                                                              }
+ 105          /*********************************************************************************/
+ 106          void main(void)
+ 107              {
+ 108                SerialInitial();
+ 109                InterruptInitial();
+ 110                OSInit();
+ 111                AckMbox = OSMboxCreate((void *)0);                     /* Create 2 message mailboxes               *
+             -/
+ 112                TxMbox  = OSMboxCreate((void *)0);
+ 113                OSTaskCreate(task1,(void xdata*)0,&TaskStack1[0],3);
+C51 COMPILER V8.02   MCU_OS                                                                07/25/2010 11:06:15 PAGE 3   
+
+ 114                OSTaskCreate(task2,(void xdata*)0,&TaskStack2[0],4);
+ 115                OSTaskCreate(task3,(void xdata*)0,&TaskStack3[0],5);
+ 116                OSStart();
+ 117                                                  }
+ 118          /*********************************************************************************/
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)

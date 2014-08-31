@@ -1,0 +1,210 @@
+BL51 BANKED LINKER/LOCATER V5.00                                                        08/09/2008  21:00:41  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V5.00, INVOKED BY:
+C:\ELECS\KEILC\C51\BIN\BL51.EXE Text1.obj TO ccc RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  Text1.obj (TEXT1)
+  C:\ELECS\KEILC\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  ccc (TEXT1)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            REG     0008H     0008H     ABSOLUTE     "REG BANK 1"
+            DATA    0010H     0004H     UNIT         ?DT?TEXT1
+            IDATA   0014H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0003H     ABSOLUTE     
+                    0006H     07FAH                  *** GAP ***
+            CODE    0800H     0032H     UNIT         ?PR?MAIN?TEXT1
+            CODE    0832H     0023H     UNIT         ?PR?INT0?TEXT1
+            CODE    0855H     000DH     UNIT         ?PR?DELAY?TEXT1
+            CODE    0862H     000CH     UNIT         ?C_C51STARTUP
+            CODE    086EH     000AH     UNIT         ?CO?TEXT1
+
+
+
+OVERLAY MAP OF MODULE:   ccc (TEXT1)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?PR?INT0?TEXT1
+  +--> ?PR?DELAY?TEXT1
+
+*** NEW ROOT ***************************************************
+
+?C_C51STARTUP
+  +--> ?PR?MAIN?TEXT1
+
+?PR?MAIN?TEXT1
+  +--> ?CO?TEXT1
+  +--> ?PR?DELAY?TEXT1
+
+
+
+SYMBOL TABLE OF MODULE:  ccc (TEXT1)
+
+BL51 BANKED LINKER/LOCATER V5.00                                                      08/09/2008  21:00:41  PAGE 2
+
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        TEXT1
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  B:00D0H.6       PUBLIC        AC
+  B:00B0H.4       PUBLIC        T0
+  B:00B0H.5       PUBLIC        T1
+  B:00A8H.7       PUBLIC        EA
+  C:086EH         PUBLIC        table
+  B:0080H.0       PUBLIC        P0_0
+  B:0090H.0       PUBLIC        P1_0
+  B:0080H.1       PUBLIC        P0_1
+  C:0855H         PUBLIC        delay
+  B:00D0H.1       PUBLIC        FL
+  B:00A0H.0       PUBLIC        P2_0
+  B:0090H.1       PUBLIC        P1_1
+  B:0080H.2       PUBLIC        P0_2
+  B:00B0H.0       PUBLIC        P3_0
+  B:00A0H.1       PUBLIC        P2_1
+  B:0090H.2       PUBLIC        P1_2
+  B:0080H.3       PUBLIC        P0_3
+  B:00B0H.1       PUBLIC        P3_1
+  B:00A0H.2       PUBLIC        P2_2
+  B:0090H.3       PUBLIC        P1_3
+  B:0080H.4       PUBLIC        P0_4
+  B:00B0H.2       PUBLIC        P3_2
+  B:00A0H.3       PUBLIC        P2_3
+  B:0090H.4       PUBLIC        P1_4
+  B:0080H.5       PUBLIC        P0_5
+  B:00B0H.7       PUBLIC        RD
+  B:00B0H.3       PUBLIC        P3_3
+  B:00A0H.4       PUBLIC        P2_4
+  B:0090H.5       PUBLIC        P1_5
+  B:0080H.6       PUBLIC        P0_6
+  B:00B0H.4       PUBLIC        P3_4
+  B:00A0H.5       PUBLIC        P2_5
+  B:0090H.6       PUBLIC        P1_6
+  B:0080H.7       PUBLIC        P0_7
+  B:00B0H.5       PUBLIC        P3_5
+  B:00A8H.4       PUBLIC        ES
+  B:00A0H.6       PUBLIC        P2_6
+  B:0090H.7       PUBLIC        P1_7
+  B:00B0H.6       PUBLIC        P3_6
+  B:00A0H.7       PUBLIC        P2_7
+  B:00B0H.7       PUBLIC        P3_7
+  B:0098H.0       PUBLIC        RI
+  B:00D0H.7       PUBLIC        CY
+  B:00B0H.2       PUBLIC        INT0
+  B:00B0H.3       PUBLIC        INT1
+  B:0098H.1       PUBLIC        TI
+  B:00B8H.4       PUBLIC        PS
+  B:00D0H.2       PUBLIC        OV
+  C:0800H         PUBLIC        main
+  B:00B0H.6       PUBLIC        WR
+BL51 BANKED LINKER/LOCATER V5.00                                                      08/09/2008  21:00:41  PAGE 3
+
+
+  D:0010H         SYMBOL        count
+  B:0088H.1       PUBLIC        IE0
+  B:0088H.3       PUBLIC        IE1
+  B:00A8H.1       PUBLIC        ET0
+  B:00A8H.3       PUBLIC        ET1
+  B:0088H.5       PUBLIC        TF0
+  B:00A8H.5       PUBLIC        ET2
+  B:0088H.7       PUBLIC        TF1
+  B:0098H.2       PUBLIC        RB8
+  B:00A8H.0       PUBLIC        EX0
+  B:0088H.0       PUBLIC        IT0
+  B:00A8H.2       PUBLIC        EX1
+  B:0098H.3       PUBLIC        TB8
+  B:0088H.2       PUBLIC        IT1
+  B:00D0H.0       PUBLIC        P
+  B:0098H.7       PUBLIC        SM0
+  B:0098H.6       PUBLIC        SM1
+  B:0098H.5       PUBLIC        SM2
+  B:00B8H.1       PUBLIC        PT0
+  B:00D0H.3       PUBLIC        RS0
+  B:00B8H.3       PUBLIC        PT1
+  B:00D0H.4       PUBLIC        RS1
+  B:00B8H.5       PUBLIC        PT2
+  B:0088H.4       PUBLIC        TR0
+  B:0088H.6       PUBLIC        TR1
+  B:00B8H.0       PUBLIC        PX0
+  B:00B8H.2       PUBLIC        PX1
+  B:00B0H.7       PUBLIC        a
+  B:00B0H.6       PUBLIC        b
+  B:0098H.4       PUBLIC        REN
+  D:0011H         PUBLIC        i
+  B:00B0H.0       PUBLIC        RXD
+  B:00B0H.1       PUBLIC        TXD
+  B:00D0H.5       PUBLIC        F0
+  D:0012H         PUBLIC        x
+  D:0013H         PUBLIC        y
+  C:0832H         PUBLIC        int0
+  -------         PROC          INT0
+  C:0832H         LINE#         9
+  C:083FH         LINE#         11
+  C:0841H         LINE#         12
+  C:084AH         LINE#         13
+  -------         ENDPROC       INT0
+  -------         PROC          DELAY
+  -------         DO            
+  D:0007H         SYMBOL        x
+  D:0006H         SYMBOL        y
+  D:0005H         SYMBOL        z
+  -------         ENDDO         
+  C:0855H         LINE#         14
+  C:0855H         LINE#         15
+  C:0855H         LINE#         17
+  C:0857H         LINE#         18
+  C:0859H         LINE#         19
+  C:0861H         LINE#         20
+  -------         ENDPROC       DELAY
+  -------         PROC          MAIN
+BL51 BANKED LINKER/LOCATER V5.00                                                      08/09/2008  21:00:41  PAGE 4
+
+
+  C:0800H         LINE#         21
+  C:0800H         LINE#         22
+  C:0800H         LINE#         24
+  C:0802H         LINE#         25
+  C:0804H         LINE#         26
+  C:0806H         LINE#         28
+  C:0806H         LINE#         29
+  C:0806H         LINE#         30
+  C:080EH         LINE#         31
+  C:0814H         LINE#         32
+  C:0816H         LINE#         33
+  C:0818H         LINE#         34
+  C:081BH         LINE#         35
+  C:0824H         LINE#         36
+  C:0829H         LINE#         37
+  C:082DH         LINE#         38
+  C:0830H         LINE#         40
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        TEXT1
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 0075H BYTE ( 5%) *
+******************************************************************************
+
+Program Size: data=21.0 xdata=0 code=126
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,14 @@
+<html>
+<body>
+<pre>
+<h1>礦ision3 Build Log</h1>
+<h2>Project:</h2>
+D:\个人工程文件夹\kkk\1602\1.uv2
+Project File Date:  11/09/2008
+
+<h2>Output:</h2>
+Build target '目标 1'
+linking...
+Program Size: data=39.0 xdata=0 code=299
+creating hex file from "1"...
+"1" - 0 Error(s), 0 Warning(s).

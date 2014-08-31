@@ -1,0 +1,145 @@
+	NAME	support(17)
+	RSEG	CODE(0)
+	PUBLIC	memcmp
+	$DEFFN	memcmp(0,1,0,0,32768,7,0,0)
+	PUBLIC	memcpy
+	$DEFFN	memcpy(0,1,0,0,32768,7,0,0)
+	PUBLIC	sendUartByte
+	$DEFFN	sendUartByte(0,0,0,0,32768,1,0,0)
+	PUBLIC	sendUartHex
+	$DEFFN	sendUartHex(0,0,0,0,32768,1,0,0)
+	PUBLIC	sendUartString
+	$DEFFN	sendUartString(0,0,0,0,32768,4,0,0)
+	PUBLIC	strlen
+	$DEFFN	strlen(0,1,0,0,32768,3,0,0)
+	EXTERN	?LD_A_R567_DISP_L17
+	EXTERN	?ST_A_R567_DISP_L17
+	EXTERN	?STO_R567_IR0_L20
+	EXTERN	?LD_R567_IR0_L20
+	EXTERN	?CL8051S_5_50_L17
+	RSEG	CODE
+strlen:
+	MOV	R0,#$LOCBI strlen
+	MOV	@R0,#0
+	MOV	R0,#$LOCBI strlen+1
+	LCALL	?STO_R567_IR0_L20
+?0001:
+	MOV	R0,#$LOCBI strlen
+	MOV	A,@R0
+	INC	A
+	JZ	?0000
+?0002:
+	MOV	R0,#$LOCBI strlen+1
+	LCALL	?LD_R567_IR0_L20
+	MOV	R0,#$LOCBI strlen
+	MOV	A,@R0
+	MOV	DPL,A
+	MOV	DPH,#0
+	LCALL	?LD_A_R567_DISP_L17
+	JNZ	?0005
+?0004:
+	MOV	R0,#$LOCBI strlen
+	MOV	A,@R0
+	MOV	R4,A
+	RET
+?0005:
+	MOV	R0,#$LOCBI strlen
+	INC	@R0
+	SJMP	?0001
+?0000:
+	MOV	R4,#0
+?0006:
+	RET
+memcpy:
+	MOV	R0,#$LOCBI memcpy
+	MOV	@R0,#0
+	MOV	R0,#$LOCBI memcpy+1
+	LCALL	?STO_R567_IR0_L20
+?0008:
+	MOV	R0,#$LOCBI memcpy
+	MOV	A,@R0
+	CLR	C
+	MOV	R0,#$LOCBI memcpy+7
+	SUBB	A,@R0
+	JNC	?0007
+?0009:
+	MOV	R0,#$LOCBI memcpy+4
+	LCALL	?LD_R567_IR0_L20
+	MOV	R0,#$LOCBI memcpy
+	MOV	A,@R0
+	MOV	R4,A
+	MOV	DPL,A
+	MOV	DPH,#0
+	LCALL	?LD_A_R567_DISP_L17
+	MOV	R2,A
+	MOV	R0,#$LOCBI memcpy+1
+	LCALL	?LD_R567_IR0_L20
+	MOV	DPL,R4
+	MOV	DPH,#0
+	MOV	A,R2
+	LCALL	?ST_A_R567_DISP_L17
+	INC	R4
+	MOV	R0,#$LOCBI memcpy
+	MOV	A,R4
+	MOV	@R0,A
+	SJMP	?0008
+?0007:
+	RET
+memcmp:
+	MOV	R0,#$LOCBI memcmp
+	MOV	@R0,#0
+	MOV	R0,#$LOCBI memcmp+1
+	LCALL	?STO_R567_IR0_L20
+?0012:
+	MOV	R0,#$LOCBI memcmp
+	MOV	A,@R0
+	CLR	C
+	MOV	R0,#$LOCBI memcmp+7
+	SUBB	A,@R0
+	JNC	?0011
+?0013:
+	MOV	R0,#$LOCBI memcmp+1
+	LCALL	?LD_R567_IR0_L20
+	MOV	R0,#$LOCBI memcmp
+	MOV	A,@R0
+	MOV	DPL,A
+	MOV	DPH,#0
+	LCALL	?LD_A_R567_DISP_L17
+	MOV	R4,A
+	MOV	R0,#$LOCBI memcmp+4
+	LCALL	?LD_R567_IR0_L20
+	MOV	R0,#$LOCBI memcmp
+	MOV	A,@R0
+	MOV	DPL,A
+	MOV	DPH,#0
+	LCALL	?LD_A_R567_DISP_L17
+	XRL	A,R4
+	JZ	?0016
+?0015:
+	MOV	R4,#1
+	RET
+?0016:
+	MOV	R0,#$LOCBI memcmp
+	INC	@R0
+	SJMP	?0012
+?0011:
+	MOV	R4,#0
+?0017:
+	RET
+sendUartByte:
+	MOV	R0,#$LOCBI sendUartByte
+	MOV	A,R4
+	MOV	@R0,A
+	RET
+sendUartString:
+	MOV	R0,#$LOCBI sendUartString+3
+	MOV	A,R4
+	MOV	@R0,A
+	MOV	R0,#$LOCBI sendUartString
+	LJMP	?STO_R567_IR0_L20
+sendUartHex:
+	MOV	R0,#$LOCBI sendUartHex
+	MOV	A,R4
+	MOV	@R0,A
+	RET
+	END

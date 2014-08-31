@@ -1,0 +1,447 @@
+C51 COMPILER V8.02   TFT320240                                                             06/17/2010 08:54:28 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TFT320240
+OBJECT MODULE PLACED IN tft320240.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE tft320240.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "tft320240.h"
+   2          #include "string.h"
+   3          
+   4          
+   5          code int SINTABLE[60]=
+   6          {
+   7                  0,   10,  21 , 31, 41, 50 , 59, 67, 74, 81, 
+   8                  87,      91,  95 , 98, 99, 100, 99, 98, 95, 91, 
+   9                  87,  81,  74 , 67, 59, 50 , 41, 31, 21, 10, 
+  10                  0 ,  -10, -21, -31,-41,-50, -59,-67,-74,-81,
+  11                  -87, -91, -95, -98,-99,-100,-99,-98,-95,-91,
+  12                  -87, -81, -74, -67,-59,-50 ,-41,-31,-21,-10 
+  13          };
+  14          void green_dark_heng(void)
+  15          {
+  16   1              unsigned int t;
+  17   1              for(t=0;t<=0x018f;t+=1)
+  18   1              {
+  19   2                      Show(0,0x00ef,t,t, t<<6);       
+  20   2              }
+  21   1      }
+  22          /***************************************************************
+  23          画线函数
+  24          参数：起点横坐标，终点横坐标，起点纵坐标，终点纵坐标，线颜色
+  25          ***************************************************************/
+  26          void drawline(int sx, int ex, int sy, int ey,UINT linecolor)
+  27          {
+  28   1              int a,b;
+  29   1              int diffx,diffy;
+  30   1              if(sx==ex)
+  31   1              {
+  32   2                      if(sy<=ey)
+  33   2                      {
+  34   3                              for(b=sy;b<=ey;b++)
+  35   3                              {
+  36   4                                      BlockWrite(sx,sx,b,b);
+  37   4                                      W_DATA(linecolor);
+  38   4                              }
+  39   3                      }
+  40   2                      else
+  41   2                      {
+  42   3                              for(b=ey;b<=sy;b++)
+  43   3                              {
+  44   4                                      BlockWrite(sx,sx,b,b);
+  45   4                                      W_DATA(linecolor);
+  46   4                              }
+  47   3                      }
+  48   2                      return;
+  49   2              }
+  50   1              if(sy==ey)
+  51   1              {
+  52   2                      if(sx<=ex)
+  53   2                      {
+  54   3                              for(a=sx;a<=ex;a++)
+  55   3                              {
+C51 COMPILER V8.02   TFT320240                                                             06/17/2010 08:54:28 PAGE 2   
+
+  56   4                                      BlockWrite(a,a,sy,sy);
+  57   4                                      W_DATA(linecolor);              
+  58   4                              }
+  59   3                      }
+  60   2                      else
+  61   2                      {
+  62   3                              for(a=ex;a<=sx;a++)
+  63   3                              {
+  64   4                                      BlockWrite(a,a,sy,sy);
+  65   4                                      W_DATA(linecolor);              
+  66   4                              }
+  67   3                      }
+  68   2                      return;
+  69   2              }
+  70   1      //剩下就是一般情况了！！！
+  71   1      #define ABS(x) ((x>0)?(x):(-x))
+  72   1      
+  73   1              diffx=ex-sx;
+  74   1              diffy=ey-sy;
+  75   1              if(ABS(diffx)>ABS(diffy))
+  76   1              {
+  77   2                      if(sx<ex)
+  78   2                      {
+  79   3                              for(a=sx;a<=ex;a++)
+  80   3                              {
+  81   4                                      b=sy+(a-sx)*diffy/diffx;
+  82   4                                      BlockWrite(a,a,b,b);
+  83   4                                      W_DATA(linecolor);
+  84   4                              }
+  85   3                      }
+  86   2                      else
+  87   2                      {
+  88   3                              for(a=ex;a<=sx;a++)
+  89   3                              {
+  90   4                                      b=ey+(a-ex)*diffy/diffx;
+  91   4                                      BlockWrite(a,a,b,b);
+  92   4                                      W_DATA(linecolor);
+  93   4                              }
+  94   3                      }
+  95   2              }
+  96   1              else//ABS(diffx)<=ABS(diffy)
+  97   1              {
+  98   2                      if(sy<ey)
+  99   2                      {
+ 100   3                              for(b=sy;b<=ey;b++)
+ 101   3                              {
+ 102   4                                      a=sx+(b-sy)*diffx/diffy;
+ 103   4                                      BlockWrite(a,a,b,b);
+ 104   4                                      W_DATA(linecolor);
+ 105   4                              }
+ 106   3                      }
+ 107   2                      else
+ 108   2                      {
+ 109   3                              for(b=ey;b<=sy;b++)
+ 110   3                              {
+ 111   4                                      a=ex+(b-ey)*diffx/diffy;
+ 112   4                                      BlockWrite(a,a,b,b);
+ 113   4                                      W_DATA(linecolor);
+ 114   4                              }
+ 115   3                      }
+ 116   2              }
+ 117   1      }
+C51 COMPILER V8.02   TFT320240                                                             06/17/2010 08:54:28 PAGE 3   
+
+ 118          /******************************************************
+ 119          绘制矩形函数
+ 120          参数说明：起点横坐标，起点纵坐标，终点横坐标，终点纵坐标
+ 121                            矩形颜色
+ 122          
+ 123          ******************************************************/
+ 124          void juxing(UINT x0,UINT y0,UINT x1,UINT y1,UINT color)
+ 125          {
+ 126   1              drawline(x0,x1,y1,y1,color);
+ 127   1              drawline(x0,x1,y0,y0,color);
+ 128   1              drawline(x1,x1,y0,y1,color);
+ 129   1              drawline(x0,x0,y0,y1,color);
+ 130   1      }
+ 131          /**************************************************************************
+ 132          显示图片函数
+ 133          参数说明：图片数据首地址，起点横坐标，起点纵坐标，图片宽度，图片高度
+ 134          ***************************************************************************/
+ 135          void show_pic(unsigned char * table,UINT x0,UINT y0,UINT width,UINT height)
+ 136          {
+ 137   1              UINT x;
+ 138   1              UINT temp;
+ 139   1              BlockWrite(x0,x0+width-1,y0,y0+height-1);
+ 140   1              for(x=0;x<width*height*2;x+=2)
+ 141   1              {
+ 142   2                      temp=table[x]<<8;
+ 143   2                      temp+=table[x+1];
+ 144   2                      W_DATA(temp);
+ 145   2              }
+ 146   1      }
+ 147          
+ 148          //---------------------------------------------------------------------------
+ 149          void Delay(UINT t)
+ 150          {
+ 151   1              UCHAR i;
+ 152   1              while( t > 0 )
+ 153   1              {
+ 154   2                      t--;
+ 155   2                      for ( i = 0; i < 255; i++ )
+ 156   2                              ;
+ 157   2              }
+ 158   1      }
+ 159          //---------------------------------------------------------------------------
+ 160          void W_COM(UINT dat)
+ 161          {
+ 162   1              CTRLPORT&=~LCD_RS;// = 0;
+ 163   1              DATAPORT = dat >> 8;
+ 164   1              CTRLPORT&=~LCD_WR;// = 0;
+ 165   1              CTRLPORT|=LCD_WR;// = 1;
+ 166   1              DATAPORT = dat & 0xFF;
+ 167   1              CTRLPORT&=~LCD_WR;// = 0;
+ 168   1              CTRLPORT|=LCD_WR;// = 1;
+ 169   1      }
+ 170          //---------------------------------------------------------------------------
+ 171          void W_DATA(UINT dat)
+ 172          {
+ 173   1              CTRLPORT|=LCD_RS;// = 1;
+ 174   1              DATAPORT = dat >> 8;
+ 175   1              CTRLPORT&=~LCD_WR;// = 0;
+ 176   1              CTRLPORT|=LCD_WR;// = 1;
+ 177   1              DATAPORT = dat & 0xFF;
+ 178   1              CTRLPORT&=~LCD_WR;// = 0;
+ 179   1              CTRLPORT|=LCD_WR;// = 1;
+C51 COMPILER V8.02   TFT320240                                                             06/17/2010 08:54:28 PAGE 4   
+
+ 180   1      }
+ 181          //---------------------------------------------------------------------------
+ 182          void BlockWrite(UINT sx, UINT ex, UINT sy, UINT ey)
+ 183          {
+ 184   1              W_COM(0x0050);
+ 185   1              W_DATA(sx);
+ 186   1              W_COM(0x0051);
+ 187   1              W_DATA(ex);
+ 188   1              W_COM(0x0052);
+ 189   1              W_DATA(sy);
+ 190   1              W_COM(0x0053);
+ 191   1              W_DATA(ey);
+ 192   1      
+ 193   1              W_COM(0x0020);//IMPORTANT
+ 194   1              W_DATA(0);
+ 195   1              W_COM(0x0021);
+ 196   1              W_DATA(0);
+ 197   1      
+ 198   1              W_COM(0x0022);
+ 199   1      }
+ 200          //---------------------------------------------------------------------------
+ 201          void Clear(void)
+ 202          {
+ 203   1              Show(0x0000, 0x00EF, 0x0000, 0x013F, 0x0000);
+ 204   1      }
+ 205          //---------------------------------------------------------------------------
+ 206          void Full(void)
+ 207          {
+ 208   1              Show(0x0000, 0x00EF, 0x0000, 0x013F, 0xFFFF);
+ 209   1      }
+ 210          //---------------------------------------------------------------------------
+ 211          void Red(void)
+ 212          {
+ 213   1              Show(0x0000, 0x00EF, 0x0000, 0x013F, 0xF800);
+ 214   1      }
+ 215          //---------------------------------------------------------------------------
+ 216          void Green(void)
+ 217          {
+ 218   1              Show(0x0000, 0x00EF, 0x0000, 0x013F, 0x07E0);
+ 219   1      }
+ 220          //---------------------------------------------------------------------------
+ 221          void Blue(void)
+ 222          {
+ 223   1              Show(0x0000, 0x00EF, 0x0000, 0x013F, 0x001F);
+ 224   1      }
+ 225          //---------------------------------------------------------------------------
+ 226          void Show(UINT sx, UINT ex, UINT sy, UINT ey, UINT dat)
+ 227          {
+ 228   1              UINT x, y, i, j;
+ 229   1              BlockWrite(sx, ex, sy, ey);
+ 230   1              
+ 231   1              x = ex - sx;
+ 232   1              y = ey - sy;
+ 233   1              
+ 234   1              for ( i = 0; i <= y; i++ )
+ 235   1                      for ( j = 0; j <= x; j++ )
+ 236   1                              W_DATA(dat);
+ 237   1      }
+ 238          //---------------------------------------------------------------------------
+ 239          void SPFD5408A_CPT24_Initial(void)
+ 240          {
+ 241   1      //      DATADIR=0xff;
+C51 COMPILER V8.02   TFT320240                                                             06/17/2010 08:54:28 PAGE 5   
+
+ 242   1              DATAPORT=0x00;
+ 243   1      //      CTRLDIR=LCD_RESET|LCD_RS|LCD_WR;
+ 244   1              CTRLPORT|=LCD_RESET;// = 1;
+ 245   1              Delay(50);
+ 246   1              CTRLPORT&=~LCD_RESET;// = 0;
+ 247   1              Delay(200);
+ 248   1              CTRLPORT|=LCD_RESET;// = 1;
+ 249   1              Delay(50);      
+ 250   1              
+ 251   1              
+ 252   1              W_COM(0x0000);W_DATA(0x0000);
+ 253   1              W_COM(0x0001);W_DATA(0x0100);
+ 254   1              W_COM(0x0002);W_DATA(0x0700);
+ 255   1              W_COM(0x0003);W_DATA(0x10B0);
+ 256   1      
+ 257   1              W_COM(0x0004);W_DATA(0x0000);
+ 258   1              W_COM(0x0008);W_DATA(0x0207);
+ 259   1              W_COM(0x0009);W_DATA(0x0000);
+ 260   1              W_COM(0x000A);W_DATA(0x0000);
+ 261   1              W_COM(0x000C);W_DATA(0x0000);
+ 262   1              W_COM(0x000D);W_DATA(0x0000);
+ 263   1              W_COM(0x000F);W_DATA(0x0000);
+ 264   1              W_COM(0x0007);W_DATA(0x0101);
+ 265   1              Delay(10);
+ 266   1      
+ 267   1              W_COM(0x0010);W_DATA(0x12B0);
+ 268   1              W_COM(0x0011);W_DATA(0x0007);
+ 269   1              W_COM(0x0017);W_DATA(0x0001);
+ 270   1              W_COM(0x0012);W_DATA(0x01BB);
+ 271   1              W_COM(0x0013);W_DATA(0x1F00);
+ 272   1              W_COM(0x0029);W_DATA(0x0012);
+ 273   1              Delay(10);
+ 274   1      
+ 275   1              W_COM(0x0030);W_DATA(0x0102);
+ 276   1              W_COM(0x0031);W_DATA(0x0C15);
+ 277   1              W_COM(0x0032);W_DATA(0x0B18);
+ 278   1              W_COM(0x0033);W_DATA(0x1C0F);
+ 279   1              W_COM(0x0034);W_DATA(0x120B);
+ 280   1              W_COM(0x0035);W_DATA(0x0A04);
+ 281   1              W_COM(0x0036);W_DATA(0x1F00);
+ 282   1              W_COM(0x0037);W_DATA(0x051F);
+ 283   1              W_COM(0x0038);W_DATA(0x0305);
+ 284   1              W_COM(0x0039);W_DATA(0x0A05);
+ 285   1              W_COM(0x003A);W_DATA(0x0F04);
+ 286   1              W_COM(0x003B);W_DATA(0x0F00);
+ 287   1              W_COM(0x003C);W_DATA(0x000F);
+ 288   1              W_COM(0x003D);W_DATA(0x050F);
+ 289   1              W_COM(0x003E);W_DATA(0x0204);
+ 290   1              W_COM(0x003F);W_DATA(0x0404);
+ 291   1      
+ 292   1              W_COM(0x0050);W_DATA(0x0000);
+ 293   1              W_COM(0x0051);W_DATA(0x00EF);
+ 294   1              W_COM(0x0052);W_DATA(0x0000);
+ 295   1              W_COM(0x0053);W_DATA(0x013F);
+ 296   1              Delay(10);
+ 297   1      
+ 298   1              W_COM(0x0060);W_DATA(0x2700);
+ 299   1              W_COM(0x0061);W_DATA(0x0001);
+ 300   1              W_COM(0x006A);W_DATA(0x0000);
+ 301   1              Delay(10);
+ 302   1      
+ 303   1              W_COM(0x0080);W_DATA(0x0000);
+C51 COMPILER V8.02   TFT320240                                                             06/17/2010 08:54:28 PAGE 6   
+
+ 304   1              W_COM(0x0081);W_DATA(0x0000);
+ 305   1              W_COM(0x0082);W_DATA(0x0000);
+ 306   1              W_COM(0x0083);W_DATA(0x0000);
+ 307   1              W_COM(0x0084);W_DATA(0x0000);
+ 308   1              W_COM(0x0085);W_DATA(0x0000);
+ 309   1      
+ 310   1              W_COM(0x0090);W_DATA(0x0018);
+ 311   1              W_COM(0x0092);W_DATA(0x0000);
+ 312   1              W_COM(0x0093);W_DATA(0x0103);
+ 313   1              W_COM(0x0095);W_DATA(0x0210);
+ 314   1              W_COM(0x0097);W_DATA(0x0000);
+ 315   1              W_COM(0x0098);W_DATA(0x0000);
+ 316   1      
+ 317   1              W_COM(0x00F0);W_DATA(0x5408);
+ 318   1              W_COM(0x00F2);W_DATA(0x00DF);
+ 319   1              W_COM(0x00F3);W_DATA(0x0006);
+ 320   1              W_COM(0x00F4);W_DATA(0x001F);
+ 321   1              W_COM(0x00F7);W_DATA(0x0080);
+ 322   1              W_COM(0x00F0);W_DATA(0x0000);
+ 323   1      
+ 324   1              W_COM(0x0007);W_DATA(0x0173);
+ 325   1              Delay(80);
+ 326   1              W_COM(0x0007);W_DATA(0x0171);
+ 327   1              Delay(80);
+ 328   1              W_COM(0x0007);W_DATA(0x0173);
+ 329   1              Delay(80);
+ 330   1      }
+ 331          
+ 332          //---------------------------------------------------------------------------
+ 333          void ShowCharWithColor(UCHAR sx, UINT sy, UCHAR index, UINT CharColor, UINT BkColor)
+ 334          {
+ 335   1              UCHAR i, j;
+ 336   1              UCHAR mask;
+ 337   1      
+ 338   1              if ( index > 95 )
+ 339   1                      return;
+ 340   1      
+ 341   1              BlockWrite(sx, sx+7, sy, sy+15);        
+ 342   1              for ( i = 0; i < 16; i++ )
+ 343   1              {
+ 344   2                      mask = 0x80;
+ 345   2                      for ( j = 0; j < 8; j++ )
+ 346   2                      {
+ 347   3      //                      W_DATA((ascii_font[index][i] & mask) ? CharColor : BkColor);
+ 348   3                              mask >>= 1;
+ 349   3                      }
+ 350   2              }
+ 351   1      }
+*** WARNING C280 IN LINE 333 OF TFT320240.C: 'CharColor': unreferenced local variable
+*** WARNING C280 IN LINE 333 OF TFT320240.C: 'BkColor': unreferenced local variable
+ 352          //---------------------------------------------------------------------------
+ 353          void ShowString(UCHAR sx, UINT sy, char* string)
+ 354          {
+ 355   1              UCHAR len;
+ 356   1      
+ 357   1              len = strlen( string );
+ 358   1              Show(sx, len*8+2, sy, sy+17, 0);
+ 359   1              ++sx;
+ 360   1              ++sy;
+ 361   1              while( *string != 0 )
+ 362   1              {
+ 363   2                      ShowCharWithColor(sx, sy, *string-32, 0xFFFF, 0x0000);
+C51 COMPILER V8.02   TFT320240                                                             06/17/2010 08:54:28 PAGE 7   
+
+ 364   2                      sx += 8;
+ 365   2                      string++;
+ 366   2              }
+ 367   1      }
+ 368          void ShowHanzi(UCHAR sx, UINT sy, UCHAR index, UINT CharColor, UINT BkColor)
+ 369          {
+ 370   1              UCHAR i, j;
+ 371   1              UCHAR mask;
+ 372   1              BlockWrite(sx, sx+15, sy, sy+15);//16*16 
+ 373   1              for ( i = 0; i < 32; i++ )
+ 374   1              {
+ 375   2                      mask = 0x80;
+ 376   2                      for ( j = 0; j <8; j++ )
+ 377   2                      {
+ 378   3      //                      W_DATA((Hanzi[index*32+i] & mask) ? CharColor : BkColor);
+ 379   3                              mask >>= 1;
+ 380   3                      }
+ 381   2              }
+ 382   1      }
+*** WARNING C280 IN LINE 368 OF TFT320240.C: 'index': unreferenced local variable
+*** WARNING C280 IN LINE 368 OF TFT320240.C: 'CharColor': unreferenced local variable
+*** WARNING C280 IN LINE 368 OF TFT320240.C: 'BkColor': unreferenced local variable
+ 383          //---------------------------------------------------------------------------
+ 384          void circle(int cx,int cy,int cr,UINT color)
+ 385          {
+ 386   1              int x,y,temp,r2=cr*cr;
+ 387   1              for(y=cy-cr;y<cy+cr;y++)
+ 388   1              {
+ 389   2                      for(x=cx-cr;x<cx+cr;x++)
+ 390   2                      {
+ 391   3                              temp=(x-cx)*(x-cx);
+ 392   3                              temp+=(y-cy)*(y-cy);
+ 393   3                              if(temp<=r2)
+ 394   3                              {
+ 395   4                                      BlockWrite(x, x, y, y); 
+ 396   4                                      W_DATA(color);
+ 397   4                              }
+ 398   3                      }
+ 399   2              }
+ 400   1      }
+ 401          void line_deg(int cx,int cy,int deg,int len,UINT color)
+ 402          {
+ 403   1              int dx,dy;
+ 404   1              dx=cx+len*SINTABLE[deg]/100;
+ 405   1              dy=cy-len*SINTABLE[(deg+15)%60]/100;
+ 406   1              drawline(cx,dx,cy,dy,color);
+ 407   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2756    ----
+   CONSTANT SIZE    =    120    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----     115
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  5 WARNING(S),  0 ERROR(S)

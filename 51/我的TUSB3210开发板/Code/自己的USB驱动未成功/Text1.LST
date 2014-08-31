@@ -1,0 +1,198 @@
+C51 COMPILER V8.02   TEXT1                                                                 06/03/2011 08:04:29 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "types.h"
+   3          #include "tusb3210.h"
+   4          #include "serial.h"
+   5          #include "usb.h"
+   6          sbit led=P0^0;
+   7          
+   8          
+   9          extern uint8 usbstate;
+  10          
+  11          void delay(unsigned int k);
+  12          
+  13          void main(void)
+  14          {
+  15   1              unsigned char t;
+  16   1              EX0=0;
+  17   1              led=0;
+  18   1              rs232_init();
+  19   1              rs232_printstr("Hello world!\r\n");
+  20   1              hardware_init();
+  21   1              
+  22   1              while(1)
+  23   1              {
+  24   2                      led=~led;
+  25   2                      delay(10);
+  26   2              }
+  27   1      }
+*** WARNING C280 IN LINE 15 OF TEXT1.C: 't': unreferenced local variable
+  28          void serial_routine(void) interrupt 4 using 2
+  29          {
+  30   1              char xdata *p;
+  31   1              unsigned char i;
+  32   1              if(RI)
+  33   1              {/*
+  34   2                      switch(SBUF)
+  35   2                      {
+  36   2                      case '#':
+  37   2                              rs232_printstr("EP0IN buffer:");
+  38   2                              p=&bIEP0_BUFFER_ADDRESS;
+  39   2                              for(i=0;i<8;i++)
+  40   2                              {
+  41   2                                      rs232_printhex(p[i]);
+  42   2                              }
+  43   2                              rs232_printstr("\r\n");
+  44   2                              break;
+  45   2                      case '$':
+  46   2                              rs232_printstr("EP0OUT buffer:");
+  47   2                              p=&bOEP0_BUFFER_ADDRESS;
+  48   2                              for(i=0;i<8;i++)
+  49   2                              {
+  50   2                                      rs232_printhex(p[i]);
+  51   2                              }
+  52   2                              rs232_printstr("\r\n"); 
+  53   2                              break;
+  54   2                      case 'w':
+C51 COMPILER V8.02   TEXT1                                                                 06/03/2011 08:04:29 PAGE 2   
+
+  55   2                              rs232_printstr("SETUP buffer:");
+  56   2                              p=&bEP0_SETUP_ADDRESS;
+  57   2                              for(i=0;i<8;i++)
+  58   2                              {
+  59   2                                      rs232_printhex(p[i]);
+  60   2                              }
+  61   2                              rs232_printstr("\r\n"); 
+  62   2                              break;
+  63   2                      case 'q':
+  64   2                              rs232_printstr("\r\nbIEPBCNT_0:");
+  65   2                              rs232_printhex(bIEPBCNT_0);
+  66   2                              rs232_printstr("\r\nbOEPBCNT_0:");
+  67   2                              rs232_printhex(bOEPBCNT_0);
+  68   2                              rs232_printstr("\r\nbIEPCNFG_0:");
+  69   2                              rs232_printhex(bIEPCNFG_0);
+  70   2                              rs232_printstr("\r\nbOEPCNFG_0:");
+  71   2                              rs232_printhex(bOEPCNFG_0);
+  72   2                              rs232_printstr("\r\nbFUNADR:");
+  73   2                              rs232_printhex(bFUNADR);
+  74   2                              rs232_printstr("\r\nbWDCSR:");
+  75   2                              rs232_printhex(bWDCSR);
+  76   2                              break;
+  77   2                      case 'e':
+  78   2                              bUSBCTL|=0x80;
+  79   2                              break;
+  80   2                      default:
+  81   2                              rs232_printstr("no way!\r\n");
+  82   2                              break;
+  83   2                      }*/
+  84   2                      
+  85   2                      SBUF=SBUF;
+  86   2                      RI=0;
+  87   2              }
+  88   1              if(TI)
+  89   1              {
+  90   2                      TI=0;
+  91   2              }       
+  92   1      }
+*** WARNING C280 IN LINE 30 OF TEXT1.C: 'p': unreferenced local variable
+*** WARNING C280 IN LINE 31 OF TEXT1.C: 'i': unreferenced local variable
+  93          
+  94          
+  95          
+  96          
+  97          void usb_isr(void) interrupt 0 using 2
+  98          {
+  99   1              EA=0;
+ 100   1              switch(bVECINT)
+ 101   1              {
+ 102   2              case VECINT_OUTPUT_ENDPOINT0://端点0输出中断
+ 103   2                      bVECINT  = 0x00;
+ 104   2                      rs232_printstr("EP0Out\r\n");                   
+ 105   2                      break;
+ 106   2          case VECINT_INPUT_ENDPOINT0://端点0输入中断
+ 107   2                      bVECINT  = 0x00;
+ 108   2                      rs232_printstr("EP0IN\r\n");
+ 109   2                      EP0_senddata();
+ 110   2                      break;
+ 111   2              case VECINT_INPUT_ENDPOINT1:
+ 112   2                      bVECINT = 0x00;
+ 113   2                      rs232_printstr("EP1In\r\n");
+ 114   2                      break;
+C51 COMPILER V8.02   TEXT1                                                                 06/03/2011 08:04:29 PAGE 3   
+
+ 115   2      
+ 116   2          case VECINT_STPOW_PACKET_RECEIVED:
+ 117   2                      bVECINT  = 0x00;
+ 118   2                      bUSBSTA = USBSTA_STPOW;
+ 119   2                      rs232_printstr("Setup overflow\r\n");
+ 120   2                      setup_handler();
+ 121   2                      break;
+ 122   2      
+ 123   2          case VECINT_SETUP_PACKET_RECEIVED:
+ 124   2                      bVECINT  = 0x00;
+ 125   2                      bUSBSTA = USBSTA_SETUP;//加上这一条，就能保证下一次不会发生SETUP溢出
+ 126   2                      rs232_printstr("\r\nSetup-");
+ 127   2                      setup_handler();
+ 128   2                      break;
+ 129   2      
+ 130   2          case VECINT_RSTR_INTERRUPT:
+ 131   2                      bVECINT  = 0x00;
+ 132   2                      bUSBSTA = USBSTA_RSTR;
+ 133   2                      rs232_printstr("USB reset!\r\n");
+ 134   2                      break;
+ 135   2              
+ 136   2              case VECINT_RESR_INTERRUPT:
+ 137   2                      bVECINT = 0x00;
+ 138   2                      bUSBSTA = USBSTA_RESR;
+ 139   2                      rs232_printstr("USB resume!\r\n");
+ 140   2                      break;
+ 141   2              
+ 142   2              case VECINT_SUSR_INTERRUPT:
+ 143   2                      bVECINT = 0x00;
+ 144   2                      bUSBSTA = USBSTA_SUSR;
+ 145   2                      rs232_printstr("USB suspend!\r\n");
+ 146   2                      break;
+ 147   2              default:
+ 148   2                      rs232_printstr(" Unknown!\r\n");
+ 149   2                      rs232_printhex(bVECINT);
+ 150   2                      bVECINT  = 0x00;
+ 151   2                      break;
+ 152   2              }
+ 153   1              EA=1;
+ 154   1      }
+ 155          
+ 156          
+ 157          
+ 158          void delay(unsigned int k)
+ 159          {
+ 160   1              unsigned char i,j;
+ 161   1              for(;k;k--)
+ 162   1              for(i=200;i;i--)
+ 163   1              for(j=200;j;j--);
+ 164   1      }
+ 165          
+ 166          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    309    ----
+   CONSTANT SIZE    =    120    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V8.02   TEXT1                                                                 06/03/2011 08:04:29 PAGE 4   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

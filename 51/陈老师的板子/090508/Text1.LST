@@ -1,0 +1,269 @@
+C51 COMPILER V8.02   TEXT1                                                                 07/07/2009 18:45:59 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /*******************************************************
+   2          说明：数码管显示
+   3          一，二数码管显示AD输出（必须按下S4触发int0中断之后）
+   4          3位显示是否有AD输出
+   5          4，5位空闲
+   6          6位显示555的触发频率（0-F）
+   7          7，8位空闲
+   8          *******************************************************/
+   9          #include <absacc.h>
+  10          #include <reg52.h>
+  11          #include <stdarg.h>
+  12          #include <stdio.h>
+  13          sbit key1=P1^0;
+  14          sbit key2=P1^1;
+  15          sbit buz=P1^3;
+  16          
+  17          
+  18          sfr AUXR=0x8e;
+  19          sfr WDTD=0x85;
+  20          sfr WDTC=0xc0;
+  21          sfr SFCF=0xb1;
+  22          sfr SFCM=0xb2;
+  23          sfr SFAL=0xb3;
+  24          sfr SFAH=0xb4;
+  25          sfr SFDT=0xb5;
+  26          sfr SFST=0xb6;
+  27          #define SFCM_SE 0x0b
+  28          #define SFCM_VB 0x0c
+  29          #define SFCM_PB 0x0e
+  30          
+  31          
+  32          
+  33          const unsigned short int BLK1_DST_ADDR=0xee00;
+  34          const unsigned char SECT_SIZE=0x80;
+  35          unsigned char ErrorCode;
+  36          unsigned char tcount=0;
+  37          void byte_program(unsigned short int dataAddr,unsigned char dataByte);
+  38          unsigned char byte_verify(unsigned short int dataAddr);
+  39          void sector_erase(unsigned short int dataAddr);
+  40          int ready();
+  41          void error();
+  42          
+  43          
+  44          unsigned char readcode(unsigned int addr);
+  45          #define PORTA XBYTE[0x8fff]
+  46          #define PORTB XBYTE[0x9fff]
+  47          #define PORTC XBYTE[0xafff]
+  48          #define CADDR XBYTE[0xbfff]
+  49          #define ADREAD XBYTE[0x00ff]
+  50          unsigned char code table[]={
+  51          0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00
+  52          };
+  53          /*
+  54          unsigned char code wuxie[]=
+  55          {
+C51 COMPILER V8.02   TEXT1                                                                 07/07/2009 18:45:59 PAGE 2   
+
+  56          
+  57          0x00,0x0F,0x7C,0x0C,0x7F,0x0C,0x0C,0x0F,0x1C,0xFC,0x0C,0x0F,0x3C,0x18,0x00,0x00,
+  58          0xC0,0xF0,0xD8,0xD8,0xFC,0xC0,0xD8,0xD8,0xF0,0x60,0xE6,0xB6,0x1E,0x0E,0x00,0x00, 
+  59          0X00,0X3F,0X01,0X01,0X01,0X01,0X7F,0X01,0X01,0X02,0X02,0X04,0X08,0X10,0X20,0X40,
+  60          0X00,0XFC,0X00,0X00,0X00,0X00,0XFE,0X00,0X00,0X80,0X40,0X20,0X18,0X0E,0X04,0X00,
+  61          0X00,0X3F,0X01,0X01,0X01,0X01,0X7F,0X01,0X01,0X02,0X02,0X04,0X08,0X10,0X20,0X40,
+  62          0X00,0XFC,0X00,0X00,0X00,0X00,0XFE,0X00,0X00,0X80,0X40,0X20,0X18,0X0E,0X04,0X00,
+  63          0X08,0X08,0X1F,0X10,0X20,0X4F,0X00,0X1F,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+  64          0X00,0X00,0XFE,0X00,0X00,0XF8,0X00,0XF0,0X10,0X10,0X10,0X10,0X0A,0X0A,0X06,0X02,
+  65          0X00,0X7F,0X01,0X01,0X01,0X01,0X03,0X05,0X09,0X11,0X21,0X41,0X01,0X01,0X01,0X00,
+  66          0X04,0XFE,0X80,0X00,0X00,0X00,0X60,0X30,0X18,0X0C,0X08,0X00,0X00,0X00,0X00,0X00,
+  67          0X10,0X10,0X3C,0X21,0X40,0X7C,0X93,0X10,0XFD,0X11,0X11,0X11,0X11,0X15,0X19,0X11,
+  68          0X90,0X90,0X90,0XFC,0X90,0X90,0XFE,0X00,0XFC,0X04,0X04,0XFC,0X04,0X04,0XFC,0X04,
+  69          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X30,0X30,0X10,0X20,0X00,
+  70          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+  71          0X10,0X10,0X17,0XFD,0X11,0X12,0X1A,0X37,0XD0,0X19,0X15,0X12,0X13,0X14,0X58,0X20,
+  72          0X00,0X0E,0X70,0X10,0X10,0X10,0X7E,0X90,0X90,0X10,0X10,0X7C,0X00,0X80,0X7E,0X00,
+  73          0X00,0X1F,0X10,0X10,0X14,0X12,0X11,0X10,0X10,0X11,0X12,0X24,0X28,0X40,0X80,0X00,
+  74          0X00,0XF8,0X08,0X48,0X68,0X48,0X48,0X88,0X88,0X48,0X6A,0X2A,0X26,0X06,0X02,0X00,
+  75          0X00,0X07,0X78,0X08,0X08,0X7F,0X08,0X18,0X1C,0X2A,0X2B,0X4A,0X88,0X08,0X08,0X08,
+  76          0X00,0X00,0X00,0X7C,0X44,0X44,0X44,0X44,0X44,0X44,0X44,0X44,0X7C,0X44,0X00,0X00,
+  77          0X00,0X1F,0X10,0X10,0X10,0X10,0X1F,0X10,0X10,0X10,0X10,0X10,0X1F,0X10,0X00,0X00,
+  78          0X00,0XF0,0X10,0X10,0X10,0X10,0XF0,0X10,0X10,0X10,0X10,0X10,0XF0,0X10,0X00,0X00,
+  79          0X00,0XFF,0X00,0X00,0X7E,0X42,0X42,0X62,0X52,0X5A,0X52,0X42,0X42,0X4E,0X44,0X00,
+  80          0X00,0XFE,0X00,0X00,0XFC,0X84,0XC4,0XA4,0XB4,0XA4,0X84,0X84,0X84,0XBC,0X88,0X00,
+  81          0X10,0X10,0X20,0X7C,0X45,0X45,0X46,0X7C,0X44,0X44,0X44,0X44,0X7C,0X44,0X40,0X00,
+  82          0X80,0X80,0X80,0XFC,0X04,0X04,0X04,0X84,0X44,0X64,0X24,0X04,0X04,0X28,0X10,0X00,
+  83          0X00,0X00,0X00,0X00,0X10,0X10,0X10,0X10,0X10,0X10,0X10,0X10,0X10,0X00,0X10,0X00,
+  84          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+  85          0X00,0X00,0X00,0X00,0X10,0X10,0X10,0X10,0X10,0X10,0X10,0X10,0X10,0X00,0X10,0X00,
+  86          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00
+  87          };
+  88          */
+  89          unsigned char buffer[8]={0,0,0,0,0,0,0,0};
+  90          void delay(unsigned char j)
+  91          {
+  92   1              unsigned char i;
+  93   1              for(i=123;i;i--)
+  94   1              for(;j;j--);
+  95   1      }
+  96          void shortdelay(void)
+  97          {
+  98   1              unsigned char i;
+  99   1              for(i=200;i;i--);
+ 100   1      }
+ 101          void buzzer(unsigned char i)
+ 102          {
+ 103   1              buz=0;
+ 104   1              delay(i);
+ 105   1              buz=1;
+ 106   1              shortdelay();
+ 107   1      }
+ 108          void show(unsigned char *buf)
+ 109          {
+ 110   1              unsigned char i;
+ 111   1              CADDR=0x80;
+ 112   1              PORTC=0xff;
+ 113   1              PORTB=0xfe;
+ 114   1              PORTA=0x00;
+ 115   1              for(i=0;i<8;i++)
+ 116   1              {
+ 117   2                      PORTA=table[buf[i]];
+C51 COMPILER V8.02   TEXT1                                                                 07/07/2009 18:45:59 PAGE 3   
+
+ 118   2                      delay(3);
+ 119   2                      PORTB<<=1;
+ 120   2                      PORTB+=1;
+ 121   2      //              PORTC<<=1;
+ 122   2              }
+ 123   1      }
+ 124          void init(void)
+ 125          {
+ 126   1              SFCF|=0x03;
+ 127   1      }
+ 128          
+ 129          void main(void)
+ 130          {
+ 131   1              unsigned short int destAddr=0xee00;
+ 132   1              unsigned char byteCnt;
+ 133   1              unsigned int origData=0;
+ 134   1              unsigned char verifyData;
+ 135   1              unsigned char count;
+ 136   1      //      init();
+ 137   1      
+ 138   1      /*      for(count=0;count<4;count++)
+ 139   1              {
+ 140   1                      sector_erase(destAddr+128*count);
+ 141   1                      for(byteCnt=0;byteCnt<SECT_SIZE;byteCnt++)
+ 142   1                      {
+ 143   1                              byte_program(destAddr+128*count,wuxie[origData]);
+ 144   1                              verifyData=byte_verify(destAddr);
+ 145   1                              if(verifyData!=origData)
+ 146   1                              {
+ 147   1                                      error();
+ 148   1                              }
+ 149   1                              destAddr++;
+ 150   1                              origData++;
+ 151   1                      }
+ 152   1              }
+ 153   1              ErrorCode=0;
+ 154   1      */      
+ 155   1              while(1)
+ 156   1              {
+ 157   2      //              buffer[0]=readcode(0xee00);
+ 158   2      //              buffer[1]=readcode(0xee01);
+ 159   2      //              buffer[2]=readcode(0xee02);
+ 160   2      //              buffer[3]=readcode(0xee03);
+ 161   2                      show(buffer);
+ 162   2              }
+ 163   1      }
+*** WARNING C280 IN LINE 132 OF TEXT1.C: 'byteCnt': unreferenced local variable
+*** WARNING C280 IN LINE 134 OF TEXT1.C: 'verifyData': unreferenced local variable
+*** WARNING C280 IN LINE 135 OF TEXT1.C: 'count': unreferenced local variable
+ 164          void sector_erase(unsigned short int dataAddr)
+ 165          {
+ 166   1              unsigned short int destAddr=dataAddr;
+ 167   1              SFCF|=0x40;
+ 168   1              SFAH=destAddr>>8;
+ 169   1              SFAL=destAddr;
+ 170   1              SFCM=SFCM_SE;
+ 171   1              if(!ready())
+ 172   1                      error();
+ 173   1      }
+ 174          
+ 175          void byte_program(unsigned short int dataAddr,unsigned char dataByte)
+ 176          {
+C51 COMPILER V8.02   TEXT1                                                                 07/07/2009 18:45:59 PAGE 4   
+
+ 177   1              unsigned short int destAddr=dataAddr;
+ 178   1              SFCF|=0x40;
+ 179   1              SFAH=destAddr>>8;
+ 180   1              SFAL=destAddr;
+ 181   1              SFDT=dataByte;
+ 182   1              SFCM=SFCM_PB;
+ 183   1              if(!ready())
+ 184   1                      error();
+ 185   1      }
+ 186          
+ 187          unsigned char byte_verify(unsigned int dataAddr)
+ 188          {
+ 189   1              unsigned short int destAddr=dataAddr;
+ 190   1              unsigned char readByte;
+ 191   1              SFCF|=0x40;
+ 192   1              SFAH=destAddr>>8;
+ 193   1              SFAL=destAddr;
+ 194   1              SFCM=SFCM_VB;
+ 195   1              readByte=SFDT;
+ 196   1              
+ 197   1              SFCF&=0xbf;
+ 198   1              SFDT=0;
+ 199   1              return readByte;
+ 200   1      }
+ 201          
+ 202          int ready()
+ 203          {
+ 204   1              unsigned long int TimeOut=0;
+ 205   1              
+ 206   1              while(TimeOut<100000)
+ 207   1              {
+ 208   2                      if((SFST&4)==0)
+ 209   2                      {
+ 210   3                              SFCF&=0xbf;
+ 211   3                              SFDT=0;
+ 212   3                              return 1;
+ 213   3                      }
+ 214   2                      TimeOut++;
+ 215   2              }
+ 216   1              SFCF&=0xbf;
+ 217   1              SFDT=0;
+ 218   1              return 0;
+ 219   1      }
+ 220          
+ 221          void error()
+ 222          {
+ 223   1              ErrorCode=1;
+ 224   1              buffer[0]=1;
+ 225   1              while(1)
+ 226   1              {
+ 227   2                      show(buffer);
+ 228   2              }
+ 229   1      }
+ 230          unsigned char readcode(unsigned int addr)
+ 231          {
+ 232   1              unsigned char code * pcode;
+ 233   1              pcode=(unsigned char code *)addr;
+ 234   1              return *pcode;
+ 235   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+C51 COMPILER V8.02   TEXT1                                                                 07/07/2009 18:45:59 PAGE 5   
+
+   CODE SIZE        =    342    ----
+   CONSTANT SIZE    =     17    ----
+   XDATA SIZE       =     13      14
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

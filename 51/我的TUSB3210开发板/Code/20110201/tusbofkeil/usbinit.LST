@@ -1,0 +1,265 @@
+C51 COMPILER V8.02   USBINIT                                                               02/01/2011 10:20:43 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE USBINIT
+OBJECT MODULE PLACED IN usbinit.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE usbinit.c BROWSE DEFINE(WORK_AROUND_192) DEBUG OBJECTEXTEND CODE
+
+line level    source
+
+   1          #include "reg52modified.h"
+   2          #include "types.h"
+   3          #include "tusb2136.h"
+   4          #include "usb.h"
+   5          
+   6          extern bit deviceReady;
+   7          extern WORD wBytesRemainingOnIEP0;
+   8          extern PBYTE pbIEP0Buffer;
+   9          extern BYTE bConfigurationNumber;
+  10          extern BYTE bInterfaceNumber;
+  11          extern WORD wBytesRemainingOnOEP0;
+  12          extern PBYTE pbOEP0Buffer;
+  13          extern BYTE bStatusAction;
+  14          extern BYTE code abromReportDescriptor[SIZEOF_REPORT_DESCRIPTOR];
+  15          extern BYTE code abromConfigurationDescriptorGroup[SIZEOF_BOOTCODE_CONFIG_DESC_GROUP];
+  16          extern BYTE code abromDeviceDescriptor[SIZEOF_DEVICE_DESCRIPTOR];
+  17          extern BYTE previous_crc8;
+  18          
+  19          
+  20          extern xdata tEDB0 tEndPoint0DescriptorBlock;
+  21          extern xdata tEDB tInputEndPointDescriptorBlock[3];
+  22          extern xdata tEDB tOutputEndPointDescriptorBlock[3];
+  23          
+  24          void UsbReset(void);
+  25          void InitializeUsbData(void);
+  26          void InitializeUsbFunction(void);
+  27          
+  28          
+  29          /***************************************************************************
+  30           * Function:   UsbReset                                                    *
+  31           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+  32           * Description: This initializes or resets the USB function.               *
+  33           ***************************************************************************/
+  34          
+  35          void UsbReset(void)
+  36          {
+  37   1          InitializeUsbData(); 
+  38   1      
+  39   1          wBytesRemainingOnIEP0   = NO_MORE_DATA;
+  40   1          wBytesRemainingOnOEP0   = NO_MORE_DATA;
+  41   1          bStatusAction           = STATUS_ACTION_NOTHING;
+  42   1      
+  43   1          pbIEP0Buffer            = (PBYTE)0x0000;
+  44   1          pbOEP0Buffer            = (PBYTE)0x0000;
+  45   1          bConfigurationNumber    = 0x00;         // device unconfigured
+  46   1          bInterfaceNumber        = 0x00; 
+  47   1      
+  48   1          // enable endpoint 0 interrupt
+  49   1          tEndPoint0DescriptorBlock.bIEPCNFG = EPCNF_USBIE | EPCNF_UBME;
+  50   1          tEndPoint0DescriptorBlock.bOEPCNFG = EPCNF_USBIE | EPCNF_UBME;
+  51   1          // NAK both endpoints
+  52   1          tEndPoint0DescriptorBlock.bIEPBCNT  = EPBCNT_NAK;
+  53   1          tEndPoint0DescriptorBlock.bOEPBCNT  = EPBCNT_NAK;
+  54   1      
+  55   1      
+C51 COMPILER V8.02   USBINIT                                                               02/01/2011 10:20:43 PAGE 2   
+
+  56   1          // enable input endpoint 1 interrupt
+  57   1          tInputEndPointDescriptorBlock[0].bEPCNF   = EPCNF_USBIE | EPCNF_UBME ;
+  58   1          tInputEndPointDescriptorBlock[0].bEPBBAX  = (BYTE)(IEP1_X_BUFFER_ADDRESS >> 3 & 0x00ff);
+  59   1          tInputEndPointDescriptorBlock[0].bEPBCTX  = EPBCT_NAK;
+  60   1          tInputEndPointDescriptorBlock[0].bEPSIZXY = EP_MAX_PACKET_SIZE;
+  61   1          
+  62   1          
+  63   1          //enable output endpoint 1 interrupt
+  64   1          tOutputEndPointDescriptorBlock[0].bEPCNF   = EPCNF_USBIE | EPCNF_UBME ;
+  65   1          tOutputEndPointDescriptorBlock[0].bEPBBAX  = (BYTE)(OEP1_X_BUFFER_ADDRESS >> 3 & 0x00ff);
+  66   1          tOutputEndPointDescriptorBlock[0].bEPBCTX  = 0x00;
+  67   1          tOutputEndPointDescriptorBlock[0].bEPSIZXY = EP_MAX_PACKET_SIZE;
+  68   1      
+  69   1          // Enable the USB-specific Interrupts; SETUP, RESET and STPOW
+  70   1          bUSBMSK = USBMSK_STPOW | USBMSK_SETUP | USBMSK_RSTR | USBMSK_RESR | USBMSK_SUSR;
+  71   1      }
+  72          
+  73          /***************************************************************************
+  74           * Function:   InitializeUsbFunction                                       *
+  75           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+  76           * Description: Initializes the interrupts necessary to perform the user   *
+  77           *     function, then initializes the function with UsbReset().            * 
+  78           ***************************************************************************/
+  79          
+  80          void InitializeUsbFunction(void)
+  81          {
+  82   1              IT0 = 0; // Edge-triggered
+  83   1              EX0 = ENABLE; // Enable external 0 interrupt (USB interrupt source)
+  84   1              EA = ENABLE; // Enable global interrupts
+  85   1      
+  86   1              UsbReset(); // Reset the USB Function
+  87   1              
+  88   1              bUSBCTL |= USBCTL_CONT; // added by Jim 2001/01/15
+  89   1      
+  90   1      }
+  91          
+  92          /***************************************************************************
+  93           * Function:   InitializeUsbData                                           *
+  94           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+  95           * Description: Initializes the USB-related data structures, copying       *
+  96           *    descriptors, etc. from code memory to their correct address in XRAM. *
+  97           ***************************************************************************/
+  98          
+  99          void InitializeUsbData(void)
+ 100          {
+ 101   1              deviceReady = FALSE; // Device is not currently ready
+ 102   1      
+ 103   1          bMCNFG = (MCNFG_48MHZ | MCNFG_OVCE | MCNFG_XINT); // Set to 48Mhz
+ 104   1          // Set power wait time for the hub
+ 105   1          bHUBPOTG = HUBPOTG_100MS;               // 100 ms from power-on to power-good
+ 106   1      
+ 107   1          // Set power rating for the hub
+ 108   1          bHUBCURT = HUBCURT_100MA;               // 100 ms from power-on to power-good
+ 109   1      }
+C51 COMPILER V8.02   USBINIT                                                               02/01/2011 10:20:43 PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION UsbReset (BEGIN)
+                                           ; SOURCE LINE # 35
+                                           ; SOURCE LINE # 36
+                                           ; SOURCE LINE # 37
+0000 120000      R     LCALL   InitializeUsbData
+                                           ; SOURCE LINE # 39
+0003 74FF              MOV     A,#0FFH
+0005 F500        E     MOV     wBytesRemainingOnIEP0,A
+0007 F500        E     MOV     wBytesRemainingOnIEP0+01H,A
+                                           ; SOURCE LINE # 40
+0009 F500        E     MOV     wBytesRemainingOnOEP0,A
+000B F500        E     MOV     wBytesRemainingOnOEP0+01H,A
+                                           ; SOURCE LINE # 41
+000D E4                CLR     A
+000E F500        E     MOV     bStatusAction,A
+                                           ; SOURCE LINE # 43
+0010 F500        E     MOV     pbIEP0Buffer,A
+0012 F500        E     MOV     pbIEP0Buffer+01H,A
+0014 F500        E     MOV     pbIEP0Buffer+02H,A
+                                           ; SOURCE LINE # 44
+0016 F500        E     MOV     pbOEP0Buffer,A
+0018 F500        E     MOV     pbOEP0Buffer+01H,A
+001A F500        E     MOV     pbOEP0Buffer+02H,A
+                                           ; SOURCE LINE # 45
+001C F500        E     MOV     bConfigurationNumber,A
+                                           ; SOURCE LINE # 46
+001E F500        E     MOV     bInterfaceNumber,A
+                                           ; SOURCE LINE # 49
+0020 900000      E     MOV     DPTR,#tEndPoint0DescriptorBlock
+0023 7484              MOV     A,#084H
+0025 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 50
+0026 900000      E     MOV     DPTR,#tEndPoint0DescriptorBlock+02H
+0029 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 52
+002A 900000      E     MOV     DPTR,#tEndPoint0DescriptorBlock+01H
+002D 7480              MOV     A,#080H
+002F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 53
+0030 900000      E     MOV     DPTR,#tEndPoint0DescriptorBlock+03H
+0033 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 57
+0034 900000      E     MOV     DPTR,#tInputEndPointDescriptorBlock
+0037 7484              MOV     A,#084H
+0039 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 58
+003A A3                INC     DPTR
+003B 74C0              MOV     A,#0C0H
+003D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 59
+003E A3                INC     DPTR
+003F 7480              MOV     A,#080H
+0041 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 60
+0042 900000      E     MOV     DPTR,#tInputEndPointDescriptorBlock+07H
+0045 7440              MOV     A,#040H
+0047 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 64
+0048 900000      E     MOV     DPTR,#tOutputEndPointDescriptorBlock
+C51 COMPILER V8.02   USBINIT                                                               02/01/2011 10:20:43 PAGE 4   
+
+004B 7484              MOV     A,#084H
+004D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 65
+004E A3                INC     DPTR
+004F 74B0              MOV     A,#0B0H
+0051 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 66
+0052 E4                CLR     A
+0053 A3                INC     DPTR
+0054 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 67
+0055 900000      E     MOV     DPTR,#tOutputEndPointDescriptorBlock+07H
+0058 7440              MOV     A,#040H
+005A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 70
+005B 90FFFD            MOV     DPTR,#0FFFDH
+005E 74E5              MOV     A,#0E5H
+0060 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 71
+0061 22                RET     
+             ; FUNCTION UsbReset (END)
+
+             ; FUNCTION InitializeUsbFunction (BEGIN)
+                                           ; SOURCE LINE # 80
+                                           ; SOURCE LINE # 81
+                                           ; SOURCE LINE # 82
+0000 C288              CLR     IT0
+                                           ; SOURCE LINE # 83
+0002 D2A8              SETB    EX0
+                                           ; SOURCE LINE # 84
+0004 D2AF              SETB    EA
+                                           ; SOURCE LINE # 86
+0006 120000      R     LCALL   UsbReset
+                                           ; SOURCE LINE # 88
+0009 90FFFC            MOV     DPTR,#0FFFCH
+000C E0                MOVX    A,@DPTR
+000D 4480              ORL     A,#080H
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 90
+0010 22                RET     
+             ; FUNCTION InitializeUsbFunction (END)
+
+             ; FUNCTION InitializeUsbData (BEGIN)
+                                           ; SOURCE LINE # 99
+                                           ; SOURCE LINE # 100
+                                           ; SOURCE LINE # 101
+0000 C200        E     CLR     deviceReady
+                                           ; SOURCE LINE # 103
+0002 90FF90            MOV     DPTR,#0FF90H
+0005 74E0              MOV     A,#0E0H
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 105
+0008 90FFF5            MOV     DPTR,#0FFF5H
+000B 7432              MOV     A,#032H
+000D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 108
+000E 90FFF4            MOV     DPTR,#0FFF4H
+0011 7464              MOV     A,#064H
+0013 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 109
+0014 22                RET     
+             ; FUNCTION InitializeUsbData (END)
+C51 COMPILER V8.02   USBINIT                                                               02/01/2011 10:20:43 PAGE 5   
+
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    136    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

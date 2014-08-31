@@ -1,0 +1,4 @@
+"third.obj" 
+TO "main" 
+CODE( 0X0000-0X0FFF )
+XDATA( 0X9000-0X913F )

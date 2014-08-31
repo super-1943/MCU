@@ -1,0 +1,45 @@
+C51 COMPILER V7.00  TEXT1                                                                  07/25/2008 17:06:48 PAGE 1   
+
+
+C51 COMPILER V7.00, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Elecs\Keilc\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <at89x51.h>
+   2          void delay()
+   3          {
+   4   1              unsigned char i,j;
+   5   1              for(i=0;i<200;i++)for(j=0;j<50;j++);
+   6   1      }
+   7          void int0(void) interrupt 0 using 1
+   8          {
+   9   1              P1=(P1+1)%10;
+  10   1              delay();
+  11   1              
+  12   1      
+  13   1              
+  14   1      }
+  15          void main(void)
+  16          {
+  17   1              EA=1;
+  18   1              EX0=1;
+  19   1              IT0=1;
+  20   1              P1=0x00;
+  21   1              while(1);
+  22   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     53    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

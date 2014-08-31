@@ -1,0 +1,1913 @@
+; .\Text1.SRC generated from: Text1.c
+; COMPILER INVOKED BY:
+;        C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND SRC(.\Text1.SRC)
+
+$NOMOD51
+
+NAME	TEXT1
+
+P0	DATA	080H
+P1	DATA	090H
+P2	DATA	0A0H
+P3	DATA	0B0H
+T0	BIT	0B0H.4
+AC	BIT	0D0H.6
+T1	BIT	0B0H.5
+T2	BIT	090H.0
+EA	BIT	0A8H.7
+IE	DATA	0A8H
+EXF2	BIT	0C8H.6
+RD	BIT	0B0H.7
+ES	BIT	0A8H.4
+IP	DATA	0B8H
+RI	BIT	098H.0
+INT0	BIT	0B0H.2
+CY	BIT	0D0H.7
+TI	BIT	098H.1
+INT1	BIT	0B0H.3
+RCAP2H	DATA	0CBH
+PS	BIT	0B8H.4
+SP	DATA	081H
+T2EX	BIT	090H.1
+OV	BIT	0D0H.2
+RCAP2L	DATA	0CAH
+C_T2	BIT	0C8H.1
+WR	BIT	0B0H.6
+RCLK	BIT	0C8H.5
+TCLK	BIT	0C8H.4
+SBUF	DATA	099H
+PCON	DATA	087H
+SCON	DATA	098H
+TMOD	DATA	089H
+TCON	DATA	088H
+led	BIT	090H.1
+IE0	BIT	088H.1
+IE1	BIT	088H.3
+B	DATA	0F0H
+CP_RL2	BIT	0C8H.0
+ACC	DATA	0E0H
+ET0	BIT	0A8H.1
+ET1	BIT	0A8H.3
+TF0	BIT	088H.5
+ET2	BIT	0A8H.5
+TF1	BIT	088H.7
+TF2	BIT	0C8H.7
+RB8	BIT	098H.2
+TH0	DATA	08CH
+EX0	BIT	0A8H.0
+IT0	BIT	088H.0
+TH1	DATA	08DH
+TB8	BIT	098H.3
+EX1	BIT	0A8H.2
+IT1	BIT	088H.2
+TH2	DATA	0CDH
+P	BIT	0D0H.0
+SM0	BIT	098H.7
+TL0	DATA	08AH
+SM1	BIT	098H.6
+TL1	DATA	08BH
+SM2	BIT	098H.5
+TL2	DATA	0CCH
+PT0	BIT	0B8H.1
+PT1	BIT	0B8H.3
+RS0	BIT	0D0H.3
+PT2	BIT	0B8H.5
+TR0	BIT	088H.4
+RS1	BIT	0D0H.4
+TR1	BIT	088H.6
+TR2	BIT	0C8H.2
+PX0	BIT	0B8H.0
+PX1	BIT	0B8H.2
+DPH	DATA	083H
+DPL	DATA	082H
+EXEN2	BIT	0C8H.3
+REN	BIT	098H.4
+T2CON	DATA	0C8H
+RXD	BIT	0B0H.0
+TXD	BIT	0B0H.1
+F0	BIT	0D0H.5
+PSW	DATA	0D0H
+?PR?rs232_init?TEXT1 SEGMENT CODE 
+?PR?rs232_getchar?TEXT1                  SEGMENT CODE 
+?PR?_rs232_putchar?TEXT1                 SEGMENT CODE 
+?PR?_rs232_printstr?TEXT1                SEGMENT CODE 
+?DT?_rs232_printstr?TEXT1                SEGMENT DATA OVERLAYABLE 
+?PR?_rs232_printhex?TEXT1                SEGMENT CODE 
+?PR?USB_reset?TEXT1  SEGMENT CODE 
+?PR?EP0_senddata?TEXT1                   SEGMENT CODE 
+?PR?setup_handler?TEXT1                  SEGMENT CODE 
+?PR?_delay?TEXT1     SEGMENT CODE 
+?PR?serial_routine?TEXT1                 SEGMENT CODE 
+?PR?fun?TEXT1        SEGMENT CODE 
+?PR?hardware_init?TEXT1                  SEGMENT CODE 
+?PR?main?TEXT1       SEGMENT CODE 
+?DT?main?TEXT1       SEGMENT DATA OVERLAYABLE 
+?CO?TEXT1            SEGMENT CODE 
+?C_INITSEG           SEGMENT CODE 
+?DT?TEXT1            SEGMENT DATA 
+	EXTRN	CODE (?C?CLDPTR)
+	EXTRN	CODE (?C?CCASE)
+	EXTRN	CODE (?C_STARTUP)
+	PUBLIC	NeedZeroPacket
+	PUBLIC	pSendData
+	PUBLIC	SendLength
+	PUBLIC	debugbuffer
+	PUBLIC	DeviceDescriptor
+	PUBLIC	main
+	PUBLIC	hardware_init
+	PUBLIC	fun
+	PUBLIC	serial_routine
+	PUBLIC	_delay
+	PUBLIC	setup_handler
+	PUBLIC	EP0_senddata
+	PUBLIC	USB_reset
+	PUBLIC	_rs232_printhex
+	PUBLIC	_rs232_printstr
+	PUBLIC	_rs232_putchar
+	PUBLIC	rs232_getchar
+	PUBLIC	rs232_init
+
+	RSEG  ?DT?main?TEXT1
+?main?BYTE:
+         p?1249:   DS   2
+	ORG  2
+         i?1250:   DS   1
+
+	RSEG  ?DT?_rs232_printstr?TEXT1
+?_rs232_printstr?BYTE:
+        str?342:   DS   3
+
+	RSEG  ?DT?TEXT1
+    debugbuffer:   DS   10
+     SendLength:   DS   1
+      pSendData:   DS   3
+ NeedZeroPacket:   DS   1
+
+	RSEG  ?CO?TEXT1
+?SC_0:
+	DB  '0' ,'x' ,000H
+
+?SC_3:
+	DB  ' ' ,000H
+
+?SC_5:
+	DB  'r' ,'e' ,'p' ,'l' ,'y' ,'8' ,00DH,00AH,000H
+
+?SC_14:
+	DB  'r' ,'e' ,'p' ,'l' ,'y' ,000H
+
+?SC_20:
+	DB  00DH,00AH,000H
+
+?SC_23:
+	DB  'r' ,'e' ,'p' ,'l' ,'y' ,'0' ,00DH,00AH,000H
+
+?SC_32:
+	DB  'U' ,'S' ,'B' ,0B1H,0EAH,0D7H,0BCH,0CAH,0E4H,0C8H
+	DB  0EBH,0C7H,0EBH,0C7H,0F3H,',' ,000H
+
+?SC_49:
+	DB  0BBH,0F1H,0C8H,0A1H,0C5H,0E4H,0D6H,0C3H,00DH,00AH
+	DB  000H
+
+?SC_60:
+	DB  0BBH,0F1H,0C8H,0A1H,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH
+	DB  '-' ,'-' ,'-' ,'-' ,000H
+
+?SC_75:
+	DB  0C9H,0E8H,0B1H,0B8H,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH
+	DB  00DH,00AH,000H
+
+?SC_88:
+	DB  0C5H,0E4H,0D6H,0C3H,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH
+	DB  00DH,00AH,000H
+
+?SC_101:
+	DB  0D7H,0D6H,0B7H,0FBH,0B4H,0AEH,0C3H,0E8H,0CAH,0F6H
+	DB  0B7H,0FBH,00DH,00AH,000H
+
+?SC_116:
+	DB  0D3H,0EFH,0D1H,0D4H,'I' ,'D' ,00DH,00AH,000H
+
+?SC_125:
+	DB  0B3H,0A7H,0C9H,0CCH,0C3H,0E8H,0CAH,0F6H,00DH,00AH
+	DB  000H
+
+?SC_136:
+	DB  0B2H,0FAH,0C6H,0B7H,0C3H,0E8H,0CAH,0F6H,00DH,00AH
+	DB  000H
+
+?SC_147:
+	DB  0B2H,0FAH,0C6H,0B7H,0D0H,0F2H,0C1H,0D0H,0BAH,0C5H
+	DB  00DH,00AH,000H
+
+?SC_160:
+	DB  0CEH,0B4H,0D6H,0AAH,0B5H,0C4H,0CBH,0F7H,0D2H,0D6H
+	DB  0B5H,00DH,00AH,000H
+
+?SC_174:
+	DB  0B1H,0A8H,0B8H,0E6H,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH
+	DB  00DH,00AH,000H
+
+?SC_187:
+	DB  0C6H,0E4H,0CBH,0FBH,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH
+	DB  0A3H,0ACH,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH,0B4H,0FAH
+	DB  0C2H,0EBH,0A3H,0BAH,000H
+
+?SC_212:
+	DB  0B4H,0EDH,0CEH,0F3H,0A3H,0BAH,0CEH,0B4H,0B6H,0A8H
+	DB  0D2H,0E5H,0B5H,0C4H,0B1H,0EAH,0D7H,0BCH,0CAH,0E4H
+	DB  0C8H,0EBH,0C7H,0EBH,0C7H,0F3H,0A1H,0A3H,00DH,00AH
+	DB  000H
+
+?SC_243:
+	DB  0B4H,0EDH,0CEH,0F3H,0A3H,0BAH,0CEH,0B4H,0B6H,0A8H
+	DB  0D2H,0E5H,0B5H,0C4H,0CAH,0E4H,0C8H,0EBH,0C7H,0EBH
+	DB  0C7H,0F3H,00DH,00AH,000H
+
+?SC_268:
+	DB  'U' ,'S' ,'B' ,0B1H,0EAH,0D7H,0BCH,0CAH,0E4H,0B3H
+	DB  0F6H,0C7H,0EBH,0C7H,0F3H,0A3H,0BAH,000H
+
+?SC_286:
+	DB  0C7H,0E5H,0B3H,0CCH,0D8H,0D0H,0D4H,00DH,00AH,000H
+
+?SC_296:
+	DB  0C9H,0E8H,0D6H,0C3H,0B5H,0D8H,0D6H,0B7H,'.' ,0B5H
+	DB  0D8H,0D6H,0B7H,0CEH,0AAH,0A3H,0BAH,000H
+
+?SC_314:
+	DB  0C9H,0E8H,0D6H,0C3H,0C5H,0E4H,0D6H,0C3H,00DH,00AH
+	DB  000H
+
+?SC_325:
+	DB  0B4H,0EDH,0CEH,0F3H,0A3H,0BAH,0CEH,0B4H,0B6H,0A8H
+	DB  0D2H,0E5H,0B5H,0C4H,0B1H,0EAH,0D7H,0BCH,0CAH,0E4H
+	DB  0B3H,0F6H,0C7H,0EBH,0C7H,0F3H,00DH,00AH,000H
+
+?SC_354:
+	DB  'U' ,'S' ,'B' ,0C0H,0E0H,0CAH,0E4H,0B3H,0F6H,0C7H
+	DB  0EBH,0C7H,0F3H,0A3H,0BAH,00DH,00AH,000H
+
+?SC_372:
+	DB  0C9H,0E8H,0D6H,0C3H,0BFH,0D5H,0CFH,0D0H,00DH,00AH
+	DB  000H
+
+?SC_383:
+	DB  0CEH,0B4H,0D6H,0AAH,0C7H,0EBH,0C7H,0F3H,00DH,00AH
+	DB  000H
+
+?SC_394:
+	DB  0B4H,0EDH,0CEH,0F3H,0A3H,0BAH,0CEH,0B4H,0B6H,0A8H
+	DB  0D2H,0E5H,0B5H,0C4H,0CAH,0E4H,0B3H,0F6H,0C7H,0EBH
+	DB  0C7H,0F3H,00DH,00AH,000H
+
+?SC_419:
+	DB  ' ' ,'E' ,'P' ,'0' ,' ' ,'O' ,'u' ,'t' ,'!' ,00DH
+	DB  00AH,000H
+
+?SC_431:
+	DB  'E' ,'P' ,'0' ,' ' ,'I' ,'n' ,'!' ,00DH,00AH,000H
+
+?SC_441:
+	DB  ' ' ,'E' ,'P' ,'1' ,' ' ,'I' ,'n' ,'!' ,00DH,00AH
+	DB  000H
+
+?SC_452:
+	DB  'U' ,'S' ,'B' ,' ' ,'s' ,'e' ,'t' ,'u' ,'p' ,' ' 
+	DB  'o' ,'v' ,'e' ,'r' ,'f' ,'l' ,'o' ,'w' ,'!' ,00DH
+	DB  00AH,000H
+
+?SC_474:
+	DB  'U' ,'S' ,'B' ,' ' ,'s' ,'e' ,'t' ,'u' ,'p' ,'!' 
+	DB  00DH,00AH,000H
+
+?SC_487:
+	DB  'U' ,'S' ,'B' ,' ' ,'r' ,'e' ,'s' ,'e' ,'t' ,'!' 
+	DB  00DH,00AH,000H
+
+?SC_500:
+	DB  'U' ,'S' ,'B' ,' ' ,'r' ,'e' ,'s' ,'u' ,'m' ,'e' 
+	DB  '!' ,00DH,00AH,000H
+
+?SC_514:
+	DB  'U' ,'S' ,'B' ,' ' ,'s' ,'u' ,'s' ,'p' ,'e' ,'n' 
+	DB  'd' ,'!' ,00DH,00AH,000H
+
+?SC_529:
+	DB  ' ' ,'U' ,'n' ,'k' ,'n' ,'o' ,'w' ,'n' ,'!' ,00DH
+	DB  00AH,000H
+
+?SC_541:
+	DB  'H' ,'e' ,'l' ,'l' ,'o' ,' ' ,'w' ,'o' ,'r' ,'l' 
+	DB  'd' ,'!' ,00DH,00AH,000H
+
+?SC_556:
+	DB  'E' ,'P' ,'0' ,'I' ,'N' ,' ' ,'b' ,'u' ,'f' ,'f' 
+	DB  'e' ,'r' ,':' ,000H
+
+?SC_570:
+	DB  'E' ,'P' ,'0' ,'O' ,'U' ,'T' ,' ' ,'b' ,'u' ,'f' 
+	DB  'f' ,'e' ,'r' ,':' ,000H
+
+?SC_585:
+	DB  'S' ,'E' ,'T' ,'U' ,'P' ,' ' ,'b' ,'u' ,'f' ,'f' 
+	DB  'e' ,'r' ,':' ,000H
+
+?SC_599:
+	DB  00DH,00AH,'b' ,'I' ,'E' ,'P' ,'B' ,'C' ,'N' ,'T' 
+	DB  '_' ,'0' ,':' ,000H
+
+?SC_613:
+	DB  00DH,00AH,'b' ,'O' ,'E' ,'P' ,'B' ,'C' ,'N' ,'T' 
+	DB  '_' ,'0' ,':' ,000H
+
+?SC_627:
+	DB  00DH,00AH,'b' ,'I' ,'E' ,'P' ,'C' ,'N' ,'F' ,'G' 
+	DB  '_' ,'0' ,':' ,000H
+
+?SC_641:
+	DB  00DH,00AH,'b' ,'O' ,'E' ,'P' ,'C' ,'N' ,'F' ,'G' 
+	DB  '_' ,'0' ,':' ,000H
+
+?SC_655:
+	DB  00DH,00AH,'b' ,'F' ,'U' ,'N' ,'A' ,'D' ,'R' ,':' 
+	DB  000H
+
+?SC_666:
+	DB  00DH,00AH,'b' ,'W' ,'D' ,'C' ,'S' ,'R' ,':' ,000H
+
+DeviceDescriptor:
+	DB	012H
+	DB	001H
+	DB	010H
+	DB	001H
+	DB	000H
+	DB	000H
+	DB	000H
+	DB	008H
+	DB	088H
+	DB	088H
+	DB	002H
+	DB	000H
+	DB	000H
+	DB	001H
+	DB	001H
+	DB	002H
+	DB	003H
+	DB	001H
+
+
+	RSEG  ?C_INITSEG
+	DB	00AH
+	DB	debugbuffer
+	DB	000H
+	DB  000H,000H,000H,000H,000H,000H,000H,000H,000H
+
+
+; #include <reg52.h>
+; #include "tusb3210.h"
+; #include "serial.h"
+; 
+; sbit led=P1^1;
+; 
+; uint8 *pSendData;
+; uint8 SendLength;
+; uint8 NeedZeroPacket;
+; uint8 debugbuffer[10]={0};
+
+	RSEG  ?PR?rs232_init?TEXT1
+rs232_init:
+			; SOURCE LINE # 10
+; #include "usb.h"
+			; SOURCE LINE # 11
+; 
+			; SOURCE LINE # 12
+	ANL  	TMOD,#0FH
+; void delay(unsigned int k)
+			; SOURCE LINE # 13
+	ORL  	TMOD,#020H
+; {
+			; SOURCE LINE # 14
+	MOV  	TH1,#0F3H
+; 	unsigned char i,j;
+			; SOURCE LINE # 15
+	MOV  	TL1,#0F3H
+; 	for(;k;k--)
+			; SOURCE LINE # 16
+	ORL  	PCON,#080H
+; 	for(i=200;i;i--)
+			; SOURCE LINE # 17
+	MOV  	SCON,#050H
+; 	for(j=200;j;j--);
+			; SOURCE LINE # 18
+	SETB 	TR1
+; }
+			; SOURCE LINE # 19
+	SETB 	EA
+; 
+			; SOURCE LINE # 20
+	RET  	
+; END OF rs232_init
+
+; void serial_routine(void) interrupt 4 using 2
+
+	RSEG  ?PR?rs232_getchar?TEXT1
+rs232_getchar:
+	USING	0
+			; SOURCE LINE # 21
+; {
+			; SOURCE LINE # 22
+?C0002:
+; 	if(RI)
+; 	{
+			; SOURCE LINE # 24
+	JNB  	RI,?C0002
+?C0003:
+; 		RI=0;
+			; SOURCE LINE # 25
+	CLR  	RI
+; 	}
+			; SOURCE LINE # 26
+;---- Variable 'b?140' assigned to Register 'R7' ----
+	MOV  	R7,SBUF
+; 	if(TI)
+			; SOURCE LINE # 27
+; 	{
+			; SOURCE LINE # 28
+?C0004:
+	RET  	
+; END OF rs232_getchar
+
+; 		TI=0;
+
+	RSEG  ?PR?_rs232_putchar?TEXT1
+_rs232_putchar:
+			; SOURCE LINE # 29
+;---- Variable 'txd?241' assigned to Register 'R7' ----
+; 	}	
+			; SOURCE LINE # 30
+; }
+			; SOURCE LINE # 31
+	MOV  	SBUF,R7
+?C0005:
+; 
+			; SOURCE LINE # 32
+	JNB  	TI,?C0005
+?C0006:
+; 
+			; SOURCE LINE # 33
+	CLR  	TI
+; 
+			; SOURCE LINE # 34
+	RET  	
+; END OF _rs232_putchar
+
+; 
+
+	RSEG  ?PR?_rs232_printstr?TEXT1
+L?0144:
+	USING	0
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_20)
+	MOV  	R1,#LOW (?SC_20)
+_rs232_printstr:
+	USING	0
+			; SOURCE LINE # 35
+	MOV  	str?342,R3
+	MOV  	str?342+01H,R2
+	MOV  	str?342+02H,R1
+; void fun(void) interrupt 0 using 2
+			; SOURCE LINE # 36
+?C0008:
+; {
+			; SOURCE LINE # 37
+	MOV  	R3,str?342
+	MOV  	R2,str?342+01H
+	MOV  	R1,str?342+02H
+	LCALL	?C?CLDPTR
+	JZ   	?C0012
+; 	EA=0;
+			; SOURCE LINE # 38
+; 	switch(bVECINT)
+			; SOURCE LINE # 39
+	INC  	str?342+02H
+	MOV  	A,str?342+02H
+	JNZ  	?C0112
+	INC  	str?342+01H
+?C0112:
+	DEC  	A
+	MOV  	R1,A
+	LCALL	?C?CLDPTR
+	MOV  	SBUF,A
+?C0010:
+; 	{
+			; SOURCE LINE # 40
+	JNB  	TI,?C0010
+?C0011:
+; 		case VECINT_OUTPUT_ENDPOINT0:
+			; SOURCE LINE # 41
+	CLR  	TI
+; 			bVECINT  = 0x00;
+			; SOURCE LINE # 42
+	SJMP 	?C0008
+; //			OEP0InterruptHandler();
+			; SOURCE LINE # 43
+?C0012:
+	RET  	
+; END OF _rs232_printstr
+
+; 			rs232_printstr(" EP0 Out!\r\n");
+
+	RSEG  ?PR?_rs232_printhex?TEXT1
+L?0142:
+	USING	0
+L?0143:
+	MOV  	A,p?1249+01H
+	ADD  	A,i?1250
+	MOV  	DPL,A
+	CLR  	A
+	ADDC 	A,p?1249
+	MOV  	DPH,A
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+_rs232_printhex:
+	USING	0
+			; SOURCE LINE # 44
+;---- Variable 'b?443' assigned to Register 'R6' ----
+	MOV  	R6,AR7
+; 			bOEPBCNT_0 = 0x00;
+			; SOURCE LINE # 45
+; 			bIEPBCNT_0=0x00;
+; 			break;
+; 
+			; SOURCE LINE # 48
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_0)
+	MOV  	R1,#LOW (?SC_0)
+	LCALL	_rs232_printstr
+;         case VECINT_INPUT_ENDPOINT0:
+; 			bVECINT  = 0x00;
+			; SOURCE LINE # 50
+	MOV  	A,R6
+	ANL  	A,#0F0H
+	SWAP 	A
+	ANL  	A,#0FH
+;---- Variable 'hexvalue?444' assigned to Register 'R5' ----
+	MOV  	R5,A
+; 			rs232_printstr("EP0 In!\r\n");
+			; SOURCE LINE # 51
+	CLR  	C
+	SUBB 	A,#0AH
+	MOV  	A,R5
+	JNC  	?C0013
+; 			EP0_senddata();
+			; SOURCE LINE # 52
+; 			break;
+			; SOURCE LINE # 53
+	ADD  	A,#030H
+; 
+			; SOURCE LINE # 54
+	SJMP 	?C0116
+?C0013:
+; 		case VECINT_INPUT_ENDPOINT1:
+; 		case 0x12:
+			; SOURCE LINE # 56
+; 			bVECINT = 0x00;
+			; SOURCE LINE # 57
+	ADD  	A,#037H
+?C0116:
+	MOV  	R7,A
+	LCALL	_rs232_putchar
+; //			IEP1InterruptHandler();
+			; SOURCE LINE # 58
+?C0014:
+; 			rs232_printstr(" EP1 In!\r\n");
+			; SOURCE LINE # 59
+	MOV  	A,R6
+	ANL  	A,#0FH
+	MOV  	R5,A
+; 			break;
+			; SOURCE LINE # 60
+	CLR  	C
+	SUBB 	A,#0AH
+	MOV  	A,R5
+	JNC  	?C0015
+; 
+			; SOURCE LINE # 61
+;             case VECINT_STPOW_PACKET_RECEIVED:
+			; SOURCE LINE # 62
+	ADD  	A,#030H
+; 			bVECINT  = 0x00;
+			; SOURCE LINE # 63
+	SJMP 	?C0117
+?C0015:
+; 			bUSBSTA = USBSTA_STPOW;
+; 			rs232_printstr("USB setup overflow!\r\n");
+			; SOURCE LINE # 65
+; 			setup_handler();
+			; SOURCE LINE # 66
+	ADD  	A,#037H
+?C0117:
+	MOV  	R7,A
+	LCALL	_rs232_putchar
+; 			break;
+			; SOURCE LINE # 67
+?C0016:
+; 
+;             case VECINT_SETUP_PACKET_RECEIVED:
+			; SOURCE LINE # 69
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_3)
+	MOV  	R1,#LOW (?SC_3)
+	LJMP 	_rs232_printstr
+; END OF _rs232_printhex
+
+
+	RSEG  ?PR?USB_reset?TEXT1
+USB_reset:
+			; SOURCE LINE # 38
+			; SOURCE LINE # 39
+			; SOURCE LINE # 40
+	MOV  	DPTR,#0FF80H
+	MOV  	A,#084H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 41
+	MOV  	DPTR,#0FF82H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 42
+	MOV  	DPTR,#0FF48H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 43
+	MOV  	DPTR,#0FF50H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 44
+	MOV  	DPTR,#0FF58H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 45
+	MOV  	DPTR,#0FF08H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 46
+	MOV  	DPTR,#0FF10H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 47
+	MOV  	DPTR,#0FF18H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 48
+	RET  	
+; END OF USB_reset
+
+
+	RSEG  ?PR?EP0_senddata?TEXT1
+EP0_senddata:
+	USING	0
+			; SOURCE LINE # 49
+;---- Variable 'i?645' assigned to Register 'R4' ----
+			; SOURCE LINE # 50
+			; SOURCE LINE # 52
+	MOV  	DPTR,#DeviceDescriptor+07H
+	CLR  	A
+	MOVC 	A,@A+DPTR
+	MOV  	R7,A
+	MOV  	A,SendLength
+	SETB 	C
+	SUBB 	A,R7
+	JC   	?C0019
+			; SOURCE LINE # 53
+			; SOURCE LINE # 54
+	CLR  	A
+	MOV  	R4,A
+?C0020:
+	MOV  	DPTR,#DeviceDescriptor+07H
+	CLR  	A
+	MOVC 	A,@A+DPTR
+	MOV  	R7,A
+	MOV  	A,R4
+	CLR  	C
+	SUBB 	A,R7
+	JNC  	?C0021
+			; SOURCE LINE # 55
+			; SOURCE LINE # 56
+	MOV  	R3,pSendData
+	INC  	pSendData+02H
+	MOV  	A,pSendData+02H
+	MOV  	R2,pSendData+01H
+	JNZ  	?C0113
+	INC  	pSendData+01H
+?C0113:
+	DEC  	A
+	MOV  	R1,A
+	LCALL	?C?CLDPTR
+	MOV  	R6,A
+	MOV  	A,#0F8H
+	ADD  	A,R4
+	MOV  	DPL,A
+	CLR  	A
+	ADDC 	A,#0FEH
+	MOV  	DPH,A
+	MOV  	A,R6
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 57
+	INC  	R4
+	SJMP 	?C0020
+?C0021:
+			; SOURCE LINE # 58
+	MOV  	DPTR,#0FF81H
+	MOV  	A,#08H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 59
+	CLR  	C
+	MOV  	A,SendLength
+	SUBB 	A,R7
+	MOV  	SendLength,A
+			; SOURCE LINE # 60
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_5)
+	MOV  	R1,#LOW (?SC_5)
+			; SOURCE LINE # 61
+	SJMP 	?C0118
+?C0019:
+			; SOURCE LINE # 63
+			; SOURCE LINE # 64
+	MOV  	A,SendLength
+	JZ   	?C0024
+			; SOURCE LINE # 65
+			; SOURCE LINE # 66
+	CLR  	A
+	MOV  	R4,A
+?C0025:
+	MOV  	A,R4
+	CLR  	C
+	SUBB 	A,SendLength
+	JNC  	?C0026
+			; SOURCE LINE # 67
+			; SOURCE LINE # 68
+	MOV  	R3,pSendData
+	INC  	pSendData+02H
+	MOV  	A,pSendData+02H
+	MOV  	R2,pSendData+01H
+	JNZ  	?C0114
+	INC  	pSendData+01H
+?C0114:
+	DEC  	A
+	MOV  	R1,A
+	LCALL	?C?CLDPTR
+	MOV  	R7,A
+	MOV  	A,#0F8H
+	ADD  	A,R4
+	MOV  	DPL,A
+	CLR  	A
+	ADDC 	A,#0FEH
+	MOV  	DPH,A
+	MOV  	A,R7
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 69
+	INC  	R4
+	SJMP 	?C0025
+?C0026:
+; 			bVECINT  = 0x00;
+			; SOURCE LINE # 70
+	MOV  	DPTR,#0FF81H
+	MOV  	A,SendLength
+	MOVX 	@DPTR,A
+; 			bUSBSTA = USBSTA_SETUP;
+			; SOURCE LINE # 71
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_14)
+	MOV  	R1,#LOW (?SC_14)
+	LCALL	_rs232_printstr
+; 			rs232_printstr("USB setup!\r\n");
+			; SOURCE LINE # 72
+	MOV  	R7,SendLength
+	LCALL	_rs232_printhex
+; 			setup_handler();
+			; SOURCE LINE # 73
+	LCALL	L?0144
+; 			break;
+			; SOURCE LINE # 74
+	CLR  	A
+	MOV  	SendLength,A
+; 
+			; SOURCE LINE # 75
+	RET  	
+?C0024:
+;             case VECINT_RSTR_INTERRUPT:
+; 			bVECINT  = 0x00;
+			; SOURCE LINE # 77
+; 			bUSBSTA = USBSTA_RSTR;
+			; SOURCE LINE # 78
+	MOV  	A,NeedZeroPacket
+	CJNE 	A,#01H,?C0030
+; 			USB_reset();
+			; SOURCE LINE # 79
+; 			rs232_printstr("USB reset!\r\n");
+			; SOURCE LINE # 80
+	MOV  	DPTR,#0FF81H
+	CLR  	A
+	MOVX 	@DPTR,A
+; 			break;
+			; SOURCE LINE # 81
+	MOV  	NeedZeroPacket,A
+; 		
+			; SOURCE LINE # 82
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_23)
+	MOV  	R1,#LOW (?SC_23)
+?C0118:
+	LCALL	_rs232_printstr
+; 		case VECINT_RESR_INTERRUPT:
+			; SOURCE LINE # 83
+; 			bVECINT = 0x00;
+			; SOURCE LINE # 84
+; 			bUSBSTA = USBSTA_RESR;
+			; SOURCE LINE # 85
+; 			rs232_printstr("USB resume!\r\n");
+			; SOURCE LINE # 86
+?C0030:
+	RET  	
+; END OF EP0_senddata
+
+; 			break;
+
+	RSEG  ?PR?setup_handler?TEXT1
+setup_handler:
+	USING	0
+			; SOURCE LINE # 87
+; 		
+			; SOURCE LINE # 88
+; 		case VECINT_SUSR_INTERRUPT:
+			; SOURCE LINE # 89
+	MOV  	DPTR,#0FFFCH
+	MOVX 	A,@DPTR
+	ORL  	A,#02H
+	MOVX 	@DPTR,A
+; 			bVECINT = 0x00;
+; 			bUSBSTA = USBSTA_SUSR;
+; 			rs232_printstr("USB suspend!\r\n");
+; 			break;
+			; SOURCE LINE # 93
+	MOV  	DPTR,#0FF81H
+	MOV  	A,#080H
+	MOVX 	@DPTR,A
+; 
+			; SOURCE LINE # 94
+	MOV  	DPTR,#0FF83H
+	MOVX 	@DPTR,A
+; 		default:
+			; SOURCE LINE # 95
+	MOV  	DPTR,#0FF00H
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	JB   	ACC.7,$ + 6H
+	LJMP 	?C0031
+; 			rs232_printstr(" Unknown!\r\n");
+			; SOURCE LINE # 96
+; 			rs232_printhex(bVECINT);
+			; SOURCE LINE # 97
+	MOV  	DPTR,#0FFFCH
+	MOVX 	A,@DPTR
+	ORL  	A,#01H
+	MOVX 	@DPTR,A
+; 			bVECINT  = 0x00;
+; 			break;
+; 	}
+; 	EA=1;
+			; SOURCE LINE # 101
+	MOV  	A,R7
+	SWAP 	A
+	RRC  	A
+	ANL  	A,#03H
+	JZ   	$ + 5H
+	LJMP 	?C0050
+; }
+			; SOURCE LINE # 102
+; void hardware_init(void)
+			; SOURCE LINE # 103
+?C0033:
+; {
+			; SOURCE LINE # 104
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_32)
+	MOV  	R1,#LOW (?SC_32)
+	LCALL	_rs232_printstr
+; 	bMCNFG=0x01;//SDW=1;XINT=0;
+			; SOURCE LINE # 105
+	MOV  	DPTR,#0FF01H
+	MOVX 	A,@DPTR
+	ADD  	A,#0FAH
+	JZ   	?C0036
+	ADD  	A,#0FEH
+	JZ   	$ + 5H
+	LJMP 	?C0049
+; 	bPUR3=0x00;
+			; SOURCE LINE # 106
+; 	bPUR2=0x00;
+			; SOURCE LINE # 107
+?C0035:
+; 	bPUR1=0x00;
+			; SOURCE LINE # 108
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_49)
+	MOV  	R1,#LOW (?SC_49)
+; 	bPUR0=0x00;//all pull up are connected to pins
+			; SOURCE LINE # 109
+	LJMP 	?C0134
+; 	bUSBCTL = 0x00;
+			; SOURCE LINE # 110
+?C0036:
+; 	bUSBMSK=USBMSK_STPOW|USBMSK_RWUP|USBMSK_SETUP|USBMSK_RESR|USBMSK_SUSR|USBMSK_RSTR;
+			; SOURCE LINE # 111
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_60)
+	MOV  	R1,#LOW (?SC_60)
+	LCALL	_rs232_printstr
+; 	EA=1;
+			; SOURCE LINE # 112
+	MOV  	DPTR,#0FF03H
+	MOVX 	A,@DPTR
+	ADD  	A,#0FEH
+	JZ   	?C0039
+	DEC  	A
+	JZ   	?C0040
+	ADD  	A,#0E1H
+	JZ   	?C0047
+	ADD  	A,#021H
+	JNZ  	?C0048
+; 	EX0=1;
+			; SOURCE LINE # 113
+; 	ES=0;
+			; SOURCE LINE # 114
+?C0038:
+; 	IT0=0;
+			; SOURCE LINE # 115
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_75)
+	MOV  	R1,#LOW (?SC_75)
+	LCALL	_rs232_printstr
+; 	USB_CONNECT;
+; }
+			; SOURCE LINE # 117
+	MOV  	DPTR,#0FF83H
+	CLR  	A
+	MOVX 	@DPTR,A
+; void main(void)
+			; SOURCE LINE # 118
+; {
+			; SOURCE LINE # 119
+; 	char xdata *p;
+			; SOURCE LINE # 120
+; 	unsigned char i;
+			; SOURCE LINE # 121
+	SJMP 	?C0120
+; 	EX0=0;
+			; SOURCE LINE # 122
+?C0039:
+; 	led=0;
+			; SOURCE LINE # 123
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_88)
+	MOV  	R1,#LOW (?SC_88)
+	LCALL	_rs232_printstr
+; 	rs232_init();
+			; SOURCE LINE # 124
+?C0120:
+	MOV  	pSendData,#0FFH
+	MOV  	pSendData+01H,#HIGH (DeviceDescriptor)
+	MOV  	pSendData+02H,#LOW (DeviceDescriptor)
+; 	rs232_printstr("Hello world!\r\n");
+			; SOURCE LINE # 125
+	MOV  	SendLength,#010H
+; 	hardware_init();
+			; SOURCE LINE # 126
+	LCALL	EP0_senddata
+; 	
+			; SOURCE LINE # 127
+	LJMP 	?C0051
+; 	while(1)
+			; SOURCE LINE # 128
+?C0040:
+; 	{
+			; SOURCE LINE # 129
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_101)
+	MOV  	R1,#LOW (?SC_101)
+	LCALL	_rs232_printstr
+; 		if(RI)
+			; SOURCE LINE # 130
+	MOV  	DPTR,#0FF02H
+	MOVX 	A,@DPTR
+	DEC  	A
+	JZ   	?C0043
+	DEC  	A
+	JZ   	?C0044
+	DEC  	A
+	JZ   	?C0045
+	ADD  	A,#03H
+	JNZ  	?C0046
+; 		{
+			; SOURCE LINE # 131
+; 			switch(SBUF)
+			; SOURCE LINE # 132
+?C0042:
+; 			{
+			; SOURCE LINE # 133
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_116)
+	MOV  	R1,#LOW (?SC_116)
+?C0119:
+; 				case '#':
+; 					rs232_printstr("EP0IN buffer:");
+			; SOURCE LINE # 135
+	LJMP 	?C0134
+; 					p=&bIEP0_BUFFER_ADDRESS;
+			; SOURCE LINE # 136
+?C0043:
+; 					for(i=0;i<8;i++)
+			; SOURCE LINE # 137
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_125)
+	MOV  	R1,#LOW (?SC_125)
+?C0121:
+; 					{
+; 						rs232_printhex(p[i]);
+			; SOURCE LINE # 139
+	LJMP 	?C0134
+; 					}
+			; SOURCE LINE # 140
+?C0044:
+; 					rs232_printstr("\r\n");
+			; SOURCE LINE # 141
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_136)
+	MOV  	R1,#LOW (?SC_136)
+?C0122:
+; 					break;
+; 				case '$':
+			; SOURCE LINE # 143
+	LJMP 	?C0134
+; 					rs232_printstr("EP0OUT buffer:");
+			; SOURCE LINE # 144
+?C0045:
+; 					p=&bOEP0_BUFFER_ADDRESS;
+			; SOURCE LINE # 145
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_147)
+	MOV  	R1,#LOW (?SC_147)
+?C0123:
+; 					for(i=0;i<8;i++)
+; 					{
+			; SOURCE LINE # 147
+	LJMP 	?C0134
+; 						rs232_printhex(p[i]);
+			; SOURCE LINE # 148
+?C0046:
+; 					}
+			; SOURCE LINE # 149
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_160)
+	MOV  	R1,#LOW (?SC_160)
+?C0124:
+; 					rs232_printstr("\r\n");	
+; 					break;
+			; SOURCE LINE # 151
+	LJMP 	?C0134
+; 				case 'w':
+			; SOURCE LINE # 152
+; 					rs232_printstr("SETUP buffer:");
+; 					p=&bEP0_SETUP_ADDRESS;
+			; SOURCE LINE # 154
+; 					for(i=0;i<8;i++)
+			; SOURCE LINE # 155
+?C0047:
+; 					{
+			; SOURCE LINE # 156
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_174)
+	MOV  	R1,#LOW (?SC_174)
+?C0125:
+; 						rs232_printhex(p[i]);
+; 					}
+			; SOURCE LINE # 158
+	LJMP 	?C0134
+; 					rs232_printstr("\r\n");	
+			; SOURCE LINE # 159
+?C0048:
+; 					break;
+			; SOURCE LINE # 160
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_187)
+	MOV  	R1,#LOW (?SC_187)
+	LCALL	_rs232_printstr
+; 				case 'q':
+			; SOURCE LINE # 161
+	MOV  	DPTR,#0FF03H
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	LCALL	_rs232_printhex
+; 					rs232_printstr("\r\nbIEPBCNT_0:");
+			; SOURCE LINE # 162
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_20)
+	MOV  	R1,#LOW (?SC_20)
+?C0126:
+; 					rs232_printhex(bIEPBCNT_0);
+			; SOURCE LINE # 163
+	LJMP 	?C0134
+; 					rs232_printstr("\r\nbOEPBCNT_0:");
+			; SOURCE LINE # 164
+; 					rs232_printhex(bOEPBCNT_0);
+			; SOURCE LINE # 165
+; 					rs232_printstr("\r\nbIEPCNFG_0:");
+; 					rs232_printhex(bIEPCNFG_0);
+			; SOURCE LINE # 167
+?C0049:
+; 					rs232_printstr("\r\nbOEPCNFG_0:");
+			; SOURCE LINE # 168
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_212)
+	MOV  	R1,#LOW (?SC_212)
+?C0127:
+; 					rs232_printhex(bOEPCNFG_0);
+			; SOURCE LINE # 169
+	LJMP 	?C0134
+; 					rs232_printstr("\r\nbFUNADR:");
+			; SOURCE LINE # 170
+; 					rs232_printhex(bFUNADR);
+			; SOURCE LINE # 171
+; 					rs232_printstr("\r\nbWDCSR:");
+			; SOURCE LINE # 172
+?C0050:
+; 					rs232_printhex(bWDCSR);
+			; SOURCE LINE # 173
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_243)
+	MOV  	R1,#LOW (?SC_243)
+?C0128:
+; 					break;
+			; SOURCE LINE # 174
+	LJMP 	?C0134
+; 				case 'e':
+			; SOURCE LINE # 175
+; 					bUSBCTL|=0x80;
+			; SOURCE LINE # 176
+?C0031:
+; 					break;
+; 				default:
+			; SOURCE LINE # 178
+; 					rs232_printstr("Hello world!\r\n");
+			; SOURCE LINE # 179
+	MOV  	DPTR,#0FFFCH
+	MOVX 	A,@DPTR
+	ANL  	A,#0FEH
+	MOVX 	@DPTR,A
+; 					break;
+			; SOURCE LINE # 180
+	MOV  	DPTR,#0FF00H
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	SWAP 	A
+	RRC  	A
+	ANL  	A,#03H
+	DEC  	A
+	JZ   	?C0059
+	INC  	A
+	JZ   	$ + 5H
+	LJMP 	?C0063
+; 			}
+			; SOURCE LINE # 181
+; 			RI=0;
+			; SOURCE LINE # 182
+?C0053:
+; 			
+			; SOURCE LINE # 183
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_268)
+	MOV  	R1,#LOW (?SC_268)
+	LCALL	_rs232_printstr
+; 		}
+			; SOURCE LINE # 184
+	MOV  	DPTR,#0FF01H
+	MOVX 	A,@DPTR
+	ADD  	A,#0FBH
+	JZ   	?C0056
+	ADD  	A,#0FCH
+	JZ   	?C0057
+	ADD  	A,#08H
+	JNZ  	?C0058
+; 		if(TI)
+			; SOURCE LINE # 185
+; 		{
+			; SOURCE LINE # 186
+?C0055:
+; 			TI=0;
+			; SOURCE LINE # 187
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_286)
+	MOV  	R1,#LOW (?SC_286)
+?C0129:
+; 		}
+			; SOURCE LINE # 188
+	SJMP 	?C0134
+; 		led=~led;
+			; SOURCE LINE # 189
+?C0056:
+; 		delay(10);
+			; SOURCE LINE # 190
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_296)
+	MOV  	R1,#LOW (?SC_296)
+	LCALL	_rs232_printstr
+; 	}
+			; SOURCE LINE # 191
+	MOV  	DPTR,#0FF02H
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	LCALL	_rs232_printhex
+; }
+			; SOURCE LINE # 192
+	LCALL	L?0144
+; *** sync lost ***
+			; SOURCE LINE # 193
+	MOV  	DPTR,#0FF02H
+	MOVX 	A,@DPTR
+	MOV  	DPTR,#0FFFFH
+	MOVX 	@DPTR,A
+; *** sync lost ***
+			; SOURCE LINE # 194
+	MOV  	DPTR,#0FF83H
+	CLR  	A
+	MOVX 	@DPTR,A
+; *** sync lost ***
+			; SOURCE LINE # 195
+	MOV  	DPTR,#0FF81H
+	MOVX 	@DPTR,A
+; *** sync lost ***
+			; SOURCE LINE # 196
+	MOV  	DPTR,#0FF80H
+	MOVX 	A,@DPTR
+	ORL  	A,#020H
+	MOVX 	@DPTR,A
+; *** sync lost ***
+			; SOURCE LINE # 197
+	SJMP 	?C0051
+; *** sync lost ***
+			; SOURCE LINE # 198
+?C0057:
+; *** sync lost ***
+			; SOURCE LINE # 199
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_314)
+	MOV  	R1,#LOW (?SC_314)
+?C0130:
+; *** sync lost ***
+; *** sync lost ***
+; *** sync lost ***
+; *** sync lost ***
+; *** sync lost ***
+; *** sync lost ***
+			; SOURCE LINE # 205
+	SJMP 	?C0134
+; *** sync lost ***
+			; SOURCE LINE # 206
+?C0058:
+; *** sync lost ***
+			; SOURCE LINE # 207
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_325)
+	MOV  	R1,#LOW (?SC_325)
+?C0131:
+; *** sync lost ***
+			; SOURCE LINE # 208
+	SJMP 	?C0134
+; *** sync lost ***
+			; SOURCE LINE # 209
+; *** sync lost ***
+			; SOURCE LINE # 210
+; *** sync lost ***
+			; SOURCE LINE # 211
+?C0059:
+; *** sync lost ***
+			; SOURCE LINE # 212
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_354)
+	MOV  	R1,#LOW (?SC_354)
+	LCALL	_rs232_printstr
+; *** sync lost ***
+			; SOURCE LINE # 213
+	MOV  	DPTR,#0FF01H
+	MOVX 	A,@DPTR
+	ADD  	A,#0F6H
+	JNZ  	?C0062
+; *** sync lost ***
+			; SOURCE LINE # 214
+; *** sync lost ***
+			; SOURCE LINE # 215
+?C0061:
+; *** sync lost ***
+			; SOURCE LINE # 216
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_372)
+	MOV  	R1,#LOW (?SC_372)
+?C0132:
+; *** sync lost ***
+; *** sync lost ***
+			; SOURCE LINE # 218
+	SJMP 	?C0134
+; *** sync lost ***
+			; SOURCE LINE # 219
+?C0062:
+; *** sync lost ***
+			; SOURCE LINE # 220
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_383)
+	MOV  	R1,#LOW (?SC_383)
+?C0133:
+; *** sync lost ***
+			; SOURCE LINE # 221
+	SJMP 	?C0134
+; *** sync lost ***
+			; SOURCE LINE # 222
+; *** sync lost ***
+			; SOURCE LINE # 223
+; *** sync lost ***
+			; SOURCE LINE # 224
+?C0063:
+; *** sync lost ***
+			; SOURCE LINE # 225
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_394)
+	MOV  	R1,#LOW (?SC_394)
+?C0134:
+	LCALL	_rs232_printstr
+; *** sync lost ***
+			; SOURCE LINE # 226
+; *** sync lost ***
+			; SOURCE LINE # 227
+; *** sync lost ***
+			; SOURCE LINE # 228
+?C0051:
+; *** sync lost ***
+			; SOURCE LINE # 229
+	MOV  	DPTR,#0FFFCH
+	MOVX 	A,@DPTR
+	ANL  	A,#0FDH
+	MOVX 	@DPTR,A
+; *** sync lost ***
+; *** sync lost ***
+; *** sync lost ***
+; *** sync lost ***
+			; SOURCE LINE # 233
+	RET  	
+; END OF setup_handler
+
+
+	RSEG  ?PR?_delay?TEXT1
+_delay:
+	USING	0
+			; SOURCE LINE # 13
+;---- Variable 'k?846' assigned to Register 'R6/R7' ----
+			; SOURCE LINE # 14
+			; SOURCE LINE # 16
+?C0065:
+	MOV  	A,R7
+	ORL  	A,R6
+	JZ   	?C0074
+			; SOURCE LINE # 17
+;---- Variable 'i?847' assigned to Register 'R5' ----
+	MOV  	R5,#0C8H
+?C0068:
+			; SOURCE LINE # 18
+;---- Variable 'j?848' assigned to Register 'R4' ----
+	MOV  	R4,#0C8H
+?C0071:
+	DJNZ 	R4,?C0071
+?C0070:
+	DJNZ 	R5,?C0068
+?C0067:
+	MOV  	A,R7
+	DEC  	R7
+	JNZ  	?C0065
+	DEC  	R6
+?C0115:
+	SJMP 	?C0065
+			; SOURCE LINE # 19
+?C0074:
+	RET  	
+; END OF _delay
+
+CSEG	AT	00023H
+	LJMP	serial_routine
+
+
+	RSEG  ?PR?serial_routine?TEXT1
+	USING	2
+serial_routine:
+			; SOURCE LINE # 21
+			; SOURCE LINE # 23
+	JNB  	RI,?C0075
+			; SOURCE LINE # 24
+			; SOURCE LINE # 25
+	CLR  	RI
+			; SOURCE LINE # 26
+?C0075:
+			; SOURCE LINE # 27
+	JNB  	TI,?C0077
+			; SOURCE LINE # 28
+			; SOURCE LINE # 29
+	CLR  	TI
+			; SOURCE LINE # 30
+			; SOURCE LINE # 31
+?C0077:
+	RETI 	
+; END OF serial_routine
+
+CSEG	AT	00003H
+	LJMP	fun
+
+
+	RSEG  ?PR?fun?TEXT1
+	USING	2
+fun:
+	PUSH 	ACC
+	PUSH 	DPH
+	PUSH 	DPL
+	PUSH 	PSW
+	USING	2
+	MOV  	PSW,#010H
+			; SOURCE LINE # 36
+			; SOURCE LINE # 38
+	CLR  	EA
+			; SOURCE LINE # 39
+	MOV  	DPTR,#0FF92H
+	MOVX 	A,@DPTR
+	LCALL	?C?CCASE
+	DW   	?C0082
+	DB   	012H
+	DW   	?C0082
+	DB   	022H
+	DW   	?C0083
+	DB   	030H
+	DW   	?C0084
+	DB   	032H
+	DW   	?C0086
+	DB   	038H
+	DW   	?C0087
+	DB   	03AH
+	DW   	?C0085
+	DB   	03CH
+	DW   	?C0080
+	DB   	044H
+	DW   	?C0079
+	DB   	046H
+	DW   	00H
+	DW   	?C0088
+			; SOURCE LINE # 40
+			; SOURCE LINE # 41
+?C0079:
+			; SOURCE LINE # 42
+	MOV  	DPTR,#0FF92H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 44
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_419)
+	MOV  	R1,#LOW (?SC_419)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 45
+	MOV  	DPTR,#0FF83H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 46
+	MOV  	DPTR,#0FF81H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 47
+	LJMP 	?C0078
+			; SOURCE LINE # 49
+?C0080:
+			; SOURCE LINE # 50
+	MOV  	DPTR,#0FF92H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 51
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_431)
+	MOV  	R1,#LOW (?SC_431)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 52
+	LCALL	EP0_senddata
+			; SOURCE LINE # 53
+	LJMP 	?C0078
+			; SOURCE LINE # 55
+			; SOURCE LINE # 56
+?C0082:
+			; SOURCE LINE # 57
+	MOV  	DPTR,#0FF92H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 59
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_441)
+	MOV  	R1,#LOW (?SC_441)
+			; SOURCE LINE # 60
+	SJMP 	?C0138
+			; SOURCE LINE # 62
+?C0083:
+			; SOURCE LINE # 63
+	MOV  	DPTR,#0FF92H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 64
+	MOV  	DPTR,#0FFFEH
+	INC  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 65
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_452)
+	MOV  	R1,#LOW (?SC_452)
+			; SOURCE LINE # 66
+			; SOURCE LINE # 67
+	SJMP 	?C0136
+			; SOURCE LINE # 69
+?C0084:
+			; SOURCE LINE # 70
+	MOV  	DPTR,#0FF92H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 71
+	MOV  	DPTR,#0FFFEH
+	MOV  	A,#04H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 72
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_474)
+	MOV  	R1,#LOW (?SC_474)
+?C0136:
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 73
+	LCALL	setup_handler
+			; SOURCE LINE # 74
+	SJMP 	?C0078
+			; SOURCE LINE # 76
+?C0085:
+			; SOURCE LINE # 77
+	MOV  	DPTR,#0FF92H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 78
+	MOV  	DPTR,#0FFFEH
+	MOV  	A,#080H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 79
+	LCALL	USB_reset
+			; SOURCE LINE # 80
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_487)
+	MOV  	R1,#LOW (?SC_487)
+?C0135:
+			; SOURCE LINE # 81
+	SJMP 	?C0138
+			; SOURCE LINE # 83
+?C0086:
+			; SOURCE LINE # 84
+	MOV  	DPTR,#0FF92H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 85
+	MOV  	DPTR,#0FFFEH
+	MOV  	A,#020H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 86
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_500)
+	MOV  	R1,#LOW (?SC_500)
+?C0137:
+			; SOURCE LINE # 87
+	SJMP 	?C0138
+			; SOURCE LINE # 89
+?C0087:
+			; SOURCE LINE # 90
+	MOV  	DPTR,#0FF92H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 91
+	MOV  	DPTR,#0FFFEH
+	MOV  	A,#040H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 92
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_514)
+	MOV  	R1,#LOW (?SC_514)
+?C0138:
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 93
+	SJMP 	?C0078
+			; SOURCE LINE # 95
+?C0088:
+			; SOURCE LINE # 96
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_529)
+	MOV  	R1,#LOW (?SC_529)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 97
+	MOV  	DPTR,#0FF92H
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	LCALL	_rs232_printhex
+			; SOURCE LINE # 98
+	MOV  	DPTR,#0FF92H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 99
+			; SOURCE LINE # 100
+?C0078:
+			; SOURCE LINE # 101
+	SETB 	EA
+			; SOURCE LINE # 102
+	POP  	PSW
+	POP  	DPL
+	POP  	DPH
+	POP  	ACC
+	RETI 	
+; END OF fun
+
+
+	RSEG  ?PR?hardware_init?TEXT1
+hardware_init:
+			; SOURCE LINE # 103
+			; SOURCE LINE # 104
+			; SOURCE LINE # 105
+	MOV  	DPTR,#0FF90H
+	MOV  	A,#01H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 106
+	MOV  	DPTR,#0FF97H
+	CLR  	A
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 107
+	MOV  	DPTR,#0FF96H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 108
+	MOV  	DPTR,#0FF95H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 109
+	MOV  	DPTR,#0FF94H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 110
+	MOV  	DPTR,#0FFFCH
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 111
+	INC  	DPTR
+	MOV  	A,#0E7H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 112
+	SETB 	EA
+			; SOURCE LINE # 113
+	SETB 	EX0
+			; SOURCE LINE # 114
+	CLR  	ES
+			; SOURCE LINE # 115
+	CLR  	IT0
+			; SOURCE LINE # 116
+	MOV  	DPTR,#0FFFCH
+	MOVX 	A,@DPTR
+	ORL  	A,#080H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 117
+	RET  	
+; END OF hardware_init
+
+
+	RSEG  ?PR?main?TEXT1
+main:
+	USING	0
+			; SOURCE LINE # 118
+			; SOURCE LINE # 119
+			; SOURCE LINE # 122
+	CLR  	EX0
+			; SOURCE LINE # 123
+	CLR  	led
+			; SOURCE LINE # 124
+	LCALL	rs232_init
+			; SOURCE LINE # 125
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_541)
+	MOV  	R1,#LOW (?SC_541)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 126
+	LCALL	hardware_init
+?C0091:
+			; SOURCE LINE # 128
+			; SOURCE LINE # 129
+			; SOURCE LINE # 130
+	JB   	RI,$ + 6H
+	LJMP 	?C0093
+			; SOURCE LINE # 131
+			; SOURCE LINE # 132
+	MOV  	R7,SBUF
+	MOV  	A,R7
+	ADD  	A,#0DCH
+	JZ   	?C0099
+	ADD  	A,#0BFH
+	JNZ  	$ + 5H
+	LJMP 	?C0108
+	ADD  	A,#0F4H
+	JZ   	?C0107
+	ADD  	A,#0FAH
+	JZ   	?C0103
+	ADD  	A,#054H
+	JZ   	$ + 5H
+	LJMP 	?C0109
+			; SOURCE LINE # 133
+			; SOURCE LINE # 134
+?C0095:
+			; SOURCE LINE # 135
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_556)
+	MOV  	R1,#LOW (?SC_556)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 136
+	MOV  	p?1249,#0FEH
+	MOV  	p?1249+01H,#0F8H
+			; SOURCE LINE # 137
+	CLR  	A
+	MOV  	i?1250,A
+?C0096:
+			; SOURCE LINE # 138
+			; SOURCE LINE # 139
+	LCALL	L?0142
+			; SOURCE LINE # 140
+	INC  	i?1250
+	MOV  	A,i?1250
+	CLR  	C
+	SUBB 	A,#08H
+	JC   	?C0096
+?C0097:
+			; SOURCE LINE # 141
+			; SOURCE LINE # 142
+	SJMP 	?C0140
+			; SOURCE LINE # 143
+?C0099:
+			; SOURCE LINE # 144
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_570)
+	MOV  	R1,#LOW (?SC_570)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 145
+	MOV  	p?1249,#0FEH
+	MOV  	p?1249+01H,#0F0H
+			; SOURCE LINE # 146
+	CLR  	A
+	MOV  	i?1250,A
+?C0100:
+			; SOURCE LINE # 147
+			; SOURCE LINE # 148
+	LCALL	L?0142
+			; SOURCE LINE # 149
+	INC  	i?1250
+	MOV  	A,i?1250
+	CLR  	C
+	SUBB 	A,#08H
+	JC   	?C0100
+?C0101:
+			; SOURCE LINE # 150
+?C0139:
+			; SOURCE LINE # 151
+	SJMP 	?C0140
+			; SOURCE LINE # 152
+?C0103:
+			; SOURCE LINE # 153
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_585)
+	MOV  	R1,#LOW (?SC_585)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 154
+	MOV  	p?1249,#0FFH
+	MOV  	p?1249+01H,#00H
+			; SOURCE LINE # 155
+	CLR  	A
+	MOV  	i?1250,A
+?C0104:
+			; SOURCE LINE # 156
+			; SOURCE LINE # 157
+	LCALL	L?0143
+			; SOURCE LINE # 158
+	INC  	i?1250
+	MOV  	A,i?1250
+	CLR  	C
+	SUBB 	A,#08H
+	JC   	?C0104
+?C0105:
+			; SOURCE LINE # 159
+?C0140:
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_20)
+	MOV  	R1,#LOW (?SC_20)
+			; SOURCE LINE # 160
+	SJMP 	?C0141
+			; SOURCE LINE # 161
+?C0107:
+			; SOURCE LINE # 162
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_599)
+	MOV  	R1,#LOW (?SC_599)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 163
+	MOV  	DPTR,#0FF81H
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	LCALL	_rs232_printhex
+			; SOURCE LINE # 164
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_613)
+	MOV  	R1,#LOW (?SC_613)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 165
+	MOV  	DPTR,#0FF83H
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	LCALL	_rs232_printhex
+			; SOURCE LINE # 166
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_627)
+	MOV  	R1,#LOW (?SC_627)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 167
+	MOV  	DPTR,#0FF80H
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	LCALL	_rs232_printhex
+			; SOURCE LINE # 168
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_641)
+	MOV  	R1,#LOW (?SC_641)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 169
+	MOV  	DPTR,#0FF82H
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	LCALL	_rs232_printhex
+			; SOURCE LINE # 170
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_655)
+	MOV  	R1,#LOW (?SC_655)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 171
+	MOV  	DPTR,#0FFFFH
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	LCALL	_rs232_printhex
+			; SOURCE LINE # 172
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_666)
+	MOV  	R1,#LOW (?SC_666)
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 173
+	MOV  	DPTR,#0FF93H
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	LCALL	_rs232_printhex
+			; SOURCE LINE # 174
+	SJMP 	?C0094
+			; SOURCE LINE # 175
+?C0108:
+			; SOURCE LINE # 176
+	MOV  	DPTR,#0FFFCH
+	MOVX 	A,@DPTR
+	ORL  	A,#080H
+	MOVX 	@DPTR,A
+			; SOURCE LINE # 177
+	SJMP 	?C0094
+			; SOURCE LINE # 178
+?C0109:
+			; SOURCE LINE # 179
+	MOV  	R3,#0FFH
+	MOV  	R2,#HIGH (?SC_541)
+	MOV  	R1,#LOW (?SC_541)
+?C0141:
+	LCALL	_rs232_printstr
+			; SOURCE LINE # 180
+			; SOURCE LINE # 181
+?C0094:
+			; SOURCE LINE # 182
+	CLR  	RI
+			; SOURCE LINE # 184
+?C0093:
+			; SOURCE LINE # 185
+	JNB  	TI,?C0110
+			; SOURCE LINE # 186
+			; SOURCE LINE # 187
+	CLR  	TI
+			; SOURCE LINE # 188
+?C0110:
+			; SOURCE LINE # 189
+	CPL  	led
+			; SOURCE LINE # 190
+	MOV  	R7,#0AH
+	MOV  	R6,#00H
+	LCALL	_delay
+			; SOURCE LINE # 191
+	LJMP 	?C0091
+; END OF main
+
+	END

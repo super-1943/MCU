@@ -1,0 +1,25 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+E:\AllProject\51\touch\kkk.uv2
+Project File Date:  04/07/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RED?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GREEN?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?BLUE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SHOWSTRING?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SHOWICON?TEXT1
+Program Size: data=56.0 xdata=0 code=3299
+creating hex file from "kkk"...
+"kkk" - 0 Error(s), 5 Warning(s).

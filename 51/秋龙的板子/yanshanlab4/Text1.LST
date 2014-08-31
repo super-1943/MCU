@@ -1,0 +1,198 @@
+C51 COMPILER V8.02   TEXT1                                                                 07/07/2009 19:02:12 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          sfr AUXR=0x8e;
+   3          sfr WDTD=0x85;
+   4          sfr WDTC=0xc0;
+   5          sfr SFCF=0xb1;
+   6          sfr SFCM=0xb2;
+   7          sfr SFAL=0xb3;
+   8          sfr SFAH=0xb4;
+   9          sfr SFDT=0xb5;
+  10          sfr SFST=0xb6;
+  11          #define SFCM_SE 0x0b
+  12          #define SFCM_VB 0x0c
+  13          #define SFCM_PB 0x0e
+  14          
+  15          const unsigned short int BLK1_DST_ADDR=0xee00;
+  16          const unsigned char SECT_SIZE=0x80;
+  17          unsigned char ErrorCode;
+  18          
+  19          #include<stdio.h>
+  20          
+  21          #define uchar unsigned char
+  22          #define uint  unsigned int
+  23          #define LOWBYTE(v)  ((unsigned char)(v))
+  24          #define HIGHBYTE(v)  ((unsigned char)(((unsigned int)(v))>>8))
+  25          /*********************************************************************************************************
+             -*****************
+  26          数码管控制：P0.0~P0.3控制位选，低电平有效；
+  27                                  P2.0~P2.7控制段选，低电平有效；
+  28                                  注意P2口线序反向，即数据0b10111100------》0b00111101
+  29          **********************************************************************************************************
+             -****************/
+  30          unsigned char code tab[]={0xfc,0x60,0xda,0xf2,0x66,0xb6,0xbe,0xe0,0xfe,0xf6,0xee,0x3e,0x9c,0x7a,0x9e,0x8e}
+             -;
+  31          unsigned char buffer[4]={0,0,0,0};
+  32          
+  33          void delay(unsigned char i);
+  34          void show(void);
+  35          void byte_program(unsigned short int dataAddr,unsigned char dataByte);
+  36          unsigned char byte_verify(unsigned short int dataAddr);
+  37          void sector_erase(unsigned short int dataAddr);
+  38          int ready();
+  39          void error();
+  40          void main(void)
+  41          {
+  42   1              unsigned int destAddr=BLK1_DST_ADDR;
+  43   1              unsigned char byteCnt;
+  44   1              unsigned char origData;
+  45   1              unsigned char verifyData;
+  46   1      //      SFCF|=0x03;
+  47   1              delay(100);
+  48   1      /*      sector_erase(destAddr);
+  49   1              origData=0;
+  50   1              for(byteCnt=0;byteCnt<SECT_SIZE;byteCnt++)
+  51   1              {
+  52   1                      byte_program(destAddr,origData);
+C51 COMPILER V8.02   TEXT1                                                                 07/07/2009 19:02:12 PAGE 2   
+
+  53   1                      verifyData=byte_verify(destAddr);
+  54   1                      if(verifyData!=origData)
+  55   1                      {
+  56   1                              error();
+  57   1                      }
+  58   1                      destAddr++;
+  59   1                      origData++;
+  60   1              }
+  61   1              ErrorCode=0;
+  62   1      */
+  63   1              while(1)
+  64   1              {
+  65   2                      buffer[2]=1;
+  66   2                      buffer[3]=1;
+  67   2                      show();
+  68   2              }
+  69   1      }
+*** WARNING C280 IN LINE 43 OF TEXT1.C: 'byteCnt': unreferenced local variable
+*** WARNING C280 IN LINE 44 OF TEXT1.C: 'origData': unreferenced local variable
+*** WARNING C280 IN LINE 45 OF TEXT1.C: 'verifyData': unreferenced local variable
+  70          void delay(unsigned char i)
+  71          {
+  72   1              unsigned char j,k;
+  73   1              while(i--)
+  74   1              {
+  75   2                      for(j=20;j;j--)
+  76   2                      for(k=10;k;k--);
+  77   2              }
+  78   1      }
+  79          
+  80          
+  81          void show(void)
+  82          {
+  83   1              P0=0xfe;
+  84   1              P2=~tab[buffer[0]];
+  85   1              delay(10);
+  86   1              P0=0xfd;
+  87   1              P2=~tab[buffer[1]];
+  88   1              delay(10);
+  89   1              P0=0xfb;
+  90   1              P2=~tab[buffer[2]];
+  91   1              delay(10);
+  92   1              P0=0xf7;
+  93   1              P2=~tab[buffer[3]];
+  94   1              delay(10);
+  95   1      }
+  96          void sector_erase(unsigned short int dataAddr)
+  97          {
+  98   1              unsigned short int destAddr=dataAddr;
+  99   1              SFCF|=0x40;
+ 100   1              SFAH=destAddr>>8;
+ 101   1              SFAL=destAddr;
+ 102   1              SFCM=SFCM_SE;
+ 103   1              if(!ready())
+ 104   1                      error();
+ 105   1      //      while((SFST&0x04)!=0);
+ 106   1      }
+ 107          
+ 108          void byte_program(unsigned short int dataAddr,unsigned char dataByte)
+ 109          {
+ 110   1              unsigned short int destAddr=dataAddr;
+ 111   1              SFCF|=0x40;
+C51 COMPILER V8.02   TEXT1                                                                 07/07/2009 19:02:12 PAGE 3   
+
+ 112   1              SFAH=destAddr>>8;
+ 113   1              SFAL=destAddr;
+ 114   1              SFDT=dataByte;
+ 115   1              SFCM=SFCM_PB;
+ 116   1              if(!ready())
+ 117   1                      error();
+ 118   1      //      while((SFST&0X04)!=0);
+ 119   1      }
+ 120          
+ 121          uchar byte_verify(uint dataAddr)
+ 122          {
+ 123   1              unsigned short int destAddr=dataAddr;
+ 124   1              unsigned char readByte;
+ 125   1              SFCF|=0x40;
+ 126   1              SFAH=destAddr>>8;
+ 127   1              SFAL=destAddr;
+ 128   1              SFCM=SFCM_VB;
+ 129   1              readByte=SFDT;
+ 130   1              
+ 131   1              SFCF&=0xbf;
+ 132   1              SFDT=0;
+ 133   1              return readByte;
+ 134   1      }
+ 135          
+ 136          int ready()
+ 137          {
+ 138   1              unsigned long int TimeOut=0;
+ 139   1              
+ 140   1              while(TimeOut<100000)
+ 141   1              {
+ 142   2                      if((SFST&4)==0)
+ 143   2                      {
+ 144   3                              SFCF&=0xbf;
+ 145   3                              SFDT=0;
+ 146   3                              return 1;
+ 147   3                      }
+ 148   2                      TimeOut++;
+ 149   2              }
+ 150   1              SFCF&=0xbf;
+ 151   1              SFDT=0;
+ 152   1              return 0;
+ 153   1      }
+ 154          
+ 155          void error()
+ 156          {
+ 157   1              ErrorCode=1;
+ 158   1              buffer[0]=1;
+ 159   1              while(1)
+ 160   1              {
+ 161   2                      show();
+ 162   2              }
+ 163   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    304    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =      8       9
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V8.02   TEXT1                                                                 07/07/2009 19:02:12 PAGE 4   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

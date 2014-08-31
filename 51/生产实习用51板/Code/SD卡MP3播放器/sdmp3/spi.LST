@@ -1,0 +1,163 @@
+C51 COMPILER V8.02   SPI                                                                   04/22/2011 18:12:40 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE SPI
+OBJECT MODULE PLACED IN spi.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE spi.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "spi.h"
+   2          
+   3          /*******************************************************
+   4          
+   5                  +----------------------------------------+
+   6                  | 振南电子 驱动程序模块 软件模拟SPI 部分 |
+   7                  +----------------------------------------+
+   8          
+   9            此源码版权属 振南 全权享有，如欲引用，敬请署名并告知
+  10                  严禁随意用于商业目的，违者必究，后果自负
+  11                   振南电子 
+  12                       ->产品网站 http://www.znmcu.cn/
+  13                       ->产品网店 http://shop.znmcu.cn/
+  14                       ->产品咨询 QQ:987582714 
+  15                                              MSN:yzn07@126.com
+  16                                      WW:yzn07    
+  17                                                                                    
+  18          ********************************************************/
+  19          
+  20          unsigned char bdata dat; //dat是可位寻址的变量
+  21          
+  22          sbit dat7=dat^7;
+  23          sbit dat6=dat^6;
+  24          sbit dat5=dat^5;
+  25          sbit dat4=dat^4;
+  26          sbit dat3=dat^3;
+  27          sbit dat2=dat^2;
+  28          sbit dat1=dat^1;
+  29          sbit dat0=dat^0; //取出dat的各个位
+  30          
+  31          /******************************************************************
+  32           - 功能描述：IO模拟SPI，发送一个字节
+  33           - 隶属模块：SPI模块
+  34           - 函数属性：外部，供用户调用
+  35           - 参数说明：x:要发送的字节
+  36           - 返回说明：无返回
+  37           - 注：很多情况下，SPI是需要有较高的速度的，此函数中不使用任何循环
+  38                 结构，如for(;;) while等等，并且使用了位寻址就是为了提高速度
+  39           ******************************************************************/
+  40          
+  41          void SPI_WriteByte(unsigned char x) 
+  42          {
+  43   1       /*----这种使用循环与位运算的实现方式，速度要比直接用位寻址与顺序执行方式实现慢得多
+  44   1         ----因为它把大部分的时间花在了循环因子的递增、比较与位运行上了
+  45   1        unsigned char i=0;
+  46   1        for(i=0;i<8;i++)
+  47   1        {
+  48   1         SPI_SI=x&(0x80>>i);
+  49   1         SPI_SCL=0; 
+  50   1         SPI_SCL=1;
+  51   1        }
+  52   1       ----------------------------------*/
+  53   1      
+  54   1       dat=x; //将x的值赋给可位寻址的变量dat，以便取出各个位
+  55   1       
+C51 COMPILER V8.02   SPI                                                                   04/22/2011 18:12:40 PAGE 2   
+
+  56   1       SPI_SI=dat7; //取出第7个位，写到数据线上
+  57   1       SPI_SCL=0; 
+  58   1       SPI_SCL=1;       //时钟线产生上升沿，数据被写入
+  59   1      
+  60   1       SPI_SI=dat6;
+  61   1       SPI_SCL=0; 
+  62   1       SPI_SCL=1;
+  63   1      
+  64   1       SPI_SI=dat5;
+  65   1       SPI_SCL=0;
+  66   1       SPI_SCL=1;
+  67   1      
+  68   1       SPI_SI=dat4;
+  69   1       SPI_SCL=0;
+  70   1       SPI_SCL=1;
+  71   1      
+  72   1       SPI_SI=dat3;
+  73   1       SPI_SCL=0; 
+  74   1       SPI_SCL=1;
+  75   1      
+  76   1       SPI_SI=dat2;
+  77   1       SPI_SCL=0;
+  78   1       SPI_SCL=1;
+  79   1      
+  80   1       SPI_SI=dat1;
+  81   1       SPI_SCL=0; 
+  82   1       SPI_SCL=1;
+  83   1      
+  84   1       SPI_SI=dat0;
+  85   1       SPI_SCL=0;
+  86   1       SPI_SCL=1;
+  87   1      }
+  88          
+  89          /******************************************************************
+  90           - 功能描述：IO模拟SPI，读取一个字节
+  91           - 隶属模块：SPI模块
+  92           - 函数属性：外部，供用户调用
+  93           - 参数说明：无
+  94           - 返回说明：读到的字节
+  95           - 注：很多情况下，SPI是需要有较高的速度的，此函数中不使用任何循环
+  96                 结构，如for(;;) while等等，并且使用了位寻址就是为了提高速度
+  97           ******************************************************************/
+  98          
+  99          unsigned char SPI_ReadByte() 
+ 100          {  
+ 101   1       SPI_SO=1;
+ 102   1      
+ 103   1       SPI_SCL=1;
+ 104   1       SPI_SCL=0;
+ 105   1       dat7=SPI_SO; 
+ 106   1      
+ 107   1       SPI_SCL=1;
+ 108   1       SPI_SCL=0;
+ 109   1       dat6=SPI_SO; 
+ 110   1      
+ 111   1       SPI_SCL=1;
+ 112   1       SPI_SCL=0;
+ 113   1       dat5=SPI_SO; 
+ 114   1      
+ 115   1       SPI_SCL=1;
+ 116   1       SPI_SCL=0;
+ 117   1       dat4=SPI_SO; 
+C51 COMPILER V8.02   SPI                                                                   04/22/2011 18:12:40 PAGE 3   
+
+ 118   1      
+ 119   1       SPI_SCL=1;
+ 120   1       SPI_SCL=0;
+ 121   1       dat3=SPI_SO; 
+ 122   1      
+ 123   1       SPI_SCL=1;
+ 124   1       SPI_SCL=0;
+ 125   1       dat2=SPI_SO; 
+ 126   1      
+ 127   1       SPI_SCL=1;
+ 128   1       SPI_SCL=0;
+ 129   1       dat1=SPI_SO;
+ 130   1      
+ 131   1       SPI_SCL=1;
+ 132   1       SPI_SCL=0;
+ 133   1       dat0=SPI_SO; 
+ 134   1       
+ 135   1       return (dat);
+ 136   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    136    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

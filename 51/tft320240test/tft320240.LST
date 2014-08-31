@@ -1,0 +1,249 @@
+C51 COMPILER V8.02   TFT320240                                                             05/03/2012 12:36:28 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TFT320240
+OBJECT MODULE PLACED IN tft320240.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE tft320240.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "tft320240.h"
+   2          #include "string.h"
+   3          
+   4          extern code unsigned char ascii_font[][16];
+   5          extern code unsigned char Hanzi[];
+   6          //---------------------------------------------------------------------------
+   7          void tft320240_delay(UINT t)
+   8          {
+   9   1              UCHAR i;
+  10   1              while( t > 0 )
+  11   1              {
+  12   2                      t--;
+  13   2                      for ( i = 0; i < 255; i++ )
+  14   2                              ;
+  15   2              }
+  16   1      }
+  17          //---------------------------------------------------------------------------
+  18          void tft320240_W_COM(UINT dat)
+  19          {
+  20   1              CTRLPORT&=~LCD_RS;// = 0;
+  21   1              DATAPORT = dat >> 8;
+  22   1              CTRLPORT&=~LCD_WR;// = 0;
+  23   1              CTRLPORT|=LCD_WR;// = 1;
+  24   1              DATAPORT = dat & 0xFF;
+  25   1              CTRLPORT&=~LCD_WR;// = 0;
+  26   1              CTRLPORT|=LCD_WR;// = 1;
+  27   1      }
+  28          //---------------------------------------------------------------------------
+  29          void tft320240_W_DATA(UINT dat)
+  30          {
+  31   1              CTRLPORT|=LCD_RS;// = 1;
+  32   1              DATAPORT = dat >> 8;
+  33   1              CTRLPORT&=~LCD_WR;// = 0;
+  34   1              CTRLPORT|=LCD_WR;// = 1;
+  35   1              DATAPORT = dat & 0xFF;
+  36   1              CTRLPORT&=~LCD_WR;// = 0;
+  37   1              CTRLPORT|=LCD_WR;// = 1;
+  38   1      }
+  39          //---------------------------------------------------------------------------
+  40          void tft320240_blockwrite(UINT sx, UINT ex, UINT sy, UINT ey)
+  41          {
+  42   1              tft320240_W_COM(0x0050);
+  43   1              tft320240_W_DATA(sx);
+  44   1              tft320240_W_COM(0x0051);
+  45   1              tft320240_W_DATA(ex);
+  46   1              tft320240_W_COM(0x0052);
+  47   1              tft320240_W_DATA(sy);
+  48   1              tft320240_W_COM(0x0053);
+  49   1              tft320240_W_DATA(ey);
+  50   1      
+  51   1              tft320240_W_COM(0x0020);//IMPORTANT
+  52   1              tft320240_W_DATA(0);
+  53   1              tft320240_W_COM(0x0021);
+  54   1              tft320240_W_DATA(0);
+  55   1      
+C51 COMPILER V8.02   TFT320240                                                             05/03/2012 12:36:28 PAGE 2   
+
+  56   1              tft320240_W_COM(0x0022);
+  57   1      }
+  58          //---------------------------------------------------------------------------
+  59          void tft320240_clear(void)
+  60          {
+  61   1              tft320240_show(0x0000, 0x00EF, 0x0000, 0x013F, 0x0000);
+  62   1      }
+  63          
+  64          
+  65          //---------------------------------------------------------------------------
+  66          void tft320240_initial(void)
+  67          {
+  68   1      //      DATADIR=0xff;
+  69   1              DATAPORT=0x00;
+  70   1      //      CTRLDIR=LCD_RESET|LCD_RS|LCD_WR;
+  71   1              CTRLPORT|=LCD_RESET;// = 1;
+  72   1              tft320240_delay(50);
+  73   1              CTRLPORT&=~LCD_RESET;// = 0;
+  74   1              tft320240_delay(200);
+  75   1              CTRLPORT|=LCD_RESET;// = 1;
+  76   1              tft320240_delay(50);    
+  77   1              
+  78   1              
+  79   1              tft320240_W_COM(0x0000);tft320240_W_DATA(0x0000);
+  80   1              tft320240_W_COM(0x0001);tft320240_W_DATA(0x0100);
+  81   1              tft320240_W_COM(0x0002);tft320240_W_DATA(0x0700);
+  82   1              tft320240_W_COM(0x0003);tft320240_W_DATA(0x10B0);
+  83   1      
+  84   1              tft320240_W_COM(0x0004);tft320240_W_DATA(0x0000);
+  85   1              tft320240_W_COM(0x0008);tft320240_W_DATA(0x0207);
+  86   1              tft320240_W_COM(0x0009);tft320240_W_DATA(0x0000);
+  87   1              tft320240_W_COM(0x000A);tft320240_W_DATA(0x0000);
+  88   1              tft320240_W_COM(0x000C);tft320240_W_DATA(0x0000);
+  89   1              tft320240_W_COM(0x000D);tft320240_W_DATA(0x0000);
+  90   1              tft320240_W_COM(0x000F);tft320240_W_DATA(0x0000);
+  91   1              tft320240_W_COM(0x0007);tft320240_W_DATA(0x0101);
+  92   1              tft320240_delay(10);
+  93   1      
+  94   1              tft320240_W_COM(0x0010);tft320240_W_DATA(0x12B0);
+  95   1              tft320240_W_COM(0x0011);tft320240_W_DATA(0x0007);
+  96   1              tft320240_W_COM(0x0017);tft320240_W_DATA(0x0001);
+  97   1              tft320240_W_COM(0x0012);tft320240_W_DATA(0x01BB);
+  98   1              tft320240_W_COM(0x0013);tft320240_W_DATA(0x1F00);
+  99   1              tft320240_W_COM(0x0029);tft320240_W_DATA(0x0012);
+ 100   1              tft320240_delay(10);
+ 101   1      
+ 102   1              tft320240_W_COM(0x0030);tft320240_W_DATA(0x0102);
+ 103   1              tft320240_W_COM(0x0031);tft320240_W_DATA(0x0C15);
+ 104   1              tft320240_W_COM(0x0032);tft320240_W_DATA(0x0B18);
+ 105   1              tft320240_W_COM(0x0033);tft320240_W_DATA(0x1C0F);
+ 106   1              tft320240_W_COM(0x0034);tft320240_W_DATA(0x120B);
+ 107   1              tft320240_W_COM(0x0035);tft320240_W_DATA(0x0A04);
+ 108   1              tft320240_W_COM(0x0036);tft320240_W_DATA(0x1F00);
+ 109   1              tft320240_W_COM(0x0037);tft320240_W_DATA(0x051F);
+ 110   1              tft320240_W_COM(0x0038);tft320240_W_DATA(0x0305);
+ 111   1              tft320240_W_COM(0x0039);tft320240_W_DATA(0x0A05);
+ 112   1              tft320240_W_COM(0x003A);tft320240_W_DATA(0x0F04);
+ 113   1              tft320240_W_COM(0x003B);tft320240_W_DATA(0x0F00);
+ 114   1              tft320240_W_COM(0x003C);tft320240_W_DATA(0x000F);
+ 115   1              tft320240_W_COM(0x003D);tft320240_W_DATA(0x050F);
+ 116   1              tft320240_W_COM(0x003E);tft320240_W_DATA(0x0204);
+ 117   1              tft320240_W_COM(0x003F);tft320240_W_DATA(0x0404);
+C51 COMPILER V8.02   TFT320240                                                             05/03/2012 12:36:28 PAGE 3   
+
+ 118   1      
+ 119   1              tft320240_W_COM(0x0050);tft320240_W_DATA(0x0000);
+ 120   1              tft320240_W_COM(0x0051);tft320240_W_DATA(0x00EF);
+ 121   1              tft320240_W_COM(0x0052);tft320240_W_DATA(0x0000);
+ 122   1              tft320240_W_COM(0x0053);tft320240_W_DATA(0x013F);
+ 123   1              tft320240_delay(10);
+ 124   1      
+ 125   1              tft320240_W_COM(0x0060);tft320240_W_DATA(0x2700);
+ 126   1              tft320240_W_COM(0x0061);tft320240_W_DATA(0x0001);
+ 127   1              tft320240_W_COM(0x006A);tft320240_W_DATA(0x0000);
+ 128   1              tft320240_delay(10);
+ 129   1      
+ 130   1              tft320240_W_COM(0x0080);tft320240_W_DATA(0x0000);
+ 131   1              tft320240_W_COM(0x0081);tft320240_W_DATA(0x0000);
+ 132   1              tft320240_W_COM(0x0082);tft320240_W_DATA(0x0000);
+ 133   1              tft320240_W_COM(0x0083);tft320240_W_DATA(0x0000);
+ 134   1              tft320240_W_COM(0x0084);tft320240_W_DATA(0x0000);
+ 135   1              tft320240_W_COM(0x0085);tft320240_W_DATA(0x0000);
+ 136   1      
+ 137   1              tft320240_W_COM(0x0090);tft320240_W_DATA(0x0018);
+ 138   1              tft320240_W_COM(0x0092);tft320240_W_DATA(0x0000);
+ 139   1              tft320240_W_COM(0x0093);tft320240_W_DATA(0x0103);
+ 140   1              tft320240_W_COM(0x0095);tft320240_W_DATA(0x0210);
+ 141   1              tft320240_W_COM(0x0097);tft320240_W_DATA(0x0000);
+ 142   1              tft320240_W_COM(0x0098);tft320240_W_DATA(0x0000);
+ 143   1      
+ 144   1              tft320240_W_COM(0x00F0);tft320240_W_DATA(0x5408);
+ 145   1              tft320240_W_COM(0x00F2);tft320240_W_DATA(0x00DF);
+ 146   1              tft320240_W_COM(0x00F3);tft320240_W_DATA(0x0006);
+ 147   1              tft320240_W_COM(0x00F4);tft320240_W_DATA(0x001F);
+ 148   1              tft320240_W_COM(0x00F7);tft320240_W_DATA(0x0080);
+ 149   1              tft320240_W_COM(0x00F0);tft320240_W_DATA(0x0000);
+ 150   1      
+ 151   1              tft320240_W_COM(0x0007);tft320240_W_DATA(0x0173);
+ 152   1              tft320240_delay(80);
+ 153   1              tft320240_W_COM(0x0007);tft320240_W_DATA(0x0171);
+ 154   1              tft320240_delay(80);
+ 155   1              tft320240_W_COM(0x0007);tft320240_W_DATA(0x0173);
+ 156   1              tft320240_delay(80);
+ 157   1      }
+ 158          void tft320240_show(UINT sx, UINT ex, UINT sy, UINT ey, UINT dat)
+ 159          {
+ 160   1              UINT x, y, i, j;
+ 161   1              tft320240_blockwrite(sx, ex, sy, ey);
+ 162   1              
+ 163   1              x = ex - sx;
+ 164   1              y = ey - sy;
+ 165   1              
+ 166   1              for ( i = 0; i <= y; i++ )
+ 167   1                      for ( j = 0; j <= x; j++ )
+ 168   1                              tft320240_W_DATA(dat);
+ 169   1      }
+ 170          //---------------------------------------------------------------------------
+ 171          void tft320240_show_colorchar(UCHAR sx, UINT sy, UCHAR index, UINT CharColor, UINT BkColor)
+ 172          {
+ 173   1              UCHAR i, j;
+ 174   1              UCHAR mask;
+ 175   1      
+ 176   1              if ( index > 95 )
+ 177   1                      return;
+ 178   1      
+ 179   1              tft320240_blockwrite(sx, sx+7, sy, sy+15);      
+C51 COMPILER V8.02   TFT320240                                                             05/03/2012 12:36:28 PAGE 4   
+
+ 180   1              for ( i = 0; i < 16; i++ )
+ 181   1              {
+ 182   2                      mask = 0x80;
+ 183   2                      for ( j = 0; j < 8; j++ )
+ 184   2                      {
+ 185   3                              tft320240_W_DATA((ascii_font[index][i] & mask) ? CharColor : BkColor);
+ 186   3                              mask >>= 1;
+ 187   3                      }
+ 188   2              }
+ 189   1      }
+ 190          //---------------------------------------------------------------------------
+ 191          void tft320240_show_string(UCHAR sx, UINT sy, char* string)
+ 192          {
+ 193   1              UCHAR len;
+ 194   1      
+ 195   1              len = strlen( string );
+ 196   1              tft320240_show(sx, len*8+2, sy, sy+17, 0);
+ 197   1              ++sx;
+ 198   1              ++sy;
+ 199   1              while( *string != 0 )
+ 200   1              {
+ 201   2                      tft320240_show_colorchar(sx, sy, *string-32, 0xFFFF, 0x0000);
+ 202   2                      sx += 8;
+ 203   2                      string++;
+ 204   2              }
+ 205   1      }
+ 206          void tft320240_show_hanzi(UCHAR sx, UINT sy, UCHAR index, UINT CharColor, UINT BkColor)
+ 207          {
+ 208   1              UCHAR i, j;
+ 209   1              UCHAR mask;
+ 210   1              tft320240_blockwrite(sx, sx+15, sy, sy+15);//16*16 
+ 211   1              for ( i = 0; i < 32; i++ )
+ 212   1              {
+ 213   2                      mask = 0x80;
+ 214   2                      for ( j = 0; j <8; j++ )
+ 215   2                      {
+ 216   3                              tft320240_W_DATA((Hanzi[index*32+i] & mask) ? CharColor : BkColor);
+ 217   3                              mask >>= 1;
+ 218   3                      }
+ 219   2              }
+ 220   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1251    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      44
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

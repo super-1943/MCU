@@ -1,0 +1,45 @@
+A51 MACRO ASSEMBLER  1                                                                    12/04/2008 14:05:41 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.07
+OBJECT MODULE PLACED IN 1.OBJ
+ASSEMBLER INVOKED BY: d:\Program Files\Keil\C51\BIN\A51.EXE 1.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     org 0000h
+0000                   2     main:
+0000 7401              3     mov a,#01h
+0002                   4     l:
+0002 F590              5     mov P1,a;
+0004 110B              6     call delay;
+0006 03                7     rr a;
+0007 80F9              8     sjmp l;
+0009 80F5              9     sjmp main;
+000B                  10     delay:
+000B 79FF             11     mov r1,#0ffh;
+000D                  12     d:
+000D 7AFF             13     mov r2,#0ffh;
+000F DAFE             14     djnz r2,$;
+0011 D9FA             15     djnz r1,d;
+0013 22               16     ret;
+                      17     end;
+A51 MACRO ASSEMBLER  1                                                                    12/04/2008 14:05:41 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+D. . . . . . . . .  C ADDR   000DH   A   
+DELAY. . . . . . .  C ADDR   000BH   A   
+L. . . . . . . . .  C ADDR   0002H   A   
+MAIN . . . . . . .  C ADDR   0000H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

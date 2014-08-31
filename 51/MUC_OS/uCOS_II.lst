@@ -1,0 +1,31 @@
+C51 COMPILER V7.50   UCOS_II                                                               05/10/2007 13:04:33 PAGE 1   
+
+
+C51 COMPILER V7.50, COMPILATION OF MODULE UCOS_II
+OBJECT MODULE PLACED IN .\uCOS_II.obj
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE ..\UCOS_II\uCOS_II.C BROWSE DEBUG OBJECTEXTEND PRINT(.\uCOS_II.lst) OBJECT(
+                    -.\uCOS_II.obj)
+
+line level    source
+
+   1          /*
+   2          *********************************************************************************************************
+   3          *                                                uC/OS-II
+   4          *                                          The Real-Time Kernel
+   5          *
+   6          *                          (c) Copyright 1992-2002, Jean J. Labrosse, Weston, FL
+   7          *                                           All Rights Reserved
+   8          *
+   9          * File : uCOS_II.C
+  10          * By   : Jean J. Labrosse
+  11          *********************************************************************************************************
+  12          */
+  13          
+  14          #define  OS_GLOBALS                           /* Declare GLOBAL variables                              */
+  15          #include "includes.h"
+  16          
+  17          
+  18          
+*** ERROR C249 IN LINE 18 OF ..\UCOS_II\UCOS_II.C: 'DATA': SEGMENT TOO LARGE
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  1 ERROR(S)

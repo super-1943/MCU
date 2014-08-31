@@ -1,0 +1,314 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V7.51A/W32 for 8051                28/May/2010  14:43:48 #
+# Copyright 2004-2009 IAR Systems AB.                                         #
+# Time limited license: 20 days left                                          #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  near                                               #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data                                               #
+#    Dptr setup         =  1,16                                               #
+#    Source file        =  E:\AllProject\51\Keyboard Firmware Source          #
+#                          Code\support.c                                     #
+#    Command line       =  "E:\AllProject\51\Keyboard Firmware Source         #
+#                          Code\support.c" -lC "E:\AllProject\51\Keyboard     #
+#                          Firmware Source Code\Debug\List\" -lA              #
+#                          "E:\AllProject\51\Keyboard Firmware Source         #
+#                          Code\Debug\List\" -o "E:\AllProject\51\Keyboard    #
+#                          Firmware Source Code\Debug\Obj\" -e                #
+#                          --char_is_signed --no_cse --no_unroll --no_inline  #
+#                          --no_code_motion --no_tbaa --debug --core=plain    #
+#                          --dptr=16,1 --data_model=large --code_model=near   #
+#                          --calling_convention=xdata_reentrant               #
+#                          --place_constants=data --nr_virtual_regs 8 -I      #
+#                          "C:\Program Files\IAR Systems\Embedded Workbench   #
+#                          5.3 Evaluation version\8051\INC\" -I "C:\Program   #
+#                          Files\IAR Systems\Embedded Workbench 5.3           #
+#                          Evaluation version\8051\INC\CLIB\" -Ol             #
+#    List file          =  E:\AllProject\51\Keyboard Firmware Source          #
+#                          Code\Debug\List\support.lst                        #
+#    Object file        =  E:\AllProject\51\Keyboard Firmware Source          #
+#                          Code\Debug\Obj\support.r51                         #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+E:\AllProject\51\Keyboard Firmware Source Code\support.c
+      1          /******************************************************************************
+      2           *                         VAULT INFORMATION SERVICES                         *
+      3           *                          TEXAS INSTRUMENTS, INC.                           *
+      4           *----------------------------------------------------------------------------*
+      5           *                  "Support Program for TUSB2136 Demo App"                   *
+      6           *                                                                            * 
+      7           * Programmed by: Craig Steiner, VIS (csteiner@vaultbbs.com)                  * 
+      8           * Develop Date:  30/Sep/2000                                                 *  
+      9           *----------------------------------------------------------------------------*
+     10           * Description: This module is a component of the TUSB2136 Demo App.  It      *
+     11           *   contains generic, non-specific support routines that are utilized by     *
+     12           *   other modules in the project.                                            *
+     13           ******************************************************************************/
+     14          
+     15          #include <io51.h>
+     16          #include "types.h"
+     17          #include "tusb2136.h"
+     18          
+     19          /***************************************************************************
+     20           * Function:   strlen                                                      *
+     21           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+     22           * Description: Generic, simple version of the normal strlen() C-function. *
+     23           *    It is coded here because using the following version of strlen() is  *
+     24           *    approximately 40 bytes more efficient than using the standard lib    *
+     25           *    version of strlen() with IAR tools.                                  * 
+     26           ***************************************************************************/
+     27          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+     28          BYTE strlen(PBYTE string)
+   \                     strlen:
+     29          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?FUNC_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+     30          	BYTE str;
+     31          	for(str = 0; str < 255 ; str++)
+   \   000005   7900         MOV     R1,#0x0
+   \   000007   8001         SJMP    ??strlen_0
+   \                     ??strlen_1:
+   \   000009   09           INC     R1
+   \                     ??strlen_0:
+   \   00000A   E9           MOV     A,R1
+   \   00000B   C3           CLR     C
+   \   00000C   94FF         SUBB    A,#-0x1
+   \   00000E   5014         JNC     ??strlen_2
+     32          		if( string[str] == 0x00 )
+   \   000010   89..         MOV     ?V0 + 0,R1
+   \   000012   75..00       MOV     ?V0 + 1,#0x0
+   \   000015   EA           MOV     A,R2
+   \   000016   25..         ADD     A,?V0 + 0
+   \   000018   F582         MOV     DPL,A
+   \   00001A   EB           MOV     A,R3
+   \   00001B   35..         ADDC    A,?V0 + 1
+   \   00001D   F583         MOV     DPH,A
+   \   00001F   E0           MOVX    A,@DPTR
+   \   000020   70E7         JNZ     ??strlen_1
+     33          			return(str);
+   \   000022   8002         SJMP    ??strlen_3
+     34          	return(0);
+   \                     ??strlen_2:
+   \   000024   7900         MOV     R1,#0x0
+   \                     ??strlen_3:
+   \   000026   7F02         MOV     R7,#0x2
+   \   000028   02....       LJMP    ?FUNC_LEAVE_XDATA
+     35          }
+     36          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+     37          void memcpy(char *string1, char *string2, BYTE count)
+   \                     memcpy:
+     38          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?FUNC_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+     39          	BYTE str;
+     40          	for(str = 0; str < count; str++)
+   \   000005   7E00         MOV     R6,#0x0
+   \   000007   8025         SJMP    ??memcpy_0
+     41          		string1[str] = string2[str];
+   \                     ??memcpy_1:
+   \   000009   8E..         MOV     ?V0 + 0,R6
+   \   00000B   75..00       MOV     ?V0 + 1,#0x0
+   \   00000E   EC           MOV     A,R4
+   \   00000F   25..         ADD     A,?V0 + 0
+   \   000011   F582         MOV     DPL,A
+   \   000013   ED           MOV     A,R5
+   \   000014   35..         ADDC    A,?V0 + 1
+   \   000016   F583         MOV     DPH,A
+   \   000018   E0           MOVX    A,@DPTR
+   \   000019   C0E0         PUSH    A
+   \   00001B   8E..         MOV     ?V0 + 0,R6
+   \   00001D   75..00       MOV     ?V0 + 1,#0x0
+   \   000020   EA           MOV     A,R2
+   \   000021   25..         ADD     A,?V0 + 0
+   \   000023   F582         MOV     DPL,A
+   \   000025   EB           MOV     A,R3
+   \   000026   35..         ADDC    A,?V0 + 1
+   \   000028   F583         MOV     DPH,A
+   \   00002A   D0E0         POP     A
+   \   00002C   F0           MOVX    @DPTR,A
+   \   00002D   0E           INC     R6
+   \                     ??memcpy_0:
+   \   00002E   EE           MOV     A,R6
+   \   00002F   C3           CLR     C
+   \   000030   99           SUBB    A,R1
+   \   000031   40D6         JC      ??memcpy_1
+     42          }
+   \   000033   7F02         MOV     R7,#0x2
+   \   000035   02....       LJMP    ?FUNC_LEAVE_XDATA
+     43          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+     44          BYTE memcmp(PBYTE string1, PBYTE string2, BYTE count)
+   \                     memcmp:
+     45          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?FUNC_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+     46          	BYTE str;
+     47          	for(str = 0; str < count; str++)
+   \   000005   7F00         MOV     R7,#0x0
+   \   000007   8001         SJMP    ??memcmp_0
+   \                     ??memcmp_1:
+   \   000009   0F           INC     R7
+   \                     ??memcmp_0:
+   \   00000A   EF           MOV     A,R7
+   \   00000B   C3           CLR     C
+   \   00000C   99           SUBB    A,R1
+   \   00000D   5028         JNC     ??memcmp_2
+     48          		if( string1[str] != string2[str] )
+   \   00000F   8F..         MOV     ?V0 + 0,R7
+   \   000011   75..00       MOV     ?V0 + 1,#0x0
+   \   000014   EA           MOV     A,R2
+   \   000015   25..         ADD     A,?V0 + 0
+   \   000017   F582         MOV     DPL,A
+   \   000019   EB           MOV     A,R3
+   \   00001A   35..         ADDC    A,?V0 + 1
+   \   00001C   F583         MOV     DPH,A
+   \   00001E   E0           MOVX    A,@DPTR
+   \   00001F   FE           MOV     R6,A
+   \   000020   8F..         MOV     ?V0 + 0,R7
+   \   000022   75..00       MOV     ?V0 + 1,#0x0
+   \   000025   EC           MOV     A,R4
+   \   000026   25..         ADD     A,?V0 + 0
+   \   000028   F582         MOV     DPL,A
+   \   00002A   ED           MOV     A,R5
+   \   00002B   35..         ADDC    A,?V0 + 1
+   \   00002D   F583         MOV     DPH,A
+   \   00002F   E0           MOVX    A,@DPTR
+   \   000030   6E           XRL     A,R6
+   \   000031   60D6         JZ      ??memcmp_1
+     49          			return(1);
+   \   000033   7901         MOV     R1,#0x1
+   \   000035   8002         SJMP    ??memcmp_3
+     50          	return(0);
+   \                     ??memcmp_2:
+   \   000037   7900         MOV     R1,#0x0
+   \                     ??memcmp_3:
+   \   000039   7F02         MOV     R7,#0x2
+   \   00003B   02....       LJMP    ?FUNC_LEAVE_XDATA
+     51          }
+     52          
+     53          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+     54          void sendUartByte(BYTE bValue)
+   \                     sendUartByte:
+     55          {
+   \   000000                ; Saved register size: 0
+   \   000000                ; Auto size: 0
+     56          #ifdef SERIALDEBUG
+     57          	while(TI == 0);
+     58          	TI = 0;
+     59          	SBUF = bValue;
+     60          #endif
+     61          }
+   \   000000   22           RET
+     62          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+     63          void sendUartString(char *string, BYTE bCount)
+   \                     sendUartString:
+     64          {
+   \   000000                ; Saved register size: 0
+   \   000000                ; Auto size: 0
+     65          #ifdef SERIALDEBUG
+     66          	BYTE bIndex;
+     67          	for(bIndex = 0; bIndex < bCount; bIndex++)
+     68          		sendUartByte(string[bCount]);
+     69          #endif
+     70          }
+   \   000000   22           RET
+     71          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+     72          void sendUartHex(BYTE bValue)
+   \                     sendUartHex:
+     73          {
+   \   000000                ; Saved register size: 0
+   \   000000                ; Auto size: 0
+     74          #ifdef SERIALDEBUG
+     75          	BYTE hexValue;
+     76          	hexValue = (bValue & 0xF0)>> 4;
+     77          	if(hexValue < 10 )
+     78          		sendUartByte(hexValue + '0');
+     79          	else
+     80          		sendUartByte(hexValue + 55);
+     81          
+     82          	hexValue = (bValue & 0x0F);
+     83          	if(hexValue < 10 )
+     84          		sendUartByte(hexValue + '0');
+     85          	else
+     86          		sendUartByte(hexValue + 55);
+     87          #endif
+     88          }
+   \   000000   22           RET
+     89          
+     90          
+     91          #ifdef XXX
+     92          /***************************************************************************
+     93           * Function:   DelaymSecond                                                *
+     94           * Programmer: Horng-Ming Lobo Tai (lobotai@ti.com)                        *
+     95           * Description: Delays the given amount of msecs, assuming the processor   *
+     96           *    is running at 12MHz.                                                 *
+     97           ***************************************************************************/
+     98          
+     99          VOID DelaymSecond(UINT uiCounter)   // 12Mhz
+    100          {
+    101              TMOD &= 0xf0;
+    102              TMOD |= 0x01;               // timer 0 in mode 1, 16bit counter
+    103          
+    104              while(uiCounter--){
+    105                  TL0 = (65536-1000*SYS_CLOCK/12) % 256;
+    106                  TH0 = (65536-1000*SYS_CLOCK/12) / 256;
+    107                  TR0 = 1;                // start timer
+    108                  while(TF0 !=1);
+    109                  TF0 = 0;
+    110              }
+    111              TR0 = 0;
+    112          }
+    113          #endif
+
+   Maximum stack usage in bytes:
+
+     Function       ISTACK PSTACK XSTACK
+     --------       ------ ------ ------
+     memcmp             0      0      9
+     memcpy             1      0      9
+     sendUartByte       0      0      0
+     sendUartHex        0      0      0
+     sendUartString     0      0      0
+     strlen             0      0      9
+
+
+   Segment part sizes:
+
+     Function/Label Bytes
+     -------------- -----
+     strlen           43
+     memcpy           56
+     memcmp           62
+     sendUartByte      1
+     sendUartString    1
+     sendUartHex       1
+
+ 
+ 164 bytes in segment NEAR_CODE
+ 
+ 164 bytes of CODE memory
+
+Errors: none
+Warnings: none

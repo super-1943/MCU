@@ -1,0 +1,38 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+C:\Documents and Settings\zhaoyongke\×ÀÃæ\jia4\1602.uv2
+Project File Date:  01/26/2009
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling Text1.asm...
+linking...
+BL51 BANKED LINKER/LOCATER V6.00 - SN: K1UFC-M49RT7
+COPYRIGHT KEIL ELEKTRONIK GmbH 1987 - 2005
+"Text1.obj" 
+TO "1602" 
+RAMSIZE(256) 
+*** FATAL ERROR L210: I/O ERROR ON INPUT FILE:
+    EXCEPTION 0021H: PATH OR FILE NOT FOUND
+    FILE: Text1.obj
+Target not created
+Build target 'Target 1'
+assembling Text1.asm...
+Text1.asm(90): warning A73: TEXT FOUND BEYOND END STATEMENT - IGNORED
+linking...
+Program Size: data=8.0 xdata=0 code=101
+"1602" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+assembling Text1.asm...
+assembling main.asm...
+linking...
+Program Size: data=8.0 xdata=0 code=237
+"1602" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=8.0 xdata=0 code=237
+creating hex file from "1602"...
+"1602" - 0 Error(s), 0 Warning(s).

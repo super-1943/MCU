@@ -1,0 +1,165 @@
+C51 COMPILER V8.02   DESCRIP                                                               07/21/2010 10:42:03 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE DESCRIP
+OBJECT MODULE PLACED IN descrip.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE descrip.c BROWSE DEFINE(WORK_AROUND_192) DEBUG OBJECTEXTEND CODE
+
+line level    source
+
+   1          /******************************************************************************
+   2           *                         VAULT INFORMATION SERVICES                         *
+   3           *                          TEXAS INSTRUMENTS, INC.                           *
+   4           *----------------------------------------------------------------------------*
+   5           *                  "USB Descriptors for TUSB2136 Demo App"                   *
+   6           *                                                                            * 
+   7           * Programmed by: Craig Steiner, VIS (csteiner@vaultbbs.com)                  * 
+   8           * Develop Date:  30/Sep/2000                                                 *  
+   9           *----------------------------------------------------------------------------*
+  10           * Description: This module is a component of the TUSB2136 Demo App.  It      *
+  11           *   contains all the pre-defined descriptors used by the application.        *
+  12           *                                                                            *
+  13           * Modified by Jim Chen 2001/01/03:                                           *
+  14           *   1. total 102 keys                                                        *
+  15           *   2. can work in Mac                                                       *
+  16           *   3. use scanline8, scanline9 and return 0x40 as suspend key               *
+  17           *   4. added usbSetIdle(void), void usbSetProtocol(void) for Mac             *
+  18           *                                                                            *
+  19           ******************************************************************************/
+  20          
+  21          #include "types.h"
+  22          #include "tusb2136.h"
+  23          #include "usb.h"
+  24          
+  25          /***************************************************************************
+  26           * Structure: Device Descriptor Structure                                  *
+  27           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+  28           * Description: The abromDeviceDescriptor[] structure holds the 12h (18)   *
+  29           *    bytes that make up the device descriptor for the keyboard device.    *
+  30           ***************************************************************************/
+  31          
+  32          BYTE code abromDeviceDescriptor[SIZEOF_DEVICE_DESCRIPTOR] = 
+  33                  {
+  34              SIZEOF_DEVICE_DESCRIPTOR,       // Length of this descriptor (12h bytes)
+  35              DESC_TYPE_DEVICE,               // Type code of this descriptor (01h)
+  36              0x10,0x01,                      // Release of USB spec (Rev 1.1)
+  37              0xFF,                               // Device's base class code
+  38              0,                              // Device's sub class code
+  39              0,                              // Device's protocol type code
+  40              EP0_MAX_PACKET_SIZE,            // End point 0's max packet size = 8
+  41              0x51,0x04,                      // Vendor ID: Texas Instruments
+  42              0x00, 0x5F,                                 // Product ID: UCD9110 EVM
+  43              0x00,0x01,                      // Revision level of device, UPDATED AT RUN-TIME
+  44              0,                              // Index of manufacturer name string desc, UPDATED AT RUN-TIME
+  45              0,                              // Index of product name string desc, UPDATED AT RUN-TIME
+  46              0,                              // Index of serial number string desc, UPDATED AT RUN-TIME
+  47              1                               // Number of configurations supported
+  48              };
+  49          
+  50          /***************************************************************************
+  51           * Structure: Configuration Descriptor Structure                           *
+  52           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+  53           * Description: The abromConfigurationDescriptorGroup structure holds the  *
+  54           *    data that makes up the Configuration descriptor for the keyboard     *
+  55           *    device.                                                              *
+C51 COMPILER V8.02   DESCRIP                                                               07/21/2010 10:42:03 PAGE 2   
+
+  56           ***************************************************************************/
+  57          
+  58          BYTE code abromConfigurationDescriptorGroup[SIZEOF_BOOTCODE_CONFIG_DESC_GROUP] =
+  59                  {
+  60              // CONFIGURATION DESCRIPTOR (9 bytes)
+  61              SIZEOF_CONFIG_DESCRIPTOR,        // bLength
+  62              DESC_TYPE_CONFIG,                // bDescriptorType
+  63              SIZEOF_BOOTCODE_CONFIG_DESC_GROUP, 0x00, // wTotalLength
+  64              0x01,                            // bNumInterfaces
+  65              0x01,                            // bConfigurationValue
+  66              0x00,                            // iConfiguration Description offset
+  67              0x80,                            // bmAttributes, bus power, do not support remote wakeup
+  68              0x4B,                            // Max. Power Consumption at 2mA unit = 150mA
+  69          
+  70              // INTERFACE DESCRIPTOR (9 bytes)
+  71              SIZEOF_INTERFACE_DESCRIPTOR,    // bLength
+  72              DESC_TYPE_INTERFACE,            // bDescriptorType
+  73              0x00,                           // bInterfaceNumber
+  74              0x00,                           // bAlternateSetting
+  75                  0x02,                                                   // bNumEndPoints
+  76                  0x03,                                                   // bInterfaceClass: 3 = HID Device
+  77                  0x00,                                                   // bInterfaceSubClass: no Boot Device
+  78                  0x00,                                                   // bInterfaceProtocol: no protocol
+  79              0x01,                           // iInterface
+  80          
+  81              // KEYBOARD HID DESCRIPTOR (9 bytes)
+  82              0x09,                                   // bLength of HID descriptor
+  83              0x21,                               // HID Descriptor Type:
+  84              0x01,0x01,                              // HID Revision number 1.00
+  85              0x00,                                       // Target country, nothing specified (00h)
+  86              0x01,                                       // Number of HID classes to follow 
+  87              0x22,                                       // Report descriptor type
+  88              SIZEOF_REPORT_DESCRIPTOR, 0x00, // Total length of report descriptor
+  89          
+  90              // ENDPOINT #1 INPUT DESCRIPTOR, (7 bytes)
+  91              SIZEOF_ENDPOINT_DESCRIPTOR,     // bLength
+  92              DESC_TYPE_ENDPOINT,             // bDescriptorType
+  93              0x81,                           // bEndpointAddress; bit7=1 for IN, bits 3-0=1 for ep1
+  94              EP_DESC_ATTR_TYPE_INT,          // bmAttributes, interrupt transfers
+  95              0x40, 0x00,                     // wMaxPacketSize, 64 bytes
+  96              0x0A,                                                       // Polling interval: Every 10 ms
+  97          
+  98                  // ENDPOINT #1 OUTPUT DESCRIPTOR (7 bytes) 
+  99                  SIZEOF_ENDPOINT_DESCRIPTOR,     // bLength
+ 100              DESC_TYPE_ENDPOINT,             // bDescriptorType
+ 101              0x01,                           // bEndpointAddress; bit7=1 for IN, bits 3-0=1 for ep1
+ 102              EP_DESC_ATTR_TYPE_INT,          // bmAttributes, interrupt transfers
+ 103              0x40, 0x00,                     // wMaxPacketSize, 64 bytes
+ 104              0x0A                            // Polling interval: Every 10 ms    
+ 105          };
+ 106          
+ 107          
+ 108          
+ 109          BYTE code abromReportDescriptor[SIZEOF_REPORT_DESCRIPTOR] =
+ 110          {
+ 111                  0x06, 0xA0, 0xFF,               // Usage Page(vendor defined)
+ 112                  0x09, 0xA5,                             // Usage (vendor defined)
+ 113                  0xA1, 0x01,                     // Collection (Application)
+ 114                  0x09, 0xA6,                     // Usage (vendor defined)
+ 115                  
+ 116                  // The Input Report (Sends 32 bytes of data to the host)
+ 117                  0x09, 0xA7,                             // Usage (vendor defined)
+C51 COMPILER V8.02   DESCRIP                                                               07/21/2010 10:42:03 PAGE 3   
+
+ 118                  0x15, 0x80,                             // Logical Minimum(-127)
+ 119                  0x25, 0x7F,                     // Logical Maximum (128)
+ 120                  0x75, 0x08,                     // Report Size (8) bits
+ 121                  0x95, 0x40,                     // Report Count (64) fields
+ 122                  0x81, 0x02,                     // Input (Data, Variable, Absolute)
+ 123          
+ 124                  // The Output Report (Sends 32 bytes of data to the device)
+ 125                  0x09, 0xA9,                     // Usage (vendor defined)
+ 126                  0x15, 0x80,                             // Logical Minimum(-127)
+ 127                  0x25, 0x7F,                     // Logical Maximum (128)
+ 128                  0x75, 0x08,                     // Report Size (8) bits
+ 129                  0x95, 0x40,                     // Report Count (64) fields
+ 130                  0x91, 0x02,                     // Output (Data, Variable, Absolute)    
+ 131                  0xC0                                    // End Collection
+ 132          };
+ 133          
+C51 COMPILER V8.02   DESCRIP                                                               07/21/2010 10:42:03 PAGE 4   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =     93    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

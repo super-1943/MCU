@@ -1,0 +1,32 @@
+C51 COMPILER V7.06   KEILTEST                                                              01/18/2011 15:53:14 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE KEILTEST
+OBJECT MODULE PLACED IN keiltest.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE keiltest.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg51.h>
+   2          
+   3          void main(void)
+   4          {
+   5   1              while(1)
+   6   1              {
+   7   2                      P0=0x55;
+   8   2              }
+   9   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =      5    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

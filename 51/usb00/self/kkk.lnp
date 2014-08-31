@@ -1,0 +1,6 @@
+"STARTUP.obj",
+"Text1.obj",
+"UART.obj",
+"PDIUSBD12.obj" 
+TO "kkk" 
+RAMSIZE(256) 

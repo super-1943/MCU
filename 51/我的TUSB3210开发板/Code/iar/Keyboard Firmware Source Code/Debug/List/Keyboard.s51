@@ -1,0 +1,2643 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V7.51A/W32 for 8051               28/May/2010  14:43:46 /
+// Copyright 2004-2009 IAR Systems AB.                                        /
+// Time limited license: 20 days left                                         /
+//                                                                            /
+//    Core               =  plain                                             /
+//    Code model         =  near                                              /
+//    Data model         =  large                                             /
+//    Calling convention =  xdata reentrant                                   /
+//    Constant location  =  data                                              /
+//    Dptr setup         =  1,16                                              /
+//    Source file        =  E:\AllProject\51\Keyboard Firmware Source         /
+//                          Code\Keyboard.c                                   /
+//    Command line       =  "E:\AllProject\51\Keyboard Firmware Source        /
+//                          Code\Keyboard.c" -lC "E:\AllProject\51\Keyboard   /
+//                          Firmware Source Code\Debug\List\" -lA             /
+//                          "E:\AllProject\51\Keyboard Firmware Source        /
+//                          Code\Debug\List\" -o "E:\AllProject\51\Keyboard   /
+//                          Firmware Source Code\Debug\Obj\" -e               /
+//                          --char_is_signed --no_cse --no_unroll             /
+//                          --no_inline --no_code_motion --no_tbaa --debug    /
+//                          --core=plain --dptr=16,1 --data_model=large       /
+//                          --code_model=near --calling_convention=xdata_reen /
+//                          trant --place_constants=data --nr_virtual_regs 8  /
+//                          -I "C:\Program Files\IAR Systems\Embedded         /
+//                          Workbench 5.3 Evaluation version\8051\INC\" -I    /
+//                          "C:\Program Files\IAR Systems\Embedded Workbench  /
+//                          5.3 Evaluation version\8051\INC\CLIB\" -Ol        /
+//    List file          =  E:\AllProject\51\Keyboard Firmware Source         /
+//                          Code\Debug\List\Keyboard.s51                      /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME Keyboard
+
+        RTMODEL "__calling_convention", "xdata_reentrant"
+        RTMODEL "__code_model", "near"
+        RTMODEL "__core", "plain"
+        RTMODEL "__data_model", "large"
+        RTMODEL "__dptr_size", "16"
+        RTMODEL "__extended_stack", "disabled"
+        RTMODEL "__location_for_constants", "data"
+        RTMODEL "__number_of_dptrs", "1"
+        RTMODEL "__rt_version", "1"
+
+        RSEG DOVERLAY:DATA:NOROOT(0)
+        RSEG IOVERLAY:IDATA:NOROOT(0)
+        RSEG ISTACK:IDATA:NOROOT(0)
+        RSEG PSTACK:XDATA:NOROOT(0)
+        RSEG XSTACK:XDATA:NOROOT(0)
+
+        EXTERN ?FUNC_ENTER_XDATA
+        EXTERN ?FUNC_LEAVE_XDATA
+        EXTERN ?L_EQ_C
+        EXTERN ?L_MOV_X
+        EXTERN ?S_SHL
+        EXTERN ?UC_SWITCH_DENSE
+        EXTERN ?UL_GT_C
+        EXTERN ?V0
+        EXTERN __INIT_XDATA_I
+        EXTERN __INIT_XDATA_Z
+
+        PUBLIC ClearKeyBoardBuffer
+        FUNCTION ClearKeyBoardBuffer,0203H
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME XSTACK, 9, STACK
+        PUBLIC IEP1InterruptHandler
+        FUNCTION IEP1InterruptHandler,021203H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC OEP0SetLEDs
+        FUNCTION OEP0SetLEDs,0203H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC UpdateIEP1WithKeypress
+        FUNCTION UpdateIEP1WithKeypress,021203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 1, STACK
+        LOCFRAME XSTACK, 9, STACK
+        PUBWEAK _A_IE
+        PUBWEAK _A_P0
+        PUBWEAK _A_P1
+        PUBWEAK _A_P2
+        PUBWEAK _A_P3
+        PUBWEAK _A_PCON
+        PUBWEAK __Constant_0
+        PUBLIC bLED
+        PUBLIC delay
+        FUNCTION delay,0203H
+        ARGFRAME XSTACK, 0, STACK
+        PUBLIC iep1Buffer
+        PUBLIC intFlags
+        PUBLIC keyDefs
+        PUBLIC keypressBuffer
+        PUBLIC keypressDebounce
+        PUBLIC main
+        FUNCTION main,0a1a03H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC modifierByte
+        PUBLIC otherFlags
+        PUBLIC previousIEP1packet
+        
+        CFI Names cfiNames0
+        CFI StackFrame CFA_SP SP IDATA
+        CFI StackFrame CFA_PSP16 PSP16 XDATA
+        CFI StackFrame CFA_XSP16 XSP16 XDATA
+        CFI StaticOverlayFrame CFA_IOVERLAY IOVERLAY
+        CFI StaticOverlayFrame CFA_DOVERLAY DOVERLAY
+        CFI Resource `PSW.CY`:1, `B.BR0`:1, `B.BR1`:1, `B.BR2`:1, `B.BR3`:1
+        CFI Resource `B.BR4`:1, `B.BR5`:1, `B.BR6`:1, `B.BR7`:1, `VB.BR8`:1
+        CFI Resource `VB.BR9`:1, `VB.BR10`:1, `VB.BR11`:1, `VB.BR12`:1
+        CFI Resource `VB.BR13`:1, `VB.BR14`:1, `VB.BR15`:1, VB:8, B:8, A:8
+        CFI Resource PSW:8, DPL0:8, DPH0:8, R0:8, R1:8, R2:8, R3:8, R4:8, R5:8
+        CFI Resource R6:8, R7:8, V0:8, V1:8, V2:8, V3:8, V4:8, V5:8, V6:8, V7:8
+        CFI Resource SP:8, PSPH:8, PSPL:8, PSP16:16, XSPH:8, XSPL:8, XSP16:16
+        CFI VirtualResource ?RET:16, ?RET_HIGH:8, ?RET_LOW:8
+        CFI ResourceParts PSP16 PSPH, PSPL
+        CFI ResourceParts XSP16 XSPH, XSPL
+        CFI ResourceParts ?RET ?RET_HIGH, ?RET_LOW
+        CFI EndNames cfiNames0
+        
+        CFI Common cfiCommon0 Using cfiNames0
+        CFI CodeAlign 1
+        CFI DataAlign -1
+        CFI ReturnAddress ?RET CODE
+        CFI CFA_DOVERLAY Used
+        CFI CFA_IOVERLAY Used
+        CFI CFA_SP SP+-2
+        CFI CFA_PSP16 PSP16+0
+        CFI CFA_XSP16 XSP16+0
+        CFI `PSW.CY` SameValue
+        CFI `B.BR0` SameValue
+        CFI `B.BR1` SameValue
+        CFI `B.BR2` SameValue
+        CFI `B.BR3` SameValue
+        CFI `B.BR4` SameValue
+        CFI `B.BR5` SameValue
+        CFI `B.BR6` SameValue
+        CFI `B.BR7` SameValue
+        CFI `VB.BR8` SameValue
+        CFI `VB.BR9` SameValue
+        CFI `VB.BR10` SameValue
+        CFI `VB.BR11` SameValue
+        CFI `VB.BR12` SameValue
+        CFI `VB.BR13` SameValue
+        CFI `VB.BR14` SameValue
+        CFI `VB.BR15` SameValue
+        CFI VB SameValue
+        CFI B Undefined
+        CFI A Undefined
+        CFI PSW SameValue
+        CFI DPL0 SameValue
+        CFI DPH0 SameValue
+        CFI R0 Undefined
+        CFI R1 Undefined
+        CFI R2 Undefined
+        CFI R3 Undefined
+        CFI R4 Undefined
+        CFI R5 Undefined
+        CFI R6 SameValue
+        CFI R7 SameValue
+        CFI V0 SameValue
+        CFI V1 SameValue
+        CFI V2 SameValue
+        CFI V3 SameValue
+        CFI V4 SameValue
+        CFI V5 SameValue
+        CFI V6 SameValue
+        CFI V7 SameValue
+        CFI PSPH Undefined
+        CFI PSPL Undefined
+        CFI XSPH Undefined
+        CFI XSPL Undefined
+        CFI ?RET Concat
+        CFI ?RET_HIGH Frame(CFA_SP, 2)
+        CFI ?RET_LOW Frame(CFA_SP, 1)
+        CFI EndCommon cfiCommon0
+        
+        EXTERN GetVidPidSetting
+        FUNCTION GetVidPidSetting,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN InitializeUsbHub
+        FUNCTION InitializeUsbHub,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN InitializeUsbFunction
+        FUNCTION InitializeUsbFunction,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN strlen
+        FUNCTION strlen,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN memcmp
+        FUNCTION memcmp,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN memcpy
+        FUNCTION memcpy,0202H
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN bSuspended
+        EXTERN deviceReady
+        EXTERN s0123
+
+// E:\AllProject\51\Keyboard Firmware Source Code\Keyboard.c
+//    1  /*****************************************************************************
+//    2  *                         VAULT INFORMATION SERVICES                         *
+//    3  *                          TEXAS INSTRUMENTS, INC.                           *
+//    4  *----------------------------------------------------------------------------*
+//    5  *                  "TUSB2136 Generic Keyboard Demo Program"                  *
+//    6  *                                                                            * 
+//    7  * Programmed by: Craig Steiner, VIS (csteiner@vaultbbs.com)                  * 
+//    8  * Develop Date:  30/Sep/2000                                                 *  
+//    9  *----------------------------------------------------------------------------*
+//   10  * Description: This software is a fully functional demonstration program that*
+//   11  *   illustrates the use of the TUSB2136 to implement a USB 101-key keyboard. *
+//   12  *                                                                            *
+//   13  *   This module is the "main" module.  Also, pretty much everything that the *
+//   14  *   end-user will need to modify to create a standard keyboard is contained  * 
+//   15  *   in this module.                                                          * 
+//   16  *                                                                            *
+//   17  * Modified by Jim Chen 2001/01/03:                                           *
+//   18  *   1. total 102 keys                                                        *
+//   19  *   2. can work in Mac                                                       *
+//   20  *   3. use scanline8, scanline9 and return 0x40 as suspend key               *
+//   21  *   4. added usbSetIdle(void), void usbSetProtocol(void) for Mac             *
+//   22  *                                                                            *
+//   23  * Modified by Jim Chen 2001/01/19:                                           *
+//   24  *   1. fixed bug in high speed Mac                                           *
+//   25  *                                                                            *
+//   26  * Modified by Jim Chen 2001/03/02:                                           *
+//   27  *   1. merge 4 configurations into one binary code                           *
+//   28  *   2. solve phantom key issue by Mike's solution                            *
+//   29  *   3. version number started with Rev1.00                                   *
+//   30  *                                                                            *
+//   31  * Modified by Jim Chen 2001/06/01: Rev1.01                                   *
+//   32  *   1. changed version 4 from NewMotion one-key to flat keypad               *
+//   33  *                                                                            *
+//   34  ******************************************************************************/
+//   35 
+//   36 #include <io51.h>
+
+        ASEGN SFR_AN:DATA:NOROOT,0a8H
+// union <unnamed> volatile __sfr _A_IE
+_A_IE:
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,090H
+// union <unnamed> volatile __sfr _A_P1
+_A_P1:
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,080H
+// union <unnamed> volatile __sfr _A_P0
+_A_P0:
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0b0H
+// union <unnamed> volatile __sfr _A_P3
+_A_P3:
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0a0H
+// union <unnamed> volatile __sfr _A_P2
+_A_P2:
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,087H
+// union <unnamed> volatile __sfr _A_PCON
+_A_PCON:
+        DS 1
+//   37 #include "types.h"
+//   38 #include "delay.h"
+//   39 #include "usb.h"
+//   40 #include "tusb2136.h"
+//   41 
+//   42 // Maximum size of the Keypress buffer is 6 bytes, because that's what fits in
+//   43 // a single HID standard keyboard response
+//   44 
+//   45 #define KEYPRESS_BUFFER_SIZE			0x06
+//   46 
+//   47 // The following definitions indicate which bit of the data byte sent from
+//   48 // the host to the keyboard correspond to each of the given LEDs.
+//   49 
+//   50 #define BIT_NUMLOCK					0x01
+//   51 #define BIT_CAPSLOCK				0x02
+//   52 #define BIT_SCROLLLOCK				0x04
+//   53 // The following definitions indicate which GPIO pin corresponds to each
+//   54 // of the keyboard LEDs.
+//   55 
+//   56 #define PIN_NUMLOCK				P3_bit.T0
+//   57 #define PIN_CAPSLOCK				P3_bit.INT1
+//   58 #define PIN_SCROLLLOCK				P3_bit.INT0
+//   59 
+//   60 extern unsigned char s0123;
+//   61 extern BYTE deviceReady;
+//   62 extern BYTE bSuspended;
+//   63 
+//   64 extern void gpioInitialization(void);
+//   65 extern void setLEDs(BYTE bData);
+//   66 extern int readSwitches(void);
+//   67 extern BYTE strlen(char *string);
+//   68 void sendUartByte(BYTE bValue);void sendUartString(char *string, BYTE bCount);
+//   69 void sendUartHex(BYTE bValue);
+//   70 
+//   71 extern BYTE memcmp(char *string1, char *string2, BYTE count);
+//   72 extern void memcpy(char *string1, char *string2, BYTE count);
+//   73 extern void InitializeUsbData(void);
+//   74 extern void InitializeUsbHub(void);
+//   75 extern void InitializeUsbFunction(void);
+//   76 extern void GetVidPidSetting(void);
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//   77 unsigned char intFlags = 0x00;
+intFlags:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//   78 unsigned char otherFlags = 0x00;
+otherFlags:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+//   79 
+//   80 void ClearKeyBoardBuffer(void);
+//   81 void sendKeyData(int x);
+//   82 void UpdateIEP1WithKeypress(void);
+//   83 
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//   84 BYTE bLED = 0;
+bLED:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//   85 BYTE modifierByte = 0x00;
+modifierByte:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//   86 BYTE keypressBuffer[KEYPRESS_BUFFER_SIZE + 1];
+keypressBuffer:
+        DS 7
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//   87 BYTE previousIEP1packet[8];
+previousIEP1packet:
+        DS 8
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//   88 PBYTE iep1Buffer = 0x00;
+iep1Buffer:
+        DS 2
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//   89 BYTE keypressDebounce[256];
+keypressDebounce:
+        DS 256
+        REQUIRE __INIT_XDATA_Z
+//   90 
+//   91 
+//   92 
+//   93 /***************************************************************************
+//   94  * Structure: KEYDEFS Structure                                            *
+//   95  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//   96  * Description: The keyDefs[] structure contains a list of all the keys    *
+//   97  *    that are supported by the keyboard and information related to each   *
+//   98  *    key.  Additional keys may be added to the program by adding          *
+//   99  *    additional entries in this table.  The structure is defined in       * 
+//  100  *    types.h.                                                             *
+//  101  *                                                                         *
+//  102  *    vidPidMask: The first column is a bit-mapped mask that indicates     *
+//  103  *          whether the given key is supported by each VID/PID version.    *
+//  104  *          For example, 0x0001 means that the given key is only supported *
+//  105  *          by VIDSTA configuration #1.  0x0003 means it is supported only * 
+//  106  *          by configuration #1 and #2.  0xFFFF means it is supported by   *
+//  107  *          all 16 possible configurations of VIDSTA.  This allows a       * 
+//  108  *          single firmware which includes specialized key definitions     *
+//  109  *          that only apply to certain products.                           *
+//  110  *    scanLine: The second column indicates which keyboard scan line must  *
+//  111  *          be selected in order to detect the keypress.  The current      *
+//  112  *          software supports 18 scan lines.  More scan lines may be       *
+//  113  *          supported by modifying the "scan line selection" code in       *
+//  114  *          the main() module.                                             *
+//  115  *    keyPressMask: The third column is a bitmask which indicates which    *
+//  116  *          bit will be brought low when the given key is pressed.         *
+//  117  *    hidCode: The fourth column indicates the HID usage code for the      *
+//  118  *          given keypress.  The constants are delcared in usb.h.  A       *
+//  119  *          value of 0 in the hidCode coumn will cause the keypress to     *
+//  120  *          be ignored.                                                    *
+//  121  *    modBit: The fifth (optional) column indicates which bit, if any,     *
+//  122  *          should be set in the keyboard modifier byte.  This is for      *
+//  123  *          ALT, SHIFT, CTRL, and GUI keys.  This is implemented as a      *
+//  124  *          field in the array so that additional keys can easily be       *
+//  125  *          added that mimic the functionality of the keys above.  If the  *
+//  126  *          value is omitted, it will be compiled to 0x00 which means the  *
+//  127  *          key will NOT set any bit in the modifier byte of the report.   *
+//  128  ***************************************************************************/
+//  129 /* for reference only
+//  130 struct KEYMAP_STRUCT
+//  131 	{
+//  132 	unsigned int	vidPidMask; // Each bit indicates whether this key is supported in given VID/PID setting
+//  133 	unsigned long	scanLine; // Indicates the column to select
+//  134 	BYTE			keyPressMask; // Indicates the value returned if the given key is pressed
+//  135 	BYTE			hidCode; // The value that is returned via USB to computer for this keypress
+//  136 	BYTE			modBit; // Holds the bit which should be turned on in the modifier byte if this key is pressed
+//  137 	};
+//  138 */
+//  139 // 4 kinds of keyboard matrix mapping
+
+        RSEG CODE_C:CODE:REORDER:NOROOT(0)
+        DATA
+//  140 struct KEYMAP_STRUCT code keyDefs[] = {
+keyDefs:
+        DW 1
+        DD 18
+        DB 2, 227, 8
+        DW 2
+        DD 18
+        DB 128, 30, 0
+        DW 6
+        DD 18
+        DB 64, 4, 0
+        DW 6
+        DD 18
+        DB 32, 13, 0
+        DW 6
+        DD 18
+        DB 16, 22, 0
+        DW 4
+        DD 18
+        DB 128, 83, 0
+        DW 8
+        DD 18
+        DB 128, 20, 0
+        DW 8
+        DD 18
+        DB 64, 26, 0
+        DW 8
+        DD 18
+        DB 32, 8, 0
+        DW 8
+        DD 18
+        DB 16, 21, 0
+        DW 8
+        DD 18
+        DB 8, 23, 0
+        DW 8
+        DD 18
+        DB 4, 28, 0
+        DW 8
+        DD 18
+        DB 2, 24, 0
+        DW 1
+        DD 17
+        DB 128, 230, 64
+        DW 1
+        DD 17
+        DB 32, 226, 4
+        DW 1
+        DD 17
+        DB 8, 71, 0
+        DW 1
+        DD 17
+        DB 4, 70, 0
+        DW 2
+        DD 17
+        DB 128, 31, 0
+        DW 6
+        DD 17
+        DB 64, 5, 0
+        DW 6
+        DD 17
+        DB 32, 14, 0
+        DW 6
+        DD 17
+        DB 16, 23, 0
+        DW 4
+        DD 17
+        DB 128, 57, 0
+        DW 8
+        DD 17
+        DB 128, 38, 0
+        DW 8
+        DD 17
+        DB 64, 37, 0
+        DW 8
+        DD 17
+        DB 32, 36, 0
+        DW 8
+        DD 17
+        DB 16, 41, 0
+        DW 8
+        DD 17
+        DB 8, 225, 2
+        DW 8
+        DD 17
+        DB 4, 19, 0
+        DW 8
+        DD 17
+        DB 2, 18, 0
+        DW 8
+        DD 17
+        DB 1, 12, 0
+        DW 1
+        DD 16
+        DB 128, 44, 0
+        DW 1
+        DD 16
+        DB 64, 40, 0
+        DW 1
+        DD 16
+        DB 32, 62, 0
+        DW 1
+        DD 16
+        DB 16, 42, 0
+        DW 1
+        DD 16
+        DB 4, 67, 0
+        DW 1
+        DD 16
+        DB 2, 66, 0
+        DW 1
+        DD 16
+        DB 1, 49, 0
+        DW 2
+        DD 16
+        DB 128, 32, 0
+        DW 6
+        DD 16
+        DB 64, 6, 0
+        DW 6
+        DD 16
+        DB 32, 15, 0
+        DW 6
+        DD 16
+        DB 16, 24, 0
+        DW 4
+        DD 16
+        DB 128, 71, 0
+        DW 8
+        DD 16
+        DB 128, 4, 0
+        DW 8
+        DD 16
+        DB 64, 22, 0
+        DW 8
+        DD 16
+        DB 32, 7, 0
+        DW 8
+        DD 16
+        DB 16, 9, 0
+        DW 8
+        DD 16
+        DB 8, 10, 0
+        DW 8
+        DD 16
+        DB 4, 11, 0
+        DW 8
+        DD 16
+        DB 2, 13, 0
+        DW 8
+        DD 16
+        DB 1, 54, 0
+        DW 1
+        DD 15
+        DB 128, 56, 0
+        DW 1
+        DD 15
+        DB 32, 52, 0
+        DW 1
+        DD 15
+        DB 16, 47, 0
+        DW 1
+        DD 15
+        DB 8, 19, 0
+        DW 1
+        DD 15
+        DB 4, 39, 0
+        DW 1
+        DD 15
+        DB 2, 45, 0
+        DW 1
+        DD 15
+        DB 1, 51, 0
+        DW 6
+        DD 15
+        DB 128, 33, 0
+        DW 6
+        DD 15
+        DB 64, 7, 0
+        DW 6
+        DD 15
+        DB 32, 16, 0
+        DW 6
+        DD 15
+        DB 16, 25, 0
+        DW 8
+        DD 15
+        DB 128, 35, 0
+        DW 8
+        DD 15
+        DB 64, 34, 0
+        DW 8
+        DD 15
+        DB 32, 33, 0
+        DW 8
+        DD 15
+        DB 16, 74, 0
+        DW 8
+        DD 15
+        DB 8, 230, 64
+        DW 8
+        DD 15
+        DB 4, 52, 0
+        DW 8
+        DD 15
+        DB 2, 15, 0
+        DW 8
+        DD 15
+        DB 1, 14, 0
+        DW 1
+        DD 14
+        DB 64, 55, 0
+        DW 1
+        DD 14
+        DB 16, 64, 0
+        DW 1
+        DD 14
+        DB 8, 18, 0
+        DW 1
+        DD 14
+        DB 4, 38, 0
+        DW 1
+        DD 14
+        DB 2, 65, 0
+        DW 1
+        DD 14
+        DB 1, 15, 0
+        DW 6
+        DD 14
+        DB 128, 34, 0
+        DW 6
+        DD 14
+        DB 64, 8, 0
+        DW 6
+        DD 14
+        DB 32, 17, 0
+        DW 6
+        DD 14
+        DB 16, 26, 0
+        DW 8
+        DD 14
+        DB 128, 29, 0
+        DW 8
+        DD 14
+        DB 64, 27, 0
+        DW 8
+        DD 14
+        DB 32, 6, 0
+        DW 8
+        DD 14
+        DB 16, 25, 0
+        DW 8
+        DD 14
+        DB 8, 5, 0
+        DW 8
+        DD 14
+        DB 4, 17, 0
+        DW 8
+        DD 14
+        DB 2, 16, 0
+        DW 8
+        DD 14
+        DB 1, 224, 1
+        DW 1
+        DD 13
+        DB 64, 54, 0
+        DW 1
+        DD 13
+        DB 32, 63, 0
+        DW 1
+        DD 13
+        DB 16, 48, 0
+        DW 1
+        DD 13
+        DB 8, 12, 0
+        DW 1
+        DD 13
+        DB 4, 37, 0
+        DW 1
+        DD 13
+        DB 2, 46, 0
+        DW 1
+        DD 13
+        DB 1, 14, 0
+        DW 6
+        DD 13
+        DB 128, 35, 0
+        DW 6
+        DD 13
+        DB 64, 9, 0
+        DW 6
+        DD 13
+        DB 32, 18, 0
+        DW 6
+        DD 13
+        DB 16, 27, 0
+        DW 8
+        DD 13
+        DB 128, 32, 0
+        DW 8
+        DD 13
+        DB 64, 31, 0
+        DW 8
+        DD 13
+        DB 32, 30, 0
+        DW 8
+        DD 13
+        DB 16, 77, 0
+        DW 8
+        DD 13
+        DB 8, 40, 0
+        DW 8
+        DD 13
+        DB 4, 82, 0
+        DW 8
+        DD 13
+        DB 2, 49, 0
+        DW 8
+        DD 13
+        DB 1, 56, 0
+        DW 1
+        DD 12
+        DB 128, 17, 0
+        DW 1
+        DD 12
+        DB 64, 16, 0
+        DW 1
+        DD 12
+        DB 32, 11, 0
+        DW 1
+        DD 12
+        DB 16, 28, 0
+        DW 1
+        DD 12
+        DB 8, 24, 0
+        DW 1
+        DD 12
+        DB 4, 36, 0
+        DW 1
+        DD 12
+        DB 2, 35, 0
+        DW 1
+        DD 12
+        DB 1, 13, 0
+        DW 6
+        DD 12
+        DB 128, 36, 0
+        DW 6
+        DD 12
+        DB 64, 10, 0
+        DW 6
+        DD 12
+        DB 32, 19, 0
+        DW 6
+        DD 12
+        DB 16, 28, 0
+        DW 8
+        DD 12
+        DB 128, 76, 0
+        DW 8
+        DD 12
+        DB 64, 39, 0
+        DW 8
+        DD 12
+        DB 32, 73, 0
+        DW 8
+        DD 12
+        DB 16, 79, 0
+        DW 8
+        DD 12
+        DB 8, 44, 0
+        DW 8
+        DD 12
+        DB 4, 81, 0
+        DW 8
+        DD 12
+        DB 2, 80, 0
+        DW 8
+        DD 12
+        DB 1, 55, 0
+        DW 1
+        DD 11
+        DB 128, 5, 0
+        DW 1
+        DD 11
+        DB 64, 25, 0
+        DW 1
+        DD 11
+        DB 32, 10, 0
+        DW 1
+        DD 11
+        DB 16, 23, 0
+        DW 1
+        DD 11
+        DB 8, 21, 0
+        DW 1
+        DD 11
+        DB 4, 33, 0
+        DW 1
+        DD 11
+        DB 2, 34, 0
+        DW 1
+        DD 11
+        DB 1, 9, 0
+        DW 6
+        DD 11
+        DB 128, 37, 0
+        DW 6
+        DD 11
+        DB 64, 11, 0
+        DW 6
+        DD 11
+        DB 32, 20, 0
+        DW 6
+        DD 11
+        DB 16, 29, 0
+        DW 1
+        DD 10
+        DB 64, 6, 0
+        DW 1
+        DD 10
+        DB 32, 61, 0
+        DW 1
+        DD 10
+        DB 16, 60, 0
+        DW 1
+        DD 10
+        DB 8, 8, 0
+        DW 1
+        DD 10
+        DB 4, 32, 0
+        DW 1
+        DD 10
+        DB 2, 59, 0
+        DW 1
+        DD 10
+        DB 1, 7, 0
+        DW 6
+        DD 10
+        DB 128, 38, 0
+        DW 6
+        DD 10
+        DB 64, 12, 0
+        DW 6
+        DD 10
+        DB 32, 21, 0
+        DW 6
+        DD 10
+        DB 16, 57, 0
+        DW 1
+        DD 9
+        DB 64, 27, 0
+        DW 1
+        DD 9
+        DB 16, 57, 0
+        DW 1
+        DD 9
+        DB 8, 26, 0
+        DW 1
+        DD 9
+        DB 4, 31, 0
+        DW 1
+        DD 9
+        DB 2, 58, 0
+        DW 1
+        DD 9
+        DB 1, 22, 0
+        DW 8
+        DD 9
+        DB 128, 58, 0
+        DW 8
+        DD 9
+        DB 64, 59, 0
+        DW 8
+        DD 9
+        DB 32, 60, 0
+        DW 8
+        DD 9
+        DB 16, 61, 0
+        DW 8
+        DD 9
+        DB 8, 62, 0
+        DW 8
+        DD 9
+        DB 4, 63, 0
+        DW 8
+        DD 9
+        DB 2, 64, 0
+        DW 1
+        DD 8
+        DB 64, 29, 0
+        DW 1
+        DD 8
+        DB 32, 41, 0
+        DW 1
+        DD 8
+        DB 16, 43, 0
+        DW 1
+        DD 8
+        DB 8, 20, 0
+        DW 1
+        DD 8
+        DB 4, 30, 0
+        DW 1
+        DD 8
+        DB 2, 53, 0
+        DW 1
+        DD 8
+        DB 1, 4, 0
+        DW 8
+        DD 8
+        DB 4, 65, 0
+        DW 8
+        DD 8
+        DB 2, 66, 0
+        DW 8
+        DD 8
+        DB 1, 67, 0
+        DW 1
+        DD 7
+        DB 128, 81, 0
+        DW 1
+        DD 7
+        DB 64, 83, 0
+        DW 1
+        DD 7
+        DB 16, 92, 0
+        DW 1
+        DD 7
+        DB 8, 95, 0
+        DW 1
+        DD 7
+        DB 4, 68, 0
+        DW 1
+        DD 7
+        DB 2, 76, 0
+        DW 1
+        DD 7
+        DB 1, 89, 0
+        DW 1
+        DD 6
+        DB 128, 79, 0
+        DW 1
+        DD 6
+        DB 64, 84, 0
+        DW 1
+        DD 6
+        DB 32, 98, 0
+        DW 1
+        DD 6
+        DB 16, 93, 0
+        DW 1
+        DD 6
+        DB 8, 96, 0
+        DW 1
+        DD 6
+        DB 4, 69, 0
+        DW 1
+        DD 6
+        DB 2, 73, 0
+        DW 1
+        DD 6
+        DB 1, 90, 0
+        DW 1
+        DD 5
+        DB 64, 229, 32
+        DW 1
+        DD 5
+        DB 16, 225, 2
+        DW 1
+        DD 4
+        DB 8, 101, 0
+        DW 1
+        DD 4
+        DB 1, 231, 128
+        DW 1
+        DD 3
+        DB 128, 86, 0
+        DW 1
+        DD 3
+        DB 64, 85, 0
+        DW 1
+        DD 3
+        DB 32, 99, 0
+        DW 1
+        DD 3
+        DB 16, 94, 0
+        DW 1
+        DD 3
+        DB 8, 97, 0
+        DW 1
+        DD 3
+        DB 4, 78, 0
+        DW 1
+        DD 3
+        DB 2, 75, 0
+        DW 1
+        DD 3
+        DB 1, 91, 0
+        DW 1
+        DD 2
+        DB 128, 80, 0
+        DW 1
+        DD 2
+        DB 64, 72, 0
+        DW 1
+        DD 2
+        DB 32, 82, 0
+        DW 1
+        DD 2
+        DB 8, 87, 0
+        DW 1
+        DD 2
+        DB 4, 77, 0
+        DW 1
+        DD 2
+        DB 2, 74, 0
+        DW 1
+        DD 2
+        DB 1, 88, 0
+        DW 1
+        DD 1
+        DB 64, 228, 16
+        DW 1
+        DD 1
+        DB 2, 224, 1
+        DW 65535
+        DD 0
+        DB 0, 0, 0
+//  141     //VID, Col, Ret, USB, ModByteBit
+//  142     {0x0001, 18, 0x02, usbUsageLeftGUI, 0x08},
+//  143         {0x0002, 18, 0x80, usbUsage1},
+//  144 	    {0x0006, 18, 0x40, usbUsageA}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+//  145 	    {0x0006, 18, 0x20, usbUsageJ},
+//  146 	    {0x0006, 18, 0x10, usbUsageS},
+//  147             {0x0004, 18, 0x80, usbUsageKeypadNumlock},
+//  148     	        {0x0008, 18,  0x80, usbUsageQ}, // for David's keypad
+//  149     	        {0x0008, 18,  0x40, usbUsageW}, // for David's keypad
+//  150     	        {0x0008, 18,  0x20, usbUsageE}, // for David's keypad
+//  151     	        {0x0008, 18,  0x10, usbUsageR}, // for David's keypad
+//  152     	        {0x0008, 18,  0x08, usbUsageT}, // for David's keypad
+//  153     	        {0x0008, 18,  0x04, usbUsageY}, // for David's keypad
+//  154     	        {0x0008, 18,  0x02, usbUsageU}, // for David's keypad
+//  155 	    
+//  156     {0x0001, 17, 0x80, usbUsageRightAlt, 0x40},
+//  157     {0x0001, 17, 0x20, usbUsageLeftAlt, 0x04 },
+//  158     {0x0001, 17, 0x08, usbUsageScrollLock},
+//  159     {0x0001, 17, 0x04, usbUsagePrintScreen},
+//  160         {0x0002, 17, 0x80, usbUsage2},
+//  161 	    {0x0006, 17, 0x40, usbUsageB}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+//  162 	    {0x0006, 17, 0x20, usbUsageK},
+//  163 	    {0x0006, 17, 0x10, usbUsageT},
+//  164             {0x0004, 17, 0x80, usbUsageCapsLock},
+//  165     	        {0x0008, 17,  0x80, usbUsage9}, // for David's keypad
+//  166     	        {0x0008, 17,  0x40, usbUsage8}, // for David's keypad
+//  167     	        {0x0008, 17,  0x20, usbUsage7}, // for David's keypad
+//  168     	        {0x0008, 17,  0x10, usbUsageEscape}, // for David's keypad
+//  169 //    	        {0x0008, 17,  0x08, usbUsageOut}, // for David's keypad
+//  170     	        {0x0008, 17,  0x08, usbUsageLeftShift, 0x02}, // for David's keypad
+//  171     	        {0x0008, 17,  0x04, usbUsageP}, // for David's keypad
+//  172     	        {0x0008, 17,  0x02, usbUsageO}, // for David's keypad
+//  173     	        {0x0008, 17,  0x01, usbUsageI}, // for David's keypad
+//  174 	    
+//  175     {0x0001, 16, 0x80, usbUsageSpacebar}, 
+//  176     {0x0001, 16, 0x40, usbUsageEnter}, 
+//  177     {0x0001, 16, 0x20, usbUsageF5},
+//  178     {0x0001, 16, 0x10, usbUsageBackspace},
+//  179     {0x0001, 16, 0x04, usbUsageF10},
+//  180     {0x0001, 16, 0x02, usbUsageF9},
+//  181     {0x0001, 16, 0x01, usbUsageBackslash},
+//  182     	{0x0002, 16, 0x80, usbUsage3},
+//  183 	    {0x0006, 16, 0x40, usbUsageC}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+//  184 	    {0x0006, 16, 0x20, usbUsageL},
+//  185 	    {0x0006, 16, 0x10, usbUsageU},
+//  186             {0x0004, 16, 0x80, usbUsageScrollLock},
+//  187     	        {0x0008, 16,  0x80, usbUsageA}, // for David's keypad
+//  188     	        {0x0008, 16,  0x40, usbUsageS}, // for David's keypad
+//  189     	        {0x0008, 16,  0x20, usbUsageD}, // for David's keypad
+//  190     	        {0x0008, 16,  0x10, usbUsageF}, // for David's keypad
+//  191     	        {0x0008, 16,  0x08, usbUsageG}, // for David's keypad
+//  192     	        {0x0008, 16,  0x04, usbUsageH}, // for David's keypad
+//  193     	        {0x0008, 16,  0x02, usbUsageJ}, // for David's keypad
+//  194     	        {0x0008, 16,  0x01, usbUsageComma}, // for David's keypad
+//  195     	
+//  196     {0x0001, 15, 0x80, usbUsageSlash},
+//  197     {0x0001, 15, 0x20, usbUsageApostrophe},
+//  198     {0x0001, 15, 0x10, usbUsageLeftBracket},
+//  199     {0x0001, 15, 0x08, usbUsageP},
+//  200     {0x0001, 15, 0x04, usbUsage0},
+//  201     {0x0001, 15, 0x02, usbUsageMinus},
+//  202     {0x0001, 15, 0x01, usbUsageSemicolon},
+//  203         {0x0006, 15, 0x80, usbUsage4}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+//  204 	    {0x0006, 15, 0x40, usbUsageD},
+//  205 	    {0x0006, 15, 0x20, usbUsageM},
+//  206 	    {0x0006, 15, 0x10, usbUsageV},
+//  207     	        {0x0008, 15,  0x80, usbUsage6}, // for David's keypad
+//  208     	        {0x0008, 15,  0x40, usbUsage5}, // for David's keypad
+//  209     	        {0x0008, 15,  0x20, usbUsage4}, // for David's keypad
+//  210     	        {0x0008, 15,  0x10, usbUsageHome}, // for David's keypad
+//  211 //    	        {0x0008, 15,  0x08, usbUsageIn}, // for David's keypad
+//  212     	        {0x0008, 15,  0x08, usbUsageRightAlt, 0x40}, // for David's keypad
+//  213     	        {0x0008, 15,  0x04, usbUsageApostrophe}, // for David's keypad
+//  214     	        {0x0008, 15,  0x02, usbUsageL}, // for David's keypad
+//  215     	        {0x0008, 15,  0x01, usbUsageK}, // for David's keypad
+//  216         
+//  217     {0x0001, 14, 0x40, usbUsagePeriod},
+//  218     {0x0001, 14, 0x10, usbUsageF7},
+//  219     {0x0001, 14, 0x08, usbUsageO},
+//  220     {0x0001, 14, 0x04, usbUsage9},
+//  221     {0x0001, 14, 0x02, usbUsageF8},
+//  222     {0x0001, 14, 0x01, usbUsageL},
+//  223     	{0x0006, 14, 0x80, usbUsage5}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+//  224 	    {0x0006, 14, 0x40, usbUsageE},
+//  225 	    {0x0006, 14, 0x20, usbUsageN},
+//  226 	    {0x0006, 14, 0x10, usbUsageW},
+//  227     	        {0x0008, 14,  0x80, usbUsageZ}, // for David's keypad
+//  228     	        {0x0008, 14,  0x40, usbUsageX}, // for David's keypad
+//  229     	        {0x0008, 14,  0x20, usbUsageC}, // for David's keypad
+//  230     	        {0x0008, 14,  0x10, usbUsageV}, // for David's keypad
+//  231     	        {0x0008, 14,  0x08, usbUsageB}, // for David's keypad
+//  232     	        {0x0008, 14,  0x04, usbUsageN}, // for David's keypad
+//  233     	        {0x0008, 14,  0x02, usbUsageM}, // for David's keypad
+//  234     	        {0x0008, 14,  0x01, usbUsageLeftControl, 0x01}, // for David's keypad
+//  235     	
+//  236     {0x0001, 13, 0x40, usbUsageComma},
+//  237     {0x0001, 13, 0x20, usbUsageF6},
+//  238     {0x0001, 13, 0x10, usbUsageRightBracket},
+//  239     {0x0001, 13, 0x08, usbUsageI}, 
+//  240     {0x0001, 13, 0x04, usbUsage8},
+//  241     {0x0001, 13, 0x02, usbUsageEqual},
+//  242     {0x0001, 13, 0x01, usbUsageK},
+//  243     	{0x0006, 13, 0x80, usbUsage6}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+//  244 	    {0x0006, 13, 0x40, usbUsageF},
+//  245 	    {0x0006, 13, 0x20, usbUsageO},
+//  246 	    {0x0006, 13, 0x10, usbUsageX},
+//  247     	        {0x0008, 13,  0x80, usbUsage3}, // for David's keypad
+//  248     	        {0x0008, 13,  0x40, usbUsage2}, // for David's keypad
+//  249     	        {0x0008, 13,  0x20, usbUsage1}, // for David's keypad
+//  250     	        {0x0008, 13,  0x10, usbUsageEnd}, // for David's keypad
+//  251     	        {0x0008, 13,  0x08, usbUsageEnter}, // for David's keypad
+//  252     	        {0x0008, 13,  0x04, usbUsageUpArrow}, // for David's keypad
+//  253     	        {0x0008, 13,  0x02, usbUsageBackslash}, // for David's keypad
+//  254     	        {0x0008, 13,  0x01, usbUsageSlash}, // for David's keypad
+//  255     	
+//  256     {0x0001, 12, 0x80, usbUsageN},
+//  257     {0x0001, 12, 0x40, usbUsageM},
+//  258     {0x0001, 12, 0x20, usbUsageH},
+//  259     {0x0001, 12, 0x10, usbUsageY},
+//  260     {0x0001, 12, 0x08, usbUsageU},
+//  261     {0x0001, 12, 0x04, usbUsage7},
+//  262     {0x0001, 12, 0x02, usbUsage6},
+//  263     {0x0001, 12, 0x01, usbUsageJ},
+//  264     	{0x0006, 12, 0x80, usbUsage7}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+//  265 	    {0x0006, 12, 0x40, usbUsageG},
+//  266 	    {0x0006, 12, 0x20, usbUsageP},
+//  267 	    {0x0006, 12, 0x10, usbUsageY},
+//  268     	        {0x0008, 12,  0x80, usbUsageDeleteForward}, // for David's keypad
+//  269     	        {0x0008, 12,  0x40, usbUsage0}, // for David's keypad
+//  270     	        {0x0008, 12,  0x20, usbUsageInsert}, // for David's keypad
+//  271     	        {0x0008, 12,  0x10, usbUsageRightArrow}, // for David's keypad
+//  272     	        {0x0008, 12,  0x08, usbUsageSpacebar}, // for David's keypad
+//  273     	        {0x0008, 12,  0x04, usbUsageDownArrow}, // for David's keypad
+//  274     	        {0x0008, 12,  0x02, usbUsageLeftArrow}, // for David's keypad
+//  275     	        {0x0008, 12,  0x01, usbUsagePeriod}, // for David's keypad
+//  276     	
+//  277     {0x0001, 11, 0x80, usbUsageB},
+//  278     {0x0001, 11, 0x40, usbUsageV},
+//  279     {0x0001, 11, 0x20, usbUsageG},
+//  280     {0x0001, 11, 0x10, usbUsageT},
+//  281     {0x0001, 11, 0x08, usbUsageR},
+//  282     {0x0001, 11, 0x04, usbUsage4},
+//  283     {0x0001, 11, 0x02, usbUsage5},
+//  284     {0x0001, 11, 0x01, usbUsageF},
+//  285     	{0x0006, 11, 0x80, usbUsage8}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+//  286 	    {0x0006, 11, 0x40, usbUsageH},
+//  287 	    {0x0006, 11, 0x20, usbUsageQ},
+//  288 	    {0x0006, 11, 0x10, usbUsageZ},
+//  289     	
+//  290     {0x0001, 10, 0x40, usbUsageC},
+//  291     {0x0001, 10, 0x20, usbUsageF4},
+//  292     {0x0001, 10, 0x10, usbUsageF3},
+//  293     {0x0001, 10, 0x08, usbUsageE},
+//  294     {0x0001, 10, 0x04, usbUsage3},
+//  295     {0x0001, 10, 0x02, usbUsageF2},
+//  296     {0x0001, 10, 0x01, usbUsageD},
+//  297     	{0x0006, 10, 0x80, usbUsage9}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+//  298 	    {0x0006, 10, 0x40, usbUsageI},
+//  299 	    {0x0006, 10, 0x20, usbUsageR},
+//  300 	    {0x0006, 10, 0x10, usbUsageCapsLock},
+//  301     	
+//  302     {0x0001, 9,  0x40, usbUsageX},
+//  303     {0x0001, 9,  0x10, usbUsageCapsLock},
+//  304     {0x0001, 9,  0x08, usbUsageW},
+//  305     {0x0001, 9,  0x04, usbUsage2},
+//  306     {0x0001, 9,  0x02, usbUsageF1},
+//  307     {0x0001, 9,  0x01, usbUsageS},
+//  308 //    	        {0x0008, 9,  0x40, 0x66}, // for NewMotion one suspend-key keyboard 
+//  309     	        {0x0008, 9,  0x80, usbUsageF1}, // for David's keypad
+//  310     	        {0x0008, 9,  0x40, usbUsageF2}, // for David's keypad
+//  311     	        {0x0008, 9,  0x20, usbUsageF3}, // for David's keypad
+//  312     	        {0x0008, 9,  0x10, usbUsageF4}, // for David's keypad
+//  313     	        {0x0008, 9,  0x08, usbUsageF5}, // for David's keypad
+//  314     	        {0x0008, 9,  0x04, usbUsageF6}, // for David's keypad
+//  315     	        {0x0008, 9,  0x02, usbUsageF7}, // for David's keypad
+//  316     	        
+//  317     {0x0001, 8,  0x40, usbUsageZ},
+//  318     {0x0001, 8,  0x20, usbUsageEscape},
+//  319     {0x0001, 8,  0x10, usbUsageTab},
+//  320     {0x0001, 8,  0x08, usbUsageQ},
+//  321     {0x0001, 8,  0x04, usbUsage1},
+//  322     {0x0001, 8,  0x02, usbUsageTilde},
+//  323     {0x0001, 8,  0x01, usbUsageA},
+//  324     	        {0x0008, 8,  0x04, usbUsageF8}, // for David's keypad
+//  325     	        {0x0008, 8,  0x02, usbUsageF9}, // for David's keypad
+//  326     	        {0x0008, 8,  0x01, usbUsageF10}, // for David's keypad
+//  327     
+//  328     {0x0001, 7,  0x80, usbUsageDownArrow},
+//  329     {0x0001, 7,  0x40, usbUsageKeypadNumlock},
+//  330     {0x0001, 7,  0x10, usbUsageKeypad4},
+//  331     {0x0001, 7,  0x08, usbUsageKeypad7},
+//  332     {0x0001, 7,  0x04, usbUsageF11},
+//  333     {0x0001, 7,  0x02, usbUsageDeleteForward},
+//  334     {0x0001, 7,  0x01, usbUsageKeypad1},
+//  335     
+//  336     {0x0001, 6,  0x80, usbUsageRightArrow},
+//  337     {0x0001, 6,  0x40, usbUsageKeypadSlash},
+//  338     {0x0001, 6,  0x20, usbUsageKeypad0},
+//  339     {0x0001, 6,  0x10, usbUsageKeypad5},
+//  340     {0x0001, 6,  0x08, usbUsageKeypad8},
+//  341     {0x0001, 6,  0x04, usbUsageF12},
+//  342     {0x0001, 6,  0x02, usbUsageInsert},
+//  343     {0x0001, 6,  0x01, usbUsageKeypad2},
+//  344     
+//  345     {0x0001, 5,  0x40, usbUsageRightShift, 0x20},
+//  346     {0x0001, 5,  0x10, usbUsageLeftShift, 0x02},
+//  347     
+//  348     {0x0001, 4,  0x08, usbUsageWindowsKey},
+//  349     {0x0001, 4,  0x01, usbUsageRightGUI, 0x80},
+//  350     
+//  351     {0x0001, 3,  0x80, usbUsageKeypadMinus},
+//  352     {0x0001, 3,  0x40, usbUsageKeypadAsterisk},
+//  353     {0x0001, 3,  0x20, usbUsageKeypadPeriod},
+//  354     {0x0001, 3,  0x10, usbUsageKeypad6},
+//  355     {0x0001, 3,  0x08, usbUsageKeypad9},
+//  356     {0x0001, 3,  0x04, usbUsagePageDown},
+//  357     {0x0001, 3,  0x02, usbUsagePageUp},
+//  358     {0x0001, 3,  0x01, usbUsageKeypad3},
+//  359     
+//  360     {0x0001, 2,  0x80, usbUsageLeftArrow},
+//  361     {0x0001, 2,  0x40, usbUsagePause},
+//  362     {0x0001, 2,  0x20, usbUsageUpArrow},
+//  363     {0x0001, 2,  0x08, usbUsageKeypadPlus},
+//  364     {0x0001, 2,  0x04, usbUsageEnd},
+//  365     {0x0001, 2,  0x02, usbUsageHome},
+//  366 	{0x0001, 2,  0x01, usbUsageKeypadEnter}, 
+//  367 	
+//  368     {0x0001, 1,  0x40, usbUsageRightControl, 0x10},
+//  369     {0x0001, 1,  0x02, usbUsageLeftControl, 0x01},
+//  370     
+//  371     {0xFFFF, 0,  0x00, 0x00} // End of table flag
+//  372     };
+//  373  
+//  374 	
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  375 void delay(int i)
+delay:
+        CFI Block cfiBlock0 Using cfiCommon0
+        CFI Function delay
+//  376 {
+        ; Saved register size: 0
+        ; Auto size: 0
+//  377   while(i--);
+??delay_0:
+        MOV     A,R2
+        MOV     R0,A
+        MOV     A,R3
+        MOV     R1,A
+        MOV     A,#-0x1
+        ADD     A,R0
+        MOV     R2,A
+        MOV     A,#-0x1
+        ADDC    A,R1
+        MOV     R3,A
+        MOV     A,#0x0
+        XRL     A,R0
+        JNZ     ??delay_1
+        MOV     A,#0x0
+        XRL     A,R1
+??delay_1:
+        JNZ     ??delay_0
+//  378 }
+        RET
+        CFI EndBlock cfiBlock0
+//  379 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  380 void main(void)
+main:
+        CFI Block cfiBlock1 Using cfiCommon0
+        CFI Function main
+//  381 {
+        FUNCALL main, GetVidPidSetting
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL main, InitializeUsbHub
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL main, InitializeUsbFunction
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL main, ClearKeyBoardBuffer
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL main, UpdateIEP1WithKeypress
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL main, strlen
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL main, strlen
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL main, strlen
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        ; Auto size: 0
+//  382 	int vidPidMask;
+//  383 	int iTemp;
+//  384 
+//  385 #ifdef SERIALDEBUG
+//  386 	// Enable serial port for debug at 9600 baud, using 48.000MHZ.
+//  387 	SCON = 0x52;
+//  388 	TH1 = -13;
+//  389 	TMOD = 0x20;
+//  390 	TR1 = 1;
+//  391 #endif
+//  392 
+//  393 	bPUR0 = 0x00;   // enable internal pull-ups
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6c
+        MOVX    @DPTR,A
+//  394 	bPUR1 = 0x00;
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6b
+        MOVX    @DPTR,A
+//  395 	bPUR2 = 0x00;
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6a
+        MOVX    @DPTR,A
+//  396 	bPUR3 = 0x00;
+        MOV     A,#0x0
+        MOV     DPTR,#-0x69
+        MOVX    @DPTR,A
+//  397 	
+//  398 	P3 = 0xff; // speed-up pull-ups
+        MOV     0xb0,#-0x1
+//  399 	P2 = 0xff;
+        MOV     0xa0,#-0x1
+//  400 	P1 = 0xff;
+        MOV     0x90,#-0x1
+//  401 	P0 = 0xff;
+        MOV     0x80,#-0x1
+//  402 	
+//  403 	GetVidPidSetting(); // Obtain the S0-S3 setting to determine VID/PID
+        ; Setup parameters for call to function GetVidPidSetting
+        LCALL   GetVidPidSetting
+//  404 	InitializeUsbHub(); // Initialize the USB hub connecting it to upstream port
+        ; Setup parameters for call to function InitializeUsbHub
+        LCALL   InitializeUsbHub
+//  405 	InitializeUsbFunction(); // Initialize the USB embedded function
+        ; Setup parameters for call to function InitializeUsbFunction
+        LCALL   InitializeUsbFunction
+//  406 	ClearKeyBoardBuffer(); // Clear the keyboard buffer
+        ; Setup parameters for call to function ClearKeyBoardBuffer
+        LCALL   ClearKeyBoardBuffer
+//  407 	
+//  408 	vidPidMask = 1 << s0123; // Prepares our VID/PID mask to decide whether a given key is valid
+        MOV     ?V0 + 0,#0x1
+        MOV     ?V0 + 1,#0x0
+        MOV     DPTR,#s0123
+        MOVX    A,@DPTR
+        MOV     R0,#?V0 + 0
+        LCALL   ?S_SHL
+        MOV     ?V0 + 6,?V0 + 0
+        MOV     ?V0 + 7,?V0 + 1
+//  409 	while(!deviceReady); // Wait for the setup packets to be exchanged, etc.
+??main_0:
+        MOV     DPTR,#deviceReady
+        MOVX    A,@DPTR
+        JZ      ??main_0
+//  410 	
+//  411 	for(iTemp = 0; iTemp < 256; iTemp++)
+        MOV     R0,#0x0
+        MOV     R1,#0x0
+        SJMP    ??main_1
+//  412 		keypressDebounce[iTemp] = 0x00;
+??main_2:
+        MOV     A,#0x0
+        PUSH    A
+        CFI CFA_SP SP+-3
+        MOV     A,R0
+        ADD     A,#(keypressDebounce & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#((keypressDebounce >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+-2
+        MOVX    @DPTR,A
+        MOV     A,R0
+        ADD     A,#0x1
+        MOV     R0,A
+        MOV     A,R1
+        ADDC    A,#0x0
+        MOV     R1,A
+??main_1:
+        CLR     C
+        MOV     A,R0
+        SUBB    A,#0x0
+        MOV     A,R1
+        SUBB    A,#0x1
+        MOV     C,0xD0 /* PSW */.2
+        XRL     A,PSW
+        RLC     A
+        JC      ??main_2
+        SJMP    ??main_3
+//  413 
+//  414 	while(1) { // Indefinite loop to handle keyboard scanning
+//  415 		
+//  416 // for debug only
+//  417 //		P3.2 = bVIDSTA&1;
+//  418 //		P3.3 = (bVIDSTA>>1)&1;
+//  419 //		P3.4 = (bVIDSTA>>2)&1;
+//  420 //		P3.5 = (bVIDSTA>>3)&1;
+//  421 		
+//  422 		if(bSuspended) {
+//  423 		
+//  424 	        // disable P0, P1 and part of P3 internal pull-ups
+//  425 			bPUR0 = 0xFF;
+//  426 			bPUR1 = 0xFF;
+//  427 			bPUR3 = 0xc3;  // disable P3.6, P3.7, P3.0, & P3.1 pull-ups 
+//  428 			
+//  429 			P0 = 0x00;
+//  430 			P1 = 0x00;
+//  431 			P3 = 0xff;     // turn LED off 
+//  432 			P3_bit.WR = 0;
+//  433 			P3_bit.RD = 0;                                                      
+//  434 
+//  435             // TUSB3210 Base EVM needs follow codes, otherwise it will comsume more 100uA power
+//  436             P3_bit.RxD = 0;      // since dip switch may tie P3.0 & P3.1 to ground
+//  437             P3_bit.TxD = 0;      
+//  438 			
+//  439             IE_bit.EX1 = ENABLE;  // enable P2 interrupt
+//  440                         
+//  441 			// Set IDLE bit in PCON to bring MCU to suspend
+//  442 			PCON |= 0x01;
+//  443 
+//  444             // uC wakeups from suspend
+//  445 			IE_bit.EX1 = DISABLE;
+//  446 			bPUR0 = 0x00;
+//  447 			bPUR1 = 0x00;
+//  448 			bPUR3 = 0x00;
+//  449 
+//  450 			// Execution will stop until we wake back up, at which point
+//  451 			// we then conitnue by indicating we're no longer in Suspend
+//  452 			// mode.
+//  453 			bSuspended = FALSE;
+//  454 		} // end of if(bSuspended)
+//  455 			
+//  456 		if(!deviceReady)
+//  457 			continue;
+//  458 			
+//  459 		// We only scan the keyboard if the keypressBuffer is currently empty.
+//  460 		if(keypressBuffer[0] == 0x00) {
+//  461 			BYTE scanLine, keypress, keyDefOffset = 0;
+//  462 			modifierByte = 0x00; // We initialize the modifier byte to zero initially
+//  463 
+//  464 			// We now select each of the 18 scanlines (0-17) in sequence so that
+//  465 			// we can detect any keys that have been pressed on the line.
+//  466 			for(scanLine = 18; scanLine > 0; scanLine--) {
+//  467 				// We start the loop by turning on all the bits of the 18 scanline select
+//  468 				// lines.
+//  469 				P0 = 0xFF;
+//  470 				P1 = 0xFF;
+//  471 				P3 |= 0xC0;
+//  472 				
+//  473 				// Now we turn off a single GPIO line to select the current scanline.
+//  474 				switch(scanLine) {
+//  475                     case 1: P1_bit.P10 = 0; break;
+//  476                     case 2: P1_bit.P11 = 0; break;
+//  477                     case 3: P1_bit.P12 = 0; break;
+//  478                     case 4: P1_bit.P13 = 0; break;
+//  479                     case 5: P1_bit.P14 = 0; break;
+//  480                     case 6: P1_bit.P15 = 0; break;
+//  481                     case 7: P1_bit.P16 = 0; break;
+//  482                     case 8: P1_bit.P17 = 0; break;
+//  483                     case 9: P3_bit.WR = 0; break;
+//  484                     case 10: P0_bit.P00 = 0; break;
+//  485                     case 11: P0_bit.P01 = 0; break;
+//  486                     case 12: P0_bit.P02 = 0; break;
+//  487                     case 13: P0_bit.P03 = 0; break;
+//  488                     case 14: P0_bit.P04 = 0; break;
+//  489                     case 15: P0_bit.P05 = 0; break;
+//  490                     case 16: P0_bit.P06 = 0; break;
+//  491                     case 17: P0_bit.P07 = 0; break;
+//  492                     case 18: P0_bit.P07 = 0; break;				
+//  493 					// Additional scan lines may be added by adding more case statements
+//  494 					// here and increasing the range of the for() statement above.
+//  495 					default: break;
+//  496 				} // end of switch(scanLine)
+//  497 				
+//  498 				// Get the current of the current scanline.  We invert it so that any bit that
+//  499 				// is set indicates a key that has been pressed.
+//  500 				keypress = ~P2; 
+//  501 
+//  502                 if (keypress == 0x01 || keypress == 0x02 || keypress == 0x04 || keypress == 0x08 ||
+//  503                     keypress == 0x10 || keypress == 0x20 || keypress == 0x40 || keypress == 0x80) {
+//  504                     
+//  505                     // We now search the keyDefs[] table starting at the offset that we're at.
+//  506                     // We keep searching until the scanline indicated in the table is less than
+//  507                     // the current scanline, which means there are no more options for the current
+//  508                     // scanline.
+//  509                     while(keyDefs[keyDefOffset].scanLine >= scanLine ) {
+//  510                         // If the scanline of the table at our current offset is equal to our
+//  511                         // current scanline then we can proceed to analyze it.
+//  512                         if(keyDefs[keyDefOffset].scanLine == scanLine) {
+//  513                             // If the detected keypress ANDed with the keypress Mask from the table
+//  514                             // results in a non-zero value, it means the given key has been pressed.
+//  515                             // We also make sure the given keypress is supported in our current
+//  516                             // VID/PID mode.
+//  517                             if( (keypress & keyDefs[keyDefOffset].keyPressMask) && (vidPidMask & keyDefs[keyDefOffset].vidPidMask)) {
+//  518                             //  keypressDebounce[keyDefs[keyDefOffset].hidCode]++;
+//  519                             //  if(keypressDebounce[keyDefs[keyDefOffset].hidCode] > 5)
+//  520                             //      {
+//  521                             //      keypressDebounce[keyDefs[keyDefOffset].hidCode] = 6;
+//  522                                     // We check to see if the key that has been pressed is one of the
+//  523                                     // keys that is sent back in the modifier byte.
+//  524                                     if(keyDefs[keyDefOffset].modBit != 0x00 ) {
+//  525                                         modifierByte |= keyDefs[keyDefOffset].modBit;
+//  526                                     }
+//  527                                     else if(strlen(keypressBuffer) < KEYPRESS_BUFFER_SIZE ) {
+//  528                                         // If it was not a modifier byte key and there is still room in the
+//  529                                         // keypressBuffer, we will add this key to the buffer.
+//  530                                         keypressBuffer[strlen(keypressBuffer)] = keyDefs[keyDefOffset].hidCode;
+//  531                                     }
+//  532                                     //}
+//  533                             //  else
+//  534                             //      {
+//  535                             //      keypressDebounce[keyDefs[keyDefOffset].hidCode] = 0;
+//  536                             //      }
+//  537                             } // end of if( (keypress & keyDefs[keyDefOffset].keyPressMask) && (vidPidMask & keyDefs[keyDefOffset].vidPidMask))
+//  538                         } // end of if(keyDefs[keyDefOffset].scanLine == scanLine)
+//  539                         keyDefOffset++;
+//  540                     } // end of while(keyDefs[keyDefOffset].scanLine >= scanLine )
+//  541 
+//  542                     // If we reach the end of the keypress table then there's nothing else we can
+//  543                     // possibly find, so we exit our scanline loop even if we haven't checked every
+//  544                     // scan line.  We also exit if the keypress buffer has been completely filled.
+//  545                     // In this case, even if there are more valid keys waiting we won't be able to
+//  546                     // store them anyway, so we exit.
+//  547                     if(keyDefs[keyDefOffset].scanLine == 0 || strlen(keypressBuffer) >= KEYPRESS_BUFFER_SIZE)
+//  548                         break;
+//  549 					
+//  550 				} // end of if (keypress == 0x01 ...
+//  551 			} // end of for(scanLine = 18; scanLine > 0; scanLine--)
+//  552 			
+//  553 			// Send the current keyboard buffer to IEP1 to be sent to host
+//  554 			UpdateIEP1WithKeypress();
+??main_4:
+        ; Setup parameters for call to function UpdateIEP1WithKeypress
+        LCALL   UpdateIEP1WithKeypress
+??main_3:
+        MOV     DPTR,#bSuspended
+        MOVX    A,@DPTR
+        JZ      ??main_5
+        MOV     A,#-0x1
+        MOV     DPTR,#-0x6c
+        MOVX    @DPTR,A
+        MOV     A,#-0x1
+        MOV     DPTR,#-0x6b
+        MOVX    @DPTR,A
+        MOV     A,#-0x3d
+        MOV     DPTR,#-0x69
+        MOVX    @DPTR,A
+        MOV     0x80,#0x0
+        MOV     0x90,#0x0
+        MOV     0xb0,#-0x1
+        CLR     0xb0.6
+        CLR     0xb0.7
+        CLR     0xb0.0
+        CLR     0xb0.1
+        SETB    0xa8.2
+        ORL     0x87,#0x1
+        CLR     0xa8.2
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6c
+        MOVX    @DPTR,A
+        MOV     A,#0x0
+        MOV     DPTR,#-0x6b
+        MOVX    @DPTR,A
+        MOV     A,#0x0
+        MOV     DPTR,#-0x69
+        MOVX    @DPTR,A
+        MOV     A,#0x0
+        MOV     DPTR,#bSuspended
+        MOVX    @DPTR,A
+??main_5:
+        MOV     DPTR,#deviceReady
+        MOVX    A,@DPTR
+        JZ      ??main_3
+        MOV     DPTR,#keypressBuffer
+        MOVX    A,@DPTR
+        JNZ     ??main_3
+        MOV     R6,#0x0
+        MOV     A,#0x0
+        MOV     DPTR,#modifierByte
+        MOVX    @DPTR,A
+        MOV     ?V0 + 4,#0x12
+        SJMP    ??main_6
+??main_7:
+        DEC     ?V0 + 4
+??main_6:
+        MOV     A,?V0 + 4
+        CLR     C
+        SUBB    A,#0x1
+        JC      ??main_4
+        MOV     0x80,#-0x1
+        MOV     0x90,#-0x1
+        ORL     0xb0,#0xc0
+        MOV     A,0xb0
+        MOV     A,?V0 + 4
+        LCALL   ?UC_SWITCH_DENSE
+`?<Jumptable for main>_0`:
+        DATA
+        DB        1
+        DB        17
+        DW        ??main_8
+        DW        ??main_9
+        DW        ??main_10
+        DW        ??main_11
+        DW        ??main_12
+        DW        ??main_13
+        DW        ??main_14
+        DW        ??main_15
+        DW        ??main_16
+        DW        ??main_17
+        DW        ??main_18
+        DW        ??main_19
+        DW        ??main_20
+        DW        ??main_21
+        DW        ??main_22
+        DW        ??main_23
+        DW        ??main_24
+        DW        ??main_25
+        DW        ??main_26
+        CODE
+??main_9:
+        CLR     0x90.0
+        SJMP    ??main_8
+??main_10:
+        CLR     0x90.1
+        SJMP    ??main_8
+??main_11:
+        CLR     0x90.2
+        SJMP    ??main_8
+??main_12:
+        CLR     0x90.3
+        SJMP    ??main_8
+??main_13:
+        CLR     0x90.4
+        SJMP    ??main_8
+??main_14:
+        CLR     0x90.5
+        SJMP    ??main_8
+??main_15:
+        CLR     0x90.6
+        SJMP    ??main_8
+??main_16:
+        CLR     0x90.7
+        SJMP    ??main_8
+??main_17:
+        CLR     0xb0.6
+        SJMP    ??main_8
+??main_18:
+        CLR     0x80.0
+        SJMP    ??main_8
+??main_19:
+        CLR     0x80.1
+        SJMP    ??main_8
+??main_20:
+        CLR     0x80.2
+        SJMP    ??main_8
+??main_21:
+        CLR     0x80.3
+        SJMP    ??main_8
+??main_22:
+        CLR     0x80.4
+        SJMP    ??main_8
+??main_23:
+        CLR     0x80.5
+        SJMP    ??main_8
+??main_24:
+        CLR     0x80.6
+        SJMP    ??main_8
+??main_25:
+        CLR     0x80.7
+        SJMP    ??main_8
+??main_26:
+        CLR     0x80.7
+??main_8:
+        MOV     A,0xa0
+        CPL     A
+        MOV     R7,A
+        MOV     A,#0x1
+        XRL     A,R7
+        JZ      ??main_27
+        MOV     A,#0x2
+        XRL     A,R7
+        JZ      ??main_27
+        MOV     A,#0x4
+        XRL     A,R7
+        JZ      ??main_27
+        MOV     A,#0x8
+        XRL     A,R7
+        JZ      ??main_27
+        MOV     A,#0x10
+        XRL     A,R7
+        JZ      ??main_27
+        MOV     A,#0x20
+        XRL     A,R7
+        JZ      ??main_27
+        MOV     A,#0x40
+        XRL     A,R7
+        JZ      ??main_27
+        MOV     A,#-0x80
+        XRL     A,R7
+        JZ      $+5
+        LJMP    ??main_7
+        SJMP    ??main_27
+??main_28:
+        ; Setup parameters for call to function strlen
+        MOV     R2,#(keypressBuffer & 0xff)
+        MOV     R3,#((keypressBuffer >> 8) & 0xff)
+        LCALL   strlen
+        MOV     A,R1
+        CLR     C
+        SUBB    A,#0x6
+        JNC     ??main_29
+        ; Setup parameters for call to function strlen
+        MOV     R2,#(keypressBuffer & 0xff)
+        MOV     R3,#((keypressBuffer >> 8) & 0xff)
+        LCALL   strlen
+        MOV     A,R1
+        MOV     ?V0 + 0,A
+        MOV     A,R6
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x9
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x9
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((keyDefs + 7) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((keyDefs + 7) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        PUSH    A
+        CFI CFA_SP SP+-3
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(keypressBuffer & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((keypressBuffer >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+-2
+        MOVX    @DPTR,A
+??main_29:
+        INC     R6
+??main_27:
+        MOV     A,R6
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x9
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x9
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((keyDefs + 2) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((keyDefs + 2) >> 8) & 0xff)
+        MOV     DPH,A
+        MOV     ?V0 + 0,?V0 + 4
+        CLR     A
+        MOV     ?V0 + 1,A
+        MOV     ?V0 + 2,A
+        MOV     ?V0 + 3,A
+        MOV     R0,#?V0 + 0
+        LCALL   ?UL_GT_C
+        JNC     $+5
+        LJMP    ??main_30
+        MOV     A,R6
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x9
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x9
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((keyDefs + 2) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((keyDefs + 2) >> 8) & 0xff)
+        MOV     DPH,A
+        MOV     ?V0 + 0,?V0 + 4
+        CLR     A
+        MOV     ?V0 + 1,A
+        MOV     ?V0 + 2,A
+        MOV     ?V0 + 3,A
+        MOV     R0,#?V0 + 0
+        LCALL   ?L_EQ_C
+        JNZ     ??main_29
+        MOV     A,R6
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x9
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x9
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((keyDefs + 6) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((keyDefs + 6) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        ANL     A,R7
+        JNZ     $+5
+        LJMP    ??main_29
+        MOV     A,R6
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x9
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x9
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#(keyDefs & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#((keyDefs >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        ANL     A,?V0 + 6
+        MOV     R0,A
+        INC     DPTR
+        CLR     A
+        MOVC    A,@A+DPTR
+        ANL     A,?V0 + 7
+        MOV     R1,A
+        MOV     A,#0x0
+        XRL     A,R0
+        JNZ     ??main_31
+        MOV     A,#0x0
+        XRL     A,R1
+??main_31:
+        JNZ     $+5
+        LJMP    ??main_29
+        MOV     A,R6
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x9
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x9
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((keyDefs + 8) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((keyDefs + 8) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        JNZ     $+5
+        LJMP    ??main_28
+        MOV     A,R6
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x9
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x9
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((keyDefs + 8) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((keyDefs + 8) >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     R2,A
+        MOV     DPTR,#modifierByte
+        MOVX    A,@DPTR
+        ORL     A,R2
+        MOVX    @DPTR,A
+        LJMP    ??main_29
+??main_30:
+        MOV     A,R6
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x9
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x9
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#((keyDefs + 2) & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#(((keyDefs + 2) >> 8) & 0xff)
+        MOV     DPH,A
+        PUSH    DPL
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI CFA_SP SP+-4
+        MOV     DPTR,#__Constant_0
+        MOV     R0,#?V0 + 0
+        LCALL   ?L_MOV_X
+        POP     DPH
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI CFA_SP SP+-2
+        MOV     R0,#?V0 + 0
+        LCALL   ?L_EQ_C
+        JZ      ??main_32
+        ; Setup parameters for call to function strlen
+        MOV     R2,#(keypressBuffer & 0xff)
+        MOV     R3,#((keypressBuffer >> 8) & 0xff)
+        LCALL   strlen
+        MOV     A,R1
+        CLR     C
+        SUBB    A,#0x6
+        JNC     $+5
+        LJMP    ??main_7
+??main_32:
+        LJMP    ??main_4
+        CFI EndBlock cfiBlock1
+        REQUIRE _A_IE
+        REQUIRE _A_P1
+        REQUIRE _A_P0
+        REQUIRE _A_P3
+        REQUIRE _A_P2
+        REQUIRE _A_PCON
+//  555 		} // end of if(keypressBuffer[0] == 0x00)
+//  556 	} // end of while(1)
+//  557 }
+//  558 
+//  559 /***************************************************************************
+//  560  * Function:   ClearKeyBoardBuffer                                         *
+//  561  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//  562  * Description: Clears the keyboard's internal keypress buffer.  The       *
+//  563  *    keypress buffer is 6 bytes which represent a maximum of 6 keypresses *
+//  564  *    that can be returned via USB.  Once the keypresses are sent via USB, *
+//  565  *    this routine may be called to clear the buffer.                      * 
+//  566  ***************************************************************************/
+//  567 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  568 void ClearKeyBoardBuffer(void)
+ClearKeyBoardBuffer:
+        CFI Block cfiBlock2 Using cfiCommon0
+        CFI Function ClearKeyBoardBuffer
+//  569 {
+        MOV     A,#-0x9
+        LCALL   ?FUNC_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+//  570 	BYTE bTemp;
+//  571 
+//  572 	for(bTemp = 0; bTemp < KEYPRESS_BUFFER_SIZE; bTemp++)
+        MOV     R2,#0x0
+        SJMP    ??ClearKeyBoardBuffer_0
+//  573 		keypressBuffer[bTemp] = 0x00;
+??ClearKeyBoardBuffer_1:
+        MOV     A,#0x0
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     ?V0 + 0,R2
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(keypressBuffer & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((keypressBuffer >> 8) & 0xff)
+        MOV     DPH,A
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R2
+??ClearKeyBoardBuffer_0:
+        MOV     A,R2
+        CLR     C
+        SUBB    A,#0x6
+        JC      ??ClearKeyBoardBuffer_1
+//  574 }
+        MOV     R7,#0x2
+        LJMP    ?FUNC_LEAVE_XDATA
+        CFI EndBlock cfiBlock2
+//  575 
+//  576 /***************************************************************************
+//  577  * Function:   UpdateIEP1WithKeypress                                      *
+//  578  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//  579  * Description: Is called by the main() program in order to send the       *
+//  580  *    contents of the keypressBuffer[] to the host via USB.  The function  *
+//  581  *    does the following:                                                  *
+//  582  *                                                                         * 
+//  583  *    1. Makes sure the current IEP1 Byte Counter is "NAK", which means    * 
+//  584  *       there is nothing pending to send.  Any other value means the last * 
+//  585  *       packet sent to the host hasn't been sent yet, so we don't send    * 
+//  586  *       anything else until the previous packet is sent.                  * 
+//  587  *    2. If nothing is pending to send, the routine constructs the output  * 
+//  588  *       data packet in the IEP1 Output buffer, copying the modifier byte, * 
+//  589  *       the constant 0x00 byte, and the 6 bytes of keypressBufferp[] data.*   
+//  590  *    3. Compares to see if the current packet that is ready to send is    * 
+//  591  *       the same as the last packet that was sent.  If it is, it exits    * 
+//  592  *       since only *changes* in the keyboard state need to be reported.   *   
+//  593  *    4. If all of the above tests are successful, the routine sets the    * 
+//  594  *       Byte Counter to 8 which will cause the 8-byte packet to be        * 
+//  595  *       sent when the next IEP1 poll is received from the host.           *   
+//  596  ***************************************************************************/
+//  597 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  598 void UpdateIEP1WithKeypress(void)
+UpdateIEP1WithKeypress:
+        CFI Block cfiBlock3 Using cfiCommon0
+        CFI Function UpdateIEP1WithKeypress
+//  599 {
+        FUNCALL UpdateIEP1WithKeypress, ClearKeyBoardBuffer
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL UpdateIEP1WithKeypress, memcmp
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL UpdateIEP1WithKeypress, ClearKeyBoardBuffer
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?FUNC_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+//  600 	BYTE bTemp;
+//  601 
+//  602 	// We first check to see if the character count is NAK.  If it's not
+//  603 	// NAK that means we still have some output pending, so we leave it
+//  604 	// alone for now.
+//  605 	
+//  606 	if(bIEPDCTX_1 != EPBCT_NAK)
+        MOV     DPTR,#-0xb6
+        MOVX    A,@DPTR
+        MOV     R0,A
+        RLC     A
+        SUBB    A,0xE0 /* A   */
+        MOV     R1,A
+        MOV     A,#-0x80
+        XRL     A,R0
+        JNZ     ??UpdateIEP1WithKeypress_0
+        MOV     A,#0x0
+        XRL     A,R1
+??UpdateIEP1WithKeypress_0:
+        JZ      ??UpdateIEP1WithKeypress_1
+//  607 		{
+//  608 		ClearKeyBoardBuffer();
+        ; Setup parameters for call to function ClearKeyBoardBuffer
+        LCALL   ClearKeyBoardBuffer
+//  609 		return;
+        SJMP    ??UpdateIEP1WithKeypress_2
+//  610 		}
+//  611 
+//  612 	// Start by initialization the HID Keyboard report header
+//  613 	iep1Buffer[0] = modifierByte; // Holds shift, alt, etc.
+??UpdateIEP1WithKeypress_1:
+        MOV     DPTR,#modifierByte
+        MOVX    A,@DPTR
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     DPTR,#iep1Buffer
+        MOVX    A,@DPTR
+        MOV     R0,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        MOV     DPH,A
+        MOV     DPL,R0
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+//  614 	iep1Buffer[1] = 0x00; // Second byte is always 0x00
+        MOV     A,#0x0
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     DPTR,#iep1Buffer
+        MOVX    A,@DPTR
+        MOV     R0,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        MOV     DPH,A
+        MOV     DPL,R0
+        INC     DPTR
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+//  615 	
+//  616 	// We now copy the keypress buffer into the rest of the iep1Buffer.
+//  617 	for(bTemp = 0; bTemp < 6; bTemp++)
+        MOV     R3,#0x0
+        SJMP    ??UpdateIEP1WithKeypress_3
+//  618 		iep1Buffer[2 + bTemp] = keypressBuffer[bTemp];
+??UpdateIEP1WithKeypress_4:
+        MOV     ?V0 + 0,R3
+        MOV     ?V0 + 1,#0x0
+        MOV     A,?V0 + 0
+        ADD     A,#(keypressBuffer & 0xff)
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#((keypressBuffer >> 8) & 0xff)
+        MOV     DPH,A
+        MOVX    A,@DPTR
+        PUSH    A
+        CFI CFA_SP SP+-1
+        MOV     A,R3
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     DPTR,#iep1Buffer
+        MOVX    A,@DPTR
+        ADD     A,R0
+        MOV     R2,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        ADDC    A,R1
+        MOV     DPL,R2
+        MOV     DPH,A
+        INC     DPTR
+        INC     DPTR
+        POP     A
+        CFI CFA_SP SP+0
+        MOVX    @DPTR,A
+        INC     R3
+??UpdateIEP1WithKeypress_3:
+        MOV     A,R3
+        CLR     C
+        SUBB    A,#0x6
+        JC      ??UpdateIEP1WithKeypress_4
+//  619 
+//  620 	// We now compare the currently prepared IEP1 output buffer with the last
+//  621 	// packet that was sent, which is held in the variable previousIEP1packet.
+//  622 	// If the current packet is the same as the previous packet sent, we 
+//  623 	// don't need to do anything since the host will assume the previous state
+//  624 	// is still current until we report a different state.
+//  625 	if( memcmp(iep1Buffer, previousIEP1packet, 8) == 0)
+        ; Setup parameters for call to function memcmp
+        MOV     R1,#0x8
+        MOV     R4,#(previousIEP1packet & 0xff)
+        MOV     R5,#((previousIEP1packet >> 8) & 0xff)
+        MOV     DPTR,#iep1Buffer
+        MOVX    A,@DPTR
+        MOV     R2,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        MOV     R3,A
+        LCALL   memcmp
+        MOV     A,R1
+        JNZ     ??UpdateIEP1WithKeypress_5
+//  626 		{
+//  627 		ClearKeyBoardBuffer();
+        ; Setup parameters for call to function ClearKeyBoardBuffer
+        LCALL   ClearKeyBoardBuffer
+//  628 		return;
+        SJMP    ??UpdateIEP1WithKeypress_2
+//  629 		}
+//  630 
+//  631 	// We now check to see if the device is currently suspended.  If it is,
+//  632 	// the keypress should wake the system up--so we generate a Wakeup
+//  633 	// pulse so things come back to life.
+//  634 #ifdef XXX
+//  635 	if(bSuspended)
+//  636 		bUSBCTL |= USBCTL_RWUP;
+//  637 #endif
+//  638 	// We finally the set the CTX_1 to the number of bytes in the IEP1 output
+//  639 	// buffer (8).  Thus, the next time the host issues an IN1 poll to the
+//  640 	// TUSB2136, the data will be sent out immediately.  We will know that
+//  641 	// the transfer has taken place when the IEP1InterruptHandler() interrupt
+//  642 	// handler is called.
+//  643 	bIEPDCTX_1 = 8;
+??UpdateIEP1WithKeypress_5:
+        MOV     A,#0x8
+        MOV     DPTR,#-0xb6
+        MOVX    @DPTR,A
+//  644 }
+??UpdateIEP1WithKeypress_2:
+        MOV     R7,#0x2
+        LJMP    ?FUNC_LEAVE_XDATA
+        CFI EndBlock cfiBlock3
+//  645 
+//  646 /***************************************************************************
+//  647  * Function:   IEP1InterruptHandler                                        *
+//  648  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//  649  * Description: This function is the IEP1 interrupt handler.  It is called *
+//  650  *    whenever a packet of data has been transmitted from the device to the*
+//  651  *    host.  The routine performs the following tasks:                     *
+//  652  *                                                                         * 
+//  653  *    1. Makes a copy of the data packet that was just sent in the         * 
+//  654  *       variable previousIEP1packet.  This is used by the                 *
+//  655  *       UpdateIEP1WithKeypress function to determine whether or not there *
+//  656  *       has been a change in the keyboard state.                          *   
+//  657  *    2. Clears the keypressBuffer to allow the main program loop to       *  
+//  658  *       scan the keyboard and generate a new packet.                      *  
+//  659  *                                                                         *     
+//  660  ***************************************************************************/
+//  661 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  662 void IEP1InterruptHandler(void)
+IEP1InterruptHandler:
+        CFI Block cfiBlock4 Using cfiCommon0
+        CFI Function IEP1InterruptHandler
+//  663 {
+        FUNCALL IEP1InterruptHandler, memcpy
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL IEP1InterruptHandler, ClearKeyBoardBuffer
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  664 	// This interrupt is triggered when we've finished sending a block of data
+//  665 	// to the host.  At that point we copy the current IEP1 buffer to the
+//  666 	// "previousIEP1packet" buffer.  This holds a copy of the last data that
+//  667 	// was sent to the host.  This is used later to see if a subsequent packet
+//  668 	// is the same as a new packet.  If it is, we won't have to resend it.
+//  669 	memcpy(previousIEP1packet,iep1Buffer, 8);
+        ; Setup parameters for call to function memcpy
+        MOV     R1,#0x8
+        MOV     DPTR,#iep1Buffer
+        MOVX    A,@DPTR
+        MOV     R4,A
+        INC     DPTR
+        MOVX    A,@DPTR
+        MOV     R5,A
+        MOV     R2,#(previousIEP1packet & 0xff)
+        MOV     R3,#((previousIEP1packet >> 8) & 0xff)
+        LCALL   memcpy
+//  670 //	BYTE str;
+//  671 //
+//  672 //	for(str = 0; str < 8; str++)
+//  673 //		previousIEP1packet[str] = iep1Buffer[str];
+//  674 	
+//  675 	// We clear the keypressBuffer.  The keyboard scan process will only begin
+//  676 	// if the keypressBuffer is clear.
+//  677 	ClearKeyBoardBuffer();
+        ; Setup parameters for call to function ClearKeyBoardBuffer
+        LCALL   ClearKeyBoardBuffer
+//  678 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock4
+//  679 
+//  680 /***************************************************************************
+//  681  * Function:   OEP0SetLEDs                                                 *
+//  682  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//  683  * Description: This function is called by the usbReceiveNextPacketOnOEP0  *
+//  684  *    routine when the data packet of a LED SetReport transaction is       *
+//  685  *    received.  This routine sets/clears the keyboard LEDs based on the   *
+//  686  *    data received from the host.                                         * 
+//  687  *                                                                         *     
+//  688  ***************************************************************************/
+//  689 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  690 void OEP0SetLEDs(void)
+OEP0SetLEDs:
+        CFI Block cfiBlock5 Using cfiCommon0
+        CFI Function OEP0SetLEDs
+//  691 {
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  692 // This code is only enabled if this is a "real" keyboard, not the
+//  693 // demo version selected by DIPSWITCHES.  If it is the demo version,
+//  694 // changing the values of the P3.2-P3.4 pins seems to cause problems.
+//  695 
+//  696 	if(bLED & BIT_NUMLOCK)
+        MOV     DPTR,#bLED
+        MOVX    A,@DPTR
+        MOV     C,0xE0 /* A   */.0
+        JNC     ??OEP0SetLEDs_0
+//  697 		PIN_NUMLOCK = 0;
+        CLR     0xb0.4
+        SJMP    ??OEP0SetLEDs_1
+//  698 	else
+//  699 		PIN_NUMLOCK = 1;
+??OEP0SetLEDs_0:
+        SETB    0xb0.4
+//  700 
+//  701 	if(bLED & BIT_CAPSLOCK)
+??OEP0SetLEDs_1:
+        MOV     DPTR,#bLED
+        MOVX    A,@DPTR
+        MOV     C,0xE0 /* A   */.1
+        JNC     ??OEP0SetLEDs_2
+//  702 		PIN_CAPSLOCK = 0;
+        CLR     0xb0.3
+        SJMP    ??OEP0SetLEDs_3
+//  703 	else
+//  704 		PIN_CAPSLOCK = 1;
+??OEP0SetLEDs_2:
+        SETB    0xb0.3
+//  705 
+//  706 	if(bLED & BIT_SCROLLLOCK)
+??OEP0SetLEDs_3:
+        MOV     DPTR,#bLED
+        MOVX    A,@DPTR
+        MOV     C,0xE0 /* A   */.2
+        JNC     ??OEP0SetLEDs_4
+//  707 		PIN_SCROLLLOCK = 0;
+        CLR     0xb0.2
+        SJMP    ??OEP0SetLEDs_5
+//  708 	else
+//  709 		PIN_SCROLLLOCK = 1;
+??OEP0SetLEDs_4:
+        SETB    0xb0.2
+//  710 }
+??OEP0SetLEDs_5:
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock5
+        REQUIRE _A_P3
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA
+__Constant_0:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_0>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+        DATA
+`?<Initializer for __Constant_0>`:
+        DD 0
+
+        END
+// 
+// 1 881 bytes in segment CODE_C
+// 1 167 bytes in segment NEAR_CODE
+//     6 bytes in segment SFR_AN
+//     4 bytes in segment XDATA_I
+//     4 bytes in segment XDATA_ID
+//   277 bytes in segment XDATA_Z
+// 
+// 3 048 bytes of CODE  memory (+ 4 bytes shared)
+//     0 bytes of DATA  memory (+ 6 bytes shared)
+//   277 bytes of XDATA memory (+ 4 bytes shared)
+//
+//Errors: none
+//Warnings: 8

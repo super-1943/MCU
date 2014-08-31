@@ -1,0 +1,82 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+E:\AllProject\51\MUC_OS\MCU_OS.uv2
+Project File Date:  02/27/2009
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling MCU_OS.C...
+includes.h(18): warning C318: can't open file '..\ucos_ii.h'
+MCU_OS.C(17): error C129: missing ';' before 'xdata'
+compiling OS_CPU_C.C...
+includes.h(18): warning C318: can't open file '..\ucos_ii.h'
+OS_CPU_C.C(35): warning C322: unknown identifier
+OS_CPU_C.C(53): warning C322: unknown identifier
+OS_CPU_C.C(72): error C141: syntax error near 'xdata', expected ')'
+OS_CPU_C.C(73): error C267: 'OSTaskCreateHook': requires ANSI-style prototype
+OS_CPU_C.C(74): error C202: 'pptcb': undefined identifier
+OS_CPU_C.C(109): warning C322: unknown identifier
+OS_CPU_C.C(227): warning C322: unknown identifier
+compiling OS_FLAG.C...
+INCLUDES.H(18): warning C318: can't open file '..\ucos_ii.h'
+..\UCOS_II\OS_FLAG.C(19): warning C322: unknown identifier
+compiling OS_MBOX.C...
+includes.h(18): warning C318: can't open file '..\ucos_ii.h'
+..\UCOS_II\OS_MBOX.C(78): error C129: missing ';' before '*'
+compiling OS_MEM.C...
+includes.h(18): warning C318: can't open file '..\ucos_ii.h'
+compiling OS_MUTEX.C...
+includes.h(18): warning C318: can't open file '..\ucos_ii.h'
+compiling OS_Q.C...
+includes.h(18): warning C318: can't open file '..\ucos_ii.h'
+compiling OS_SEM.C...
+includes.h(18): warning C318: can't open file '..\ucos_ii.h'
+compiling OS_TASK.C...
+includes.h(18): warning C318: can't open file '..\ucos_ii.h'
+..\UCOS_II\OS_TASK.C(158): error C141: syntax error near ','
+..\UCOS_II\OS_TASK.C(173): error C202: 'OSTCBPrioTbl': undefined identifier
+..\UCOS_II\OS_TASK.C(173): error C141: syntax error near ')'
+..\UCOS_II\OS_TASK.C(173): error C141: syntax error near ')'
+..\UCOS_II\OS_TASK.C(174): error C202: 'OSTCBPrioTbl': undefined identifier
+..\UCOS_II\OS_TASK.C(174): error C141: syntax error near ')'
+compiling OS_TIME.C...
+includes.h(18): warning C318: can't open file '..\ucos_ii.h'
+..\UCOS_II\OS_TIME.C(44): error C202: 'OSTCBCur': undefined identifier
+..\UCOS_II\OS_TIME.C(45): error C202: 'OSRdyGrp': undefined identifier
+..\UCOS_II\OS_TIME.C(47): error C202: 'OSTCBCur': undefined identifier
+compiling OS_CORE.C...
+includes.h(18): warning C318: can't open file '..\ucos_ii.h'
+..\UCOS_II\OS_CORE.C(87): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(97): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(114): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(146): error C202: 'OSRunning': undefined identifier
+..\UCOS_II\OS_CORE.C(147): error C202: 'OSIntNesting': undefined identifier
+..\UCOS_II\OS_CORE.C(148): error C202: 'OSIntNesting': undefined identifier
+..\UCOS_II\OS_CORE.C(179): error C202: 'OSRunning': undefined identifier
+..\UCOS_II\OS_CORE.C(181): error C202: 'OSIntNesting': undefined identifier
+..\UCOS_II\OS_CORE.C(182): error C202: 'OSIntNesting': undefined identifier
+..\UCOS_II\OS_CORE.C(184): error C202: 'OSIntNesting': undefined identifier
+..\UCOS_II\OS_CORE.C(185): error C202: 'OSIntExitY': undefined identifier
+..\UCOS_II\OS_CORE.C(186): error C202: 'OSPrioHighRdy': undefined identifier
+..\UCOS_II\OS_CORE.C(187): error C202: 'OSPrioHighRdy': undefined identifier
+..\UCOS_II\OS_CORE.C(188): error C202: 'OSTCBHighRdy': undefined identifier
+..\UCOS_II\OS_CORE.C(189): error C202: 'OSCtxSwCtr': undefined identifier
+..\UCOS_II\OS_CORE.C(458): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(508): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(534): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(567): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(571): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(575): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(579): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(583): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(587): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(591): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(595): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(616): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(1076): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(1080): warning C322: unknown identifier
+..\UCOS_II\OS_CORE.C(1088): warning C322: unknown identifier
+Target not created

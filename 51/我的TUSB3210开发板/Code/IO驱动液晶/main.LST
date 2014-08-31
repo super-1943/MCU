@@ -1,0 +1,62 @@
+C51 COMPILER V8.02   MAIN                                                                  07/21/2010 21:54:31 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          sbit seg0=P0^0;
+   3          sbit seg1=P0^1;
+   4          sbit seg2=P0^2;
+   5          sbit seg3=P0^3;
+   6          sbit seg4=P0^4;
+   7          sbit seg5=P0^6;
+   8          sbit seg6=P0^6;
+   9          sbit seg7=P0^7;
+  10          sbit seg8=P3^7;
+  11          
+  12          sbit sel0=P3^0;
+  13          sbit sel1=P3^1;
+  14          sbit sel2=P3^2;
+  15          sbit sel3=P3^3;
+  16          
+  17          
+  18          unsigned char i;
+  19          void delay_ms(unsigned int k)
+  20          {
+  21   1              unsigned char i,j;
+  22   1              for(;k;k--)
+  23   1              for(i=200;i;i--)
+  24   1              for(j=200;j;j--);
+  25   1      }
+  26          void main(void)
+  27          {
+  28   1              P0=0xff;
+  29   1              P3=0xff;
+  30   1              seg0^=1;
+  31   1      
+  32   1              while(1)
+  33   1              {
+  34   2                      P0^=0xff;
+  35   2                      P3^=0xff;
+  36   2                      delay_ms(1);
+  37   2      
+  38   2              }
+  39   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     46    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

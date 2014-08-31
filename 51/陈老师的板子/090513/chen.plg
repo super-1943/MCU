@@ -1,0 +1,70 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+E:\Projects\51\090513\chen.uv2
+Project File Date:  05/13/2009
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BUZZER?TEXT1
+Program Size: data=46.0 xdata=0 code=410
+"chen" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BUZZER?TEXT1
+Program Size: data=46.0 xdata=0 code=410
+creating hex file from "chen"...
+"chen" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BUZZER?TEXT1
+Program Size: data=46.0 xdata=0 code=408
+creating hex file from "chen"...
+"chen" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BUZZER?TEXT1
+Program Size: data=38.0 xdata=0 code=371
+creating hex file from "chen"...
+"chen" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(80): error C141: syntax error near 'unsigned'
+TEXT1.C(80): error C202: 'i': undefined identifier
+TEXT1.C(81): error C202: 'i': undefined identifier
+TEXT1.C(83): error C202: 'i': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BUZZER?TEXT1
+Program Size: data=38.0 xdata=0 code=382
+creating hex file from "chen"...
+"chen" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BUZZER?TEXT1
+Program Size: data=38.0 xdata=0 code=383
+creating hex file from "chen"...
+"chen" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BUZZER?TEXT1
+Program Size: data=38.0 xdata=0 code=381
+creating hex file from "chen"...
+"chen" - 0 Error(s), 1 Warning(s).

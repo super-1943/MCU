@@ -1,0 +1,150 @@
+BL51 BANKED LINKER/LOCATER V5.03                                                        12/19/2008  13:55:43  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V5.03, INVOKED BY:
+D:\PROGRAM FILES\KEIL\C51\BIN\BL51.EXE jinhang.obj TO jinhang RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  jinhang.obj (JINHANG)
+  D:\PROGRAM FILES\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+  D:\PROGRAM FILES\KEIL\C51\LIB\C51S.LIB (?C?CLDOPTR)
+
+
+LINK MAP OF MODULE:  jinhang (JINHANG)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0003H     UNIT         _DATA_GROUP_
+            IDATA   000BH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0089H     UNIT         ?CO?JINHANG
+            CODE    008CH     004CH     UNIT         ?PR?_SHOW?JINHANG
+            CODE    00D8H     002DH     UNIT         ?C?LIB_CODE
+            CODE    0105H     0026H     UNIT         ?PR?MAIN?JINHANG
+            CODE    012BH     000DH     UNIT         ?PR?LONGDELAY?JINHANG
+            CODE    0138H     000CH     UNIT         ?C_C51STARTUP
+            CODE    0144H     0009H     UNIT         ?PR?SHORTDELAY?JINHANG
+
+
+
+OVERLAY MAP OF MODULE:   jinhang (JINHANG)
+
+
+SEGMENT                          DATA_GROUP 
+  +--> CALLED SEGMENT          START    LENGTH
+----------------------------------------------
+?C_C51STARTUP                  -----    -----
+  +--> ?PR?MAIN?JINHANG
+
+?PR?MAIN?JINHANG               -----    -----
+  +--> ?CO?JINHANG
+  +--> ?PR?_SHOW?JINHANG
+
+?PR?_SHOW?JINHANG              0008H    0003H
+  +--> ?PR?SHORTDELAY?JINHANG
+
+
+
+SYMBOL TABLE OF MODULE:  jinhang (JINHANG)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+BL51 BANKED LINKER/LOCATER V5.03                                                      12/19/2008  13:55:43  PAGE 2
+
+
+
+  -------         MODULE        JINHANG
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  C:006CH         PUBLIC        tb_MEI
+  C:004CH         PUBLIC        tb_WEI
+  C:002CH         PUBLIC        tb_REN
+  C:008CH         PUBLIC        _show
+  C:0105H         PUBLIC        main
+  C:0003H         PUBLIC        bits
+  C:012BH         PUBLIC        longdelay
+  C:0144H         PUBLIC        shortdelay
+  C:000CH         PUBLIC        tb_LI
+  -------         PROC          SHORTDELAY
+  -------         DO            
+  D:0007H         SYMBOL        i
+  D:0006H         SYMBOL        j
+  -------         ENDDO         
+  C:0144H         LINE#         40
+  C:0144H         LINE#         41
+  C:0144H         LINE#         43
+  C:0146H         LINE#         44
+  C:014CH         LINE#         45
+  -------         ENDPROC       SHORTDELAY
+  -------         PROC          LONGDELAY
+  -------         DO            
+  D:0007H         SYMBOL        i
+  D:0006H         SYMBOL        j
+  D:0005H         SYMBOL        k
+  -------         ENDDO         
+  C:012BH         LINE#         47
+  C:012BH         LINE#         48
+  C:012BH         LINE#         50
+  C:012DH         LINE#         51
+  C:012FH         LINE#         52
+  C:0137H         LINE#         53
+  -------         ENDPROC       LONGDELAY
+  -------         PROC          _SHOW
+  D:0008H         SYMBOL        tb
+  -------         DO            
+  D:0004H         SYMBOL        P
+  D:0005H         SYMBOL        i
+  -------         ENDDO         
+  C:008CH         LINE#         54
+  C:0092H         LINE#         55
+  C:0092H         LINE#         61
+  C:0094H         LINE#         63
+  C:009AH         LINE#         64
+  C:009AH         LINE#         65
+  C:009CH         LINE#         66
+  C:009CH         LINE#         67
+  C:009EH         LINE#         68
+  C:00B3H         LINE#         69
+  C:00CCH         LINE#         70
+  C:00CFH         LINE#         71
+BL51 BANKED LINKER/LOCATER V5.03                                                      12/19/2008  13:55:43  PAGE 3
+
+
+  C:00D3H         LINE#         72
+  C:00D5H         LINE#         73
+  C:00D7H         LINE#         75
+  -------         ENDPROC       _SHOW
+  -------         PROC          MAIN
+  C:0105H         LINE#         77
+  C:0105H         LINE#         78
+  C:0105H         LINE#         85
+  C:0105H         LINE#         86
+  C:0105H         LINE#         87
+  C:010EH         LINE#         89
+  C:0117H         LINE#         91
+  C:0120H         LINE#         92
+  C:0129H         LINE#         94
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        JINHANG
+
+  -------         MODULE        ?C?CLDOPTR
+  C:00D8H         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LONGDELAY?JINHANG
+
+Program Size: data=12.0 xdata=0 code=333
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)

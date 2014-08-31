@@ -1,0 +1,89 @@
+C51 COMPILER V7.00  TEXT1                                                                  08/14/2008 18:49:42 PAGE 1   
+
+
+C51 COMPILER V7.00, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Elecs\Keilc\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <at89x51.h>
+   2          
+   3          sbit st=P3^2;
+   4          sbit oe=P3^0;
+   5          sbit eoc=P3^1;
+   6          sbit aa=P3^4;
+   7          sbit ab=P3^5;
+   8          sbit ac=P3^6;
+   9          sbit l0=P2^7;
+  10          sbit l1=P2^6;
+  11          sbit l2=P2^5;
+  12          
+  13          unsigned char data adc;
+  14          unsigned char buff[3]={0,0,0};
+  15          unsigned char code tab[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f};
+  16          void delay()
+  17          {
+  18   1              unsigned char i,j;
+  19   1              for(i=10;i;i--)
+  20   1              for(j=250;j;j--);
+  21   1      }
+  22          void disp(void)
+  23          {
+  24   1              unsigned char i;
+  25   1              l2=0;
+  26   1              i=adc/100;
+  27   1              P1=tab[i];
+  28   1              delay();
+  29   1              l2=1;
+  30   1              l1=0;
+  31   1              i=adc/10;
+  32   1              i%=10;
+  33   1              P1=tab[i];
+  34   1              delay();
+  35   1              l1=1;
+  36   1              l0=0;
+  37   1              i=adc%10;
+  38   1              P1=tab[i];
+  39   1              delay();
+  40   1              l0=1;
+  41   1      }
+  42                  
+  43          
+  44          void main()
+  45          {
+  46   1              
+  47   1              aa=1;
+  48   1              ab=1;
+  49   1              ac=0;
+  50   1              while(1)
+  51   1              {
+  52   2                      st=0;
+  53   2                      st=1;
+  54   2                      st=0;
+  55   2                      while(eoc==0);
+C51 COMPILER V7.00  TEXT1                                                                  08/14/2008 18:49:42 PAGE 2   
+
+  56   2                      oe=1;
+  57   2                      adc=P0;
+  58   2                      oe=0;
+  59   2                      disp();
+  60   2      
+  61   2      
+  62   2                      
+  63   2              }
+  64   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     89    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

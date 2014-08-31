@@ -1,0 +1,6 @@
+"STARTUP.obj",
+"Text1.obj",
+"serial.obj",
+"wireless.obj" 
+TO "tusb2136" 
+RAMSIZE(256) 

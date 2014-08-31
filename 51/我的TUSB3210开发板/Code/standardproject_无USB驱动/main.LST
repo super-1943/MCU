@@ -1,0 +1,74 @@
+C51 COMPILER V8.02   MAIN                                                                  07/25/2010 19:06:07 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define FC_PORT         P3
+   3          #define FC_PIN          P3
+   4          #define FC_LATCH        0x20
+   5          #define FC_CLK          0x10
+   6          #define FC_DATA         0x08
+   7          #define FC_LATCH_0      FC_PORT&=       ~FC_LATCH
+   8          #define FC_LATCH_1      FC_PORT|=    FC_LATCH
+   9          #define FC_CLK_0        FC_PORT&=       ~FC_CLK
+  10          #define FC_CLK_1        FC_PORT|=    FC_CLK
+  11          #define FC_DATA_IN      (FC_PIN&FC_DATA)
+  12          
+  13          void FC_Init(void)
+  14          {
+  15   1              FC_PORT|=FC_LATCH|FC_CLK|FC_DATA;
+  16   1              FC_PORT&=~FC_LATCH;
+  17   1      }
+  18          unsigned char FC_Getdata(void)
+  19          {
+  20   1              unsigned char i,t=0;
+  21   1              FC_LATCH_1;
+  22   1              FC_LATCH_1;
+  23   1              FC_LATCH_1;
+  24   1              FC_LATCH_1;
+  25   1              FC_LATCH_0;
+  26   1              for(i=0;i<8;i++)
+  27   1              {
+  28   2                      t>>=1;
+  29   2                      FC_CLK_0;
+  30   2                      if(FC_DATA_IN)
+  31   2                      {
+  32   3                              t|=0x80;
+  33   3                      }
+  34   2                      
+  35   2                      FC_CLK_1;
+  36   2                      
+  37   2              }
+  38   1              return t;
+  39   1      }
+  40          void main(void)
+  41          {
+  42   1              unsigned char i;
+  43   1              FC_Init();
+  44   1              while(1)
+  45   1              {
+  46   2                      P0=FC_Getdata();
+  47   2              }
+  48   1      }
+*** WARNING C280 IN LINE 42 OF MAIN.C: 'i': unreferenced local variable
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     58    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+C51 COMPILER V8.02   MAIN                                                                  07/25/2010 19:06:07 PAGE 2   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

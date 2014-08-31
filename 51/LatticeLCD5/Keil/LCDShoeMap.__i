@@ -1,0 +1,1 @@
+"sources\LCDShoeMap.c" BROWSE INCDIR(.\include) DEBUG OBJECTEXTEND PRINT(.\LCDShoeMap.lst) OBJECT(LCDShoeMap.obj)

@@ -1,0 +1,30 @@
+386_OBJECTS= \
+    $(_OBJ_DIR)\i386\usbcryptdriver.res \
+    $(_OBJ_DIR)\i386\crmain.obj \
+    $(_OBJ_DIR)\i386\crpnp.obj \
+    $(_OBJ_DIR)\i386\crio.obj \
+    $(_OBJ_DIR)\i386\crconfig.obj \
+    $(_OBJ_DIR)\i386\crwmi.obj
+
+PASS0_386_OBJECTS=
+
+IA64_OBJECTS= \
+    $(_OBJ_DIR)\ia64\usbcryptdriver.res \
+    $(_OBJ_DIR)\ia64\crmain.obj \
+    $(_OBJ_DIR)\ia64\crpnp.obj \
+    $(_OBJ_DIR)\ia64\crio.obj \
+    $(_OBJ_DIR)\ia64\crconfig.obj \
+    $(_OBJ_DIR)\ia64\crwmi.obj
+
+PASS0_IA64_OBJECTS=
+
+AMD64_OBJECTS= \
+    $(_OBJ_DIR)\amd64\usbcryptdriver.res \
+    $(_OBJ_DIR)\amd64\crmain.obj \
+    $(_OBJ_DIR)\amd64\crpnp.obj \
+    $(_OBJ_DIR)\amd64\crio.obj \
+    $(_OBJ_DIR)\amd64\crconfig.obj \
+    $(_OBJ_DIR)\amd64\crwmi.obj
+
+PASS0_AMD64_OBJECTS=
+

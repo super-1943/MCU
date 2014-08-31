@@ -1,0 +1,394 @@
+A51 MACRO ASSEMBLER  A                                                                    11/18/2008 14:02:02 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.07
+OBJECT MODULE PLACED IN a.OBJ
+ASSEMBLER INVOKED BY: d:\Program Files\Keil\C51\BIN\A51.EXE a.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ;电子琴程序
+                       2     ;功能:  按1到8号键分别发出8个基本音节
+                       3     ;   按9号(歌曲)键,演奏一首乐曲
+  00B5                 4         SOUD    EQU P3.5        ;
+  0090                 5         K1  EQU P1.0        ;
+  0091                 6         K2  EQU P1.1        ;
+  0092                 7         K3  EQU P1.2        ;
+  0093                 8         K4  EQU P1.3        ;
+  0094                 9         K5  EQU P1.4        ;
+  0095                10         K6  EQU P1.5        ;
+  0096                11         K7  EQU P1.6        ;
+  0097                12         K8  EQU P1.7        ;
+  00B4                13         K9  EQU P3.4        ;
+0000                  14         ORG     0000H
+0000 020014           15             LJMP    START
+000B                  16             ORG     000BH
+000B 0520             17             INC     20H            ;中断服务,中断计数器加1
+000D 758CD8           18             MOV     TH0,#0D8H
+0010 758AEF           19             MOV     TL0,#0EFH      ;12M晶振，形成10毫秒中断
+0013 32               20             RETI
+0014                  21     START:  
+0014 758150           22             MOV     SP,#50H
+0017 758CD8           23             MOV     TH0,#0D8H
+001A 758AEF           24             MOV     TL0,#0EFH
+001D 758901           25             MOV     TMOD,#01H
+0020 75A882           26             MOV     IE,#82H     ;
+0023                  27     MAIN:
+0023 209009           28         JB  K1, LOOP1   ;
+0026 11E6             29         ACALL   DEL5MS      ;
+0028 209004           30         JB  K1, LOOP1   ;
+002B 11EF             31         ACALL   ONE     ;
+002D 0123             32         AJMP    MAIN        ;
+002F                  33     LOOP1:
+002F 209109           34         JB  K2, LOOP2   ;
+0032 11E6             35         ACALL   DEL5MS      ;
+0034 209104           36         JB  K2, LOOP2   ;
+0037 3101             37         ACALL   TWO     ;
+0039 0123             38         AJMP    MAIN        ;
+003B                  39     LOOP2:
+003B 209209           40         JB  K3, LOOP3   ;
+003E 11E6             41         ACALL   DEL5MS      ;
+0040 209204           42         JB  K3, LOOP3   ;
+0043 3113             43         ACALL   THREE       ;
+0045 0123             44         AJMP    MAIN        ;
+0047                  45     LOOP3:
+0047 209309           46         JB  K4, LOOP4   ;   
+004A 11E6             47         ACALL   DEL5MS      ;
+004C 209304           48         JB  K4, LOOP4   ;
+004F 3125             49         ACALL   FOUR        ;
+0051 0123             50         AJMP    MAIN        ;
+0053                  51     LOOP4:
+0053 209409           52         JB  K5, LOOP5   ;
+0056 11E6             53         ACALL   DEL5MS      ;
+0058 209404           54         JB  K5, LOOP5   ;
+005B 3137             55         ACALL   FIVE        ;
+005D 0123             56         AJMP    MAIN        ;
+005F                  57     LOOP5:
+005F 209509           58         JB  K6, LOOP6   ;
+A51 MACRO ASSEMBLER  A                                                                    11/18/2008 14:02:02 PAGE     2
+
+0062 11E6             59         ACALL   DEL5MS      ;
+0064 209504           60         JB  K6, LOOP6   ;
+0067 3149             61         ACALL   SIX     ;
+0069 0123             62         AJMP    MAIN        ;
+006B                  63     LOOP6:
+006B 209609           64         JB  K7, LOOP7   ;
+006E 11E6             65         ACALL   DEL5MS      ;
+0070 209604           66         JB  K7, LOOP7   ;
+0073 315B             67         ACALL   SEVEN       ;
+0075 0123             68         AJMP    MAIN        ;
+0077                  69     LOOP7:
+0077 209709           70         JB  K8, LOOP8   ;
+007A 11E6             71         ACALL   DEL5MS      ;
+007C 209704           72         JB  K8, LOOP8   ;
+007F 316D             73         ACALL   EIGHT       ;
+0081 0123             74         AJMP    MAIN        ;
+0083                  75     LOOP8:
+0083 20B407           76         JB  K9, LOOP9   ;
+0086 11E6             77         ACALL   DEL5MS      ;
+0088 20B402           78         JB  K9, LOOP9   ;
+008B 118F             79         ACALL   MUSIC0      ;
+008D                  80     LOOP9:
+008D 0123             81         AJMP    MAIN        ;
+                      82     ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+008F                  83     MUSIC0:
+008F 00               84             NOP
+0090 90017F           85             MOV     DPTR,#DAT       ;表头地址送DPTR
+0093 752000           86             MOV     20H,#00H        ;中断计数器清0
+0096 75F000           87             MOV     B,#00H          ;表序号清0
+0099                  88     MUSIC1:
+0099 00               89             NOP
+009A E4               90             CLR     A
+009B 93               91             MOVC    A,@A+DPTR       ;查表取代码
+009C 6033             92             JZ      END0            ;是00H,则结束
+009E B4FF03           93             CJNE    A,#0FFH,MUSIC5
+00A1 0200C0           94             LJMP    MUSIC3
+00A4                  95     MUSIC5:
+00A4 00               96             NOP
+00A5 FE               97             MOV     R6,A
+00A6 A3               98             INC     DPTR
+00A7 E5F0             99             MOV     A,B
+00A9 93              100             MOVC    A,@A+DPTR       ;取节拍代码送R7
+00AA FF              101             MOV     R7,A
+00AB D28C            102             SETB    TR0             ;启动计数
+00AD                 103     MUSIC2:
+00AD 00              104             NOP
+00AE B2B5            105             CPL     SOUD
+00B0 EE              106             MOV     A,R6
+00B1 FB              107             MOV     R3,A
+00B2 1200DC          108             LCALL   DEL
+00B5 EF              109             MOV     A,R7
+00B6 B520F4          110             CJNE    A,20H,MUSIC2    ;中断计数器(20H)=R7否?
+                     111                                     ;不等,则继续循环
+00B9 752000          112             MOV     20H,#00H        ;等于,则取下一代码
+00BC A3              113             INC     DPTR
+00BD 020099          114             LJMP    MUSIC1
+00C0                 115     MUSIC3:
+00C0 00              116             NOP
+00C1 C28C            117             CLR     TR0             ;休止100毫秒
+00C3 7A0D            118             MOV     R2,#0DH
+00C5                 119     MUSIC4:
+00C5 00              120             NOP
+00C6 7BFF            121             MOV     R3,#0FFH
+00C8 1200DC          122             LCALL   DEL
+00CB DAF8            123             DJNZ    R2,MUSIC4
+00CD A3              124             INC     DPTR
+A51 MACRO ASSEMBLER  A                                                                    11/18/2008 14:02:02 PAGE     3
+
+00CE 020099          125             LJMP    MUSIC1
+00D1                 126     END0:
+00D1 00              127             NOP
+00D2 7A64            128             MOV     R2,#64H         ;
+00D4                 129     MUSIC6:
+00D4 7B00            130             MOV     R3,#00H
+00D6 1200DC          131             LCALL   DEL
+00D9 DAF9            132             DJNZ    R2,MUSIC6
+00DB 22              133             RET         ;
+                     134     ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22
+00DC                 135     DEL:
+00DC 00              136             NOP
+00DD                 137     DEL3:                  
+00DD 7C05            138             MOV     R4,#05H
+00DF                 139     DEL4:   
+00DF 00              140             NOP
+00E0 DCFD            141             DJNZ    R4,DEL4
+00E2 00              142             NOP
+00E3 DBF8            143             DJNZ    R3,DEL3
+00E5 22              144             RET
+00E6                 145     DEL5MS: 
+00E6 7C2D            146         MOV   R4,#45
+00E8                 147     DEL5MS1:
+00E8 7B36            148         MOV   R3,#54
+00EA                 149     DEL5MS2:
+00EA DBFE            150         DJNZ  R3,DEL5MS2
+00EC DCFA            151             DJNZ  R4,DEL5MS1
+00EE 22              152             RET
+                     153     ;@@@@@@@@@@@@@@@@@@@@@@@@2
+                     154     ;发1音
+                     155     ;@@@@@@@@@@@@@@@@@@@@@@@@@
+00EF                 156     ONE:
+00EF 00              157         NOP
+00F0 B2B5            158             CPL     SOUD
+00F2 7430            159             MOV     A,  #30H
+00F4 FB              160             MOV     R3, A
+00F5 1200DC          161             LCALL   DEL
+00F8 3090F4          162             JNB K1, ONE ;
+00FB 11E6            163             ACALL   DEL5MS      ;
+00FD 3090EF          164             JNB K1, ONE ;
+0100 22              165             RET         ;
+                     166     ;@@@@@@@@@@@@@@@@@@@@@@@@2
+                     167     ;发2音
+                     168     ;@@@@@@@@@@@@@@@@@@@@@@@@@
+0101                 169     TWO:
+0101 00              170         NOP
+0102 B2B5            171             CPL     SOUD
+0104 742C            172             MOV     A,  #2CH
+0106 FB              173             MOV     R3, A
+0107 1200DC          174             LCALL   DEL
+010A 3091F4          175             JNB K2, TWO ;
+010D 11E6            176             ACALL   DEL5MS      ;
+010F 3091EF          177             JNB K2, TWO ;
+0112 22              178             RET         ;
+                     179     ;@@@@@@@@@@@@@@@@@@@@@@@@2
+                     180     ;发3音
+                     181     ;@@@@@@@@@@@@@@@@@@@@@@@@@
+0113                 182     THREE:
+0113 00              183         NOP
+0114 B2B5            184             CPL     SOUD
+0116 7428            185             MOV     A,  #28H
+0118 FB              186             MOV     R3, A
+0119 1200DC          187             LCALL   DEL
+011C 3092F4          188             JNB K3, THREE   ;
+011F 11E6            189             ACALL   DEL5MS      ;
+0121 3092EF          190             JNB K3, THREE   ;
+A51 MACRO ASSEMBLER  A                                                                    11/18/2008 14:02:02 PAGE     4
+
+0124 22              191             RET         ;
+                     192     ;@@@@@@@@@@@@@@@@@@@@@@@@2
+                     193     ;发4音
+                     194     ;@@@@@@@@@@@@@@@@@@@@@@@@@
+0125                 195     FOUR:
+0125 00              196         NOP
+0126 B2B5            197             CPL     SOUD
+0128 7424            198             MOV     A,  #24H
+012A FB              199             MOV     R3, A
+012B 1200DC          200             LCALL   DEL
+012E 3093F4          201             JNB K4, FOUR    ;
+0131 11E6            202             ACALL   DEL5MS      ;
+0133 3093EF          203             JNB K4, FOUR    ;
+0136 22              204             RET         ;
+                     205     ;@@@@@@@@@@@@@@@@@@@@@@@@2
+                     206     ;发5音
+                     207     ;@@@@@@@@@@@@@@@@@@@@@@@@@
+0137                 208     FIVE:
+0137 00              209         NOP
+0138 B2B5            210             CPL     SOUD
+013A 7420            211             MOV     A,  #20H
+013C FB              212             MOV     R3, A
+013D 1200DC          213             LCALL   DEL
+0140 3094F4          214             JNB K5, FIVE    ;
+0143 11E6            215             ACALL   DEL5MS      ;
+0145 3094EF          216             JNB K5, FIVE    ;
+0148 22              217             RET         ;
+                     218     ;@@@@@@@@@@@@@@@@@@@@@@@@2
+                     219     ;发6音
+                     220     ;@@@@@@@@@@@@@@@@@@@@@@@@@
+0149                 221     SIX:
+0149 00              222         NOP
+014A B2B5            223             CPL     SOUD
+014C 741C            224             MOV     A,  #1CH
+014E FB              225             MOV     R3, A
+014F 1200DC          226             LCALL   DEL
+0152 3095F4          227             JNB K6, SIX ;
+0155 11E6            228             ACALL   DEL5MS      ;
+0157 3095EF          229             JNB K6, SIX ;
+015A 22              230             RET         ;
+                     231     ;@@@@@@@@@@@@@@@@@@@@@@@@2
+                     232     ;发7音
+                     233     ;@@@@@@@@@@@@@@@@@@@@@@@@@
+015B                 234     SEVEN:
+015B 00              235         NOP
+015C B2B5            236             CPL     SOUD
+015E 741A            237             MOV     A,  #1AH
+0160 FB              238             MOV     R3, A
+0161 1200DC          239             LCALL   DEL
+0164 3096F4          240             JNB K7, SEVEN   ;
+0167 11E6            241             ACALL   DEL5MS      ;
+0169 3096EF          242             JNB K7, SEVEN   ;
+016C 22              243             RET         ;
+                     244     ;@@@@@@@@@@@@@@@@@@@@@@@@2
+                     245     ;发8音
+                     246     ;@@@@@@@@@@@@@@@@@@@@@@@@@
+016D                 247     EIGHT:
+016D 00              248         NOP
+016E B2B5            249             CPL     SOUD
+0170 7418            250             MOV     A,  #18H
+0172 FB              251             MOV     R3, A
+0173 1200DC          252             LCALL   DEL
+0176 3097F4          253             JNB K8, EIGHT   ;
+0179 11E6            254             ACALL   DEL5MS      ;
+017B 3097EF          255             JNB K8, EIGHT   ;
+017E 22              256             RET         ;
+A51 MACRO ASSEMBLER  A                                                                    11/18/2008 14:02:02 PAGE     5
+
+                     257     
+                     258     ;       NOP
+                     259     ;曲谱编码表
+017F                 260     DAT:   
+017F 18301C10        261             DB      18H,     30H,     1CH,     10H
+0183 20401C10        262             DB      20H,     40H,     1CH,     10H     
+0187 18102010        263             DB      18H,     10H,     20H,     10H
+018B 1C101840        264             DB      1CH,     10H,     18H,     40H
+018F 1C202020        265             DB      1CH,     20H,     20H,     20H
+0193 1C201820        266             DB      1CH,     20H,     18H,     20H     
+0197 2080FF20        267             DB      20H,     80H,     0FFH,    20H
+019B 301C1018        268             DB      30H,     1CH,     10H ,   18H
+019F 2015201C        269             DB      20H,     15H,     20H ,    1CH
+01A3 20202026        270             DB      20H,     20H,     20H ,    26H
+01A7 4020202B        271             DB      40H,     20H ,    20H ,    2BH
+01AB 20262020        272             DB      20H,     26H,     20H ,    20H     
+01AF 203080FF        273             DB      20H,     30H ,    80H ,    0FFH
+01B3 20201C10        274             DB      20H,     20H,     1CH ,    10H
+01B7 18102020        275             DB      18H,     10H,     20H ,    20H
+01BB 26202B20        276             DB      26H,     20H ,    2BH ,    20H
+01BF 30202B40        277             DB      30H,     20H ,    2BH ,    40H
+01C3 20201C10        278             DB      20H,     20H  ,   1CH  ,   10H
+01C7 18102020        279             DB      18H,     10H,     20H,     20H
+01CB 26202B20        280             DB      26H,     20H ,    2BH,     20H
+01CF 30202B40        281             DB      30H,     20H,     2BH ,    40H
+01D3 20301C10        282             DB      20H,     30H,     1CH ,    10H
+01D7 18201520        283             DB      18H,     20H ,    15H ,    20H
+01DB 1C202020        284             DB      1CH,     20H ,    20H ,    20H
+01DF 26402020        285             DB      26H,     40H,     20H ,    20H     
+01E3 2B202620        286             DB      2BH,     20H,     26H ,    20H     
+01E7 20203080        287             DB      20H,     20H,     30H ,    80H
+01EB 20301C10        288             DB      20H,     30H,     1CH ,    10H
+01EF 20101C10        289             DB      20H,     10H,     1CH ,    10H
+01F3 20202620        290             DB      20H,     20H,     26H  ,   20H
+01F7 2B203020        291             DB      2BH,     20H,     30H  ,   20H
+01FB 2B402015        292             DB      2BH,     40H,     20H   ,  15H
+01FF 1F052010        293             DB      1FH,     05H,     20H    , 10H
+0203 1C102020        294             DB      1CH,     10H,     20H ,    20H
+0207 26202B20        295             DB      26H,     20H,     2BH ,    20H
+020B 30202B40        296             DB      30H,     20H,     2BH ,    40H
+020F 20301C10        297             DB      20H,     30H,     1CH  ,   10H
+0213 18201520        298             DB      18H,     20H ,    15H  ,   20H
+0217 1C202020        299             DB      1CH,     20H ,    20H  ,   20H
+021B 26402020        300             DB      26H,     40H,     20H  ,   20H
+021F 2B202620        301             DB      2BH,     20H,     26H   ,  20H
+0223 20203030        302             DB      20H,     20H,     30H,     30H      
+0227 20301C10        303             DB      20H,     30H,     1CH,     10H
+022B 18401C20        304             DB      18H,     40H,     1CH,     20H
+022F 20202640        305             DB      20H,     20H,     26H,     40H
+0233 13601820        306             DB      13H,     60H,     18H ,    20H
+0237 15401340        307             DB      15H,     40H,     13H ,    40H
+023B 188000          308             DB      18H,     80H,     00H
+                     309     END
+                             
+A51 MACRO ASSEMBLER  A                                                                    11/18/2008 14:02:02 PAGE     6
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+B. . . . . . . . .  D ADDR   00F0H   A   
+DAT. . . . . . . .  C ADDR   017FH   A   
+DEL. . . . . . . .  C ADDR   00DCH   A   
+DEL3 . . . . . . .  C ADDR   00DDH   A   
+DEL4 . . . . . . .  C ADDR   00DFH   A   
+DEL5MS . . . . . .  C ADDR   00E6H   A   
+DEL5MS1. . . . . .  C ADDR   00E8H   A   
+DEL5MS2. . . . . .  C ADDR   00EAH   A   
+EIGHT. . . . . . .  C ADDR   016DH   A   
+END0 . . . . . . .  C ADDR   00D1H   A   
+FIVE . . . . . . .  C ADDR   0137H   A   
+FOUR . . . . . . .  C ADDR   0125H   A   
+IE . . . . . . . .  D ADDR   00A8H   A   
+K1 . . . . . . . .  B ADDR   0090H.0 A   
+K2 . . . . . . . .  B ADDR   0090H.1 A   
+K3 . . . . . . . .  B ADDR   0090H.2 A   
+K4 . . . . . . . .  B ADDR   0090H.3 A   
+K5 . . . . . . . .  B ADDR   0090H.4 A   
+K6 . . . . . . . .  B ADDR   0090H.5 A   
+K7 . . . . . . . .  B ADDR   0090H.6 A   
+K8 . . . . . . . .  B ADDR   0090H.7 A   
+K9 . . . . . . . .  B ADDR   00B0H.4 A   
+LOOP1. . . . . . .  C ADDR   002FH   A   
+LOOP2. . . . . . .  C ADDR   003BH   A   
+LOOP3. . . . . . .  C ADDR   0047H   A   
+LOOP4. . . . . . .  C ADDR   0053H   A   
+LOOP5. . . . . . .  C ADDR   005FH   A   
+LOOP6. . . . . . .  C ADDR   006BH   A   
+LOOP7. . . . . . .  C ADDR   0077H   A   
+LOOP8. . . . . . .  C ADDR   0083H   A   
+LOOP9. . . . . . .  C ADDR   008DH   A   
+MAIN . . . . . . .  C ADDR   0023H   A   
+MUSIC0 . . . . . .  C ADDR   008FH   A   
+MUSIC1 . . . . . .  C ADDR   0099H   A   
+MUSIC2 . . . . . .  C ADDR   00ADH   A   
+MUSIC3 . . . . . .  C ADDR   00C0H   A   
+MUSIC4 . . . . . .  C ADDR   00C5H   A   
+MUSIC5 . . . . . .  C ADDR   00A4H   A   
+MUSIC6 . . . . . .  C ADDR   00D4H   A   
+ONE. . . . . . . .  C ADDR   00EFH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+SEVEN. . . . . . .  C ADDR   015BH   A   
+SIX. . . . . . . .  C ADDR   0149H   A   
+SOUD . . . . . . .  B ADDR   00B0H.5 A   
+SP . . . . . . . .  D ADDR   0081H   A   
+START. . . . . . .  C ADDR   0014H   A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+THREE. . . . . . .  C ADDR   0113H   A   
+TL0. . . . . . . .  D ADDR   008AH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+TWO. . . . . . . .  C ADDR   0101H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

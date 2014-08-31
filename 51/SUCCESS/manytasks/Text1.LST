@@ -1,0 +1,138 @@
+A51 MACRO ASSEMBLER  TEXT1                                                                02/14/2009 10:55:33 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN Text1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE Text1.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+  0030                 1     BUF1H EQU 0X30
+  0031                 2     BUF1L EQU 0X31
+  0032                 3     BUF2H EQU 0X32
+  0033                 4     BUF2L EQU 0X33
+  0000                 5     FLAG BIT 0X00;   FLAG==0---->TASK1;FLAG==1--->TASK2
+0000                   6     ORG 00H
+0000 02000E            7     LJMP START
+000B                   8     ORG 0BH
+000B 020032            9     LJMP INT0X
+                      10     
+000E                  11     START: 
+000E 758160           12                     MOV SP,#0X60;
+0011 753000           13                     MOV BUF1H,#TASK1/256;
+0014 753169           14                     MOV BUF1L,#TASK1 MOD 256
+0017 753200           15                     MOV BUF2H,#TASK2/256;
+001A 75337D           16                     MOV BUF2L,#TASK2 MOD 256
+001D 758901           17                     MOV TMOD,#01H
+0020 758CFF           18                     MOV TH0,#0xff
+0023 758AF0           19                     MOV TL0,#0xF0
+0026 D28C             20                     SETB TR0
+0028 D2A9             21                     SETB ET0
+002A D2AF             22                     SETB EA
+002C C200             23                     CLR FLAG;
+002E 1169             24                     CALL TASK1;
+0030 80FE             25                     SJMP $
+0032                  26     INT0X:
+0032 C28D             27                     CLR TF0;
+0034 C2AF             28                     CLR EA
+0036 758CFF           29                     MOV TH0,#0xff
+0039 758AF0           30                     MOV TL0,#0xF0
+003C A981             31                     MOV R1,SP;
+003E 200014           32                     JB FLAG,NEXT;                   IF FLAG==0,GO ON;ELSE JMP TO NEXT
+0041 19               33                     DEC R1;
+0042 E7               34                     MOV A,@R1;
+0043 F531             35                     MOV BUF1L,A;
+0045 19               36                     DEC R1;
+0046 E7               37                     MOV A,@R1;
+0047 F530             38                     MOV BUF1H,A;                    STORE PC
+                      39                     
+0049 E532             40                     MOV A,BUF2H;                    PUT TASK2'S PC INTO STACK
+004B F7               41                     MOV @R1,A;
+004C E533             42                     MOV A,BUF2L;
+004E 09               43                     INC R1;
+004F F7               44                     MOV @R1,A;
+0050 D2AF             45                     SETB EA
+0052 D200             46                     SETB FLAG
+0054 32               47                     RETI;
+0055                  48     NEXT:
+0055 19               49                     DEC R1;
+0056 E7               50                     MOV A,@R1;
+0057 F533             51                     MOV BUF2L,A;
+0059 19               52                     DEC R1;
+005A E7               53                     MOV A,@R1;
+005B F532             54                     MOV BUF2H,A;                    STORE PC
+                      55                     
+005D E530             56                     MOV A,BUF1H;                    PUT TASK2'S PC INTO STACK
+005F F7               57                     MOV @R1,A;
+0060 E531             58                     MOV A,BUF1L;
+A51 MACRO ASSEMBLER  TEXT1                                                                02/14/2009 10:55:33 PAGE     2
+
+0062 09               59                     INC R1;
+0063 F7               60                     MOV @R1,A;
+0064 D2AF             61                     SETB EA
+0066 C200             62                     CLR FLAG;
+0068 32               63                     RETI
+0069                  64     TASK1:
+0069 759000           65                     MOV P1,#0X00;
+006C C2AF             66                     CLR EA
+006E 1191             67                     CALL DELAY
+0070 D2AF             68                     SETB EA
+0072 7590FF           69                     MOV P1,#0XFF;
+0075 C2AF             70                     CLR EA
+0077 1191             71                     CALL DELAY;
+0079 D2AF             72                     SETB EA
+007B 80EC             73                     SJMP TASK1;
+007D                  74     TASK2:
+007D 75A000           75                     MOV P2,#0X00;
+0080 C2AF             76                     CLR EA
+0082 1191             77                     CALL DELAY;
+0084 D2AF             78                     SETB EA
+0086 75A0FF           79                     MOV P2,#0XFF;
+0089 C2AF             80                     CLR EA
+008B 1191             81                     CALL DELAY;
+008D D2AF             82                     SETB EA
+008F 80EC             83                     SJMP TASK2;
+0091                  84     DELAY:
+0091 7DFF             85                     MOV R5,#0XFF;
+0093 7EFF             86     L:              MOV R6,#0XFF;
+0095 DEFE             87                     DJNZ R6,$;
+0097 DDFA             88                     DJNZ R5,L
+                      89                     
+0099 22               90                     RET;
+                      91     END
+A51 MACRO ASSEMBLER  TEXT1                                                                02/14/2009 10:55:33 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+BUF1H. . . . . . .  N NUMB   0030H   A   
+BUF1L. . . . . . .  N NUMB   0031H   A   
+BUF2H. . . . . . .  N NUMB   0032H   A   
+BUF2L. . . . . . .  N NUMB   0033H   A   
+DELAY. . . . . . .  C ADDR   0091H   A   
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+ET0. . . . . . . .  B ADDR   00A8H.1 A   
+FLAG . . . . . . .  B ADDR   0020H.0 A   
+INT0X. . . . . . .  C ADDR   0032H   A   
+L. . . . . . . . .  C ADDR   0093H   A   
+NEXT . . . . . . .  C ADDR   0055H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+START. . . . . . .  C ADDR   000EH   A   
+TASK1. . . . . . .  C ADDR   0069H   A   
+TASK2. . . . . . .  C ADDR   007DH   A   
+TF0. . . . . . . .  B ADDR   0088H.5 A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+TL0. . . . . . . .  D ADDR   008AH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

@@ -1,0 +1,907 @@
+
+main.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000035a  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000036  00800060  0000035a  000003ce  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .debug_aranges 00000020  00000000  00000000  00000404  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_pubnames 000000f1  00000000  00000000  00000424  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_info   0000057e  00000000  00000000  00000515  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_abbrev 000001f3  00000000  00000000  00000a93  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_line   00000465  00000000  00000000  00000c86  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_frame  00000110  00000000  00000000  000010ec  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_str    0000011d  00000000  00000000  000011fc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_loc    000003c6  00000000  00000000  00001319  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	2c c0       	rjmp	.+88     	; 0x5c <__bad_interrupt>
+   4:	2b c0       	rjmp	.+86     	; 0x5c <__bad_interrupt>
+   6:	2a c0       	rjmp	.+84     	; 0x5c <__bad_interrupt>
+   8:	29 c0       	rjmp	.+82     	; 0x5c <__bad_interrupt>
+   a:	28 c0       	rjmp	.+80     	; 0x5c <__bad_interrupt>
+   c:	27 c0       	rjmp	.+78     	; 0x5c <__bad_interrupt>
+   e:	26 c0       	rjmp	.+76     	; 0x5c <__bad_interrupt>
+  10:	25 c0       	rjmp	.+74     	; 0x5c <__bad_interrupt>
+  12:	24 c0       	rjmp	.+72     	; 0x5c <__bad_interrupt>
+  14:	23 c0       	rjmp	.+70     	; 0x5c <__bad_interrupt>
+  16:	22 c0       	rjmp	.+68     	; 0x5c <__bad_interrupt>
+  18:	21 c0       	rjmp	.+66     	; 0x5c <__bad_interrupt>
+  1a:	20 c0       	rjmp	.+64     	; 0x5c <__bad_interrupt>
+  1c:	1f c0       	rjmp	.+62     	; 0x5c <__bad_interrupt>
+  1e:	1e c0       	rjmp	.+60     	; 0x5c <__bad_interrupt>
+  20:	1d c0       	rjmp	.+58     	; 0x5c <__bad_interrupt>
+  22:	1c c0       	rjmp	.+56     	; 0x5c <__bad_interrupt>
+  24:	1b c0       	rjmp	.+54     	; 0x5c <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+
+00000032 <__do_copy_data>:
+  32:	10 e0       	ldi	r17, 0x00	; 0
+  34:	a0 e6       	ldi	r26, 0x60	; 96
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	ea e5       	ldi	r30, 0x5A	; 90
+  3a:	f3 e0       	ldi	r31, 0x03	; 3
+  3c:	02 c0       	rjmp	.+4      	; 0x42 <.do_copy_data_start>
+
+0000003e <.do_copy_data_loop>:
+  3e:	05 90       	lpm	r0, Z+
+  40:	0d 92       	st	X+, r0
+
+00000042 <.do_copy_data_start>:
+  42:	a6 39       	cpi	r26, 0x96	; 150
+  44:	b1 07       	cpc	r27, r17
+  46:	d9 f7       	brne	.-10     	; 0x3e <.do_copy_data_loop>
+
+00000048 <__do_clear_bss>:
+  48:	10 e0       	ldi	r17, 0x00	; 0
+  4a:	a6 e9       	ldi	r26, 0x96	; 150
+  4c:	b0 e0       	ldi	r27, 0x00	; 0
+  4e:	01 c0       	rjmp	.+2      	; 0x52 <.do_clear_bss_start>
+
+00000050 <.do_clear_bss_loop>:
+  50:	1d 92       	st	X+, r1
+
+00000052 <.do_clear_bss_start>:
+  52:	a6 39       	cpi	r26, 0x96	; 150
+  54:	b1 07       	cpc	r27, r17
+  56:	e1 f7       	brne	.-8      	; 0x50 <.do_clear_bss_loop>
+  58:	08 d1       	rcall	.+528    	; 0x26a <main>
+  5a:	7d c1       	rjmp	.+762    	; 0x356 <_exit>
+
+0000005c <__bad_interrupt>:
+  5c:	d1 cf       	rjmp	.-94     	; 0x0 <__vectors>
+
+0000005e <USART_Init>:
+#include <avr/io.h>
+//usart初始化函数，可以设置波特率，计算公式：波特率=fosc/(16*(ubrr+1));
+//ubrr==25时，baud=2400
+void USART_Init( unsigned int baud ) 
+{
+	UBRRH = (unsigned char)(baud>>8);
+  5e:	90 bd       	out	0x20, r25	; 32
+	UBRRL = (unsigned char)baud;
+  60:	89 b9       	out	0x09, r24	; 9
+	UCSRB = (1<<RXEN)|(1<<TXEN);
+  62:	88 e1       	ldi	r24, 0x18	; 24
+  64:	8a b9       	out	0x0a, r24	; 10
+	UCSRC = (1<<URSEL)|(3<<UCSZ0);
+  66:	86 e8       	ldi	r24, 0x86	; 134
+  68:	80 bd       	out	0x20, r24	; 32
+}
+  6a:	08 95       	ret
+
+0000006c <USART_Transmit>:
+void USART_Transmit( unsigned char data )
+{
+	while ( !( UCSRA & (1<<UDRE)) );
+  6c:	5d 9b       	sbis	0x0b, 5	; 11
+  6e:	fe cf       	rjmp	.-4      	; 0x6c <USART_Transmit>
+	UDR = data;
+  70:	8c b9       	out	0x0c, r24	; 12
+}
+  72:	08 95       	ret
+
+00000074 <USART_Receive>:
+ unsigned char USART_Receive(void) 
+{
+	while ( !(UCSRA & (1<<RXC)) ); 
+  74:	5f 9b       	sbis	0x0b, 7	; 11
+  76:	fe cf       	rjmp	.-4      	; 0x74 <USART_Receive>
+    return UDR; 
+  78:	8c b1       	in	r24, 0x0c	; 12
+}
+  7a:	08 95       	ret
+
+0000007c <strlen>:
+
+
+//求字符串长度
+unsigned char strlen(unsigned char *d)
+{
+  7c:	ac 01       	movw	r20, r24
+  7e:	20 e0       	ldi	r18, 0x00	; 0
+	unsigned char i=0;
+	while(d[i++]);
+  80:	92 2f       	mov	r25, r18
+  82:	9f 5f       	subi	r25, 0xFF	; 255
+  84:	fa 01       	movw	r30, r20
+  86:	e2 0f       	add	r30, r18
+  88:	f1 1d       	adc	r31, r1
+  8a:	80 81       	ld	r24, Z
+  8c:	88 23       	and	r24, r24
+  8e:	11 f0       	breq	.+4      	; 0x94 <strlen+0x18>
+  90:	29 2f       	mov	r18, r25
+  92:	f6 cf       	rjmp	.-20     	; 0x80 <strlen+0x4>
+	return --i;
+}
+  94:	82 2f       	mov	r24, r18
+  96:	08 95       	ret
+
+00000098 <reverse>:
+//将字符串倒置
+void reverse(unsigned char * d)
+{
+  98:	bc 01       	movw	r22, r24
+  9a:	20 e0       	ldi	r18, 0x00	; 0
+
+//求字符串长度
+unsigned char strlen(unsigned char *d)
+{
+	unsigned char i=0;
+	while(d[i++]);
+  9c:	92 2f       	mov	r25, r18
+  9e:	9f 5f       	subi	r25, 0xFF	; 255
+  a0:	42 2f       	mov	r20, r18
+  a2:	50 e0       	ldi	r21, 0x00	; 0
+  a4:	fb 01       	movw	r30, r22
+  a6:	e4 0f       	add	r30, r20
+  a8:	f5 1f       	adc	r31, r21
+  aa:	80 81       	ld	r24, Z
+  ac:	88 23       	and	r24, r24
+  ae:	11 f0       	breq	.+4      	; 0xb4 <reverse+0x1c>
+  b0:	29 2f       	mov	r18, r25
+  b2:	f4 cf       	rjmp	.-24     	; 0x9c <reverse+0x4>
+//将字符串倒置
+void reverse(unsigned char * d)
+{
+	unsigned char i,j,k;
+	i=strlen(d);
+	for(j=0;j<i/2;j++)
+  b4:	32 2f       	mov	r19, r18
+  b6:	36 95       	lsr	r19
+  b8:	fb 01       	movw	r30, r22
+  ba:	da 01       	movw	r26, r20
+  bc:	11 97       	sbiw	r26, 0x01	; 1
+  be:	a6 0f       	add	r26, r22
+  c0:	b7 1f       	adc	r27, r23
+  c2:	20 e0       	ldi	r18, 0x00	; 0
+  c4:	06 c0       	rjmp	.+12     	; 0xd2 <reverse+0x3a>
+	{
+		k=d[j];
+  c6:	90 81       	ld	r25, Z
+		d[j]=d[i-j-1];
+  c8:	8c 91       	ld	r24, X
+  ca:	81 93       	st	Z+, r24
+		d[i-j-1]=k;
+  cc:	9c 93       	st	X, r25
+//将字符串倒置
+void reverse(unsigned char * d)
+{
+	unsigned char i,j,k;
+	i=strlen(d);
+	for(j=0;j<i/2;j++)
+  ce:	2f 5f       	subi	r18, 0xFF	; 255
+  d0:	11 97       	sbiw	r26, 0x01	; 1
+  d2:	23 17       	cp	r18, r19
+  d4:	c0 f3       	brcs	.-16     	; 0xc6 <reverse+0x2e>
+	{
+		k=d[j];
+		d[j]=d[i-j-1];
+		d[i-j-1]=k;
+	}
+}
+  d6:	08 95       	ret
+
+000000d8 <char2int>:
+//将char变成int
+int char2int(unsigned char c)
+{
+  d8:	98 2f       	mov	r25, r24
+	if(c>='0' && c<='9')
+  da:	80 53       	subi	r24, 0x30	; 48
+  dc:	8a 30       	cpi	r24, 0x0A	; 10
+  de:	18 f0       	brcs	.+6      	; 0xe6 <char2int+0xe>
+  e0:	2f ef       	ldi	r18, 0xFF	; 255
+  e2:	3f ef       	ldi	r19, 0xFF	; 255
+  e4:	04 c0       	rjmp	.+8      	; 0xee <char2int+0x16>
+	{
+		return (int)(c-'0');
+  e6:	29 2f       	mov	r18, r25
+  e8:	30 e0       	ldi	r19, 0x00	; 0
+  ea:	20 53       	subi	r18, 0x30	; 48
+  ec:	30 40       	sbci	r19, 0x00	; 0
+	}
+	else
+	{
+		return -1;
+	}
+}
+  ee:	c9 01       	movw	r24, r18
+  f0:	08 95       	ret
+
+000000f2 <int2char>:
+//将int变成char
+void int2char(unsigned char*d,int a)
+{
+  f2:	1f 93       	push	r17
+  f4:	cf 93       	push	r28
+  f6:	df 93       	push	r29
+  f8:	48 2f       	mov	r20, r24
+  fa:	19 2f       	mov	r17, r25
+  fc:	fb 01       	movw	r30, r22
+  fe:	9c 01       	movw	r18, r24
+ 100:	e9 01       	movw	r28, r18
+ 102:	0b c0       	rjmp	.+22     	; 0x11a <int2char+0x28>
+	unsigned char *dd,t;
+	dd=d;
+	while(a)
+	{
+		t=a%10;
+		*d++='0'+t;
+ 104:	cf 01       	movw	r24, r30
+ 106:	6a e0       	ldi	r22, 0x0A	; 10
+ 108:	70 e0       	ldi	r23, 0x00	; 0
+ 10a:	fe d0       	rcall	.+508    	; 0x308 <__divmodhi4>
+ 10c:	80 5d       	subi	r24, 0xD0	; 208
+ 10e:	89 93       	st	Y+, r24
+		a/=10;
+ 110:	cf 01       	movw	r24, r30
+ 112:	6a e0       	ldi	r22, 0x0A	; 10
+ 114:	70 e0       	ldi	r23, 0x00	; 0
+ 116:	f8 d0       	rcall	.+496    	; 0x308 <__divmodhi4>
+ 118:	fb 01       	movw	r30, r22
+//将int变成char
+void int2char(unsigned char*d,int a)
+{
+	unsigned char *dd,t;
+	dd=d;
+	while(a)
+ 11a:	30 97       	sbiw	r30, 0x00	; 0
+ 11c:	99 f7       	brne	.-26     	; 0x104 <int2char+0x12>
+	{
+		t=a%10;
+		*d++='0'+t;
+		a/=10;
+	}
+	*d=0;
+ 11e:	18 82       	st	Y, r1
+	reverse(dd);
+ 120:	84 2f       	mov	r24, r20
+ 122:	91 2f       	mov	r25, r17
+ 124:	b9 df       	rcall	.-142    	; 0x98 <reverse>
+}
+ 126:	df 91       	pop	r29
+ 128:	cf 91       	pop	r28
+ 12a:	1f 91       	pop	r17
+ 12c:	08 95       	ret
+
+0000012e <print_str>:
+//字符串输出函数
+void print_str(const unsigned char *d)
+{
+ 12e:	fc 01       	movw	r30, r24
+ 130:	04 c0       	rjmp	.+8      	; 0x13a <print_str+0xc>
+	UCSRB = (1<<RXEN)|(1<<TXEN);
+	UCSRC = (1<<URSEL)|(3<<UCSZ0);
+}
+void USART_Transmit( unsigned char data )
+{
+	while ( !( UCSRA & (1<<UDRE)) );
+ 132:	5d 9b       	sbis	0x0b, 5	; 11
+ 134:	fe cf       	rjmp	.-4      	; 0x132 <print_str+0x4>
+	UDR = data;
+ 136:	8c b9       	out	0x0c, r24	; 12
+void print_str(const unsigned char *d)
+{
+	while(*d)
+	{
+		USART_Transmit(*d);
+		d++;
+ 138:	31 96       	adiw	r30, 0x01	; 1
+	reverse(dd);
+}
+//字符串输出函数
+void print_str(const unsigned char *d)
+{
+	while(*d)
+ 13a:	80 81       	ld	r24, Z
+ 13c:	88 23       	and	r24, r24
+ 13e:	c9 f7       	brne	.-14     	; 0x132 <print_str+0x4>
+	{
+		USART_Transmit(*d);
+		d++;
+	}
+}
+ 140:	08 95       	ret
+
+00000142 <print_int>:
+//整数输出函数
+void print_int(int a)
+{
+ 142:	0f 93       	push	r16
+ 144:	1f 93       	push	r17
+ 146:	df 93       	push	r29
+ 148:	cf 93       	push	r28
+ 14a:	cd b7       	in	r28, 0x3d	; 61
+ 14c:	de b7       	in	r29, 0x3e	; 62
+ 14e:	2a 97       	sbiw	r28, 0x0a	; 10
+ 150:	0f b6       	in	r0, 0x3f	; 63
+ 152:	f8 94       	cli
+ 154:	de bf       	out	0x3e, r29	; 62
+ 156:	0f be       	out	0x3f, r0	; 63
+ 158:	cd bf       	out	0x3d, r28	; 61
+ 15a:	bc 01       	movw	r22, r24
+	unsigned char buff[10];
+	int2char(buff,a);
+ 15c:	8e 01       	movw	r16, r28
+ 15e:	0f 5f       	subi	r16, 0xFF	; 255
+ 160:	1f 4f       	sbci	r17, 0xFF	; 255
+ 162:	c8 01       	movw	r24, r16
+ 164:	c6 df       	rcall	.-116    	; 0xf2 <int2char>
+ 166:	f8 01       	movw	r30, r16
+ 168:	04 c0       	rjmp	.+8      	; 0x172 <print_int+0x30>
+	UCSRB = (1<<RXEN)|(1<<TXEN);
+	UCSRC = (1<<URSEL)|(3<<UCSZ0);
+}
+void USART_Transmit( unsigned char data )
+{
+	while ( !( UCSRA & (1<<UDRE)) );
+ 16a:	5d 9b       	sbis	0x0b, 5	; 11
+ 16c:	fe cf       	rjmp	.-4      	; 0x16a <print_int+0x28>
+	UDR = data;
+ 16e:	8c b9       	out	0x0c, r24	; 12
+void print_str(const unsigned char *d)
+{
+	while(*d)
+	{
+		USART_Transmit(*d);
+		d++;
+ 170:	31 96       	adiw	r30, 0x01	; 1
+	reverse(dd);
+}
+//字符串输出函数
+void print_str(const unsigned char *d)
+{
+	while(*d)
+ 172:	80 81       	ld	r24, Z
+ 174:	88 23       	and	r24, r24
+ 176:	c9 f7       	brne	.-14     	; 0x16a <print_int+0x28>
+void print_int(int a)
+{
+	unsigned char buff[10];
+	int2char(buff,a);
+	print_str(buff);
+}
+ 178:	2a 96       	adiw	r28, 0x0a	; 10
+ 17a:	0f b6       	in	r0, 0x3f	; 63
+ 17c:	f8 94       	cli
+ 17e:	de bf       	out	0x3e, r29	; 62
+ 180:	0f be       	out	0x3f, r0	; 63
+ 182:	cd bf       	out	0x3d, r28	; 61
+ 184:	cf 91       	pop	r28
+ 186:	df 91       	pop	r29
+ 188:	1f 91       	pop	r17
+ 18a:	0f 91       	pop	r16
+ 18c:	08 95       	ret
+
+0000018e <print_hex>:
+//以16进制格式输出整数
+void print_hex(unsigned char a)
+{
+ 18e:	df 93       	push	r29
+ 190:	cf 93       	push	r28
+ 192:	cd b7       	in	r28, 0x3d	; 61
+ 194:	de b7       	in	r29, 0x3e	; 62
+ 196:	61 97       	sbiw	r28, 0x11	; 17
+ 198:	0f b6       	in	r0, 0x3f	; 63
+ 19a:	f8 94       	cli
+ 19c:	de bf       	out	0x3e, r29	; 62
+ 19e:	0f be       	out	0x3f, r0	; 63
+ 1a0:	cd bf       	out	0x3d, r28	; 61
+ 1a2:	98 2f       	mov	r25, r24
+	unsigned char t[17]="0123456789ABCDEF";
+ 1a4:	de 01       	movw	r26, r28
+ 1a6:	11 96       	adiw	r26, 0x01	; 1
+ 1a8:	e0 e6       	ldi	r30, 0x60	; 96
+ 1aa:	f0 e0       	ldi	r31, 0x00	; 0
+ 1ac:	81 e1       	ldi	r24, 0x11	; 17
+ 1ae:	01 90       	ld	r0, Z+
+ 1b0:	0d 92       	st	X+, r0
+ 1b2:	81 50       	subi	r24, 0x01	; 1
+ 1b4:	e1 f7       	brne	.-8      	; 0x1ae <print_hex+0x20>
+//	print_str("0x");
+	USART_Transmit(t[a/16]);
+ 1b6:	89 2f       	mov	r24, r25
+ 1b8:	82 95       	swap	r24
+ 1ba:	8f 70       	andi	r24, 0x0F	; 15
+ 1bc:	fe 01       	movw	r30, r28
+ 1be:	e8 0f       	add	r30, r24
+ 1c0:	f1 1d       	adc	r31, r1
+ 1c2:	81 81       	ldd	r24, Z+1	; 0x01
+	UCSRB = (1<<RXEN)|(1<<TXEN);
+	UCSRC = (1<<URSEL)|(3<<UCSZ0);
+}
+void USART_Transmit( unsigned char data )
+{
+	while ( !( UCSRA & (1<<UDRE)) );
+ 1c4:	5d 9b       	sbis	0x0b, 5	; 11
+ 1c6:	fe cf       	rjmp	.-4      	; 0x1c4 <print_hex+0x36>
+	UDR = data;
+ 1c8:	8c b9       	out	0x0c, r24	; 12
+void print_hex(unsigned char a)
+{
+	unsigned char t[17]="0123456789ABCDEF";
+//	print_str("0x");
+	USART_Transmit(t[a/16]);
+	USART_Transmit(t[a%16]);
+ 1ca:	9f 70       	andi	r25, 0x0F	; 15
+ 1cc:	fe 01       	movw	r30, r28
+ 1ce:	e9 0f       	add	r30, r25
+ 1d0:	f1 1d       	adc	r31, r1
+ 1d2:	81 81       	ldd	r24, Z+1	; 0x01
+	UCSRB = (1<<RXEN)|(1<<TXEN);
+	UCSRC = (1<<URSEL)|(3<<UCSZ0);
+}
+void USART_Transmit( unsigned char data )
+{
+	while ( !( UCSRA & (1<<UDRE)) );
+ 1d4:	5d 9b       	sbis	0x0b, 5	; 11
+ 1d6:	fe cf       	rjmp	.-4      	; 0x1d4 <print_hex+0x46>
+	UDR = data;
+ 1d8:	8c b9       	out	0x0c, r24	; 12
+{
+	unsigned char t[17]="0123456789ABCDEF";
+//	print_str("0x");
+	USART_Transmit(t[a/16]);
+	USART_Transmit(t[a%16]);
+}
+ 1da:	61 96       	adiw	r28, 0x11	; 17
+ 1dc:	0f b6       	in	r0, 0x3f	; 63
+ 1de:	f8 94       	cli
+ 1e0:	de bf       	out	0x3e, r29	; 62
+ 1e2:	0f be       	out	0x3f, r0	; 63
+ 1e4:	cd bf       	out	0x3d, r28	; 61
+ 1e6:	cf 91       	pop	r28
+ 1e8:	df 91       	pop	r29
+ 1ea:	08 95       	ret
+
+000001ec <scanf_str>:
+void scanf_str(unsigned char * buff,unsigned char endcode)
+{
+ 1ec:	fc 01       	movw	r30, r24
+ 1ee:	01 c0       	rjmp	.+2      	; 0x1f2 <scanf_str+0x6>
+	while((*buff=USART_Receive())!=endcode)
+	{
+		buff++;
+ 1f0:	31 96       	adiw	r30, 0x01	; 1
+	while ( !( UCSRA & (1<<UDRE)) );
+	UDR = data;
+}
+ unsigned char USART_Receive(void) 
+{
+	while ( !(UCSRA & (1<<RXC)) ); 
+ 1f2:	5f 9b       	sbis	0x0b, 7	; 11
+ 1f4:	fe cf       	rjmp	.-4      	; 0x1f2 <scanf_str+0x6>
+    return UDR; 
+ 1f6:	8c b1       	in	r24, 0x0c	; 12
+	USART_Transmit(t[a/16]);
+	USART_Transmit(t[a%16]);
+}
+void scanf_str(unsigned char * buff,unsigned char endcode)
+{
+	while((*buff=USART_Receive())!=endcode)
+ 1f8:	80 83       	st	Z, r24
+ 1fa:	86 17       	cp	r24, r22
+ 1fc:	c9 f7       	brne	.-14     	; 0x1f0 <scanf_str+0x4>
+	{
+		buff++;
+	}
+	*buff='\0';
+ 1fe:	10 82       	st	Z, r1
+}
+ 200:	08 95       	ret
+
+00000202 <strcmp>:
+int strcmp(unsigned char *s1,unsigned char *s2)
+{
+	while(*s1==*s2 && *s1 && *s2)
+	{
+		s1++;
+ 202:	dc 01       	movw	r26, r24
+ 204:	fb 01       	movw	r30, r22
+ 206:	02 c0       	rjmp	.+4      	; 0x20c <strcmp+0xa>
+ 208:	11 96       	adiw	r26, 0x01	; 1
+		s2++;
+ 20a:	31 96       	adiw	r30, 0x01	; 1
+	}
+	*buff='\0';
+}
+int strcmp(unsigned char *s1,unsigned char *s2)
+{
+	while(*s1==*s2 && *s1 && *s2)
+ 20c:	8c 91       	ld	r24, X
+ 20e:	90 81       	ld	r25, Z
+ 210:	89 17       	cp	r24, r25
+ 212:	19 f0       	breq	.+6      	; 0x21a <strcmp+0x18>
+ 214:	28 2f       	mov	r18, r24
+ 216:	89 2f       	mov	r24, r25
+ 218:	03 c0       	rjmp	.+6      	; 0x220 <strcmp+0x1e>
+ 21a:	88 23       	and	r24, r24
+ 21c:	a9 f7       	brne	.-22     	; 0x208 <strcmp+0x6>
+ 21e:	20 e0       	ldi	r18, 0x00	; 0
+ 220:	30 e0       	ldi	r19, 0x00	; 0
+ 222:	28 1b       	sub	r18, r24
+ 224:	31 09       	sbc	r19, r1
+	{
+		s1++;
+		s2++;
+	}
+	return *s1-*s2;
+}
+ 226:	c9 01       	movw	r24, r18
+ 228:	08 95       	ret
+
+0000022a <twi_writebyte>:
+
+ 
+//写一字节 
+uchar twi_writebyte(uchar c) 
+{ 
+  TWDR = c; 
+ 22a:	83 b9       	out	0x03, r24	; 3
+  TWCR = _BV(TWINT) | _BV(TWEN);   
+ 22c:	84 e8       	ldi	r24, 0x84	; 132
+ 22e:	86 bf       	out	0x36, r24	; 54
+  while ((TWCR & _BV(TWINT)) == 0); 
+ 230:	06 b6       	in	r0, 0x36	; 54
+ 232:	07 fe       	sbrs	r0, 7
+ 234:	fd cf       	rjmp	.-6      	; 0x230 <twi_writebyte+0x6>
+    return TW_STATUS; 
+ 236:	81 b1       	in	r24, 0x01	; 1
+} 
+ 238:	88 7f       	andi	r24, 0xF8	; 248
+ 23a:	08 95       	ret
+
+0000023c <twi_readbyte>:
+ 
+//读一字节 ack: true 时发ACK，false 时发NACK 
+uchar twi_readbyte(uchar *c ,uchar ack) 
+{ 
+ 23c:	fc 01       	movw	r30, r24
+  uchar tmp=_BV(TWINT)|_BV(TWEN); 
+   
+  if(ack) 
+ 23e:	66 23       	and	r22, r22
+ 240:	11 f0       	breq	.+4      	; 0x246 <twi_readbyte+0xa>
+ 242:	84 ec       	ldi	r24, 0xC4	; 196
+ 244:	01 c0       	rjmp	.+2      	; 0x248 <twi_readbyte+0xc>
+ 246:	84 e8       	ldi	r24, 0x84	; 132
+    tmp|=_BV(TWEA);    
+  TWCR=tmp; 
+ 248:	86 bf       	out	0x36, r24	; 54
+  while ((TWCR & _BV(TWINT)) == 0) ; 
+ 24a:	06 b6       	in	r0, 0x36	; 54
+ 24c:	07 fe       	sbrs	r0, 7
+ 24e:	fd cf       	rjmp	.-6      	; 0x24a <twi_readbyte+0xe>
+  *c=TWDR; 
+ 250:	83 b1       	in	r24, 0x03	; 3
+ 252:	80 83       	st	Z, r24
+   return TW_STATUS; 
+ 254:	81 b1       	in	r24, 0x01	; 1
+} 
+ 256:	88 7f       	andi	r24, 0xF8	; 248
+ 258:	08 95       	ret
+
+0000025a <IoInit>:
+
+void IoInit(void) 
+{ 
+  //使能 SCL、SDA 引脚内部上拉电阻 
+  DDRC=0; 
+ 25a:	14 ba       	out	0x14, r1	; 20
+  PORTC=0X30; 
+ 25c:	80 e3       	ldi	r24, 0x30	; 48
+ 25e:	85 bb       	out	0x15, r24	; 21
+    //TWI 接口初始化,从器件模式 
+  TWAR=TWI_ADDRESS | _BV(TWGCE); 
+ 260:	83 e3       	ldi	r24, 0x33	; 51
+ 262:	82 b9       	out	0x02, r24	; 2
+  TWCR=_BV(TWEA) | _BV(TWEN); 
+ 264:	84 e4       	ldi	r24, 0x44	; 68
+ 266:	86 bf       	out	0x36, r24	; 54
+} 
+ 268:	08 95       	ret
+
+0000026a <main>:
+ 
+
+ int main(void) 
+{ 
+ 26a:	0f 93       	push	r16
+ 26c:	1f 93       	push	r17
+#include <avr/io.h>
+//usart初始化函数，可以设置波特率，计算公式：波特率=fosc/(16*(ubrr+1));
+//ubrr==25时，baud=2400
+void USART_Init( unsigned int baud ) 
+{
+	UBRRH = (unsigned char)(baud>>8);
+ 26e:	10 bc       	out	0x20, r1	; 32
+	UBRRL = (unsigned char)baud;
+ 270:	89 e1       	ldi	r24, 0x19	; 25
+ 272:	89 b9       	out	0x09, r24	; 9
+	UCSRB = (1<<RXEN)|(1<<TXEN);
+ 274:	88 e1       	ldi	r24, 0x18	; 24
+ 276:	8a b9       	out	0x0a, r24	; 10
+	UCSRC = (1<<URSEL)|(3<<UCSZ0);
+ 278:	86 e8       	ldi	r24, 0x86	; 134
+ 27a:	80 bd       	out	0x20, r24	; 32
+} 
+
+void IoInit(void) 
+{ 
+  //使能 SCL、SDA 引脚内部上拉电阻 
+  DDRC=0; 
+ 27c:	14 ba       	out	0x14, r1	; 20
+  PORTC=0X30; 
+ 27e:	80 e3       	ldi	r24, 0x30	; 48
+ 280:	85 bb       	out	0x15, r24	; 21
+    //TWI 接口初始化,从器件模式 
+  TWAR=TWI_ADDRESS | _BV(TWGCE); 
+ 282:	83 e3       	ldi	r24, 0x33	; 51
+ 284:	82 b9       	out	0x02, r24	; 2
+  TWCR=_BV(TWEA) | _BV(TWEN); 
+ 286:	84 e4       	ldi	r24, 0x44	; 68
+ 288:	86 bf       	out	0x36, r24	; 54
+ 28a:	e1 e7       	ldi	r30, 0x71	; 113
+ 28c:	f0 e0       	ldi	r31, 0x00	; 0
+ 28e:	04 c0       	rjmp	.+8      	; 0x298 <main+0x2e>
+}
+void USART_Transmit( unsigned char data )
+{
+	while ( !( UCSRA & (1<<UDRE)) );
+ 290:	5d 9b       	sbis	0x0b, 5	; 11
+ 292:	fe cf       	rjmp	.-4      	; 0x290 <main+0x26>
+	UDR = data;
+ 294:	8c b9       	out	0x0c, r24	; 12
+void print_str(const unsigned char *d)
+{
+	while(*d)
+	{
+		USART_Transmit(*d);
+		d++;
+ 296:	31 96       	adiw	r30, 0x01	; 1
+	reverse(dd);
+}
+//字符串输出函数
+void print_str(const unsigned char *d)
+{
+	while(*d)
+ 298:	80 81       	ld	r24, Z
+ 29a:	88 23       	and	r24, r24
+ 29c:	c9 f7       	brne	.-14     	; 0x290 <main+0x26>
+ 29e:	10 e0       	ldi	r17, 0x00	; 0
+		break; 
+     default: 
+		print_str("error:x"); 
+     break; 
+  } 
+      TWCR=_BV(TWEA) | _BV(TWEN)|_BV(TWINT);  //清除TWINT 位 
+ 2a0:	04 ec       	ldi	r16, 0xC4	; 196
+ USART_Init(25);
+  IoInit(); 
+  print_str("Hello");
+  while(1) 
+ { 
+    while ((TWCR & _BV(TWINT)) == 0); 
+ 2a2:	06 b6       	in	r0, 0x36	; 54
+ 2a4:	07 fe       	sbrs	r0, 7
+ 2a6:	fd cf       	rjmp	.-6      	; 0x2a2 <main+0x38>
+    i=TW_STATUS; 
+ 2a8:	81 b1       	in	r24, 0x01	; 1
+      switch(i) 
+ 2aa:	88 7f       	andi	r24, 0xF8	; 248
+ 2ac:	80 38       	cpi	r24, 0x80	; 128
+ 2ae:	a9 f0       	breq	.+42     	; 0x2da <main+0x70>
+ 2b0:	80 3a       	cpi	r24, 0xA0	; 160
+ 2b2:	29 f0       	breq	.+10     	; 0x2be <main+0x54>
+ 2b4:	80 36       	cpi	r24, 0x60	; 96
+ 2b6:	31 f0       	breq	.+12     	; 0x2c4 <main+0x5a>
+ 2b8:	e7 e7       	ldi	r30, 0x77	; 119
+ 2ba:	f0 e0       	ldi	r31, 0x00	; 0
+ 2bc:	20 c0       	rjmp	.+64     	; 0x2fe <main+0x94>
+ 2be:	ef e7       	ldi	r30, 0x7F	; 127
+ 2c0:	f0 e0       	ldi	r31, 0x00	; 0
+ 2c2:	14 c0       	rjmp	.+40     	; 0x2ec <main+0x82>
+ 2c4:	e8 e8       	ldi	r30, 0x88	; 136
+ 2c6:	f0 e0       	ldi	r31, 0x00	; 0
+ 2c8:	04 c0       	rjmp	.+8      	; 0x2d2 <main+0x68>
+	UCSRB = (1<<RXEN)|(1<<TXEN);
+	UCSRC = (1<<URSEL)|(3<<UCSZ0);
+}
+void USART_Transmit( unsigned char data )
+{
+	while ( !( UCSRA & (1<<UDRE)) );
+ 2ca:	5d 9b       	sbis	0x0b, 5	; 11
+ 2cc:	fe cf       	rjmp	.-4      	; 0x2ca <main+0x60>
+	UDR = data;
+ 2ce:	8c b9       	out	0x0c, r24	; 12
+void print_str(const unsigned char *d)
+{
+	while(*d)
+	{
+		USART_Transmit(*d);
+		d++;
+ 2d0:	31 96       	adiw	r30, 0x01	; 1
+	reverse(dd);
+}
+//字符串输出函数
+void print_str(const unsigned char *d)
+{
+	while(*d)
+ 2d2:	80 81       	ld	r24, Z
+ 2d4:	88 23       	and	r24, r24
+ 2d6:	c9 f7       	brne	.-14     	; 0x2ca <main+0x60>
+ 2d8:	15 c0       	rjmp	.+42     	; 0x304 <main+0x9a>
+		break; 
+     case TW_SR_DATA_ACK: 
+		if(j==0) 
+			print_int(TWDR); 
+		else 
+			print_int(TWDR); 
+ 2da:	83 b1       	in	r24, 0x03	; 3
+ 2dc:	90 e0       	ldi	r25, 0x00	; 0
+ 2de:	31 df       	rcall	.-414    	; 0x142 <print_int>
+		j++; 
+ 2e0:	1f 5f       	subi	r17, 0xFF	; 255
+ 2e2:	10 c0       	rjmp	.+32     	; 0x304 <main+0x9a>
+	UCSRB = (1<<RXEN)|(1<<TXEN);
+	UCSRC = (1<<URSEL)|(3<<UCSZ0);
+}
+void USART_Transmit( unsigned char data )
+{
+	while ( !( UCSRA & (1<<UDRE)) );
+ 2e4:	5d 9b       	sbis	0x0b, 5	; 11
+ 2e6:	fe cf       	rjmp	.-4      	; 0x2e4 <main+0x7a>
+	UDR = data;
+ 2e8:	8c b9       	out	0x0c, r24	; 12
+void print_str(const unsigned char *d)
+{
+	while(*d)
+	{
+		USART_Transmit(*d);
+		d++;
+ 2ea:	31 96       	adiw	r30, 0x01	; 1
+	reverse(dd);
+}
+//字符串输出函数
+void print_str(const unsigned char *d)
+{
+	while(*d)
+ 2ec:	80 81       	ld	r24, Z
+ 2ee:	88 23       	and	r24, r24
+ 2f0:	c9 f7       	brne	.-14     	; 0x2e4 <main+0x7a>
+ 2f2:	10 e0       	ldi	r17, 0x00	; 0
+ 2f4:	07 c0       	rjmp	.+14     	; 0x304 <main+0x9a>
+	UCSRB = (1<<RXEN)|(1<<TXEN);
+	UCSRC = (1<<URSEL)|(3<<UCSZ0);
+}
+void USART_Transmit( unsigned char data )
+{
+	while ( !( UCSRA & (1<<UDRE)) );
+ 2f6:	5d 9b       	sbis	0x0b, 5	; 11
+ 2f8:	fe cf       	rjmp	.-4      	; 0x2f6 <main+0x8c>
+	UDR = data;
+ 2fa:	8c b9       	out	0x0c, r24	; 12
+void print_str(const unsigned char *d)
+{
+	while(*d)
+	{
+		USART_Transmit(*d);
+		d++;
+ 2fc:	31 96       	adiw	r30, 0x01	; 1
+	reverse(dd);
+}
+//字符串输出函数
+void print_str(const unsigned char *d)
+{
+	while(*d)
+ 2fe:	80 81       	ld	r24, Z
+ 300:	88 23       	and	r24, r24
+ 302:	c9 f7       	brne	.-14     	; 0x2f6 <main+0x8c>
+		break; 
+     default: 
+		print_str("error:x"); 
+     break; 
+  } 
+      TWCR=_BV(TWEA) | _BV(TWEN)|_BV(TWINT);  //清除TWINT 位 
+ 304:	06 bf       	out	0x36, r16	; 54
+ 306:	cd cf       	rjmp	.-102    	; 0x2a2 <main+0x38>
+
+00000308 <__divmodhi4>:
+ 308:	97 fb       	bst	r25, 7
+ 30a:	09 2e       	mov	r0, r25
+ 30c:	07 26       	eor	r0, r23
+ 30e:	0a d0       	rcall	.+20     	; 0x324 <__divmodhi4_neg1>
+ 310:	77 fd       	sbrc	r23, 7
+ 312:	04 d0       	rcall	.+8      	; 0x31c <__divmodhi4_neg2>
+ 314:	0c d0       	rcall	.+24     	; 0x32e <__udivmodhi4>
+ 316:	06 d0       	rcall	.+12     	; 0x324 <__divmodhi4_neg1>
+ 318:	00 20       	and	r0, r0
+ 31a:	1a f4       	brpl	.+6      	; 0x322 <__divmodhi4_exit>
+
+0000031c <__divmodhi4_neg2>:
+ 31c:	70 95       	com	r23
+ 31e:	61 95       	neg	r22
+ 320:	7f 4f       	sbci	r23, 0xFF	; 255
+
+00000322 <__divmodhi4_exit>:
+ 322:	08 95       	ret
+
+00000324 <__divmodhi4_neg1>:
+ 324:	f6 f7       	brtc	.-4      	; 0x322 <__divmodhi4_exit>
+ 326:	90 95       	com	r25
+ 328:	81 95       	neg	r24
+ 32a:	9f 4f       	sbci	r25, 0xFF	; 255
+ 32c:	08 95       	ret
+
+0000032e <__udivmodhi4>:
+ 32e:	aa 1b       	sub	r26, r26
+ 330:	bb 1b       	sub	r27, r27
+ 332:	51 e1       	ldi	r21, 0x11	; 17
+ 334:	07 c0       	rjmp	.+14     	; 0x344 <__udivmodhi4_ep>
+
+00000336 <__udivmodhi4_loop>:
+ 336:	aa 1f       	adc	r26, r26
+ 338:	bb 1f       	adc	r27, r27
+ 33a:	a6 17       	cp	r26, r22
+ 33c:	b7 07       	cpc	r27, r23
+ 33e:	10 f0       	brcs	.+4      	; 0x344 <__udivmodhi4_ep>
+ 340:	a6 1b       	sub	r26, r22
+ 342:	b7 0b       	sbc	r27, r23
+
+00000344 <__udivmodhi4_ep>:
+ 344:	88 1f       	adc	r24, r24
+ 346:	99 1f       	adc	r25, r25
+ 348:	5a 95       	dec	r21
+ 34a:	a9 f7       	brne	.-22     	; 0x336 <__udivmodhi4_loop>
+ 34c:	80 95       	com	r24
+ 34e:	90 95       	com	r25
+ 350:	bc 01       	movw	r22, r24
+ 352:	cd 01       	movw	r24, r26
+ 354:	08 95       	ret
+
+00000356 <_exit>:
+ 356:	f8 94       	cli
+
+00000358 <__stop_program>:
+ 358:	ff cf       	rjmp	.-2      	; 0x358 <__stop_program>

@@ -1,0 +1,184 @@
+C51 COMPILER V8.02   OS_CPU_C                                                              02/27/2009 13:42:30 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE OS_CPU_C
+OBJECT MODULE PLACED IN OS_CPU_C.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE OS_CPU_C.C BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #define  OS_CPU_GLOBALS
+   2          
+   3          //=======================================================================
+   4          // header file
+   5          #include "includes.h"
+   6          //=======================================================================
+   7          // system SP Start address
+   8          INT8U data   STKStart;
+   9          INT8U data   TickTimeInit;
+  10          //=======================================================================
+  11          OS_STK *OSTaskStkInit
+  12                  (       
+  13                  void   (*task)(void *pd)reentrant, // point to function
+  14                  void   *pdato, 
+  15                  OS_STK *ptos, 
+  16                  INT16U opt
+  17                  )reentrant
+  18          {
+  19   1          OS_STK *stk;        
+  20   1          OS_STK *temp_sp;
+  21   1      
+  22   1          opt = opt;
+  23   1          stk  = ptos;
+  24   1          //*-----------------------------------------------------------------
+  25   1          *stk     = ((INT16U)pdato & 0xFF);  //* TaskSTK[STK_SIZE-1]
+  26   1          *--stk   = ((INT16U)pdato >> 8 );   //* TaskSTK[STK_SIZE-2]
+  27   1          *--stk   = 0xff;                    //* TaskSTK[STK_SIZE-3]
+  28   1          temp_sp  = --stk;                   
+  29   1          //*------------------------------------------------------------------
+  30   1          *stk     = ((INT16U)temp_sp >> 8 );    //* User_SP high
+  31   1          *--stk   = ((INT16U)temp_sp & 0xFF);   //* User_SP low
+  32   1          *--stk   = 0x07;                       //* R7 
+  33   1          *--stk   = 0x06;                       //* R6
+  34   1          *--stk   = 0x05;                       //* R5
+  35   1          *--stk   = 0x04;                       //* R4
+  36   1          *--stk   = 0x03;                       //* R3
+  37   1          *--stk   = 0x02;                       //* R2
+  38   1          *--stk   = 0x01;                       //* R1
+  39   1          *--stk   = 0x00;                       //* R0
+  40   1          *--stk   = 0x00;                       //* DPL
+  41   1          *--stk   = 0x00;                       //* DPH
+  42   1          *--stk   = 0x0b;                       //* B
+  43   1          *--stk   = 0x0a;                       //* ACC
+  44   1          *--stk   = 0x00;                       //* PSW
+  45   1          *--stk   = ((INT16U)task >> 8);        //* PCH
+  46   1          *--stk   = ((INT16U)task & 0x00FF);    //* PCL
+  47   1          *--stk   = 0x12;                       //* SIZE_SP
+  48   1          --stk;                                 //* NULL                     
+  49   1          return stk;
+  50   1      }
+  51          //=======================================================================
+  52          void TimeTickConfig(void)
+  53          {
+  54   1          TickTimeInit = OS_TICK_TIME;
+  55   1          TMOD &= 0xf0;
+C51 COMPILER V8.02   OS_CPU_C                                                              02/27/2009 13:42:30 PAGE 2   
+
+  56   1          TMOD |= 0x01;
+  57   1          TH0 = 0x3c;
+  58   1          TH0 = 0xb0;
+  59   1          TR0 = 1;
+  60   1          ET0 = 1;
+  61   1      }
+  62          //-----------------------------------------------------------------------
+  63          void TickTime(void)
+  64          {
+  65   1         TickTimeInit = OS_TICK_TIME; 
+  66   1      } 
+  67          //-----------------------------------------------------------------------
+  68          //=======================================================================
+  69          #if USE_Pre_ExternInt0
+  70          void ExternInt0(void)
+  71          {
+  72   1      
+  73   1      }
+  74          #endif
+  75          //-----------------------------------------------------------------------
+  76          #if USE_Pre_ExternInt1
+  77          void ExternInt1(void)
+  78          {
+  79   1      
+  80   1      }
+  81          #endif
+  82          //-----------------------------------------------------------------------
+  83          #if USE_Pre_TimeInt1
+  84          void Time1Int(void)
+  85          {
+  86   1      
+  87   1      }
+  88          #endif
+  89          //-----------------------------------------------------------------------
+  90          #if USE_Pre_SeryInt
+              void SeryInt(void)
+              {
+              
+              }
+              #endif
+  96          //=======================================================================
+  97          void OSTCBSWHook(void)
+  98          {
+  99   1           OSTCBCur  = OSTCBHighRdy;
+ 100   1           OSPrioCur = OSPrioHighRdy;
+ 101   1      }
+ 102          //-----------------------------------------------------------------------
+ 103          void OSTickISRHook(void)
+ 104          {
+ 105   1              
+ 106   1      }
+ 107          //-----------------------------------------------------------------------
+ 108          void OSTaskSwHook (void)
+ 109          {
+ 110   1      ;
+ 111   1      }
+ 112          //-----------------------------------------------------------------------
+ 113          void OSTimeTickHook (void)reentrant
+ 114          {
+ 115   1      }
+ 116          //-----------------------------------------------------------------------
+ 117          void OSTaskCreateHook (OS_TCB *ptcb)reentrant
+C51 COMPILER V8.02   OS_CPU_C                                                              02/27/2009 13:42:30 PAGE 3   
+
+ 118          {
+ 119   1          ptcb = ptcb; 
+ 120   1      }
+ 121          
+ 122          //=======================================================================
+ 123          #if OS_CPU_HOOKS_EN
+                  
+                  //--------------------------------------------
+                  void OSInitHookBegin (void)
+                  {
+                  }
+              
+                  //--------------------------------------------
+                  void OSInitHookEnd (void)
+                  {
+                  }
+                  
+                  //--------------------------------------------
+                  void OSTaskDelHook (OS_TCB *ptcb)
+                  {
+                      ptcb = ptcb;  
+                  }
+                  
+                  //--------------------------------------------
+                  void OSTaskStatHook (void)
+                  {
+                  }
+                  
+                  //--------------------------------------------
+                  void OSTCBInitHook (OS_TCB *ptcb)
+                  {
+                      ptcb = ptcb;
+                  }
+                  
+                  //--------------------------------------------
+                  void OSRunningTrue(void)
+                  {
+                    OSRunning=TRUE;
+                  }
+              #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    704    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

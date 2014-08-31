@@ -1,0 +1,136 @@
+BL51 BANKED LINKER/LOCATER V6.00                                                        02/14/2009  10:55:33  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.00, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE Text1.obj TO main
+
+
+INPUT MODULES INCLUDED:
+  Text1.obj (TEXT1)
+
+
+LINK MAP OF MODULE:  main (TEXT1)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     009AH     ABSOLUTE     
+
+
+
+SYMBOL TABLE OF MODULE:  main (TEXT1)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        TEXT1
+  N:0030H         SYMBOL        BUF1H
+  N:0031H         SYMBOL        BUF1L
+  N:0032H         SYMBOL        BUF2H
+  N:0033H         SYMBOL        BUF2L
+  C:0091H         SYMBOL        DELAY
+  B:00A8H.7       SYMBOL        EA
+  B:00A8H.1       SYMBOL        ET0
+  B:0020H.0       SYMBOL        FLAG
+  C:0032H         SYMBOL        INT0X
+  C:0093H         SYMBOL        L
+  C:0055H         SYMBOL        NEXT
+  D:0090H         SYMBOL        P1
+  D:00A0H         SYMBOL        P2
+  D:0081H         SYMBOL        SP
+  C:000EH         SYMBOL        START
+  C:0069H         SYMBOL        TASK1
+  C:007DH         SYMBOL        TASK2
+  B:0088H.5       SYMBOL        TF0
+  D:008CH         SYMBOL        TH0
+  D:008AH         SYMBOL        TL0
+  D:0089H         SYMBOL        TMOD
+  B:0088H.4       SYMBOL        TR0
+  C:0000H         LINE#         7
+  C:000BH         LINE#         9
+  C:000EH         LINE#         12
+  C:0011H         LINE#         13
+  C:0014H         LINE#         14
+  C:0017H         LINE#         15
+  C:001AH         LINE#         16
+  C:001DH         LINE#         17
+BL51 BANKED LINKER/LOCATER V6.00                                                      02/14/2009  10:55:33  PAGE 2
+
+
+  C:0020H         LINE#         18
+  C:0023H         LINE#         19
+  C:0026H         LINE#         20
+  C:0028H         LINE#         21
+  C:002AH         LINE#         22
+  C:002CH         LINE#         23
+  C:002EH         LINE#         24
+  C:0030H         LINE#         25
+  C:0032H         LINE#         27
+  C:0034H         LINE#         28
+  C:0036H         LINE#         29
+  C:0039H         LINE#         30
+  C:003CH         LINE#         31
+  C:003EH         LINE#         32
+  C:0041H         LINE#         33
+  C:0042H         LINE#         34
+  C:0043H         LINE#         35
+  C:0045H         LINE#         36
+  C:0046H         LINE#         37
+  C:0047H         LINE#         38
+  C:0049H         LINE#         40
+  C:004BH         LINE#         41
+  C:004CH         LINE#         42
+  C:004EH         LINE#         43
+  C:004FH         LINE#         44
+  C:0050H         LINE#         45
+  C:0052H         LINE#         46
+  C:0054H         LINE#         47
+  C:0055H         LINE#         49
+  C:0056H         LINE#         50
+  C:0057H         LINE#         51
+  C:0059H         LINE#         52
+  C:005AH         LINE#         53
+  C:005BH         LINE#         54
+  C:005DH         LINE#         56
+  C:005FH         LINE#         57
+  C:0060H         LINE#         58
+  C:0062H         LINE#         59
+  C:0063H         LINE#         60
+  C:0064H         LINE#         61
+  C:0066H         LINE#         62
+  C:0068H         LINE#         63
+  C:0069H         LINE#         65
+  C:006CH         LINE#         66
+  C:006EH         LINE#         67
+  C:0070H         LINE#         68
+  C:0072H         LINE#         69
+  C:0075H         LINE#         70
+  C:0077H         LINE#         71
+  C:0079H         LINE#         72
+  C:007BH         LINE#         73
+  C:007DH         LINE#         75
+  C:0080H         LINE#         76
+  C:0082H         LINE#         77
+  C:0084H         LINE#         78
+  C:0086H         LINE#         79
+  C:0089H         LINE#         80
+BL51 BANKED LINKER/LOCATER V6.00                                                      02/14/2009  10:55:33  PAGE 3
+
+
+  C:008BH         LINE#         81
+  C:008DH         LINE#         82
+  C:008FH         LINE#         83
+  C:0091H         LINE#         85
+  C:0093H         LINE#         86
+  C:0095H         LINE#         87
+  C:0097H         LINE#         88
+  C:0099H         LINE#         90
+  -------         ENDMOD        TEXT1
+
+Program Size: data=8.0 xdata=0 code=154
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

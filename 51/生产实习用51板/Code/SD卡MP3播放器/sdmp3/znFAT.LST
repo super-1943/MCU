@@ -1,0 +1,1830 @@
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE ZNFAT
+OBJECT MODULE PLACED IN znFAT.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE znFAT.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "znfat.h"
+   2          #include "sd.h"        //´æ´¢Éè±¸µÄÉÈÇø¶ÁĞ´Çı¶¯£¬ÕâÀïÊÇSD¿¨
+   3          //#include "ch375.h"       //´æ´¢Éè±¸µÄÉÈÇø¶ÁĞ´Çı¶¯£¬ÕâÀïÊÇUÅÌ
+   4          //#include "cf.h"
+   5          #include "string.h"
+   6          #include<reg51.h>
+   7          sfr P1M1 = 0x91;
+   8          sfr P1M0 = 0x92;
+   9          
+  10          /*******************************************************
+  11          
+  12                  +-----------------------------------------+
+  13                  |ÕñÄÏµç×Ó Ô­´´³ÌĞòÄ£¿é znFATÎÄ¼şÏµÍ³ 5.18 |
+  14                  +-----------------------------------------+
+  15          
+  16            ´ËÔ´Âë°æÈ¨Êô ÕñÄÏ È«È¨ÏíÓĞ£¬ÈçÓûÒıÓÃ£¬¾´ÇëÊğÃû²¢¸æÖª
+  17                  ÑÏ½ûËæÒâÓÃÓÚÉÌÒµÄ¿µÄ£¬Î¥Õß±Ø¾¿£¬ºó¹û×Ô¸º
+  18                   ÕñÄÏµç×Ó 
+  19                       ->²úÆ·ÍøÕ¾ http://www.znmcu.cn/
+  20                       ->²úÆ·Íøµê http://shop.znmcu.cn/
+  21                       ->²úÆ·×ÉÑ¯ QQ:987582714 
+  22                                              MSN:yzn07@126.com
+  23                                      WW:yzn07
+  24          ËµÃ÷£ºznFAT¾­¶à·½²âÊÔ£¬È·±£ÆäÕıÈ·ĞÔÓëÎÈ¶¨ĞÔ£¬Çë·ÅĞÄÊ¹ÓÃ£¬
+  25                ÈçÓĞbug¾´Çë¸æÖª£¬Ğ»Ğ»£¡£¡                           
+  26          ********************************************************/
+  27          
+  28          //È«¾Ö±äÁ¿¶¨Òå
+  29          struct direntry temp_rec;
+  30          INT8 temp_dir_name[13]; 
+  31          UINT32 temp_dir_cluster;
+  32          UINT32 temp_last_cluster;
+  33          
+  34          UINT8 znFAT_Buffer[512]; //ÉÈÇøÊı¾İ¶ÁĞ´»º³åÇø,ÓÉÍâ²¿Ìá¹©
+  35          
+  36          /******************************************************************
+  37           - ¹¦ÄÜÃèÊö£ºznFATµÄ´æ´¢Éè±¸³õÊ¼»¯º¯Êı
+  38           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+  39           - º¯ÊıÊôĞÔ£ºÍâ²¿£¨ÓÃÓÚ¶Ô´æ´¢Éè±¸½øĞĞ³õÊ¼»¯£©
+  40           - ²ÎÊıËµÃ÷£ºÎŞ
+  41           - ·µ»ØËµÃ÷£ºÎŞ
+  42           - ×¢£ºÔÚµ÷znFATÆäËüº¯ÊıÖ®Ç°£¬±ØĞëÏÈ¶Ô´æ´¢Éè±¸½øĞĞ³É¹¦µÄ³õÊ¼»¯¡£
+  43           ******************************************************************/
+  44          
+  45          void znFAT_Device_Init()
+  46          {
+  47   1              SD_Reset();
+  48   1              SD_Init(); 
+  49   1      }
+  50          
+  51          /******************************************************************
+  52           - ¹¦ÄÜÃèÊö£ºznFATµÄ´æ´¢Éè±¸µ×²ãÇı¶¯½Ó¿Ú£¬¶ÁÈ¡´æ´¢Éè±¸µÄaddrÉÈÇøµÄ
+  53                       512¸ö×Ö½ÚµÄÊı¾İ·ÅÈëbufÊı¾İ»º³åÇøÖĞ
+  54           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+  55           - º¯ÊıÊôĞÔ£ºÄÚ²¿£¨ÓÃÓÚÓë´æ´¢Éè±¸µÄµ×²ãÇı¶¯¶Ô½Ó£©
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 2   
+
+  56           - ²ÎÊıËµÃ÷£ºaddr:ÉÈÇøµØÖ·
+  57                       buf:Ö¸ÏòÊı¾İ»º³åÇøµÄÖ¸Õë
+  58           - ·µ»ØËµÃ÷£º0±íÊ¾¶ÁÈ¡ÉÈÇø³É¹¦£¬·ñÔòÊ§°Ü
+  59           - ×¢£ºÕâÀï¼ÓÈëÁËÌìÀÇĞÇ¾«»ª°åÉÏµÄÈıÖÖ´æ´¢Éè±¸£¬¼´SD¿¨£¨ÓĞĞ§£©¡¢UÅÌ¡¢
+  60                 CF¿¨Í¨¹ıÔÚ³ÌĞòÖĞ¶¯Ì¬µÄÇĞ»»²»Í¬µÄÉè±¸Çı¶¯£¬´Ó¶øÊµÏÖ¶àÉè±¸(¼´Í¬
+  61                     Ê±¶Ô¶àÖÖ´æ´¢Éè±¸½øĞĞ²Ù×÷£¬±ÈÈç´ÓSD¿¨¿½±´ÎÄ¼şµ½UÅÌµÈµÈ)£¬²»Í¬
+  62                     Çı¶¯µÄÇĞ»»£¬Ö»ĞèÒªÔÚ³ÌĞòÖĞ¸Ä±äDev_NoÕâ¸öÈ«¾Ö±äÁ¿µÄÖµ¼´¿É
+  63           ******************************************************************/
+  64          
+  65          UINT8 znFAT_ReadSector(UINT32 addr,UINT8 *buf) 
+  66          {
+  67   1       switch(Dev_No) //ÓÉDev_NoÀ´¾ö¶¨ËùÊ¹ÓÃµÄ´æ´¢Éè±¸Çı¶¯
+  68   1       {
+  69   2        case SDCARD:
+  70   2               return SD_Read_Sector(addr,buf);
+  71   2               break;
+  72   2        case UDISK:
+  73   2               //return CH375_Read_Sector(addr,buf);
+  74   2               break;
+  75   2        case CFCARD:
+  76   2               //return CF_Read_Sector(addr,buf);
+  77   2               break;
+  78   2        case OTHER:
+  79   2               //return XXX_Read_Sector(addr,buf);
+  80   2               break;
+  81   2       }
+  82   1      }
+  83          
+  84          /******************************************************************
+  85           - ¹¦ÄÜÃèÊö£ºznFATµÄ´æ´¢Éè±¸µ×²ãÇı¶¯½Ó¿Ú£¬½«bufÊı¾İ»º³åÇøÖĞµÄ512¸ö
+  86                       ×Ö½ÚµÄÊı¾İĞ´Èëµ½´æ´¢Éè±¸µÄaddrÉÈÇøÖĞ
+  87           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+  88           - º¯ÊıÊôĞÔ£ºÄÚ²¿£¨ÓÃÓÚÓë´æ´¢Éè±¸µÄµ×²ãÇı¶¯¶Ô½Ó£©
+  89           - ²ÎÊıËµÃ÷£ºaddr:ÉÈÇøµØÖ·
+  90                       buf:Ö¸ÏòÊı¾İ»º³åÇø
+  91           - ·µ»ØËµÃ÷£º0±íÊ¾¶ÁÈ¡ÉÈÇø³É¹¦£¬·ñÔòÊ§°Ü
+  92           - ×¢£ºÂÔ
+  93           ******************************************************************/
+  94          
+  95          UINT8 znFAT_WriteSector(UINT32 addr,UINT8 *buf)
+  96          {
+  97   1       switch(Dev_No) //ÓÉDev_NoÀ´¾ö¶¨ËùÊ¹ÓÃµÄ´æ´¢Éè±¸Çı¶¯
+  98   1       {
+  99   2        case SDCARD:
+ 100   2               return SD_Write_Sector(addr,buf);
+ 101   2               break;
+ 102   2        case UDISK:
+ 103   2               //return CH375_Write_Sector(addr,buf);
+ 104   2               break;
+ 105   2        case CFCARD:
+ 106   2               //return CF_WriteSector(addr,buf);
+ 107   2               break;
+ 108   2        case OTHER:
+ 109   2               //return XXX_Write_Sector(addr,buf);
+ 110   2               break;
+ 111   2       }
+ 112   1      }
+ 113          
+ 114          /******************************************************************
+ 115           - ¹¦ÄÜÃèÊö£ºĞ¡¶Ë×ª´ó¶Ë£¬¼´LittleEndian³µBigEndian
+ 116           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 117           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 3   
+
+ 118           - ²ÎÊıËµÃ÷£ºdat:Ö¸ÏòÒª×ªÎª´ó¶ËµÄ×Ö½ÚĞòÁĞ
+ 119                       len:Òª×ªÎª´ó¶ËµÄ×Ö½ÚĞòÁĞ³¤¶È
+ 120           - ·µ»ØËµÃ÷£º×ªÎª´ó¶ËÄ£Ê½ºó£¬×Ö½ÚĞòÁĞËù±í´ïµÄÊı¾İ
+ 121           - ×¢£º±ÈÈç£ºĞ¡¶ËÄ£Ê½µÄ       0x33 0x22 0x11 0x00  (µÍ×Ö½ÚÔÚÇ°)
+ 122                       ×ªÎª´ó¶ËÄ£Ê½ºóÎª 0x00 0x11 0x22 0x33  (¸ß×Ö½ÚÔÚÇ°)
+ 123                       Ëù±í´ïµÄÊıÖµÎª   0x00112233
+ 124                       (CISCµÄCPUÍ¨³£ÊÇĞ¡¶ËµÄ£¬ËùÒÔznFATÒ²Éè¼ÆÎªĞ¡¶Ë£¬¶øµ¥Æ¬»ú
+ 125                        ÕâÖÖRISCµÄCPU£¬Í¨³£À´Ëµ¶¼ÊÇ´ó¶ËµÄ£¬ËùÒÔĞèÒªÕâ¸öº¯Êı½«×Ö
+ 126                        ½ÚµÄ´æ·Å´ÎĞò½øĞĞµ÷Õû£¬²ÅÄÜµÃµ½ÕıÈ·µÄÊıÖµ)
+ 127           ******************************************************************/
+ 128          
+ 129          UINT32 LE2BE(UINT8 *dat,UINT8 len) 
+ 130          {
+ 131   1       UINT32 temp=0;
+ 132   1       UINT32 fact=1;
+ 133   1       UINT8  i=0;
+ 134   1       for(i=0;i<len;i++)
+ 135   1       {
+ 136   2        temp+=dat[i]*fact; //½«¸÷×Ö½Ú³ËÒÔÏàÓ¦µÄÈ¨ÖµºóÀÛ¼Ó
+ 137   2        fact*=256; //¸üĞÂÈ¨Öµ
+ 138   2       }
+ 139   1       return temp;
+ 140   1      }
+ 141          
+ 142          //-----------------------------------
+ 143          
+ 144          /**************************************************************************
+ 145           - ¹¦ÄÜÃèÊö£ºÇå¿ÕÄ³¸ö´ØµÄËùÓĞÉÈÇø£¬Ìî³ä0
+ 146           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 147           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+ 148           - ²ÎÊıËµÃ÷£ºcluster:ÒªÇå¿ÕµÄ´ØµÄ´ØºÅ
+ 149           - ·µ»ØËµÃ÷£ºÎŞ
+ 150           **************************************************************************/
+ 151          #ifdef ZNFAT_EMPTY_CLUSTER
+              
+              void znFAT_Empty_Cluster(UINT32 Cluster)
+              {
+               UINT32 iSec;
+               UINT16 i;
+               for(i=0;i<pArg->BytesPerSector;i++)
+               {
+                znFAT_Buffer[i]=0;
+               }
+               for(iSec=SOC(Cluster);iSec<SOC(Cluster)+pArg->SectorsPerClust;iSec++)
+               {
+                znFAT_WriteSector(iSec,znFAT_Buffer);
+               }
+              }
+              
+              #endif
+ 168          /***********************************************************************
+ 169           - ¹¦ÄÜÃèÊö£º»ñÈ¡Ê£ÓàÈİÁ¿
+ 170           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 171           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+ 172           - ²ÎÊıËµÃ÷£ºÎŞ    
+ 173           - ·µ»ØËµÃ÷£ºÊ£ÓàÈİÁ¿£¬µ¥Î»×Ö½Ú
+ 174           - ×¢£º´ÓFSInfoÖĞ¶ÁÈ¡¿ÕÏĞ´ØÊı£¬¶ø´Ó¼ÆËãµÃµ½Ê£ÓàµÄÈİÁ¿£¬µ¥Î»×Ö½Ú
+ 175           ***********************************************************************/
+ 176          #ifdef znFAT_GET_REMAIN_CAP
+              
+              UINT32 znFAT_Get_Remain_Cap(void)
+              {
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 4   
+
+               znFAT_ReadSector(1+pArg->BPB_Sector_No,znFAT_Buffer);
+               if(((struct FSInfo *)znFAT_Buffer)->Free_Cluster[0]==0xff 
+               && ((struct FSInfo *)znFAT_Buffer)->Free_Cluster[1]==0xff 
+               && ((struct FSInfo *)znFAT_Buffer)->Free_Cluster[2]==0xff 
+               && ((struct FSInfo *)znFAT_Buffer)->Free_Cluster[3]==0xff)
+               return pArg->Total_Size;
+               else
+               return LE2BE(((struct FSInfo *)znFAT_Buffer)->Free_Cluster,4)*pArg->SectorsPerClust*pArg->BytesPerSector;
+             - 
+              }
+              
+              #endif
+ 191          
+ 192          //--------------------------------------------
+ 193          
+ 194          /******************************************************************
+ 195           - ¹¦ÄÜÃèÊö£º½«Ğ¡×Ö×Ö·û×ªÎª´óĞ´
+ 196           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 197           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+ 198           - ²ÎÊıËµÃ÷£ºc:Òª×ª»»Îª´óĞ´µÄ×Ö·û            
+ 199           - ·µ»ØËµÃ÷£ºÒª×ª»»µÄ×Ö½ÚµÄÏàÓ¦µÄ´óĞ´×Ö·û
+ 200           - ×¢£ºÖ»¶ÔĞ¡Ğ´×Ö·ûÓĞĞ§£¬Èç¹û²»ÊÇa~zµÄĞ¡Ğ´×Ö·û£¬½«Ö±½Ó·µ»Ø
+ 201           ******************************************************************/
+ 202          
+ 203          INT8 L2U(INT8 c)
+ 204          {
+ 205   1       if(c>='a' && c<='z') return c+'A'-'a';
+ 206   1       else return c;
+ 207   1      }
+ 208          
+ 209          /***********************************************************************
+ 210           - ¹¦ÄÜÃèÊö£ºµÃµ½DBRËùÔÚµÄÉÈÇøºÅ(Èç¹ûÃ»ÓĞMBR£¬ÔòDBR¾ÍÔÚ0ÉÈÇø)
+ 211           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 212           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+ 213           - ²ÎÊıËµÃ÷£ºÎŞ     
+ 214           - ·µ»ØËµÃ÷£ºDBRµÄÉÈÇøµØÖ·
+ 215           - ×¢£ºDBRÖĞ°üº¬ÁËºÜ¶àÓĞÓÃµÄ²ÎÊıĞÅÏ¢£¬Òò´ËÕıÈ·¶¨Î»DBRÉÈÇøµÄÎ»ÖÃ£¬ÊÇ¼«Îª
+ 216                 ÖØÒªµÄ£¬ºóÃæ½«ÓĞ×¨ÃÅµÄº¯Êı¶ÔDBR½øĞĞ½âÎö£¬ÕıÈ·½âÎöDBRÊÇÊµÏÖznFATµÄ
+ 217                 »ù´¡
+ 218           ***********************************************************************/
+ 219          
+ 220          UINT16 znFAT_Find_DBR(void)
+ 221          {
+ 222   1       UINT16 sec_dbr;
+ 223   1       znFAT_ReadSector(0,znFAT_Buffer);
+ 224   1       if(znFAT_Buffer[0]!=0xeb) 
+ 225   1       {
+ 226   2        sec_dbr=LE2BE(((((struct PartSector *)(znFAT_Buffer))->Part[0]).StartLBA),4);
+ 227   2       }
+ 228   1       else
+ 229   1       {
+ 230   2        sec_dbr=0;
+ 231   2       }
+ 232   1       return sec_dbr;
+ 233   1      }
+ 234          
+ 235          /***********************************************************************
+ 236           - ¹¦ÄÜÃèÊö£º»ñÈ¡·ÖÇøµÄ×ÜÈİÁ¿
+ 237           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 238           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+ 239           - ²ÎÊıËµÃ÷£ºÎŞ     
+ 240           - ·µ»ØËµÃ÷£º·ÖÇøÈİÁ¿Öµ£¬µ¥Î»Îª×Ö½Ú
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 5   
+
+ 241           - ×¢£ºÕâÀïµÃµ½µÄ×ÜÈİÁ¿ÊÇznFAT·ÖÇøµÄÈİÁ¿£¬Ò»¶¨Ğ¡ÓÚÊµ¼ÊµÄÎïÀíÈİÁ¿
+ 242           ***********************************************************************/
+ 243          #ifdef ZNFAT_GET_TOTAL_SIZE
+              
+              UINT32 znFAT_Get_Total_Size(void) 
+              {
+               return pArg->Total_Size;
+              }
+              
+              #endif
+ 251          /***********************************************************************
+ 252           - ¹¦ÄÜÃèÊö£º¶ÁÈ¡FSInfo»ñÈ¡×î½üµÄÒ»¸ö¿ÉÓÃ¿ÕÏĞ´Ø
+ 253           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 254           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+ 255           - ²ÎÊıËµÃ÷£ºÎŞ     
+ 256           - ·µ»ØËµÃ÷£º×î½üµÄÒ»¸ö¿ÉÓÃ¿ÕÏĞ´Ø
+ 257           - ×¢£ºznFATÖĞµÄFSInfoÉÈÇø(¾ø¶Ô1ÉÈÇø)ÖĞ¼ÇÂ¼ÁË×î½üµÄÒ»¸ö¿ÉÓÃ¿ÕÏĞ´Ø
+ 258           ***********************************************************************/
+ 259          
+ 260          UINT32 Search_Last_Usable_Cluster(void)
+ 261          {
+ 262   1       znFAT_ReadSector(1+pArg->BPB_Sector_No,znFAT_Buffer);
+ 263   1       return LE2BE(((struct FSInfo *)znFAT_Buffer)->Last_Cluster,4);
+ 264   1      }
+ 265          
+ 266          /***********************************************************************
+ 267           - ¹¦ÄÜÃèÊö£ºznFATÎÄ¼şÏµÍ³³õÊ¼»¯
+ 268           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 269           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+ 270           - ²ÎÊıËµÃ÷£ºznFAT_Init_ArgÀàĞÍµÄ½á¹¹ÌåÖ¸Õë£¬ÓÃÓÚ×°ÔØÒ»Ğ©ÖØÒªµÄ²ÎÊıĞÅÏ¢£¬
+ 271                       ÒÔ±¸ºóÃæÊ¹ÓÃ     
+ 272           - ·µ»ØËµÃ÷£ºÎŞ
+ 273           - ×¢£ºÔÚÊ¹ÓÃznFATÇ°£¬Õâ¸öº¯ÊıÊÇ±ØĞëÏÈ±»µ÷ÓÃµÄ£¬½«ºÜ¶à²ÎÊıĞÅÏ¢×°Èëµ½
+ 274                 argÖ¸ÏòµÄ½á¹¹ÌåÖĞ£¬±ÈÈçÉÈÇø´óĞ¡¡¢¸ùÄ¿Â¼µÄÎ»ÖÃ¡¢FAT±í´óĞ¡µÈµÈ¡£
+ 275                 ÕâĞ©²ÎÊı¾ø´ó²¿·ÖÊÇÀ´×ÔÓÚDBRµÄBPBÖĞ£¬Òò´Ë´Ëº¯ÊıÖ÷ÒªÔÚ×÷¶ÔDBRµÄ²ÎÊı½âÎö
+ 276           ***********************************************************************/
+ 277          
+ 278          void znFAT_Init(void)
+ 279          {
+ 280   1              struct znFAT_BPB *bpb;
+ 281   1              bpb=(struct znFAT_BPB *)(znFAT_Buffer);               //½«Êı¾İ»º³åÇøÖ¸Õë×ªÎªstruct znFAT_BPB ĞÍÖ¸Õë
+ 282   1              pArg->DEV_No=Dev_No; //×°ÈëÉè±¸ºÅ
+ 283   1              pArg->BPB_Sector_No   =znFAT_Find_DBR();               //znFAT_FindBPB()¿ÉÒÔ·µ»ØBPBËùÔÚµÄÉÈÇøºÅ
+ 284   1              znFAT_ReadSector(pArg->BPB_Sector_No,znFAT_Buffer);
+ 285   1              pArg->FATsectors      =LE2BE((bpb->BPB_FATSz32)    ,4);//×°ÈëFAT±íÕ¼ÓÃµÄÉÈÇøÊıµ½FATsectorsÖĞ
+ 286   1              pArg->FirstDirClust   =LE2BE((bpb->BPB_RootClus)   ,4);//×°Èë¸ùÄ¿Â¼´ØºÅµ½FirstDirClustÖĞ
+ 287   1              pArg->BytesPerSector  =LE2BE((bpb->BPB_BytesPerSec),2);//×°ÈëÃ¿ÉÈÇø×Ö½ÚÊıµ½BytesPerSectorÖĞ
+ 288   1              pArg->SectorsPerClust =LE2BE((bpb->BPB_SecPerClus) ,1);//×°ÈëÃ¿´ØÉÈÇøÊıµ½SectorsPerClust ÖĞ
+ 289   1              pArg->FirstFATSector  =LE2BE((bpb->BPB_RsvdSecCnt) ,2)+pArg->BPB_Sector_No;//×°ÈëµÚÒ»¸öFAT±íÉÈÇøºÅµ½First
+             -FATSector ÖĞ
+ 290   1              pArg->FirstDirSector  =(pArg->FirstFATSector)+(bpb->BPB_NumFATs[0])*(pArg->FATsectors); //×°ÈëµÚÒ»¸öÄ¿Â¼É
+             -ÈÇøµ½FirstDirSectorÖĞ
+ 291   1              pArg->Total_Size      =LE2BE((bpb->BPB_TotSec32),4)*pArg->BytesPerSector;         //´ÅÅÌµÄ×ÜÈİÁ¿£¬µ¥Î»ÊÇ×
+             -Ö½Ú
+ 292   1              temp_last_cluster=Search_Last_Usable_Cluster();
+ 293   1      }
+ 294          
+ 295          /***********************************************************************
+ 296           - ¹¦ÄÜÃèÊö£º¸üĞÂFSInfoÖĞµÄ¿ÉÓÃ¿ÕÏĞ´ØµÄÊıÁ¿
+ 297           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 298           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+ 299           - ²ÎÊıËµÃ÷£ºPlusOrMinus:¿ÉÓÃ¿ÕÏĞ´ØÊı¼Ó1»ò¼õ1    
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 6   
+
+ 300           - ·µ»ØËµÃ÷£ºÎŞ
+ 301           - ×¢£º´´½¨ÎÄ¼ş¡¢×·¼ÓÊı¾İ¡¢É¾³ıÎÄ¼şµÈ²Ù×÷¶¼¿ÉÄÜ»áÊ¹¿ÉÓÃµÄ¿ÕÏĞ´ØÊı±ä»¯
+ 302                 Òª¼°Ê±¸üĞÂ
+ 303           ***********************************************************************/
+ 304          #ifdef ZNFAT_UPDATE_FSINFO_FREE_CLU
+              
+              void znFAT_Update_FSInfo_Free_Clu(UINT32 PlusOrMinus)
+              {
+               UINT32 Free_Clu=0;
+               znFAT_ReadSector(1+pArg->BPB_Sector_No,znFAT_Buffer);
+              
+               Free_Clu=(znFAT_Get_Remain_Cap())/(pArg->SectorsPerClust*pArg->BytesPerSector);
+              
+               if(PlusOrMinus) Free_Clu++;
+               else Free_Clu--;
+              
+               ((struct FSInfo *)znFAT_Buffer)->Free_Cluster[0]=Free_Clu&0x000000ff;//((UINT8 *)&Free_Clu)[0]; 
+               ((struct FSInfo *)znFAT_Buffer)->Free_Cluster[1]=(Free_Clu&0x0000ff00)>>8;//((UINT8 *)&Free_Clu)[1];
+               ((struct FSInfo *)znFAT_Buffer)->Free_Cluster[2]=(Free_Clu&0x00ff0000)>>16;//((UINT8 *)&Free_Clu)[2];
+               ((struct FSInfo *)znFAT_Buffer)->Free_Cluster[3]=(Free_Clu&0xff000000)>>24;//((UINT8 *)&Free_Clu)[3];
+               znFAT_WriteSector(1+pArg->BPB_Sector_No,znFAT_Buffer);   
+              }
+              
+              #endif
+ 324          /***********************************************************************
+ 325           - ¹¦ÄÜÃèÊö£º¸üĞÂFSInfoÖĞµÄÏÂÒ»¸ö¿ÉÓÃ¿ÕÏĞ´ØµÄ´ØºÅ
+ 326           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 327           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+ 328           - ²ÎÊıËµÃ÷£ºLast_Clu:½«Òª¸üĞÂµ½FSInfoÖĞµÄÏÂÒ»¸ö¿ÉÓÃ¿ÕÏĞ´ØµÄ´ØºÅ    
+ 329           - ·µ»ØËµÃ÷£ºÎŞ
+ 330           - ×¢£ºFSInfoÖĞµÄÏÂÒ»¸ö¿ÉÓÃ¿ÕÏĞ´ØºÅ¿ÉÒÔ¸øÎÄ¼şÏµÍ³Ò»¸ö²Î¿¼£¬Ö±½Ó¸æËßÎÄ¼şÏµÍ³
+ 331                 ÏÂÒ»¸ö¿ÉÓÃµÄ¿ÕÏĞ´ØÔÚÊ²Ã´µØ·½
+ 332           ***********************************************************************/
+ 333          #ifdef ZNFAT_UPDATE_FSINFO_LAST_CLU
+              
+              void znFAT_Update_FSInfo_Last_Clu(UINT32 Last_Clu)
+              {
+               znFAT_ReadSector(1+pArg->BPB_Sector_No,znFAT_Buffer);  
+               ((struct FSInfo *)znFAT_Buffer)->Last_Cluster[0]=Last_Clu&0x000000ff;//((UINT8 *)&Last_Clu)[0]; 
+               ((struct FSInfo *)znFAT_Buffer)->Last_Cluster[1]=(Last_Clu&0x0000ff00)>>8;//((UINT8 *)&Last_Clu)[1];
+               ((struct FSInfo *)znFAT_Buffer)->Last_Cluster[2]=(Last_Clu&0x00ff0000)>>16;//((UINT8 *)&Last_Clu)[2];
+               ((struct FSInfo *)znFAT_Buffer)->Last_Cluster[3]=(Last_Clu&0xff000000)>>24;//((UINT8 *)&Last_Clu)[3];
+               znFAT_WriteSector(1+pArg->BPB_Sector_No,znFAT_Buffer);
+              }
+              
+              #endif
+ 346          /***********************************************************************
+ 347           - ¹¦ÄÜÃèÊö£º»ñµÃÏÂÒ»¸ö´ØµÄ´ØºÅ
+ 348           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 349           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+ 350           - ²ÎÊıËµÃ÷£ºLastCluster:»ù×¼´ØºÅ  
+ 351           - ·µ»ØËµÃ÷£ºLastClutsterµÄÏÂÒ»´ØµÄ´ØºÅ
+ 352           - ×¢£º»ñµÃÏÂÒ»´ØµÄ´ØºÅ£¬¾ÍÊÇÆ¾½èFAT±íÖĞËù¼ÇÂ¼µÄ´ØÁ´¹ØÏµÀ´ÊµÏÖµÄ
+ 353           ***********************************************************************/
+ 354          #ifdef ZNFAT_GETNEXTCLUSTER
+ 355          
+ 356          UINT32 znFAT_GetNextCluster(UINT32 LastCluster)
+ 357          {
+ 358   1       UINT32 temp;
+ 359   1       struct znFAT_FAT *pFAT;
+ 360   1       struct znFAT_FAT_Item *pFAT_Item;
+ 361   1       temp=((LastCluster/128)+pArg->FirstFATSector);
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 7   
+
+ 362   1       znFAT_ReadSector(temp,znFAT_Buffer);
+ 363   1       pFAT=(struct znFAT_FAT *)znFAT_Buffer;
+ 364   1       pFAT_Item=&((pFAT->Items)[LastCluster%128]);
+ 365   1       return LE2BE((UINT8 *)pFAT_Item,4);
+ 366   1      }
+ 367          
+ 368          #endif
+ 369          /***********************************************************************
+ 370           - ¹¦ÄÜÃèÊö£º±È½ÏÄ¿Â¼Ãû
+ 371           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 372           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+ 373           - ²ÎÊıËµÃ÷£ºa:Ö¸ÏòÄ¿Â¼Ãû1µÄÖ¸Õë
+ 374                       b:Ö¸ÏòÄ¿Â¼Ãû2µÄÖ¸Õë
+ 375           - ·µ»ØËµÃ÷£ºÈç¹ûÁ½¸öÄ¿Â¼ÃûÏàÍ¬¾Í·µ»Ø1£¬·ñÔòÎª0
+ 376           ***********************************************************************/
+ 377          #ifdef COMPARE_DIR_NAME
+ 378          
+ 379          UINT8 Compare_Dir_Name(CONST INT8 *a,CONST INT8 *b)
+ 380          {
+ 381   1       UINT8 i;
+ 382   1       for(i=0;i<8;i++)
+ 383   1       {
+ 384   2        if(a[i]!=b[i]) return 0;
+ 385   2       }
+ 386   1       return 1;
+ 387   1      }
+ 388          
+ 389          #endif
+ 390          /***********************************************************************
+ 391           - ¹¦ÄÜÃèÊö£ºÎÄ¼şÃûÆ¥Åä(Ö§³Ö´ø*?Í¨Åä·ûµÄÎÄ¼şÃûµÄÆ¥Åä)
+ 392           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 393           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+ 394           - ²ÎÊıËµÃ÷£ºpat:Ô´ÎÄ¼şÃû£¬¿ÉÒÔº¬*»ò?Í¨Åä·û Èç *.txt »ò A?.mp3µÈµÈ
+ 395                       name:Ä¿±êÎÄ¼şÃû
+ 396           - ·µ»ØËµÃ÷£ºÈç¹ûÁ½¸öÎÄ¼şÃûÆ¥Åä¾Í·µ»Ø1£¬·ñÔòÎª0
+ 397           - ×¢£º¹ØÓÚÍ¨ÅäÎÄ¼şÃûÆ¥Åä£¬ÓĞÕâÑùµÄÀı×Ó£¬±ÈÈç A*.txt Óë ABC.txtÊÇÆ¥ÅäµÄ
+ 398             Í¬Ê±Óë ABCDE.txtÒ²ÊÇÆ¥ÅäµÄ¡£´Ë¹¦ÄÜÔÚÎÄ¼şÃ¶¾ÙÖĞ½«»áÓÃµ½£¬ÓÃÀ´Æ¥Åä
+ 399             ÎÄ¼şÃû·ûºÏÒ»¶¨Ìõ¼şµÄÎÄ¼ş
+ 400           ***********************************************************************/
+ 401          #ifdef FILENAMEMATCH
+ 402          
+ 403          UINT8 FilenameMatch(INT8 *pat,INT8 *name)
+ 404          {
+ 405   1       UINT8 match,ndone;
+ 406   1       INT8 *cpp,*cpn;
+ 407   1       cpp=pat;
+ 408   1       cpn=name;
+ 409   1       match=1;
+ 410   1       ndone=1;
+ 411   1       while(ndone)
+ 412   1       {
+ 413   2        switch (*cpp)
+ 414   2        {
+ 415   3         case '*':
+ 416   3                  cpp++;
+ 417   3                  cpn=strchr(cpn,*cpp);
+ 418   3                  if(cpn==NULL)
+ 419   3                  {
+ 420   4                   cpn=name;
+ 421   4                   while(*cpn) cpn++;
+ 422   4                  }
+ 423   3                  break;
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 8   
+
+ 424   3         case '?':
+ 425   3                  cpp++;
+ 426   3                  cpn++;
+ 427   3                  break;
+ 428   3         case 0:
+ 429   3                  if(*cpn!=0)
+ 430   3                  match=0;
+ 431   3                  ndone=0;
+ 432   3                  break;
+ 433   3         default:
+ 434   3                  if((*cpp)==(*cpn))
+ 435   3                  {
+ 436   4                   cpp++;
+ 437   4                   cpn++;
+ 438   4                  }
+ 439   3                  else
+ 440   3                  {
+ 441   4                   match=0;
+ 442   4                   ndone=0;
+ 443   4                  }
+ 444   3                  break;
+ 445   3        }
+ 446   2       }
+ 447   1       return(match);
+ 448   1      }
+ 449          
+ 450          #endif
+ 451          /***********************************************************************
+ 452           - ¹¦ÄÜÃèÊö£ºznFATµÄÎÄ¼şÄ¿Â¼ÏîµÄÎÄ¼şÃû×Ö¶Î(8¸ö×Ö½Ú)£¬×ªÎªÆÕÍ¨µÄÎÄ¼şÃû
+ 453                       Èç£ºABC     MP3 ½«×ªÎª ABC.MP3
+ 454           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 455           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+ 456           - ²ÎÊıËµÃ÷£ºdName£ºÖ¸ÏòÎÄ¼şÄ¿Â¼ÏîµÄÎÄ¼şÃû×Ö¶ÎµÄÖ¸Õë
+ 457                       pName£ºÖ¸Ïò×ª»»Íê³ÉºóµÄÎÄ¼şÃû
+ 458           - ·µ»ØËµÃ÷£ºÎŞ
+ 459           - ×¢£º´Ëº¯ÊıÅäºÏÉÏÃæµÄFilenameMatchº¯Êı£¬¾Í¿ÉÒÔÊµÏÖ¶ÔÎÄ¼şÃûÍ¨ÅäÆ¥Åä
+ 460           ***********************************************************************/
+ 461          #ifdef ZNFAT_TOFILENAME
+ 462          
+ 463          void znFAT_toFileName(CONST INT8 *dName,INT8 *pName)
+ 464          {
+ 465   1       UINT8 i=0;
+ 466   1       for(i=0;i<8;i++) pName[i]=dName[i];
+ 467   1       pName[8]='.';
+ 468   1       for(i=9;i<12;i++) pName[i]=dName[i-1];
+ 469   1       i--;
+ 470   1       while(pName[i]==0x20) pName[i--]=0;
+ 471   1       pName[i+1]=0;i=7;
+ 472   1       while(pName[i--]==0x20);i+=2;
+ 473   1       strcpy(pName+i,pName+8);
+ 474   1      } 
+ 475          
+ 476          #endif
+ 477          /***********************************************************************
+ 478           - ¹¦ÄÜÃèÊö£º½«×Ö·û´®ÖĞµÄĞ¡Ğ´×Ö·û¶¼×ªÎª´óĞ´×Ö·û
+ 479           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 480           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+ 481           - ²ÎÊıËµÃ÷£ºstr£ºÖ¸Ïò´ı×ª»»µÄ×Ö·û´®
+ 482           - ·µ»ØËµÃ÷£ºÎŞ
+ 483           - ×¢£º¶ÌÎÄ¼şÃûµÄÇé¿öÏÂ£¬ÎÄ¼şÃûÖĞµÄ×Ö·ûÆäÊµ¶¼ÊÇ´óĞ´×Ö·û£¬ÎªÁË·½±ã£¬½«ÎÄ¼ş
+ 484                 Ãû¶¼×ªÎª´óĞ´
+ 485           ***********************************************************************/
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 9   
+
+ 486          #ifdef STR2UP
+ 487          
+ 488          void Str2Up(INT8 *str)
+ 489          {
+ 490   1       UINT8 len=strlen(str),i;
+ 491   1       for(i=0;i<len;i++)
+ 492   1       {
+ 493   2        str[i]=L2U(str[i]); 
+ 494   2       } 
+ 495   1      }
+ 496          
+ 497          #endif
+ 498          /**************************************************************************
+ 499           - ¹¦ÄÜÃèÊö£º½øÈëÒ»¸öÄ¿Â¼
+ 500           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 501           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+ 502           - ²ÎÊıËµÃ÷£ºpath:Ä¿Â¼µÄÂ·¾¶ ĞÎÈç£º"\\dir1\\dir2\\" £¬×îºóÒ»¶¨ÊÇÒÔ\\½áÊø 
+ 503           - ·µ»ØËµÃ÷£º·µ»ØÄ¿Â¼µÄ¿ªÊ¼´ØºÅ£¬Èç¹û½øÈëÄ¿Â¼Ê§°Ü£¬±ÈÈçÄ¿Â¼²»´æÔÚ£¬Ôò·µ»Ø0
+ 504           - ×¢£º´Ëº¯ÊıÓÉºóÃæµÄznFAT_Open_FileµÈº¯Êıµ÷ÓÃ£¬ÓÃÀ´ÊµÏÖ´ò¿ªÈÎÒâÄ¿Â¼ÏÂµÄÎÄ¼ş
+ 505                 ²»½¨ÒéÓÃ»§µ÷ÓÃ
+ 506           **************************************************************************/
+ 507          #ifdef ZNFAT_ENTER_DIR
+ 508          
+ 509          UINT32 znFAT_Enter_Dir(CONST INT8 *path)
+ 510          {
+ 511   1       UINT32 Cur_Clust,sec_temp,iSec,iDir,Old_Clust;
+ 512   1       UINT8 i=1,counter=0,flag=0;
+ 513   1       struct direntry *pDir;
+ 514   1       INT8 name[20];
+ 515   1      
+ 516   1       Cur_Clust=pArg->FirstDirClust;
+ 517   1       if(path[1]==0 && path[0]=='\\') return Cur_Clust;
+ 518   1       else
+ 519   1       {
+ 520   2        while(path[i]!=0)
+ 521   2        {
+ 522   3         if(path[i]=='\\')
+ 523   3         {
+ 524   4          for(;counter<8;counter++)
+ 525   4              {
+ 526   5               name[counter]=' ';
+ 527   5              }
+ 528   4              name[counter]=0;
+ 529   4              counter=0;
+ 530   4              
+ 531   4              do
+ 532   4              {
+ 533   5               sec_temp=(SOC(Cur_Clust));
+ 534   5               for(iSec=sec_temp;iSec<sec_temp+pArg->SectorsPerClust;iSec++)
+ 535   5               {
+ 536   6                znFAT_ReadSector(iSec,znFAT_Buffer);
+ 537   6                for(iDir=0;iDir<pArg->BytesPerSector;iDir+=sizeof(struct direntry))
+ 538   6            {
+ 539   7             pDir=((struct direntry *)(znFAT_Buffer+iDir));
+ 540   7                 if(Compare_Dir_Name(pDir->deName,name) && (pDir->deAttributes&0x10))
+ 541   7                 {
+ 542   8                  flag=1;
+ 543   8                      Cur_Clust=LE2BE(pDir->deLowCluster,2)+LE2BE(pDir->deHighClust,2)*65536;
+ 544   8                      iDir=pArg->BytesPerSector;
+ 545   8                      iSec=sec_temp+pArg->SectorsPerClust;
+ 546   8                 } 
+ 547   7                }
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 10  
+
+ 548   6               }
+ 549   5               Old_Clust=Cur_Clust;
+ 550   5              }while(!flag && (Cur_Clust=znFAT_GetNextCluster(Cur_Clust))!=0x0fffffff);
+ 551   4              if(!flag) 
+ 552   4              {
+ 553   5               temp_dir_cluster=Old_Clust;
+ 554   5               strcpy(temp_dir_name,name);
+ 555   5               flag=0;
+ 556   5               return 0;
+ 557   5              }
+ 558   4              flag=0; 
+ 559   4         }
+ 560   3         else
+ 561   3         {
+ 562   4          name[counter++]=(L2U(path[i]));
+ 563   4         }
+ 564   3         i++;
+ 565   3        }
+ 566   2       }
+ 567   1       name[counter]=0; 
+ 568   1       flag=1;
+ 569   1       temp_dir_cluster=Cur_Clust;
+ 570   1       strcpy(temp_dir_name,name);
+ 571   1       return Cur_Clust;
+ 572   1      }
+ 573          
+ 574          #endif
+ 575          /**************************************************************************
+ 576           - ¹¦ÄÜÃèÊö£º´ò¿ªÒ»¸öÎÄ¼ş(Ö§³ÖÎÄ¼şÃûÍ¨Åä£¬Èç A*.txt »ò *.*)
+ 577           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 578           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+ 579           - ²ÎÊıËµÃ÷£ºpfi: FileInfoStructÀàĞÍµÄ½á¹¹ÌåÖ¸Õë£¬ÓÃÀ´×°ÔØÎÄ¼şµÄ²ÎÊıĞÅÏ¢
+ 580                        ±ÈÈçÎÄ¼şµÄ´óĞ¡¡¢ÎÄ¼şµÄÃû³Æ¡¢ÎÄ¼şµÄ¿ªÊ¼´ØµÈµÈ£¬ÒÔ±¸ºóÃæÊ¹ÓÃ
+ 581                       filepath: ÎÄ¼şµÄÂ·¾¶£¬Ö§³ÖÈÎÒâ²ãÄ¿Â¼ ±ÈÈç
+ 582                        "\\dir1\\dir2\\dir3\\....\\test.txt"
+ 583                                   item£ºÔÚÎÄ¼şÃûÖĞÓĞÍ¨Åä·û*»ò?µÄÇé¿öÏÂ£¬ÊµÏÖÓëÖ®Æ¥ÅäµÄÎÄ¼ş²¢·Ç
+ 584                                   Ò»¸ö£¬item¾ÍÊÇ´ò¿ªµÄÎÄ¼şµÄÏîÊı£¬±ÈÈç·ûºÏÍ¨ÅäÌõ¼şµÄÎÄ¼şÓĞ6¸ö£¬
+ 585                                   Èç¹ûitem=3£¬ÄÇÃ´´Ëº¯Êı¾Í»á´ò¿ªÕâ6¸öÎÄ¼şÖĞ°´Ë³ĞòÅÅºÅÎª3µÄÄÇ¸ö
+ 586                                   ÎÄ¼ş(item±àºÅ´Ó0¿ªÊ¼)
+ 587           - ·µ»ØËµÃ÷£º0£º³É¹¦ 1£ºÎÄ¼ş²»´æÔÚ 2£ºÄ¿Â¼²»´æÔÚ
+ 588           - ×¢£º´ò¿ªÎÄ¼ş²»³É¹¦ÓĞºÜ¶àÔ­Òò£¬±ÈÈçÎÄ¼ş²»´æÔÚ¡¢ÎÄ¼şµÄÄ³Ò»¼¶Ä¿Â¼²»´æÔÚ
+ 589                 Í¨ÅäÇé¿öÏÂÂú×ãÌõ¼şµÄÎÄ¼şÏîÊıĞ¡ÓÚitemµÄÖµµÈµÈ
+ 590                     Í¨³£Çé¿öÏÂ£¬ÎÄ¼şÃûÖĞÃ»ÓĞÍ¨Åä·û£¬itemµÄÖµÎÒÃÇÈ¡0¾Í¿ÉÒÔÁË
+ 591           **************************************************************************/
+ 592          #ifdef ZNFAT_OPEN_FILE
+ 593          
+ 594          UINT8 znFAT_Open_File(struct FileInfoStruct *pfi,CONST INT8 *filepath,UINT32 item,UINT8 is_file)
+ 595          {
+ 596   1       UINT32 Cur_Clust,sec_temp,iSec,iFile,iItem=0;
+ 597   1       UINT8 flag=0,index=0,i=0,h=0;
+ 598   1       struct direntry *pFile;
+ 599   1       INT8 temp_file_name[30];
+ 600   1      
+ 601   1       while(filepath[i]!=0)
+ 602   1       {
+ 603   2        if(filepath[i]=='\\') index=i;
+ 604   2        i++;
+ 605   2       }
+ 606   1       if(Cur_Clust=znFAT_Enter_Dir(filepath))
+ 607   1       {
+ 608   2        Str2Up(temp_dir_name);
+ 609   2       do
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 11  
+
+ 610   2       { 
+ 611   3        sec_temp=SOC(Cur_Clust);
+ 612   3        for(iSec=sec_temp;iSec<sec_temp+pArg->SectorsPerClust;iSec++)
+ 613   3        {     
+ 614   4         znFAT_ReadSector(iSec,znFAT_Buffer);
+ 615   4         for(iFile=0;iFile<pArg->BytesPerSector;iFile+=sizeof(struct direntry))
+ 616   4         {
+ 617   5          pFile=((struct direntry *)(znFAT_Buffer+iFile));
+ 618   5          if(pFile->deAttributes&(is_file?0x20:0x10))
+ 619   5         {
+ 620   6              znFAT_toFileName(pFile->deName,temp_file_name);
+ 621   6              if(is_file) 
+ 622   6              {
+ 623   7               i=0;
+ 624   7               while(temp_dir_name[i]!=0) {if(temp_dir_name[i++]=='.') h=1;}
+ 625   7               if(!h) {temp_dir_name[i]='.';temp_dir_name[i+1]=0;} 
+ 626   7              }
+ 627   6              if(FilenameMatch(temp_dir_name,temp_file_name) && pFile->deName[0]!=0xe5 && pFile->deAttributes&(is_file?
+             -0x20:0x10)) //Æ¥ÅäÎÄ¼şÃû
+ 628   6              { 
+ 629   7               if(item==iItem)
+ 630   7               {       
+ 631   8               flag=1;
+ 632   8           Cur_Clust=LE2BE(pFile->deLowCluster,2)+LE2BE(pFile->deHighClust,2)*65536;
+ 633   8      
+ 634   8           pfi->FileSize=LE2BE(pFile->deFileSize,4);
+ 635   8               if(pFile->deAttributes&0x10) 
+ 636   8                temp_file_name[strlen(temp_file_name)-1]=0;
+ 637   8      
+ 638   8               strcpy(pfi->FileName,temp_file_name);
+ 639   8               pfi->FileStartCluster=LE2BE(pFile->deLowCluster,2)+LE2BE(pFile->deHighClust,2)*65536;
+ 640   8               pfi->FileCurCluster=pfi->FileStartCluster;
+ 641   8               pfi->FileCurSector=SOC(pfi->FileStartCluster);
+ 642   8               pfi->FileCurPos=0;
+ 643   8               pfi->FileCurOffset=0;
+ 644   8               pfi->Rec_Sec=iSec;
+ 645   8               pfi->nRec=iFile;
+ 646   8      
+ 647   8               pfi->FileAttr=pFile->deAttributes;
+ 648   8               sec_temp=LE2BE(pFile->deCTime,2);
+ 649   8               (pfi->FileCreateTime).sec=(sec_temp&0x001f)*2;
+ 650   8               (pfi->FileCreateTime).min=((sec_temp>>5)&0x003f);
+ 651   8               (pfi->FileCreateTime).hour=((sec_temp>>11)&0x001f);
+ 652   8               sec_temp=LE2BE(pFile->deCDate,2);
+ 653   8               (pfi->FileCreateDate).day=((sec_temp)&0x001f);
+ 654   8               (pfi->FileCreateDate).month=((sec_temp>>5)&0x000f);
+ 655   8               (pfi->FileCreateDate).year=((sec_temp>>9)&0x007f)+1980;
+ 656   8      
+ 657   8               sec_temp=LE2BE(pFile->deMTime,2);
+ 658   8               (pfi->FileMTime).sec=(sec_temp&0x001f)*2;
+ 659   8               (pfi->FileMTime).min=((sec_temp>>5)&0x003f);
+ 660   8               (pfi->FileMTime).hour=((sec_temp>>11)&0x001f);
+ 661   8               sec_temp=LE2BE(pFile->deMDate,2);
+ 662   8               (pfi->FileMDate).day=((sec_temp)&0x001f);
+ 663   8               (pfi->FileMDate).month=((sec_temp>>5)&0x000f);
+ 664   8               (pfi->FileMDate).year=((sec_temp>>9)&0x007f)+1980;
+ 665   8      
+ 666   8               sec_temp=LE2BE(pFile->deADate,2);
+ 667   8               (pfi->FileADate).day=((sec_temp)&0x001f);
+ 668   8               (pfi->FileADate).month=((sec_temp>>5)&0x000f);
+ 669   8               (pfi->FileADate).year=((sec_temp>>9)&0x007f)+1980;
+ 670   8                  
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 12  
+
+ 671   8               iFile=pArg->BytesPerSector;
+ 672   8               iSec=sec_temp+pArg->SectorsPerClust;
+ 673   8               }
+ 674   7               else
+ 675   7               {
+ 676   8                iItem++;
+ 677   8               }
+ 678   7              } 
+ 679   6         }
+ 680   5         }
+ 681   4        }
+ 682   3       }while(!flag && (Cur_Clust=znFAT_GetNextCluster(Cur_Clust))!=0x0fffffff);
+ 683   2       if(!flag) 
+ 684   2       {
+ 685   3        return 1;
+ 686   3       }
+ 687   2       return 0;
+ 688   2       }
+ 689   1       else
+ 690   1       {
+ 691   2        return 2; 
+ 692   2       }
+ 693   1      }
+ 694          
+ 695          #endif
+ 696          /**************************************************************************
+ 697           - ¹¦ÄÜÃèÊö£ºÎÄ¼ş¶¨Î»
+ 698           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 699           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+ 700           - ²ÎÊıËµÃ÷£ºpfi:FileInfoStructÀàĞÍµÄ½á¹¹ÌåÖ¸Õë£¬ÓÃÓÚ×°ÔØÎÄ¼ş²ÎÊıĞÅÏ¢£¬ÎÄ¼ş
+ 701                       ¶¨Î»ºó£¬pfiËùÖ¸ÏòµÄ½á¹¹ÌåÖĞµÄÏà¹Ø²ÎÊı¾Í±»¸üĞÂÁË£¬±ÈÈçÎÄ¼şµÄµ±Ç°
+ 702                       ÉÈÇø£¬ÎÄ¼şµ±Ç°ÉÈÇøÖĞµÄÎ»ÖÃ£¬ÎÄ¼şµÄµ±Ç°Æ«ÒÆÁ¿µÈµÈ£¬ÒÔ±¸ºóÃæÊ¹ÓÃ
+ 703                       offset:Òª¶¨Î»µÄÆ«ÒÆÁ¿£¬Èç¹ûoffset´óÓÚÎÄ¼şµÄ´óĞ¡£¬Ôò¶¨Î»µ½ÎÄ¼şµÄ
+ 704                       Ä©Î²
+ 705           - ·µ»ØËµÃ÷£ºÎÄ¼ş¶¨Î»³É¹¦·µ»Ø0£¬·ñÔòÎª1
+ 706           - ×¢£º´Ëº¯Êı±»ÏÂÃæµÄznFAT_Read_Fileµ÷ÓÃ£¬ÓÃÓÚÊµÏÖ´ÓÖ¸¶¨Î»ÖÃ¶ÁÈ¡Êı¾İ£¬²»½¨Òé
+ 707                 ÓÃ»§Ö±½Óµ÷ÓÃĞ©º¯Êı
+ 708           **************************************************************************/
+ 709          #ifdef ZNFAT_SEEK_FILE
+ 710          
+ 711          UINT8 znFAT_Seek_File(struct FileInfoStruct *pfi,UINT32 offset)
+ 712          {
+ 713   1       UINT32 i,temp;
+ 714   1      
+ 715   1      if(offset<=pfi->FileSize)
+ 716   1      { 
+ 717   2       if(offset==pfi->FileCurOffset)
+ 718   2       {
+ 719   3        pfi->FileCurPos%=pArg->BytesPerSector;
+ 720   3        return 1;  
+ 721   3       }
+ 722   2       if(offset<pfi->FileCurOffset) 
+ 723   2       {
+ 724   3        pfi->FileCurCluster=pfi->FileStartCluster;
+ 725   3        pfi->FileCurSector=SOC(pfi->FileCurCluster);
+ 726   3        pfi->FileCurPos=0;
+ 727   3        pfi->FileCurOffset=0;
+ 728   3       } 
+ 729   2       if((offset-pfi->FileCurOffset)>=(pArg->BytesPerSector-pfi->FileCurPos))         //Ä¿±êÆ«ÒÆÁ¿ÓëÎÄ¼şµ±Ç°Æ«ÒÆÁ¿Ëù²î
+             -µÄ×Ö½ÚÊı²»Ğ¡ÓÚÎÄ¼şÔÚµ±Ç°ÉÈÇøÖĞµÄÎ»ÖÃµ½ÉÈÇøÄ©Î²µÄ×Ö½ÚÊı
+ 730   2       {
+ 731   3        pfi->FileCurOffset+=(pArg->BytesPerSector-pfi->FileCurPos);
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 13  
+
+ 732   3        pfi->FileCurPos=0;
+ 733   3        if(pfi->FileCurSector-SOC(pfi->FileCurCluster)==(pArg->SectorsPerClust-1))
+ 734   3        {
+ 735   4         pfi->FileCurCluster=znFAT_GetNextCluster(pfi->FileCurCluster);
+ 736   4         pfi->FileCurSector=SOC(pfi->FileCurCluster);
+ 737   4        }
+ 738   3        else
+ 739   3        {
+ 740   4         pfi->FileCurSector++; 
+ 741   4        }
+ 742   3       }
+ 743   2       else
+ 744   2       {
+ 745   3        pfi->FileCurPos=(pfi->FileCurPos+offset-pfi->FileCurOffset)%pArg->BytesPerSector;
+ 746   3        pfi->FileCurOffset=offset;
+ 747   3        return 1;
+ 748   3       }
+ 749   2       temp=SOC(pfi->FileCurCluster);
+ 750   2       if((offset-(pfi->FileCurOffset))/pArg->BytesPerSector+(pfi->FileCurSector-temp)>(pArg->SectorsPerClust-1)
+             -)
+ 751   2       {
+ 752   3        pfi->FileCurOffset+=(((pArg->SectorsPerClust)-(pfi->FileCurSector-(SOC(pfi->FileCurCluster))))*pArg->Byt
+             -esPerSector);
+ 753   3        pfi->FileCurCluster=znFAT_GetNextCluster(pfi->FileCurCluster);
+ 754   3        pfi->FileCurSector=SOC(pfi->FileCurCluster);
+ 755   3        pfi->FileCurPos=0;
+ 756   3       }
+ 757   2       else
+ 758   2       {
+ 759   3        pfi->FileCurSector+=(offset-pfi->FileCurOffset)/pArg->BytesPerSector;
+ 760   3        pfi->FileCurPos=(offset-pfi->FileCurOffset)%pArg->BytesPerSector;
+ 761   3        pfi->FileCurOffset=offset;
+ 762   3        return 1;
+ 763   3       }
+ 764   2      
+ 765   2       temp=(offset-pfi->FileCurOffset)/(pArg->BytesPerSector*pArg->SectorsPerClust);
+ 766   2       for(i=0;i<temp;i++)
+ 767   2       {
+ 768   3        pfi->FileCurCluster=znFAT_GetNextCluster(pfi->FileCurCluster);
+ 769   3       }
+ 770   2       pfi->FileCurOffset+=(temp*(pArg->BytesPerSector*pArg->SectorsPerClust));
+ 771   2       pfi->FileCurSector=(SOC(pfi->FileCurCluster))+(offset-pfi->FileCurOffset)/pArg->BytesPerSector;
+ 772   2       pfi->FileCurPos=((offset-pfi->FileCurOffset))%pArg->BytesPerSector;
+ 773   2       pfi->FileCurOffset=offset;
+ 774   2      }
+ 775   1      else
+ 776   1      {
+ 777   2       return 1;
+ 778   2      }
+ 779   1       return 0;
+ 780   1      }
+ 781          
+ 782          #endif
+ 783          /**************************************************************************
+ 784           - ¹¦ÄÜÃèÊö£º´ÓÎÄ¼şµÄÄ³Ò»¸öÎ»ÖÃ´¦£¬¶ÁÈ¡Ò»¶¨³¤¶ÈµÄÊı¾İ£¬·ÅÈëÊı¾İ»º³åÇøÖĞ
+ 785           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 786           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+ 787           - ²ÎÊıËµÃ÷£ºpfi:FileInfoStructÀàĞÍµÄ½á¹¹ÌåÖ¸Õë£¬ÓÃÓÚ×°ÔØÎÄ¼ş²ÎÊıĞÅÏ¢£¬ÎÄ¼ş
+ 788                       ¶ÁÈ¡µÄ¹ı³ÌÖĞ£¬´Ë½á¹¹ÌåÖĞµÄÏà¹Ø²ÎÊı»á¸üĞÂ£¬±ÈÈçÎÄ¼şµÄµ±Ç°Æ«ÒÆÁ¿¡¢
+ 789                       ÎÄ¼şµÄµ±Ç°ÉÈÇø£¬ÎÄ¼şµÄµ±Ç°´ØµÈµÈ
+ 790                       offset:Òª¶¨Î»µÄÆ«ÒÆÁ¿£¬ÒªĞ¡ÓÚÎÄ¼şµÄ´óĞ¡ 
+ 791                       len:Òª¶ÁÈ¡µÄÊı¾İµÄ³¤¶È£¬Èç¹ûlen+offset´óÓÚÎÄ¼şµÄ´óĞ¡£¬ÔòÊµ¼Ê¶Á
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 14  
+
+ 792                       È¡µÄÊı¾İÁ¿ÊÇ´Óoffset¿ªÊ¼µ½ÎÄ¼ş½áÊø
+ 793                       pbuf:Êı¾İ»º³åÇø
+ 794           - ·µ»ØËµÃ÷£º¶ÁÈ¡µ½µÄÊµ¼ÊµÄÊı¾İ³¤¶È£¬Èç¹û¶ÁÈ¡Ê§°Ü£¬±ÈÈçÖ¸¶¨µÄÆ«ÒÆÁ¿´óÓÚÁËÎÄ¼ş
+ 795                       ´óĞ¡£¬Ôò·µ»Ø0
+ 796           - ×¢£ºÔÚ¶ÁÈ¡Ò»¸öÎÄ¼şµÄÊı¾İÇ°£¬±ØĞëÏÈ½«¸ÃÎÄ¼şÓÃznFAT_Open_File´ò¿ª
+ 797           **************************************************************************/
+ 798          #ifdef ZNFAT_READ_FILE
+              
+              UINT32 znFAT_Read_File(struct FileInfoStruct *pfi,UINT32 offset,UINT32 len,UINT8 *pbuf)
+              {
+               UINT32 i,j,k,temp;
+               UINT32 counter=0;
+               if(offset<pfi->FileSize)
+               {
+                if(offset+len>pfi->FileSize) len=pfi->FileSize-offset;
+                znFAT_Seek_File(pfi,offset);
+                
+                znFAT_ReadSector(pfi->FileCurSector,znFAT_Buffer);
+                for(i=pfi->FileCurPos;i<pArg->BytesPerSector;i++)
+                {
+                 if(counter>=len) 
+                 {
+                   return len;
+                 }
+                 pbuf[counter]=znFAT_Buffer[i];
+                 counter++;
+                 pfi->FileCurPos++;
+                 pfi->FileCurOffset++;
+                }
+                if(pfi->FileCurSector-(SOC(pfi->FileCurCluster))!=(pArg->SectorsPerClust-1))
+                {
+                 for(j=pfi->FileCurSector+1;j<(SOC(pfi->FileCurCluster))+pArg->SectorsPerClust;j++)
+                 {
+                  znFAT_ReadSector(j,znFAT_Buffer);
+                  pfi->FileCurSector=j;
+                  for(i=0;i<pArg->BytesPerSector;i++)
+                  {
+                   if(counter>=len)
+                   {
+                     return len;
+                   }
+                   pbuf[counter]=znFAT_Buffer[i];
+                   counter++;
+                   pfi->FileCurPos++;
+                   pfi->FileCurOffset++;
+                  }
+                 }
+                } 
+                temp=(len-counter)/(pArg->BytesPerSector*pArg->SectorsPerClust);
+                for(k=0;k<temp;k++)
+                {
+                 pfi->FileCurCluster=znFAT_GetNextCluster(pfi->FileCurCluster);
+                 for(j=(SOC(pfi->FileCurCluster));j<(SOC(pfi->FileCurCluster))+pArg->SectorsPerClust;j++)
+                 {
+                  znFAT_ReadSector(j,znFAT_Buffer);
+                  pfi->FileCurSector=j;
+                  for(i=0;i<pArg->BytesPerSector;i++)
+                  {
+                   if(counter>=len)  
+                       {
+                     return len;
+                   }
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 15  
+
+                   pbuf[counter]=znFAT_Buffer[i];
+                   counter++;
+                   pfi->FileCurOffset++;
+                       pfi->FileCurPos++;
+                       pfi->FileCurPos%=pArg->BytesPerSector;
+                  } 
+                 }    
+                }
+                pfi->FileCurCluster=znFAT_GetNextCluster(pfi->FileCurCluster);
+                temp=(SOC(pfi->FileCurCluster))+((len-counter)/pArg->BytesPerSector);
+                pfi->FileCurSector=(SOC(pfi->FileCurCluster));
+                for(j=(SOC(pfi->FileCurCluster));j<temp;j++)
+                {
+                 znFAT_ReadSector(j,znFAT_Buffer);
+                 pfi->FileCurSector=j;
+                 for(i=0;i<pArg->BytesPerSector;i++)
+                 {
+                  if(counter>=len) 
+                  {
+                    return len;
+                  }
+                  pbuf[counter]=znFAT_Buffer[i];
+                  counter++;
+                  pfi->FileCurPos++;
+                  pfi->FileCurPos%=pArg->BytesPerSector;
+                  pfi->FileCurOffset++;
+                 }   
+                }
+                pfi->FileCurSector=j;
+                znFAT_ReadSector(pfi->FileCurSector,znFAT_Buffer);
+                temp=len-counter;
+                for(i=0;i<temp;i++)
+                {
+                 if(counter>=len) 
+                 {
+                   return len;
+                 }
+                 pbuf[counter]=znFAT_Buffer[i];
+                 counter++;
+                 pfi->FileCurPos++;
+                 pfi->FileCurPos%=pArg->BytesPerSector;
+                 pfi->FileCurOffset++;  
+                }
+               }
+               else
+               {
+                len=0;
+               }
+               return len;
+              }
+              
+              #endif
+ 906          /**************************************************************************
+ 907           - ¹¦ÄÜÃèÊö£º´ÓÎÄ¼şÄ³Ò»Î»ÖÃ¶ÁÈ¡Ò»¶¨³¤¶ÈµÄÊı¾İ£¬ÓÉpfunËùÖ¸ÏòµÄº¯ÊıÀ´´¦Àí
+ 908           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+ 909           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+ 910           - ²ÎÊıËµÃ÷£ºpfi:FileInfoStructÀàĞÍµÄ½á¹¹ÌåÖ¸Õë£¬ÓÃÓÚ×°ÔØÎÄ¼ş²ÎÊıĞÅÏ¢£¬ÎÄ¼ş
+ 911                       ¶ÁÈ¡µÄ¹ı³ÌÖĞ£¬´Ë½á¹¹ÌåÖĞµÄÏà¹Ø²ÎÊı»á¸üĞÂ£¬±ÈÈçÎÄ¼şµÄµ±Ç°Æ«ÒÆÁ¿¡¢
+ 912                       ÎÄ¼şµÄµ±Ç°ÉÈÇø£¬ÎÄ¼şµÄµ±Ç°´ØµÈµÈ
+ 913                       offset:Òª¶¨Î»µÄÆ«ÒÆÁ¿£¬ÒªĞ¡ÓÚÎÄ¼şµÄ´óĞ¡ 
+ 914                       len:Òª¶ÁÈ¡µÄÊı¾İµÄ³¤¶È£¬Èç¹ûlen+offset´óÓÚÎÄ¼şµÄ´óĞ¡£¬ÔòÊµ¼Ê¶Á
+ 915                       È¡µÄÊı¾İÁ¿ÊÇ´Óoffset¿ªÊ¼µ½ÎÄ¼ş½áÊø
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 16  
+
+ 916                       pfun:¶Ô¶ÁÈ¡µÄÊı¾İµÄ´¦Àíº¯Êı£¬pfunÖ¸Ïò´¦Àíº¯Êı£¬ÕâÑù¿ÉÒÔÁé»îµÄ
+ 917                       ÅäÖÃÊı¾İÈçºÎÈ¥´¦Àí£¬±ÈÈçÊÇ·ÅÔÚ»º³åÇøÖĞ£¬»¹ÊÇ°ÑÊı¾İÍ¨¹ı´®¿Ú·¢ËÍ
+ 918                       ³öÈ¥£¬Ö»ĞèÒªpfunÈ¥Ö¸ÏòÏàÓ¦µÄ´¦Àíº¯Êı¿ÉÒÔÁË
+ 919           - ·µ»ØËµÃ÷£º¶ÁÈ¡µ½µÄÊµ¼ÊµÄÊı¾İ³¤¶È£¬Èç¹û¶ÁÈ¡Ê§°Ü£¬±ÈÈçÖ¸¶¨µÄÆ«ÒÆÁ¿´óÓÚÁËÎÄ¼ş
+ 920                       ´óĞ¡£¬Ôò·µ»Ø0
+ 921           - ×¢£ºÔÚ¶ÁÈ¡Ò»¸öÎÄ¼şµÄÊı¾İÇ°£¬±ØĞëÏÈ½«¸ÃÎÄ¼şÓÃznFAT_Open_File´ò¿ª
+ 922           **************************************************************************/
+ 923          #ifdef ZNFAT_READ_FILEX
+ 924          
+ 925          UINT32 znFAT_Read_FileX(struct FileInfoStruct *pfi,UINT32 offset,UINT32 len,void (*pfun)(UINT8))
+ 926          {
+ 927   1       UINT32 i,j,k,temp;
+ 928   1       UINT32 counter=0;
+ 929   1       if(offset<pfi->FileSize)
+ 930   1       {
+ 931   2        if(offset+len>pfi->FileSize) len=pfi->FileSize-offset;
+ 932   2        znFAT_Seek_File(pfi,offset);
+ 933   2        
+ 934   2        znFAT_ReadSector(pfi->FileCurSector,znFAT_Buffer);
+ 935   2        for(i=pfi->FileCurPos;i<pArg->BytesPerSector;i++)
+ 936   2        {
+ 937   3         if(counter>=len) 
+ 938   3         {
+ 939   4           return len;
+ 940   4         }
+ 941   3         (*pfun)(znFAT_Buffer[i]);
+ 942   3         counter++;
+ 943   3         pfi->FileCurPos++;
+ 944   3         pfi->FileCurOffset++;
+ 945   3        }
+ 946   2        if(pfi->FileCurSector-(SOC(pfi->FileCurCluster))!=(pArg->SectorsPerClust-1))
+ 947   2        {
+ 948   3         for(j=pfi->FileCurSector+1;j<(SOC(pfi->FileCurCluster))+pArg->SectorsPerClust;j++)
+ 949   3         {
+ 950   4          znFAT_ReadSector(j,znFAT_Buffer);
+ 951   4          pfi->FileCurSector=j;
+ 952   4          for(i=0;i<pArg->BytesPerSector;i++)
+ 953   4          {
+ 954   5           if(counter>=len)
+ 955   5           {
+ 956   6             return len;
+ 957   6           }
+ 958   5           (*pfun)(znFAT_Buffer[i]);
+ 959   5           counter++;
+ 960   5           pfi->FileCurPos++;
+ 961   5           pfi->FileCurOffset++;
+ 962   5          }
+ 963   4         }
+ 964   3        } 
+ 965   2        temp=(len-counter)/(pArg->BytesPerSector*pArg->SectorsPerClust);
+ 966   2        for(k=0;k<temp;k++)
+ 967   2        {
+ 968   3         pfi->FileCurCluster=znFAT_GetNextCluster(pfi->FileCurCluster);
+ 969   3         for(j=(SOC(pfi->FileCurCluster));j<(SOC(pfi->FileCurCluster))+pArg->SectorsPerClust;j++)
+ 970   3         {
+ 971   4          znFAT_ReadSector(j,znFAT_Buffer);
+ 972   4          pfi->FileCurSector=j;
+ 973   4          for(i=0;i<pArg->BytesPerSector;i++)
+ 974   4          {
+ 975   5           if(counter>=len)  
+ 976   5               {
+ 977   6             return len;
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 17  
+
+ 978   6           }
+ 979   5           (*pfun)(znFAT_Buffer[i]);
+ 980   5           counter++;
+ 981   5           pfi->FileCurOffset++;
+ 982   5               pfi->FileCurPos++;
+ 983   5               pfi->FileCurPos%=pArg->BytesPerSector;
+ 984   5          } 
+ 985   4         }    
+ 986   3        }
+ 987   2        pfi->FileCurCluster=znFAT_GetNextCluster(pfi->FileCurCluster);
+ 988   2        temp=(SOC(pfi->FileCurCluster))+((len-counter)/pArg->BytesPerSector);
+ 989   2        pfi->FileCurSector=(SOC(pfi->FileCurCluster));
+ 990   2        for(j=(SOC(pfi->FileCurCluster));j<temp;j++)
+ 991   2        {
+ 992   3         znFAT_ReadSector(j,znFAT_Buffer);
+ 993   3         pfi->FileCurSector=j;
+ 994   3         for(i=0;i<pArg->BytesPerSector;i++)
+ 995   3         {
+ 996   4          if(counter>=len) 
+ 997   4          {
+ 998   5            return len;
+ 999   5          }
+1000   4          (*pfun)(znFAT_Buffer[i]);
+1001   4          counter++;
+1002   4          pfi->FileCurPos++;
+1003   4          pfi->FileCurPos%=pArg->BytesPerSector;
+1004   4          pfi->FileCurOffset++;
+1005   4         }   
+1006   3        }
+1007   2        pfi->FileCurSector=j;
+1008   2        znFAT_ReadSector(pfi->FileCurSector,znFAT_Buffer);
+1009   2        temp=len-counter;
+1010   2        for(i=0;i<temp;i++)
+1011   2        {
+1012   3         if(counter>=len) 
+1013   3         {
+1014   4           return len;
+1015   4         }
+1016   3         (*pfun)(znFAT_Buffer[i]);
+1017   3         counter++;
+1018   3         pfi->FileCurPos++;
+1019   3         pfi->FileCurPos%=pArg->BytesPerSector;
+1020   3         pfi->FileCurOffset++;  
+1021   3        }
+1022   2       }
+1023   1       else
+1024   1       {
+1025   2        len=0;
+1026   2       }
+1027   1       return len;
+1028   1      }
+1029          
+1030          #endif
+1031          /**************************************************************************
+1032           - ¹¦ÄÜÃèÊö£ºÑ°ÕÒ¿ÉÓÃµÄ¿ÕÏĞ´Ø
+1033           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+1034           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+1035           - ²ÎÊıËµÃ÷£ºÎŞ
+1036           - ·µ»ØËµÃ÷£ºÈç¹ûÕÒµ½ÁË¿ÕÏĞ´Ø£¬·µ»Ø¿ÕÏĞ´ØµÄ´ØºÅ£¬·ñÔò·µ»Ø0
+1037           - ×¢£ºÑ°ÕÒ¿ÕÏĞ´ØÊÇ´´½¨Ä¿Â¼/ÎÄ¼şÒÔ¼°ÏòÎÄ¼şĞ´ÈëÊı¾İµÄ»ù´¡£¬ËüÈç¹ûÄÜºÜ¿ìµÄÑ°
+1038                 ÕÒµ½¿ÕÏĞ´Ø£¬ÄÇÃ´´´½¨Ä¿Â¼/ÎÄ¼şÒÔ¼°ÏòÎÄ¼şĞ´ÈëÊı¾İÕâĞ©²Ù×÷Ò²»á±È½Ï¿ì¡£
+1039                 ËùÒÔÎÒÃÇ¾ø²»»á´Ó×î¿ªÊ¼µÄ´ØÒÀ´ÎÈ¥Ñ°ÕÒ£¬¶øÊÇÊ¹ÓÃÁË¶ş·ÖËÑË÷µÄËã·¨£¬ÒÔ´ï
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 18  
+
+1040                 µ½½ÏºÃµÄĞ§¹û¡£Èç¹û¿ÕÏĞ´ØÃ»ÓĞÕÒµ½£¬ºÜÓĞ¿ÉÄÜ¾ÍËµÃ÷´æ´¢Éè±¸ÒÑ¾­Ã»ÓĞ¿Õ¼ä
+1041                 ÁË
+1042           **************************************************************************/
+1043          #ifdef ZNFAT_FIND_FREE_CLUST
+              
+              UINT32 znFAT_Find_Free_Clust(UINT8 flag)
+              {
+               UINT32 iClu,iSec;
+               struct znFAT_FAT *pFAT;
+               for(iSec=pArg->FirstFATSector+temp_last_cluster/128;iSec<pArg->FirstFATSector+pArg->FATsectors;iSec++)
+               {
+                znFAT_ReadSector(iSec,znFAT_Buffer);
+                pFAT=(struct znFAT_FAT *)znFAT_Buffer;
+                for(iClu=0;iClu<pArg->BytesPerSector/4;iClu++)
+                {
+                 if(LE2BE((UINT8 *)(&((pFAT->Items))[iClu]),4)==0)
+                 {
+                  if(!flag)
+                      {
+                       znFAT_Update_FSInfo_Free_Clu(0);
+                       temp_last_cluster=128*(iSec-pArg->FirstFATSector)+iClu;
+                       znFAT_Empty_Cluster(temp_last_cluster);           
+                   return temp_last_cluster;
+                      }
+                      else
+                      {
+                       znFAT_Update_FSInfo_Last_Clu(128*(iSec-pArg->FirstFATSector)+iClu);
+                       return 128*(iSec-pArg->FirstFATSector)+iClu;
+                      }
+                 }
+                }
+               }
+               return 0;
+              }
+              
+              #endif
+1076          /**************************************************************************
+1077           - ¹¦ÄÜÃèÊö£ºÌî³äÎÄ¼ş/Ä¿Â¼Ïî
+1078           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+1079           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+1080           - ²ÎÊıËµÃ÷£ºprec:Ö¸ÏòÒ»¸ödirentryÀàĞÍµÄ½á¹¹Ìå£¬ËüµÄ½á¹¹¾ÍÊÇznFATÖĞÎÄ¼ş/
+1081                       Ä¿Â¼ÏîµÄ½á¹¹
+1082                       name:ÎÄ¼ş»òÄ¿Â¼µÄÃû³Æ
+1083                       is_dir:Ö¸Ê¾Õâ¸öÎÄ¼ş/Ä¿Â¼ÏîÊÇÎÄ¼ş»¹ÊÇÄ¿Â¼£¬·Ö±ğÓÃÀ´ÊµÏÖÎÄ¼ş¡¢
+1084                       Ä¿Â¼µÄ´´½¨ 1±íÊ¾´´½¨Ä¿Â¼ 0±íÊ¾´´½¨ÎÄ¼ş
+1085           - ·µ»ØËµÃ÷£ºÎŞ
+1086           - ×¢£ºÕâÀï´´½¨ÎÄ¼ş»òÄ¿Â¼µÄ·½·¨ÊÇ£¬ÏÈ½«ÎÄ¼ş»òÄ¿Â¼µÄĞÅÏ¢Ìî³äµ½Ò»¸ö½á¹¹ÌåÖĞ£¬
+1087                 È»ºóÔÙ½«Õâ¸ö½á¹¹ÌåµÄÊı¾İĞ´Èëµ½´æ´¢Éè±¸µÄÏàÓ¦µÄÉÈÇøµÄÏàÓ¦Î»ÖÃÉÏÈ¥£¬Õâ
+1088                 Ñù¾ÍÍê³ÉÁËÎÄ¼ş»òÄ¿Â¼µÄ´´½¨¡£
+1089                 ÔÚÌî³äÎÄ¼ş»òÄ¿Â¼µÄĞÅÏ¢Ê±£¬ÎÄ¼ş»òÄ¿Â¼µÄÊ×´Ø²¢Ã»ÓĞÌî½øÈ¥£¬¶øÊÇÈ«0
+1090           **************************************************************************/
+1091          #ifdef FILL_REC_INF
+              
+              void Fill_Rec_Inf(struct direntry *prec,INT8 *name,UINT8 is_dir,UINT8 *ptd)
+              {
+               UINT8 i=0,len=0,h=0;
+               UINT16 temp;
+              
+               if(is_dir)
+               {
+                len=strlen(name);
+                if(len>8)
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 19  
+
+                {
+                 for(i=0;i<6;i++)
+                 {
+                  (prec->deName)[i]=L2U(name[i]);
+                 }
+                 (prec->deName)[6]='~';
+                 (prec->deName)[7]='1';
+                }
+                else
+                {
+                 for(i=0;i<len;i++)
+                 {
+                  (prec->deName)[i]=L2U(name[i]);
+                 }
+                 for(;i<8;i++)
+                 {
+                  (prec->deName)[i]=' ';
+                 }
+                }
+                for(i=0;i<3;i++)
+                {
+                 (prec->deExtension)[i]=' ';
+                }
+               }
+               else
+               {
+                while(name[len]!=0) {if(name[len]=='.') h=1;len++;}
+                if(!h) {name[len]='.';name[len+1]=0;}  
+                len=0;
+                while(name[len]!='.' && name[len]!=0) len++;
+                if(len>8)
+                {
+                 for(i=0;i<6;i++)
+                 {
+                  (prec->deName)[i]=L2U(name[i]);
+                 }
+                 (prec->deName)[6]='~';
+                 (prec->deName)[7]='1';
+                }
+                else
+                {
+                 for(i=0;i<len;i++)
+                 {
+                  (prec->deName)[i]=L2U(name[i]);
+                 }
+                 for(;i<8;i++)
+                 {
+                  (prec->deName)[i]=' ';
+                 }
+                }
+                if(name[len]==0)
+                {
+                 for(i=0;i<3;i++)
+                 {
+                  (prec->deExtension)[i]=' ';
+                 }
+                }
+                else
+                {
+                 for(i=0;i<3;i++)
+                 {
+                  (prec->deExtension)[i]=' ';
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 20  
+
+                 }
+                 len++;
+                 i=0;
+                 while(name[len]!=0)
+                 {
+                  (prec->deExtension)[i++]=L2U(name[len]);
+                      len++;
+                 }
+                }
+               }
+               if(is_dir)
+                (prec->deAttributes)=0x10;
+               else
+                (prec->deAttributes)=0x20;
+               
+               temp=MAKE_FILE_TIME(ptd[3],ptd[4],ptd[5]);
+               (prec->deCTime)[0]=temp;
+               (prec->deCTime)[1]=temp>>8;
+               temp=MAKE_FILE_DATE(ptd[0],ptd[1],ptd[2]);
+               (prec->deCDate)[0]=temp;
+               (prec->deCDate)[1]=temp>>8;
+              
+               (prec->deLowerCase)=0;
+               (prec->deHighClust)[0]=0;
+               (prec->deHighClust)[1]=0;
+               (prec->deLowCluster)[0]=0;
+               (prec->deLowCluster)[1]=0;
+               for(i=0;i<4;i++)
+               {
+                (prec->deFileSize)[i]=0;
+               }                              
+              }
+              
+              #endif
+1198          /**************************************************************************
+1199           - ¹¦ÄÜÃèÊö£º¸üĞÂFAT±í
+1200           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+1201           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+1202           - ²ÎÊıËµÃ÷£ºcluster:Òª¸üĞÂµÄ´ØÏîºÅ
+1203                       dat:Òª½«ÏàÓ¦µÄ´ØÏî¸üĞÂÎªdat
+1204           - ·µ»ØËµÃ÷£ºÎŞ
+1205           - ×¢£ºÔÚÏòÎÄ¼şĞ´ÈëÁËÊı¾İºó£¬ĞèÒª¶ÔFAT±í½øĞĞ¸ü±í£¬ÒÔ±íÃ÷ĞÂÊı¾İµÄ´ØÁ´¹ØÏµ 
+1206                 É¾³ıÎÄ¼şµÄÊ±ºò£¬Ò²ĞèÒª½«¸ÃÎÄ¼şµÄ´ØÏî½øĞĞÇå³ı£¬Ïú»ÙÎÄ¼şµÄ´ØÁ´¹ØÏµ
+1207           **************************************************************************/
+1208          #ifdef ZNFAT_MODIFY_FAT
+              
+              void znFAT_Modify_FAT(UINT32 cluster,UINT32 dat)
+              {
+               znFAT_ReadSector(pArg->FirstFATSector+(cluster*4/pArg->BytesPerSector),znFAT_Buffer);
+               znFAT_Buffer[((cluster*4)%pArg->BytesPerSector)+0]=dat&0x000000ff;
+               znFAT_Buffer[((cluster*4)%pArg->BytesPerSector)+1]=(dat&0x0000ff00)>>8;
+               znFAT_Buffer[((cluster*4)%pArg->BytesPerSector)+2]=(dat&0x00ff0000)>>16;
+               znFAT_Buffer[((cluster*4)%pArg->BytesPerSector)+3]=(dat&0xff000000)>>24;
+               znFAT_WriteSector(pArg->FirstFATSector+(cluster*4/pArg->BytesPerSector),znFAT_Buffer);
+              
+               znFAT_ReadSector(pArg->FirstFATSector+pArg->FATsectors+(cluster*4/pArg->BytesPerSector),znFAT_Buffer);
+               znFAT_Buffer[((cluster*4)%pArg->BytesPerSector)+0]=dat&0x000000ff;
+               znFAT_Buffer[((cluster*4)%pArg->BytesPerSector)+1]=(dat&0x0000ff00)>>8;
+               znFAT_Buffer[((cluster*4)%pArg->BytesPerSector)+2]=(dat&0x00ff0000)>>16;
+               znFAT_Buffer[((cluster*4)%pArg->BytesPerSector)+3]=(dat&0xff000000)>>24;
+               znFAT_WriteSector(pArg->FirstFATSector+pArg->FATsectors+(cluster*4/pArg->BytesPerSector),znFAT_Buffer); 
+              }
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 21  
+
+              
+              #endif
+1228          
+1229          /**************************************************************************
+1230           - ¹¦ÄÜÃèÊö£ºÔÚ´æ´¢Éè±¸ÖĞ´´½¨Ò»¸öÎÄ¼ş/Ä¿Â¼Ïî
+1231           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+1232           - º¯ÊıÊôĞÔ£ºÄÚ²¿
+1233           - ²ÎÊıËµÃ÷£ºpfi:Ö¸ÏòFileInfoStructÀàĞÍµÄ½á¹¹Ìå£¬ÓÃÓÚ×°ÔØ¸Õ´´½¨µÄÎÄ¼şµÄĞÅÏ¢
+1234                           Ò²¾ÍÊÇËµ£¬Èç¹û´´½¨µÄÊÇÄ¿Â¼£¬Ôò´Ë½á¹¹Ìå²»»á±»¸üĞÂ
+1235                       cluster:ÔÚclusterÕâ¸ö´ØÖĞ´´½¨ÎÄ¼ş/Ä¿Â¼Ïî£¬ÓÃÓÚÊµÏÖÔÚÈÎÒâÄ¿Â¼ÏÂ
+1236                           ´´½¨ÎÄ¼ş»òÄ¿Â¼£¬¿ÉÒÔÍ¨¹ıznFAT_Enter_DirÀ´»ñÈ¡Ä³Ò»¸öÄ¿Â¼µÄ¿ª
+1237                           Ê¼´Ø
+1238                       name:ÎÄ¼ş/Ä¿Â¼µÄÃû³Æ
+1239                       is_dir:Ö¸Ê¾Òª´´½¨µÄÊÇÎÄ¼ş»¹ÊÇÄ¿Â¼£¬ÎÄ¼şÓëÄ¿Â¼µÄ´´½¨·½·¨ÊÇ²»Í¬µÄ
+1240                           1±íÊ¾´´½¨Ä¿Â¼ 0±íÊ¾´´½¨ÎÄ¼ş
+1241           - ·µ»ØËµÃ÷£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø-1
+1242           **************************************************************************/
+1243          #ifdef ZNFAT_CREATE_REC
+              
+              UINT8 znFAT_Create_Rec(struct FileInfoStruct *pfi,UINT32 cluster,INT8 *name,UINT8 is_dir,UINT8 *ptd)
+              {
+               UINT32 iSec,iRec,temp_sec,temp_clu,new_clu,i,old_clu;
+               UINT8 flag=0;
+               UINT16 temp_Rec;
+               struct direntry *pRec;
+               Fill_Rec_Inf(&temp_rec,name,is_dir,ptd);
+               do
+               {
+                old_clu=cluster;
+                temp_sec=SOC(cluster);
+                for(iSec=temp_sec;iSec<temp_sec+pArg->SectorsPerClust;iSec++)
+                {
+                 znFAT_ReadSector(iSec,znFAT_Buffer);
+                 for(iRec=0;iRec<pArg->BytesPerSector;iRec+=sizeof(struct direntry))
+                 {
+                  pRec=(struct direntry *)(znFAT_Buffer+iRec);
+                      if((pRec->deName)[0]==0)
+                      {
+                       flag=1;
+                       if(is_dir)
+                       {
+                        if(!(new_clu=znFAT_Find_Free_Clust(0))) return -1;
+                        znFAT_Modify_FAT(new_clu,0x0fffffff);
+                        (temp_rec.deHighClust)[0]=(new_clu&0x00ff0000)>>16;
+                    (temp_rec.deHighClust)[1]=(new_clu&0xff000000)>>24;
+                    (temp_rec.deLowCluster)[0]=(new_clu&0x000000ff);
+                    (temp_rec.deLowCluster)[1]=(new_clu&0x0000ff00)>>8;
+                       }
+                       znFAT_ReadSector(iSec,znFAT_Buffer);
+                       for(i=0;i<sizeof(struct direntry);i++)
+                       {
+                        ((UINT8 *)pRec)[i]=((UINT8 *)(&temp_rec))[i];
+                       }
+                       znFAT_WriteSector(iSec,znFAT_Buffer);
+                       temp_sec=iSec;
+                       temp_Rec=iRec;
+                       iRec=pArg->BytesPerSector;
+                       iSec=temp_sec+pArg->SectorsPerClust;
+                      }
+                 }
+                }
+               }while(!flag && (cluster=znFAT_GetNextCluster(cluster))!=0x0fffffff);
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 22  
+
+               if(!flag)
+               {
+                if(!(temp_clu=znFAT_Find_Free_Clust(0))) return -1;
+                znFAT_Modify_FAT(temp_clu,0x0fffffff);
+                znFAT_Modify_FAT(old_clu,temp_clu);
+                temp_sec=SOC(temp_clu);
+                temp_Rec=0;
+                znFAT_ReadSector(temp_sec,znFAT_Buffer);
+                if(is_dir)
+                {
+                 if(!(new_clu=znFAT_Find_Free_Clust(0))) return -1;
+                 znFAT_Modify_FAT(new_clu,0x0fffffff);
+                 znFAT_ReadSector(temp_sec,znFAT_Buffer);
+                 (temp_rec.deHighClust)[0]=(new_clu&0x00ff0000)>>16;
+                 (temp_rec.deHighClust)[1]=(new_clu&0xff000000)>>24;
+                 (temp_rec.deLowCluster)[0]=(new_clu&0x000000ff);
+                 (temp_rec.deLowCluster)[1]=(new_clu&0x0000ff00)>>8;
+                }
+                for(i=0;i<sizeof(struct direntry);i++)
+                {
+                 znFAT_Buffer[i]=((UINT8 *)(&temp_rec))[i]; 
+                }
+                znFAT_WriteSector(temp_sec,znFAT_Buffer);
+               }
+               if(is_dir)
+               {
+                znFAT_Empty_Cluster(new_clu);
+              
+                Fill_Rec_Inf(&temp_rec,".",1,ptd);
+                (temp_rec.deHighClust)[0]=(new_clu&0x00ff0000)>>16;
+                (temp_rec.deHighClust)[1]=(new_clu&0xff000000)>>24;
+                (temp_rec.deLowCluster)[0]=(new_clu&0x000000ff);
+                (temp_rec.deLowCluster)[1]=(new_clu&0x0000ff00)>>8;
+                for(i=0;i<sizeof(struct direntry);i++)
+                {
+                 znFAT_Buffer[i]=((UINT8 *)(&temp_rec))[i]; 
+                }
+                Fill_Rec_Inf(&temp_rec,"..",1,ptd);
+                if(cluster==pArg->FirstDirClust)
+                {
+                 (temp_rec.deHighClust)[0]=0;
+                 (temp_rec.deHighClust)[1]=0;
+                 (temp_rec.deLowCluster)[0]=0;
+                 (temp_rec.deLowCluster)[1]=0;
+                }
+                else
+                {
+                 (temp_rec.deHighClust)[0]=(cluster&0x00ff0000)>>16;
+                 (temp_rec.deHighClust)[1]=(cluster&0xff000000)>>24;
+                 (temp_rec.deLowCluster)[0]=(cluster&0x000000ff);
+                 (temp_rec.deLowCluster)[1]=(cluster&0x0000ff00)>>8;
+                }
+                  
+                for(i=sizeof(struct direntry);i<2*sizeof(struct direntry);i++)
+                {
+                 znFAT_Buffer[i]=((UINT8 *)(&temp_rec))[i-sizeof(struct direntry)]; 
+                }
+                for(;i<pArg->BytesPerSector;i++)
+                {
+                 znFAT_Buffer[i]=0;
+                }             
+                temp_sec=SOC(new_clu);
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 23  
+
+                znFAT_WriteSector(temp_sec,znFAT_Buffer);
+               }
+               else
+               {
+                strcpy(pfi->FileName,name);
+                pfi->FileStartCluster=0;
+                pfi->FileCurCluster=0;
+                pfi->FileSize=0;
+                pfi->FileCurSector=0;
+                pfi->FileCurPos=0;
+                pfi->FileCurOffset=0;
+                pfi->Rec_Sec=temp_sec;
+                pfi->nRec=temp_Rec;
+              
+                pfi->FileAttr=temp_rec.deAttributes;
+               }
+               znFAT_Find_Free_Clust(1);
+               return 1;
+              }
+              
+              #endif
+1371          /**************************************************************************
+1372           - ¹¦ÄÜÃèÊö£ºÏòÄ³Ò»¸öÎÄ¼ş×·¼ÓÊı¾İ
+1373           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+1374           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+1375           - ²ÎÊıËµÃ÷£ºpfi:Ö¸ÏòFileInfoStructÀàĞÍµÄ½á¹¹Ìå£¬ÓÃÓÚ×°ÔØ¸Õ´´½¨µÄÎÄ¼şµÄĞÅÏ¢
+1376                       len:Òª×·¼ÓµÄÊı¾İ³¤¶È
+1377                       pbuf:Ö¸ÏòÊı¾İ»º³åÇøµÄÖ¸Õë
+1378           - ·µ»ØËµÃ÷£º³É¹¦·µ»ØÊµ¼ÊĞ´ÈëµÄÊı¾İ³¤¶È£¬Ê§°Ü·µ»Ø0
+1379           - ×¢£º×·¼ÓÊı¾İÊ§°ÜºÜÓĞ¿ÉÄÜÊÇ´æ´¢Éè±¸ÒÑ¾­Ã»ÓĞ¿Õ¼äÁË£¬Ò²¾ÍÊÇÕÒ²»µ½¿ÕÏĞ´ØÁË
+1380           **************************************************************************/
+1381          #ifdef ZNFAT_ADD_DAT
+              
+              UINT32 znFAT_Add_Dat(struct FileInfoStruct *pfi,UINT32 len,UINT8 *pbuf)
+              {
+               UINT32 i=0,counter=0,iSec,iClu;
+               UINT32 temp_sub,temp_file_size,new_clu,temp_sec;
+               struct direntry *prec;
+               if(len>0)
+               {
+                znFAT_ReadSector(pfi->Rec_Sec,znFAT_Buffer);
+                prec=(struct direntry *)(znFAT_Buffer+pfi->nRec);
+                temp_file_size=LE2BE((prec->deFileSize),4);
+                if(!temp_file_size)
+                {   
+                 if(!(new_clu=znFAT_Find_Free_Clust(0))) return 0;
+                 znFAT_Modify_FAT(new_clu,0x0fffffff);
+                 pfi->FileStartCluster=new_clu;
+                 pfi->FileCurCluster=pfi->FileStartCluster;
+                 pfi->FileSize=0;
+                 pfi->FileCurSector=SOC(pfi->FileCurCluster);
+                 pfi->FileCurPos=0;
+                 pfi->FileCurOffset=0;
+                 znFAT_ReadSector(pfi->Rec_Sec,znFAT_Buffer);
+                 (prec->deHighClust)[0]=(new_clu&0x00ff0000)>>16;
+                 (prec->deHighClust)[1]=(new_clu&0xff000000)>>24;
+                 (prec->deLowCluster)[0]=(new_clu&0x000000ff);
+                 (prec->deLowCluster)[1]=(new_clu&0x0000ff00)>>8;
+                 znFAT_WriteSector(pfi->Rec_Sec,znFAT_Buffer);
+                }
+                else
+                {
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 24  
+
+                 if(!(temp_file_size%(pArg->SectorsPerClust*pArg->BytesPerSector))) //ÔÚ´ØµÄ×îÄ©Î²ÁÙ½çµØ·½£¬ĞèÒªÑ°ÕÒĞÂ´Ø
+                 {
+                  znFAT_Seek_File(pfi,pfi->FileSize-1);
+                  if(!(new_clu=znFAT_Find_Free_Clust(0))) return 0;
+                      znFAT_Modify_FAT(pfi->FileCurCluster,new_clu);
+                  znFAT_Modify_FAT(new_clu,0x0fffffff);     
+                 }
+                 znFAT_Seek_File(pfi,pfi->FileSize);
+                }
+              
+                iSec=pfi->FileCurSector;
+              
+                znFAT_ReadSector(iSec,znFAT_Buffer);
+                for(i=pfi->FileCurPos;i<pArg->BytesPerSector;i++)
+                {
+                 znFAT_Buffer[i]=pbuf[counter];
+                 counter++;
+                 if(counter>=len) 
+                 {
+                  iSec=pfi->FileCurSector;
+                  goto end;
+                 }
+                }
+                znFAT_WriteSector(pfi->FileCurSector,znFAT_Buffer); //Êı¾İ½Ó·ì  
+                
+                if(pfi->FileCurSector-(SOC(pfi->FileCurCluster))<(pArg->SectorsPerClust-1)) //ÅĞ¶ÏÊÇ²»ÊÇÒ»¸ö´ØµÄ×îºóÒ»¸ö
+             -ÉÈÇø,ÏÈ½«µ±Ç°´ØËùÓĞÉÈÇøÌîÂú 
+                {
+                 for(iSec=pfi->FileCurSector+1;iSec<=(SOC(pfi->FileCurCluster)+pArg->SectorsPerClust-1);iSec++)
+                 {
+                  for(i=0;i<pArg->BytesPerSector;i++)
+                  {
+                       znFAT_Buffer[i]=pbuf[counter];
+                       counter++;
+                   if(counter>=len) 
+                       {
+                        goto end;
+                       }
+                  }
+                  znFAT_WriteSector(iSec,znFAT_Buffer);
+                 }
+                }
+                
+                temp_sub=len-counter;
+                for(iClu=0;iClu<temp_sub/(pArg->SectorsPerClust*pArg->BytesPerSector);iClu++)
+                {
+                 if(!(new_clu=znFAT_Find_Free_Clust(0))) return 0;
+                 znFAT_Modify_FAT(pfi->FileCurCluster,new_clu);
+                 znFAT_Modify_FAT(new_clu,0x0fffffff);
+                 pfi->FileCurCluster=new_clu;
+              
+                 temp_sec=SOC(new_clu);
+                 for(iSec=temp_sec;iSec<temp_sec+pArg->SectorsPerClust;iSec++)
+                 {
+                  for(i=0;i<pArg->BytesPerSector;i++)
+                      {
+                       znFAT_Buffer[i]=pbuf[counter];
+                       counter++;
+                      } 
+                      znFAT_WriteSector(iSec,znFAT_Buffer);
+                 }
+                }
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 25  
+
+              
+                temp_sub=len-counter;
+                if(temp_sub)
+                {
+                 if(!(new_clu=znFAT_Find_Free_Clust(0))) return 0;
+                 znFAT_Modify_FAT(pfi->FileCurCluster,new_clu);
+                 znFAT_Modify_FAT(new_clu,0x0fffffff);
+                 pfi->FileCurCluster=new_clu;
+                 temp_sec=SOC(new_clu);
+                 for(iSec=temp_sec;iSec<temp_sec+temp_sub/pArg->BytesPerSector;iSec++)
+                 {
+                  for(i=0;i<pArg->BytesPerSector;i++)
+                      {
+                       znFAT_Buffer[i]=pbuf[counter];
+                       counter++;
+                      } 
+                      znFAT_WriteSector(iSec,znFAT_Buffer);    
+                 }   
+                }
+              
+                temp_sub=len-counter;
+                if(temp_sub)
+                {
+                 for(i=0;i<pArg->BytesPerSector;i++)
+                 {
+                      znFAT_Buffer[i]=pbuf[counter];
+                      counter++;
+                 } 
+                 znFAT_WriteSector(iSec,znFAT_Buffer);   
+                }
+              end:
+                znFAT_WriteSector(iSec,znFAT_Buffer);
+                znFAT_ReadSector(pfi->Rec_Sec,znFAT_Buffer);
+                (((struct direntry *)(znFAT_Buffer+pfi->nRec))->deFileSize)[0]=((temp_file_size+len)&0x000000ff);
+                (((struct direntry *)(znFAT_Buffer+pfi->nRec))->deFileSize)[1]=((temp_file_size+len)&0x0000ff00)>>8;
+                (((struct direntry *)(znFAT_Buffer+pfi->nRec))->deFileSize)[2]=((temp_file_size+len)&0x00ff0000)>>16;
+                (((struct direntry *)(znFAT_Buffer+pfi->nRec))->deFileSize)[3]=((temp_file_size+len)&0xff000000)>>24;
+                znFAT_WriteSector(pfi->Rec_Sec,znFAT_Buffer);
+              
+                pfi->FileSize=(temp_file_size+len);
+                pfi->FileCurSector=(pfi->FileSize%pArg->BytesPerSector)?iSec:iSec+1;
+                pfi->FileCurPos=pfi->FileSize%pArg->BytesPerSector;
+                pfi->FileCurOffset=pfi->FileSize;
+               }
+               znFAT_Find_Free_Clust(1);
+               return len;
+              }
+              
+              #endif
+1522          /**************************************************************************
+1523           - ¹¦ÄÜÃèÊö£º´´½¨Ä¿Â¼(Ö§³ÖÈÎÒâ²ãÄ¿Â¼´´½¨)
+1524           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+1525           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+1526           - ²ÎÊıËµÃ÷£ºpfi:ÎŞÓÃ
+1527                       dirpath:Ä¿Â¼Â·¾¶ ±ÈÈç "\\dir1\\dir2\\dir3\\....\\dirn\\"
+1528                       ×îºó±ØĞëÊÇ\\½áÊø
+1529           - ·µ»ØËµÃ÷£º³É¹¦·µ»Ø0£¬Ê§°Ü·µ»Ø1
+1530           - ×¢£ºÈç¹ûÖĞ¼äÄ³Ò»¼¶Ä¿Â¼²»´æÔÚ£¬±ÈÈçÉÏÃæµÄÕâ¸öÂ·¾¶ÖĞdir3²»´æÔÚ£¬ÄÇÃ´´Ëº¯Êı»á
+1531                 ´´½¨Õâ¸öÄ¿Â¼£¬È»ºóÔÙ¼ÌĞøÈ¥´´½¨¸üÉî²ãµÄÄ¿Â¼
+1532                 ´´½¨Ä¿Â¼Ê§°ÜÓĞ¿ÉÄÜÊÇÒòÎª´æ´¢Éè±¸¿Õ¼ä²»×ã
+1533           **************************************************************************/
+1534          #ifdef ZNFAT_CREATE_DIR
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 26  
+
+              
+              UINT8 znFAT_Create_Dir(CONST INT8 *dirpath,UINT8 *ptd)
+              {
+               struct FileInfoStruct *pfi;
+               while(!znFAT_Enter_Dir(dirpath))
+               {
+                if(znFAT_Create_Rec(pfi,temp_dir_cluster,temp_dir_name,1,ptd)==-1)
+                {
+                 return 1;
+                }
+               }
+               return 0;
+              }
+              
+              #endif
+1550          /**************************************************************************
+1551           - ¹¦ÄÜÃèÊö£º´´½¨ÎÄ¼ş(Ö§³ÖÈÎÒâ²ãÄ¿Â¼´´½¨)
+1552           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+1553           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+1554           - ²ÎÊıËµÃ÷£ºpfi:Ò»¸öÖ¸ÏòFileInfoStructÀàĞÍµÄ½á¹¹ÌåµÄÖ¸Õë£¬ÓÃÀ´×°ÔØĞÂ´´½¨µÄ
+1555                       ÎÄ¼şĞÅÏ¢£¬Òò´ËĞÂ´´½¨µÄÎÄ¼ş²»ÓÃÔÙ´ò¿ª¾Í¿ÉÒÔÖ±½ÓÀ´²Ù×÷
+1556                       filepath:ÎÄ¼şÂ·¾¶ ±ÈÈç "\\dir1\\dir2\\dir3\\....\\dirn\\test.txt"
+1557           - ·µ»ØËµÃ÷£º0£º³É¹¦ 1£ºÎÄ¼şÒÑ´æÔÚ 2£º´´½¨ÎÄ¼şÄ¿Â¼Ê§°Ü 3£º´´½¨ÎÄ¼şÊ§°Ü
+1558           - ×¢£ºÈç¹ûÎÄ¼şÂ·¾¶ÖĞÄ³Ò»¸öÖĞ¼äÄ¿Â¼²»´æÔÚ£¬ÄÇÃ´´Ëº¯Êı»á´´½¨Õâ¸öÄ¿Â¼£¬ÔÙ¼ÌĞø
+1559                 È¥´´½¨¸üÉî²ãµÄÄ¿Â¼£¬Ò»Ö±µ½×îºó°ÑÎÄ¼ş´´½¨Íê³É¡£
+1560                 ´´½¨ÎÄ¼şÊ§°ÜÓĞ¿ÉÄÜÊÇÒòÎª´æ´¢Éè±¸¿Õ¼ä²»×ã£¬»òÊÇ´ËÎÄ¼şÒÑ¾­´æÔÚ
+1561           **************************************************************************/
+1562          #ifdef ZNFAT_CREATE_FILE
+              
+              UINT8 znFAT_Create_File(struct FileInfoStruct *pfi,CONST INT8 *filepath,UINT8 *ptd)
+              {
+               if(znFAT_Open_File(pfi,filepath,0,1))
+               { 
+                if(!znFAT_Create_Dir(filepath,ptd))
+                {
+                 if(znFAT_Create_Rec(pfi,temp_dir_cluster,temp_dir_name,0,ptd)==-1)
+                 {
+                  return 3;
+                 }    
+                }
+                else
+                {
+                 return 2;   
+                }
+               }
+               else
+               {
+                return 1;
+               }
+               return 0;
+              }
+              
+              #endif
+1588          /**************************************************************************
+1589           - ¹¦ÄÜÃèÊö£ºÉ¾³ıÎÄ¼ş(Ö§³ÖÈÎÒâ²ãÄ¿Â¼)
+1590           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+1591           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+1592           - ²ÎÊıËµÃ÷£ºfilepath:ÎÄ¼şÂ·¾¶ ±ÈÈç "\\dir1\\dir2\\dir3\\....\\dirn\\test.txt"
+1593           - ·µ»ØËµÃ÷£º1:ÎÄ¼ş»òÄ¿Â¼Â·¾¶²»´æÔÚ 0:³É¹¦
+1594           - ×¢£ºÉ¾³ıºóµÄÎÄ¼şµÄFAT±íÖĞµÄ´ØÁ´¹ØÏµÍêÈ«±»ÆÆ»µ
+1595           **************************************************************************/
+1596          #ifdef ZNFAT_DEL_FILE
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 27  
+
+              
+              UINT8 znFAT_Del_File(CONST INT8 *filepath)
+              {
+               UINT32 cur_clu,next_clu;
+               struct FileInfoStruct fi;
+               
+               if(znFAT_Open_File(&fi,filepath,0,1))
+               {
+                return 1;
+               }
+               znFAT_ReadSector(fi.Rec_Sec,znFAT_Buffer);
+               *(znFAT_Buffer+fi.nRec)=0xe5;
+               znFAT_WriteSector(fi.Rec_Sec,znFAT_Buffer);
+               
+               if(cur_clu=fi.FileStartCluster)
+               {
+                if(cur_clu<Search_Last_Usable_Cluster()) 
+                 znFAT_Update_FSInfo_Last_Clu(cur_clu);
+                znFAT_Update_FSInfo_Free_Clu(1);
+                next_clu=znFAT_GetNextCluster(cur_clu);
+                while(next_clu!=0x0fffffff)
+                {
+                 znFAT_Update_FSInfo_Free_Clu(1);
+                 znFAT_Modify_FAT(cur_clu,0x00000000);
+                 cur_clu=next_clu;
+                 next_clu=znFAT_GetNextCluster(cur_clu);
+                }
+                znFAT_Modify_FAT(cur_clu,0x00000000);
+               }
+               return 0;
+              }
+              
+              #endif
+1630          /**************************************************************************
+1631           - ¹¦ÄÜÃèÊö£ºÎÄ¼ş¿½±´(Ô´ÎÄ¼şÂ·¾¶ÓëÄ¿±êÎÄ¼şÂ·¾¶¾ùÖ§³ÖÈÎÒâÉî²ãÄ¿Â¼£¬²¢ÇÒÖ§³Ö
+1632                       ÎÄ¼şÃûÍ¨Åä)
+1633           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+1634           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+1635           - ²ÎÊıËµÃ÷£ºpArg1:ÊÇÔ´ÎÄ¼şËùÔÚµÄ´æ´¢Éè±¸µÄ³õÊ¼²ÎÊı½á¹¹ÌåµÄÖ¸Õë
+1636                       pArg2:ÊÇÄ¿±êÎÄ¼şËùÔÚµÄ´æ´¢Éè±¸µÄ³õÊ¼²ÎÊı½á¹¹ÌåµÄÖ¸Õë
+1637                       sfilename:Ô´ÎÄ¼şÂ·¾¶£¬Ò²¾ÍÊÇ¿½±´²Ù×÷µÄÊı¾İÔ´
+1638                       tfilename:Ä¿±êÎÄ¼şÂ·¾¶£¬Ò²¾ÍÊÇÊı¾İ×îÖÕµ½Ğ´ÈëµÄÎÄ¼ş
+1639                                 ±ÈÈç "\\dir1\\dir2\\dir3\\....\\dirn\\test.txt" 
+1640                       file_buf:¿½±´¹ı³ÌÖĞÒªÓÃµ½µÄÊı¾İ»º³åÇø£¬´Ë»º³åÇøÈİÁ¿Ô½´ó£¬
+1641                                ¿½±´ËÙ¶ÈÔ½¿ì
+1642                       buf_size:Êı¾İ»º³åÇøµÄ´óĞ¡ 
+1643           - ·µ»ØËµÃ÷£º1:Ä¿Â¼ÎÄ¼ş´´½¨Ê§°Ü 2:Ô´ÎÄ¼ş´ò¿ª´ò°Ü 0:³É¹¦
+1644           - ×¢£º´Ëº¯ÊıÖ§³Ö¶àÉè±¸Ö®¼äµÄÎÄ¼ş¿½±´£¬pArg1ÓëpArg2ÒıÈëÁËÔ´´æ´¢Éè±¸ÓëÄ¿µÄ
+1645                 ´æ´¢Éè±¸µÄ³õÊ¼²ÎÊıĞÅÏ¢£¬´Ó¶ø¿ÉÒÔÍ¬Ê±¶ÔÁ½¸ö´æ´¢Éè±¸½øĞĞ²Ù×÷¡£
+1646                     znFAT 5.01°æ¿ªÊ¼Ö§³Ö¶àÉè±¸£¬¶àÉè±¸¼äµÄÏà»¥Êı¾İ¿½±´ÊÇ×îµäĞÍµÄÓ¦ÓÃ
+1647           **************************************************************************/
+1648          #ifdef ZNFAT_XCOPY_FILE
+              
+              UINT8 znFAT_XCopy_File(struct znFAT_Init_Arg *pArg1,struct znFAT_Init_Arg *pArg2,CONST INT8 *sfilename,CON
+             -ST INT8 *tfilename,UINT8 *file_buf,UINT32 buf_size,UINT8 *pt)
+              {
+               struct FileInfoStruct FileInfo2,FileInfo1;
+               struct znFAT_Init_Arg *pArg_temp;
+               UINT32 i;
+              
+               pArg_temp=pArg; //°ÑpArgÔ­À´µÄÖ¸Ïò¸³¸øÖĞ¼ä±äÁ¿
+              
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 28  
+
+               pArg=pArg2;Dev_No=pArg->DEV_No; //±ê¶¨Ä¿±ê´æ´¢Éè±¸
+               if(znFAT_Create_File(&FileInfo1,tfilename,pt)) return 1; //ÔÚÄ¿±ê´æ´¢Éè±¸ÉÏ´´½¨Ä¿±êÎÄ¼ş
+              
+               pArg=pArg1;Dev_No=pArg->DEV_No; //±ê¶¨Ô´´æ´¢Éè±¸
+               if(znFAT_Open_File(&FileInfo2,sfilename,0,1)) return 2;  //ÔÚÔ´´æ´¢Éè±¸ÉÏ´ò¿ªÔ´ÎÄ¼ş
+              
+               for(i=0;i<FileInfo2.FileSize/buf_size;i++)  
+               {
+                pArg=pArg1;Dev_No=pArg->DEV_No; //±ê¶¨Ô´´æ´¢Éè±¸ 
+                znFAT_Read_File(&FileInfo2,i*buf_size,buf_size,file_buf);     //¶ÁÔ´´æ´¢Éè±¸ÉÏµÄÔ´ÎÄ¼şÊı¾İµ½Êı¾İ»º³åÇø
+              
+                pArg=pArg2;Dev_No=pArg->DEV_No;       //±ê¶¨Ä¿±ê´æ´¢Éè±¸ 
+                znFAT_Add_Dat(&FileInfo1,buf_size,file_buf); //½«Êı¾İ¼¶³åÇøµÄÊı¾İĞ´Èëµ½Ä¿±êÎÄ¼şÖĞ
+               }
+              
+               pArg=pArg1;Dev_No=pArg->DEV_No; //±ê¶¨Ô´´æ´¢Éè±¸ 
+               znFAT_Read_File(&FileInfo2,i*buf_size,FileInfo2.FileSize%buf_size,file_buf);//¶ÁÈ¡×îºóµÄÎÄ¼şÓàÁ¿
+              
+               pArg=pArg2;Dev_No=pArg->DEV_No; //±ê¶¨Ä¿±ê´æ´¢Éè±¸
+               znFAT_Add_Dat(&FileInfo1,FileInfo2.FileSize%buf_size,file_buf); //½«×îºóµÄÓàÁ¿Êı¾İĞ´Èëµ½Ä¿±êÎÄ¼şÖĞ
+              
+               pArg=pArg_temp; //½«pArg»Ö¸´
+              
+               return 0;
+              }
+              
+              #endif
+1685          /**************************************************************************
+1686           - ¹¦ÄÜÃèÊö£ºÎÄ¼şÖØÃüÃû
+1687           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+1688           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+1689           - ²ÎÊıËµÃ÷£ºfilename:½«ÒªÖØÃüÃûµÄÔ´ÎÄ¼şµÄÂ·¾¶ Èç\a.txt
+1690                       newfilename:Ä¿±êÎÄ¼şÃû Èçb.txt (×¢Ä¿±êÎÄ¼şÃûÊÇµ¥´¿µÄÎÄ¼şÃû£¬
+1691                                   ²»º¬Â·¾¶)
+1692           - ·µ»ØËµÃ÷£º1:Ô´ÎÄ¼ş´ò¿ª´ò°Ü 0:³É¹¦
+1693           - ×¢£ºÎŞ
+1694           **************************************************************************/
+1695          #ifdef ZNFAT_RENAME_FILE
+              
+              UINT8 znFAT_Rename_File(CONST INT8 *filename,CONST INT8 *newfilename)
+              {
+               struct FileInfoStruct fi;
+               UINT8 i=0,j=0;
+               if(znFAT_Open_File(&fi,filename,0,1)) return 1; //ÎÄ¼ş´ò¿ªÊ§°Ü
+               znFAT_ReadSector(fi.Rec_Sec,znFAT_Buffer);
+               for(i=0;i<11;i++) (znFAT_Buffer+fi.nRec)[i]=0x20;
+               i=0;
+               while(newfilename[i]!='.')
+               {
+                (znFAT_Buffer+fi.nRec)[i]=L2U(newfilename[i]);
+                i++;
+               }
+               i++;
+               while(newfilename[i])
+               {
+                (znFAT_Buffer+fi.nRec+8)[j]=L2U(newfilename[i]);
+                i++;j++;
+               }
+               znFAT_WriteSector(fi.Rec_Sec,znFAT_Buffer);
+               return 0;
+              }
+              
+C51 COMPILER V8.02   ZNFAT                                                                 04/22/2011 18:12:40 PAGE 29  
+
+              #endif
+1721          /**************************************************************************
+1722           - ¹¦ÄÜÃèÊö£ºÎÄ¼ş¹Ø±Õ
+1723           - Á¥ÊôÄ£¿é£ºznFATÎÄ¼şÏµÍ³Ä£¿é
+1724           - º¯ÊıÊôĞÔ£ºÍâ²¿£¬Ê¹ÓÃ»§Ê¹ÓÃ
+1725           - ²ÎÊıËµÃ÷£ºpfi:Ö¸Ïòµ±Ç°´ò¿ªµÄÎÄ¼şµÄÎÄ¼şĞÅÏ¢½á¹¹
+1726           - ·µ»ØËµÃ÷£º0:³É¹¦
+1727           - ×¢£ºÎŞ
+1728           **************************************************************************/
+1729          #ifdef ZNFAT_FILE_CLOSE
+              
+              UINT8 znFAT_File_Close(struct FileInfoStruct *pfi)
+              {
+               UINT16 i=0;                                                    
+               for(i=0;i<sizeof(struct FileInfoStruct);i++)
+               {
+                ((UINT8 *)pfi)[i]=0;
+               }
+               return 0;
+              }
+              
+              #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =  10623    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    565     227
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

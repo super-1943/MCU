@@ -1,0 +1,465 @@
+BL51 BANKED LINKER/LOCATER V6.00                                                        06/05/2011  20:09:24  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.00, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, Text1.obj, serial.obj, wireless.obj TO tusb2136 RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  Text1.obj (TEXT1)
+  serial.obj (SERIAL)
+  wireless.obj (WIRELESS)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDPTR)
+
+
+LINK MAP OF MODULE:  tusb2136 (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0014H     UNIT         ?DT?WIRELESS
+            DATA    001CH     0003H     UNIT         ?DT?_NRF24L01_TXPACKET?WIRELESS
+                    001FH     0001H                  *** GAP ***
+            DATA    0020H     0002H     BIT_ADDR     ?BA?WIRELESS
+            DATA    0022H     000AH     UNIT         _DATA_GROUP_
+            DATA    002CH     0008H     UNIT         ?DT?TEXT1
+            IDATA   0034H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0097H     UNIT         ?PR?MAIN?TEXT1
+            CODE    009AH     008CH     UNIT         ?C_C51STARTUP
+            CODE    0126H     0051H     UNIT         ?PR?INIT_NRF24L01?WIRELESS
+            CODE    0177H     0049H     UNIT         ?PR?_SPI_WRITE_BUF?WIRELESS
+            CODE    01C0H     003FH     UNIT         ?PR?_RS232_PRINTHEX?SERIAL
+            CODE    01FFH     0031H     UNIT         ?PR?_SPI_RW?WIRELESS
+            CODE    0230H     002BH     UNIT         ?PR?_NRF24L01_TXPACKET?WIRELESS
+            CODE    025BH     0028H     UNIT         ?CO?TEXT1
+            CODE    0283H     0028H     UNIT         ?PR?_RS232_PRINTSTR?SERIAL
+            CODE    02ABH     0023H     UNIT         ?C_INITSEG
+            CODE    02CEH     0019H     UNIT         ?PR?RS232_INIT?SERIAL
+            CODE    02E7H     0019H     UNIT         ?PR?_SPI_RW_REG?WIRELESS
+            CODE    0300H     0019H     UNIT         ?C?LIB_CODE
+            CODE    0319H     0014H     UNIT         ?PR?_DELAY_MS?TEXT1
+            CODE    032DH     000BH     UNIT         ?PR?_INERDELAY_US?WIRELESS
+            CODE    0338H     0008H     UNIT         ?PR?RS232_GETCHAR?SERIAL
+            CODE    0340H     0008H     UNIT         ?PR?_RS232_PUTCHAR?SERIAL
+            CODE    0348H     0005H     UNIT         ?CO?SERIAL
+
+
+
+OVERLAY MAP OF MODULE:   tusb2136 (?C_STARTUP)
+
+
+BL51 BANKED LINKER/LOCATER V6.00                                                      06/05/2011  20:09:24  PAGE 2
+
+
+SEGMENT                                   DATA_GROUP 
+  +--> CALLED SEGMENT                   START    LENGTH
+-------------------------------------------------------
+?C_C51STARTUP                           -----    -----
+  +--> ?PR?MAIN?TEXT1
+  +--> ?C_INITSEG
+
+?PR?MAIN?TEXT1                          0022H    0001H
+  +--> ?PR?INIT_NRF24L01?WIRELESS
+  +--> ?PR?RS232_INIT?SERIAL
+  +--> ?CO?TEXT1
+  +--> ?PR?_RS232_PRINTSTR?SERIAL
+  +--> ?PR?_DELAY_MS?TEXT1
+  +--> ?PR?_SPI_RW_REG?WIRELESS
+  +--> ?PR?_SPI_RW?WIRELESS
+  +--> ?PR?_RS232_PRINTHEX?SERIAL
+
+?PR?INIT_NRF24L01?WIRELESS              -----    -----
+  +--> ?PR?_INERDELAY_US?WIRELESS
+  +--> ?PR?_SPI_WRITE_BUF?WIRELESS
+  +--> ?PR?_SPI_RW_REG?WIRELESS
+
+?PR?_SPI_WRITE_BUF?WIRELESS             0023H    0007H
+  +--> ?PR?_SPI_RW?WIRELESS
+
+?PR?_SPI_RW?WIRELESS                    002AH    0002H
+
+?PR?_SPI_RW_REG?WIRELESS                -----    -----
+  +--> ?PR?_SPI_RW?WIRELESS
+
+?PR?_RS232_PRINTSTR?SERIAL              0023H    0003H
+
+?PR?_RS232_PRINTHEX?SERIAL              -----    -----
+  +--> ?CO?SERIAL
+  +--> ?PR?_RS232_PRINTSTR?SERIAL
+  +--> ?PR?_RS232_PUTCHAR?SERIAL
+
+
+
+SYMBOL TABLE OF MODULE:  tusb2136 (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:009AH         SEGMENT       ?C_C51STARTUP
+  I:0034H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:009DH         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+BL51 BANKED LINKER/LOCATER V6.00                                                      06/05/2011  20:09:24  PAGE 3
+
+
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:009AH         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:009AH         LINE#         133
+  C:009CH         LINE#         134
+  C:009DH         LINE#         135
+  C:009EH         LINE#         136
+  C:00A0H         LINE#         185
+  C:00A3H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        TEXT1
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  B:00A0H.0       PUBLIC        CE
+  D:00A8H         PUBLIC        IE
+  D:00B8H         PUBLIC        IP
+  C:0003H         PUBLIC        main
+  C:0319H         PUBLIC        _delay_ms
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  B:00A0H.1       PUBLIC        CSN
+  D:00C8H         PUBLIC        T2CON
+  B:00A0H.5       PUBLIC        IRQ
+  D:00D0H         PUBLIC        PSW
+  D:002CH         PUBLIC        buffer
+  -------         PROC          _DELAY_MS
+  D:0006H         SYMBOL        k
+  -------         DO            
+  D:0005H         SYMBOL        i
+  D:0004H         SYMBOL        j
+  -------         ENDDO         
+  C:0319H         LINE#         102
+  C:0319H         LINE#         103
+  C:0319H         LINE#         105
+  C:031DH         LINE#         106
+  C:031FH         LINE#         107
+  C:032CH         LINE#         108
+  -------         ENDPROC       _DELAY_MS
+  -------         PROC          MAIN
+  -------         DO            
+  D:0022H         SYMBOL        tmp
+  -------         ENDDO         
+  C:0003H         LINE#         111
+BL51 BANKED LINKER/LOCATER V6.00                                                      06/05/2011  20:09:24  PAGE 4
+
+
+  C:0003H         LINE#         112
+  C:0003H         LINE#         114
+  C:0006H         LINE#         115
+  C:0009H         LINE#         117
+  C:000CH         LINE#         118
+  C:0015H         LINE#         119
+  C:001CH         LINE#         122
+  C:001CH         LINE#         124
+  C:001CH         LINE#         125
+  C:001EH         LINE#         126
+  C:0025H         LINE#         127
+  C:0027H         LINE#         128
+  C:002EH         LINE#         129
+  C:0030H         LINE#         130
+  C:0039H         LINE#         131
+  C:003BH         LINE#         132
+  C:003EH         LINE#         133
+  C:003EH         LINE#         134
+  C:003EH         LINE#         135
+  C:0041H         LINE#         136
+  C:0043H         LINE#         137
+  C:0045H         LINE#         138
+  C:004CH         LINE#         139
+  C:0054H         LINE#         140
+  C:0056H         LINE#         141
+  C:005FH         LINE#         142
+  C:0064H         LINE#         143
+  C:006DH         LINE#         147
+  C:006FH         LINE#         148
+  C:0078H         LINE#         149
+  C:007AH         LINE#         150
+  C:0083H         LINE#         151
+  C:0088H         LINE#         152
+  C:0091H         LINE#         153
+  C:0098H         LINE#         156
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        TEXT1
+
+  -------         MODULE        SERIAL
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  B:00A8H.7       PUBLIC        EA
+  D:00A8H         PUBLIC        IE
+  C:02CEH         PUBLIC        rs232_init
+  B:00A8H.4       PUBLIC        ES
+  D:00B8H         PUBLIC        IP
+  B:0098H.0       PUBLIC        RI
+  B:0098H.1       PUBLIC        TI
+  D:0099H         PUBLIC        SBUF
+  D:0087H         PUBLIC        PCON
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  C:01C0H         PUBLIC        _rs232_printhex
+  C:0340H         PUBLIC        _rs232_putchar
+  C:0338H         PUBLIC        rs232_getchar
+BL51 BANKED LINKER/LOCATER V6.00                                                      06/05/2011  20:09:24  PAGE 5
+
+
+  C:0283H         PUBLIC        _rs232_printstr
+  D:008DH         PUBLIC        TH1
+  D:008BH         PUBLIC        TL1
+  B:0088H.6       PUBLIC        TR1
+  D:00C8H         PUBLIC        T2CON
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          RS232_INIT
+  C:02CEH         LINE#         14
+  C:02CEH         LINE#         15
+  C:02CEH         LINE#         16
+  C:02D1H         LINE#         17
+  C:02D4H         LINE#         18
+  C:02D7H         LINE#         19
+  C:02DAH         LINE#         20
+  C:02DDH         LINE#         21
+  C:02E0H         LINE#         22
+  C:02E2H         LINE#         23
+  C:02E4H         LINE#         24
+  C:02E6H         LINE#         25
+  -------         ENDPROC       RS232_INIT
+  -------         PROC          RS232_GETCHAR
+  -------         DO            
+  D:0007H         SYMBOL        b
+  -------         ENDDO         
+  C:0338H         LINE#         26
+  C:0338H         LINE#         27
+  C:0338H         LINE#         29
+  C:033BH         LINE#         30
+  C:033DH         LINE#         31
+  C:033FH         LINE#         32
+  C:033FH         LINE#         33
+  -------         ENDPROC       RS232_GETCHAR
+  -------         PROC          _RS232_PUTCHAR
+  D:0007H         SYMBOL        txd
+  C:0340H         LINE#         34
+  C:0340H         LINE#         35
+  C:0340H         LINE#         36
+  C:0342H         LINE#         37
+  C:0345H         LINE#         38
+  C:0347H         LINE#         39
+  -------         ENDPROC       _RS232_PUTCHAR
+  -------         PROC          _RS232_PRINTSTR
+  D:0023H         SYMBOL        str
+  C:0283H         LINE#         40
+  C:0289H         LINE#         41
+  C:0289H         LINE#         42
+  C:0294H         LINE#         43
+  C:0294H         LINE#         44
+  C:02A3H         LINE#         45
+  C:02A6H         LINE#         46
+  C:02A8H         LINE#         47
+  C:02AAH         LINE#         48
+  -------         ENDPROC       _RS232_PRINTSTR
+  -------         PROC          _RS232_PRINTHEX
+  D:0006H         SYMBOL        b
+  -------         DO            
+  D:0005H         SYMBOL        hexvalue
+BL51 BANKED LINKER/LOCATER V6.00                                                      06/05/2011  20:09:24  PAGE 6
+
+
+  -------         ENDDO         
+  C:01C0H         LINE#         49
+  C:01C2H         LINE#         50
+  C:01C2H         LINE#         53
+  C:01CBH         LINE#         55
+  C:01D2H         LINE#         56
+  C:01D8H         LINE#         57
+  C:01D8H         LINE#         58
+  C:01DAH         LINE#         59
+  C:01DCH         LINE#         61
+  C:01DCH         LINE#         62
+  C:01E2H         LINE#         63
+  C:01E2H         LINE#         64
+  C:01E6H         LINE#         65
+  C:01ECH         LINE#         66
+  C:01ECH         LINE#         67
+  C:01EEH         LINE#         68
+  C:01F0H         LINE#         70
+  C:01F0H         LINE#         71
+  C:01F6H         LINE#         72
+  C:01F6H         LINE#         74
+  -------         ENDPROC       _RS232_PRINTHEX
+  -------         ENDMOD        SERIAL
+
+  -------         MODULE        WIRELESS
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  C:0230H         PUBLIC        _nRF24L01_TxPacket
+  B:00A0H.0       PUBLIC        CE
+  D:00A8H         PUBLIC        IE
+  C:0126H         PUBLIC        init_NRF24L01
+  D:0008H         PUBLIC        RX_ADDRESS
+  D:0012H         PUBLIC        TX_ADDRESS
+  D:00B8H         PUBLIC        IP
+  B:0020H.6       PUBLIC        RX_DR
+  B:0020H.5       PUBLIC        TX_DS
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  B:00A0H.4       PUBLIC        MISO
+  B:00A0H.3       PUBLIC        MOSI
+  C:017EH         PUBLIC        _SPI_Write_Buf
+  D:0020H         PUBLIC        sta
+  C:032DH         PUBLIC        _inerDelay_us
+  C:02E7H         PUBLIC        _SPI_RW_Reg
+  C:01FFH         PUBLIC        _SPI_RW
+  B:00A0H.2       PUBLIC        SCK
+  B:00A0H.1       PUBLIC        CSN
+  D:00C8H         PUBLIC        T2CON
+  B:0020H.4       PUBLIC        MAX_RT
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _INERDELAY_US
+  D:0007H         SYMBOL        n
+  C:032DH         LINE#         34
+  C:032DH         LINE#         35
+  C:032DH         LINE#         36
+BL51 BANKED LINKER/LOCATER V6.00                                                      06/05/2011  20:09:24  PAGE 7
+
+
+  C:0333H         LINE#         37
+  C:0337H         LINE#         38
+  -------         ENDPROC       _INERDELAY_US
+  -------         PROC          INIT_NRF24L01
+  C:0126H         LINE#         42
+  C:0126H         LINE#         43
+  C:0126H         LINE#         44
+  C:012BH         LINE#         45
+  C:012DH         LINE#         46
+  C:012FH         LINE#         47
+  C:0131H         LINE#         48
+  C:013FH         LINE#         49
+  C:0146H         LINE#         52
+  C:014DH         LINE#         53
+  C:0154H         LINE#         54
+  C:015BH         LINE#         55
+  C:0162H         LINE#         56
+  C:0169H         LINE#         57
+  C:0170H         LINE#         58
+  -------         ENDPROC       INIT_NRF24L01
+  -------         PROC          _SPI_RW
+  D:002AH         SYMBOL        uchar
+  -------         DO            
+  D:0002H         SYMBOL        bit_ctr
+  -------         ENDDO         
+  C:01FFH         LINE#         64
+  C:0203H         LINE#         65
+  C:0203H         LINE#         67
+  C:0206H         LINE#         68
+  C:0206H         LINE#         69
+  C:020BH         LINE#         70
+  C:0216H         LINE#         71
+  C:0218H         LINE#         72
+  C:021EH         LINE#         73
+  C:0220H         LINE#         74
+  C:022BH         LINE#         75
+  C:022FH         LINE#         76
+  -------         ENDPROC       _SPI_RW
+  -------         PROC          _SPI_RW_REG
+  D:0007H         SYMBOL        reg
+  D:0005H         SYMBOL        value
+  -------         DO            
+  D:0082H         SYMBOL        status
+  -------         ENDDO         
+  C:02E7H         LINE#         80
+  C:02E7H         LINE#         81
+  C:02E7H         LINE#         84
+  C:02E9H         LINE#         85
+  C:02F2H         LINE#         86
+  C:02F9H         LINE#         87
+  C:02FBH         LINE#         89
+  C:02FFH         LINE#         90
+  -------         ENDPROC       _SPI_RW_REG
+  -------         PROC          L?0019
+  -------         ENDPROC       L?0019
+  -------         PROC          _SPI_WRITE_BUF
+  D:0007H         SYMBOL        reg
+BL51 BANKED LINKER/LOCATER V6.00                                                      06/05/2011  20:09:24  PAGE 8
+
+
+  D:0024H         SYMBOL        pBuf
+  D:0027H         SYMBOL        uchars
+  -------         DO            
+  D:0028H         SYMBOL        status
+  D:0004H         SYMBOL        uchar_ctr
+  -------         ENDDO         
+  C:017EH         LINE#         95
+  C:0184H         LINE#         96
+  C:0184H         LINE#         99
+  C:0186H         LINE#         100
+  C:018FH         LINE#         101
+  C:019BH         LINE#         102
+  C:01B9H         LINE#         103
+  C:01BBH         LINE#         104
+  C:01BFH         LINE#         105
+  -------         ENDPROC       _SPI_WRITE_BUF
+  -------         PROC          _NRF24L01_TXPACKET
+  D:001CH         SYMBOL        tx_buf
+  C:0230H         LINE#         110
+  C:0236H         LINE#         111
+  C:0236H         LINE#         112
+  C:0238H         LINE#         113
+  C:023FH         LINE#         114
+  C:024DH         LINE#         115
+  C:0254H         LINE#         116
+  C:0256H         LINE#         117
+  -------         ENDPROC       _NRF24L01_TXPACKET
+  -------         ENDMOD        WIRELESS
+
+  -------         MODULE        ?C?CLDPTR
+  C:0300H         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_NRF24L01_TXPACKET?WIRELESS
+
+Program Size: data=52.0 xdata=0 code=845
+LINK/LOCATE RUN COMPLETE.  2 WARNING(S),  0 ERROR(S)

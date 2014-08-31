@@ -1,0 +1,89 @@
+C51 COMPILER V8.02   PDIUSBD12                                                             12/08/2009 08:17:53 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE PDIUSBD12
+OBJECT MODULE PLACED IN PDIUSBD12.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE PDIUSBD12.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "AT89x52.H"
+   2          #include "My_type.h"
+   3          #include "PDIUSBD12.H"
+   4          
+   5          
+   6          #define USB_COMMAND_ADD           1
+   7          #define USB_DATA_ADD              0
+   8          
+   9          //USB芯片连接引脚
+  10          #define USB_DATA                  P0
+  11          #define USB_A0                    P3_5
+  12          #define USB_WR                    P3_6
+  13          #define USB_RD                    P3_7
+  14          #define USB_INT                   P3_2
+  15          
+  16          /********************************************************************
+  17          函数功能：写USB命令。
+  18          入口参数：一字节命令。
+  19          返    回：无。
+  20          备    注：无。
+  21          ********************************************************************/
+  22          void WriteUsbCommand(uint8 usb_command)
+  23          {
+  24   1              USB_A0=USB_COMMAND_ADD;
+  25   1              USB_DATA=usb_command;
+  26   1              USB_WR=0;
+  27   1              USB_WR=1;
+  28   1              USB_DATA=0xFF;
+  29   1      }
+  30          ////////////////////////End of function//////////////////////////////
+  31          
+  32          /********************************************************************
+  33          函数功能：读一字节USB数据。
+  34          入口参数：无。
+  35          返    回：读回的一字节。
+  36          备    注：无。
+  37          ********************************************************************/
+  38          uint8 ReadUsbData(void)
+  39          {
+  40   1              uint8 temp;
+  41   1              USB_A0=USB_DATA_ADD;
+  42   1              USB_RD=0;
+  43   1              temp=USB_DATA;
+  44   1              USB_RD=1;
+  45   1              return temp;
+  46   1      }
+  47          ////////////////////////End of function//////////////////////////////
+  48          
+  49          /********************************************************************
+  50          函数功能：读D12的ID。
+  51          入口参数：无。
+  52          返    回：D12的ID。
+  53          备    注：无。
+  54          ********************************************************************/
+  55          uint16 ReadD12ID(void)
+C51 COMPILER V8.02   PDIUSBD12                                                             12/08/2009 08:17:53 PAGE 2   
+
+  56          {
+  57   1              uint16 id;
+  58   1              WriteUsbCommand(Read_ID);
+  59   1              ((uint8*)&id)[1]=ReadUsbData();
+  60   1              ((uint8*)&id)[0]=ReadUsbData();
+  61   1              return id;
+  62   1      }
+  63          ////////////////////////End of function//////////////////////////////
+  64          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     41    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

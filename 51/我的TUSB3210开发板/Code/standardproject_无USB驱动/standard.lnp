@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"main.obj" 
+TO "standard" 
+RAMSIZE(256) 

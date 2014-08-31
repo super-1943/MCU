@@ -1,0 +1,486 @@
+BL51 BANKED LINKER/LOCATER V6.00                                                        05/07/2011  15:25:07  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.00, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, main.obj TO TUSB2136 RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  main.obj (MAIN)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CSTPTR)
+
+
+LINK MAP OF MODULE:  TUSB2136 (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0013H     UNIT         _DATA_GROUP_
+            IDATA   001BH     0032H     UNIT         ?ID?MAIN
+            IDATA   004DH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     00EAH     UNIT         ?PR?LOAD_PROGRAM?MAIN
+            CODE    00EDH     00E5H     UNIT         ?CO?MAIN
+            CODE    01D2H     00A5H     UNIT         ?PR?_READ_CONTENT?MAIN
+            CODE    0277H     0097H     UNIT         ?PR?_WRITE_CONTENT?MAIN
+            CODE    030EH     0074H     UNIT         ?PR?MAIN?MAIN
+            CODE    0382H     003FH     UNIT         ?PR?_RS232_PRINTHEX?MAIN
+            CODE    03C1H     002EH     UNIT         ?PR?_RS232_PRINTSTR?MAIN
+            CODE    03EFH     002BH     UNIT         ?C?LIB_CODE
+            CODE    041AH     0017H     UNIT         ?PR?IIC_WAITFORWRITE?MAIN
+            CODE    0431H     0015H     UNIT         ?PR?RS232_INIT?MAIN
+            CODE    0446H     0014H     UNIT         ?PR?_DELAY_MS?MAIN
+            CODE    045AH     0013H     UNIT         ?PR?IIC_WAITFORREAD?MAIN
+            CODE    046DH     000CH     UNIT         ?C_C51STARTUP
+            CODE    0479H     0008H     UNIT         ?PR?RS232_GETCHAR?MAIN
+            CODE    0481H     0008H     UNIT         ?PR?_RS232_PUTCHAR?MAIN
+
+
+
+OVERLAY MAP OF MODULE:   TUSB2136 (?C_STARTUP)
+
+
+SEGMENT                             DATA_GROUP 
+  +--> CALLED SEGMENT             START    LENGTH
+-------------------------------------------------
+?C_C51STARTUP                     -----    -----
+  +--> ?PR?MAIN?MAIN
+
+?PR?MAIN?MAIN                     0008H    0002H
+  +--> ?PR?RS232_INIT?MAIN
+  +--> ?CO?MAIN
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/07/2011  15:25:07  PAGE 2
+
+
+  +--> ?PR?_RS232_PRINTSTR?MAIN
+  +--> ?PR?_READ_CONTENT?MAIN
+  +--> ?PR?_RS232_PRINTHEX?MAIN
+  +--> ?PR?_DELAY_MS?MAIN
+  +--> ?PR?LOAD_PROGRAM?MAIN
+
+?PR?_RS232_PRINTSTR?MAIN          0018H    0003H
+  +--> ?CO?MAIN
+
+?PR?_READ_CONTENT?MAIN            000AH    0008H
+  +--> ?PR?IIC_WAITFORWRITE?MAIN
+  +--> ?CO?MAIN
+  +--> ?PR?IIC_WAITFORREAD?MAIN
+  +--> ?PR?_RS232_PRINTSTR?MAIN
+
+?PR?_RS232_PRINTHEX?MAIN          -----    -----
+  +--> ?CO?MAIN
+  +--> ?PR?_RS232_PRINTSTR?MAIN
+  +--> ?PR?_RS232_PUTCHAR?MAIN
+
+?PR?LOAD_PROGRAM?MAIN             000AH    0006H
+  +--> ?CO?MAIN
+  +--> ?PR?_RS232_PRINTSTR?MAIN
+  +--> ?PR?_RS232_PRINTHEX?MAIN
+  +--> ?PR?_WRITE_CONTENT?MAIN
+  +--> ?PR?_DELAY_MS?MAIN
+
+?PR?_WRITE_CONTENT?MAIN           0010H    0008H
+  +--> ?PR?IIC_WAITFORWRITE?MAIN
+  +--> ?CO?MAIN
+  +--> ?PR?_RS232_PRINTSTR?MAIN
+
+
+
+SYMBOL TABLE OF MODULE:  TUSB2136 (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:046DH         SEGMENT       ?C_C51STARTUP
+  I:004DH         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0470H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/07/2011  15:25:07  PAGE 3
+
+
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:046DH         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:046DH         LINE#         133
+  C:046FH         LINE#         134
+  C:0470H         LINE#         135
+  C:0471H         LINE#         136
+  C:0473H         LINE#         185
+  C:0476H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:0003H         PUBLIC        load_program
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  D:00A8H         PUBLIC        IE
+  C:0431H         PUBLIC        rs232_init
+  D:00B8H         PUBLIC        IP
+  B:0098H.0       PUBLIC        RI
+  B:0098H.1       PUBLIC        TI
+  C:0176H         PUBLIC        array
+  C:030EH         PUBLIC        main
+  D:0099H         PUBLIC        SBUF
+  D:0087H         PUBLIC        PCON
+  C:0446H         PUBLIC        _delay_ms
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  C:0382H         PUBLIC        _rs232_printhex
+  C:045AH         PUBLIC        iic_waitforread
+  C:0481H         PUBLIC        _rs232_putchar
+  C:0479H         PUBLIC        rs232_getchar
+  C:041EH         PUBLIC        iic_waitforwrite
+  C:03C7H         PUBLIC        _rs232_printstr
+  D:008DH         PUBLIC        TH1
+  D:008BH         PUBLIC        TL1
+  B:0088H.6       PUBLIC        TR1
+  C:01D2H         PUBLIC        _read_content
+  D:00C8H         PUBLIC        T2CON
+  C:0277H         PUBLIC        _write_content
+  D:00D0H         PUBLIC        PSW
+  I:001BH         PUBLIC        buffer
+  -------         PROC          RS232_INIT
+  C:0431H         LINE#         10
+  C:0431H         LINE#         11
+  C:0431H         LINE#         12
+  C:0434H         LINE#         13
+  C:0437H         LINE#         14
+  C:043AH         LINE#         15
+  C:043DH         LINE#         16
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/07/2011  15:25:07  PAGE 4
+
+
+  C:0440H         LINE#         17
+  C:0443H         LINE#         18
+  C:0445H         LINE#         21
+  -------         ENDPROC       RS232_INIT
+  -------         PROC          RS232_GETCHAR
+  -------         DO            
+  D:0007H         SYMBOL        b
+  -------         ENDDO         
+  C:0479H         LINE#         22
+  C:0479H         LINE#         23
+  C:0479H         LINE#         25
+  C:047CH         LINE#         26
+  C:047EH         LINE#         27
+  C:0480H         LINE#         28
+  C:0480H         LINE#         29
+  -------         ENDPROC       RS232_GETCHAR
+  -------         PROC          _RS232_PUTCHAR
+  D:0007H         SYMBOL        txd
+  C:0481H         LINE#         30
+  C:0481H         LINE#         31
+  C:0481H         LINE#         32
+  C:0483H         LINE#         33
+  C:0486H         LINE#         34
+  C:0488H         LINE#         35
+  -------         ENDPROC       _RS232_PUTCHAR
+  C:03C1H         SYMBOL        L?0087
+  -------         PROC          L?0086
+  -------         ENDPROC       L?0086
+  C:03C1H         SYMBOL        L?0087
+  -------         PROC          _RS232_PRINTSTR
+  D:0018H         SYMBOL        str
+  C:03C7H         LINE#         36
+  C:03CDH         LINE#         37
+  C:03CDH         LINE#         38
+  C:03D8H         LINE#         39
+  C:03D8H         LINE#         40
+  C:03E7H         LINE#         41
+  C:03EAH         LINE#         42
+  C:03ECH         LINE#         43
+  C:03EEH         LINE#         44
+  -------         ENDPROC       _RS232_PRINTSTR
+  -------         PROC          _RS232_PRINTHEX
+  D:0006H         SYMBOL        b
+  -------         DO            
+  D:0005H         SYMBOL        hexvalue
+  -------         ENDDO         
+  C:0382H         LINE#         45
+  C:0384H         LINE#         46
+  C:0384H         LINE#         49
+  C:038DH         LINE#         51
+  C:0394H         LINE#         52
+  C:039AH         LINE#         53
+  C:039AH         LINE#         54
+  C:039CH         LINE#         55
+  C:039EH         LINE#         57
+  C:039EH         LINE#         58
+  C:03A4H         LINE#         59
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/07/2011  15:25:07  PAGE 5
+
+
+  C:03A4H         LINE#         60
+  C:03A8H         LINE#         61
+  C:03AEH         LINE#         62
+  C:03AEH         LINE#         63
+  C:03B0H         LINE#         64
+  C:03B2H         LINE#         66
+  C:03B2H         LINE#         67
+  C:03B8H         LINE#         68
+  C:03B8H         LINE#         70
+  -------         ENDPROC       _RS232_PRINTHEX
+  C:041AH         SYMBOL        L?0089
+  -------         PROC          L?0088
+  -------         ENDPROC       L?0088
+  C:041AH         SYMBOL        L?0089
+  -------         PROC          IIC_WAITFORWRITE
+  C:041EH         LINE#         38
+  C:041EH         LINE#         39
+  C:041EH         LINE#         40
+  C:0425H         LINE#         41
+  C:0425H         LINE#         42
+  C:0428H         LINE#         43
+  C:0428H         LINE#         44
+  C:042BH         LINE#         45
+  C:042EH         LINE#         46
+  C:042EH         LINE#         47
+  C:042EH         LINE#         48
+  C:0430H         LINE#         49
+  -------         ENDPROC       IIC_WAITFORWRITE
+  -------         PROC          IIC_WAITFORREAD
+  C:045AH         LINE#         54
+  C:045AH         LINE#         55
+  C:045AH         LINE#         56
+  C:0461H         LINE#         57
+  C:0461H         LINE#         58
+  C:0464H         LINE#         59
+  C:0464H         LINE#         60
+  C:0467H         LINE#         61
+  C:046AH         LINE#         62
+  C:046AH         LINE#         63
+  C:046AH         LINE#         64
+  C:046CH         LINE#         65
+  -------         ENDPROC       IIC_WAITFORREAD
+  -------         PROC          _READ_CONTENT
+  D:000AH         SYMBOL        bDevAddr
+  D:000BH         SYMBOL        wAddr
+  D:0004H         SYMBOL        wNum
+  D:000FH         SYMBOL        pbDataArray
+  -------         DO            
+  D:0006H         SYMBOL        btemp
+  -------         ENDDO         
+  C:01D2H         LINE#         69
+  C:01DCH         LINE#         75
+  C:01DCH         LINE#         77
+  C:01E3H         LINE#         78
+  C:01E6H         LINE#         79
+  C:01E9H         LINE#         80
+  C:01EDH         LINE#         81
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/07/2011  15:25:07  PAGE 6
+
+
+  C:01F3H         LINE#         82
+  C:01F5H         LINE#         83
+  C:01FBH         LINE#         84
+  C:01FBH         LINE#         85
+  C:0201H         LINE#         86
+  C:0203H         LINE#         87
+  C:0203H         LINE#         88
+  C:020BH         LINE#         89
+  C:0210H         LINE#         90
+  C:0219H         LINE#         91
+  C:0219H         LINE#         92
+  C:0222H         LINE#         93
+  C:0222H         LINE#         94
+  C:0228H         LINE#         95
+  C:0228H         LINE#         96
+  C:022EH         LINE#         97
+  C:0230H         LINE#         98
+  C:0230H         LINE#         99
+  C:0247H         LINE#         100
+  C:024CH         LINE#         101
+  C:024EH         LINE#         102
+  C:024EH         LINE#         103
+  C:0255H         LINE#         104
+  C:025BH         LINE#         105
+  C:025BH         LINE#         106
+  C:0264H         LINE#         107
+  C:0267H         LINE#         108
+  C:0267H         LINE#         109
+  C:0274H         LINE#         110
+  C:0276H         LINE#         112
+  -------         ENDPROC       _READ_CONTENT
+  -------         PROC          _WRITE_CONTENT
+  D:0001H         SYMBOL        bDevAddr
+  D:0011H         SYMBOL        wAddr
+  D:0004H         SYMBOL        wNum
+  D:0015H         SYMBOL        pbDataArray
+  -------         DO            
+  D:0007H         SYMBOL        btemp
+  -------         ENDDO         
+  C:0277H         LINE#         116
+  C:0281H         LINE#         122
+  C:0281H         LINE#         124
+  C:0288H         LINE#         125
+  C:028BH         LINE#         126
+  C:028EH         LINE#         127
+  C:0292H         LINE#         128
+  C:0297H         LINE#         129
+  C:0299H         LINE#         130
+  C:029FH         LINE#         131
+  C:029FH         LINE#         132
+  C:02A5H         LINE#         133
+  C:02A7H         LINE#         134
+  C:02A7H         LINE#         135
+  C:02B0H         LINE#         136
+  C:02B0H         LINE#         137
+  C:02B9H         LINE#         138
+  C:02B9H         LINE#         139
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/07/2011  15:25:07  PAGE 7
+
+
+  C:02CEH         LINE#         140
+  C:02D3H         LINE#         141
+  C:02D9H         LINE#         142
+  C:02D9H         LINE#         143
+  C:02DFH         LINE#         144
+  C:02E1H         LINE#         145
+  C:02E1H         LINE#         146
+  C:02E1H         LINE#         147
+  C:02E1H         LINE#         148
+  C:02E8H         LINE#         149
+  C:02F9H         LINE#         150
+  C:02FFH         LINE#         151
+  C:02FFH         LINE#         152
+  C:0308H         LINE#         153
+  C:030BH         LINE#         154
+  C:030BH         LINE#         155
+  C:030DH         LINE#         156
+  -------         ENDPROC       _WRITE_CONTENT
+  -------         PROC          _DELAY_MS
+  D:0006H         SYMBOL        k
+  -------         DO            
+  D:0005H         SYMBOL        i
+  D:0004H         SYMBOL        j
+  -------         ENDDO         
+  C:0446H         LINE#         13
+  C:0446H         LINE#         14
+  C:0446H         LINE#         16
+  C:044AH         LINE#         17
+  C:044CH         LINE#         18
+  C:0459H         LINE#         19
+  -------         ENDPROC       _DELAY_MS
+  -------         PROC          LOAD_PROGRAM
+  -------         DO            
+  D:000AH         SYMBOL        i
+  D:000CH         SYMBOL        len
+  D:000EH         SYMBOL        count
+  -------         ENDDO         
+  C:0003H         LINE#         20
+  C:0003H         LINE#         21
+  C:0003H         LINE#         23
+  C:0009H         LINE#         24
+  C:0012H         LINE#         25
+  C:0017H         LINE#         26
+  C:0020H         LINE#         27
+  C:0038H         LINE#         28
+  C:0038H         LINE#         29
+  C:0041H         LINE#         30
+  C:0046H         LINE#         31
+  C:0046H         LINE#         32
+  C:0052H         LINE#         33
+  C:0063H         LINE#         34
+  C:0066H         LINE#         35
+  C:0082H         LINE#         36
+  C:0089H         LINE#         37
+  C:0096H         LINE#         38
+  C:009FH         LINE#         39
+  C:00A5H         LINE#         40
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/07/2011  15:25:07  PAGE 8
+
+
+  C:00B0H         LINE#         41
+  C:00B0H         LINE#         42
+  C:00BAH         LINE#         43
+  C:00C4H         LINE#         44
+  C:00C7H         LINE#         45
+  C:00E6H         LINE#         46
+  -------         ENDPROC       LOAD_PROGRAM
+  -------         PROC          MAIN
+  -------         DO            
+  D:0004H         SYMBOL        i
+  D:0008H         SYMBOL        addr
+  -------         ENDDO         
+  C:030EH         LINE#         49
+  C:030EH         LINE#         50
+  C:030EH         LINE#         52
+  C:0313H         LINE#         53
+  C:0316H         LINE#         54
+  C:031FH         LINE#         55
+  C:031FH         LINE#         56
+  C:031FH         LINE#         57
+  C:032AH         LINE#         58
+  C:032AH         LINE#         59
+  C:032FH         LINE#         60
+  C:032FH         LINE#         61
+  C:0334H         LINE#         62
+  C:0334H         LINE#         63
+  C:0337H         LINE#         64
+  C:034DH         LINE#         65
+  C:034FH         LINE#         66
+  C:034FH         LINE#         67
+  C:0358H         LINE#         68
+  C:035CH         LINE#         69
+  C:0367H         LINE#         70
+  C:036AH         LINE#         71
+  C:0371H         LINE#         72
+  C:0373H         LINE#         73
+  C:0378H         LINE#         74
+  C:0378H         LINE#         75
+  C:037BH         LINE#         76
+  C:037DH         LINE#         78
+  C:037DH         LINE#         79
+  C:0380H         LINE#         80
+  C:0380H         LINE#         81
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        ?C?CLDPTR
+  C:03EFH         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        ?C?CSTPTR
+  C:0408H         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?MAIN
+
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/07/2011  15:25:07  PAGE 9
+
+
+Program Size: data=78.0 xdata=0 code=1161
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)

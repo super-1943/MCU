@@ -1,0 +1,15 @@
+<html>
+<body>
+<pre>
+<h1>礦ision3 Build Log</h1>
+<h2>Project:</h2>
+G:\kkk\我的工程\51单片机\51 Serial Communication\Serial Communication.uv2
+Project File Date:  12/19/2008
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling Serial Communication.asm...
+linking...
+Program Size: data=8.0 xdata=0 code=81
+creating hex file from "Serial Communication"...
+"Serial Communication" - 0 Error(s), 0 Warning(s).

@@ -1,0 +1,2414 @@
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN Text1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE Text1.src PR(.\Text1.ls1) EP DEBUG
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ; .\Text1.SRC generated from: Text1.c
+                       2     ; COMPILER INVOKED BY:
+                       3     ;        C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND SRC(.\Text1.SRC)
+                       4     
+                       5     $nomod51 
+                       6     
+                       7     NAME    TEXT1
+                       8     
+  0080                 9     P0      DATA    080H
+  0090                10     P1      DATA    090H
+  00A0                11     P2      DATA    0A0H
+  00B0                12     P3      DATA    0B0H
+  00B4                13     T0      BIT     0B0H.4
+  00D6                14     AC      BIT     0D0H.6
+  00B5                15     T1      BIT     0B0H.5
+  0090                16     T2      BIT     090H.0
+  00AF                17     EA      BIT     0A8H.7
+  00A8                18     IE      DATA    0A8H
+  00CE                19     EXF2    BIT     0C8H.6
+  00B7                20     RD      BIT     0B0H.7
+  00AC                21     ES      BIT     0A8H.4
+  00B8                22     IP      DATA    0B8H
+  0098                23     RI      BIT     098H.0
+  00B2                24     INT0    BIT     0B0H.2
+  00D7                25     CY      BIT     0D0H.7
+  0099                26     TI      BIT     098H.1
+  00B3                27     INT1    BIT     0B0H.3
+  00CB                28     RCAP2H  DATA    0CBH
+  00BC                29     PS      BIT     0B8H.4
+  0081                30     SP      DATA    081H
+  0091                31     T2EX    BIT     090H.1
+  00D2                32     OV      BIT     0D0H.2
+  00CA                33     RCAP2L  DATA    0CAH
+  00C9                34     C_T2    BIT     0C8H.1
+  00B6                35     WR      BIT     0B0H.6
+  00CD                36     RCLK    BIT     0C8H.5
+  00CC                37     TCLK    BIT     0C8H.4
+  0099                38     SBUF    DATA    099H
+  0087                39     PCON    DATA    087H
+  0098                40     SCON    DATA    098H
+  0089                41     TMOD    DATA    089H
+  0088                42     TCON    DATA    088H
+  0091                43     led     BIT     090H.1
+  0089                44     IE0     BIT     088H.1
+  008B                45     IE1     BIT     088H.3
+  00F0                46     B       DATA    0F0H
+  00C8                47     CP_RL2  BIT     0C8H.0
+  00E0                48     ACC     DATA    0E0H
+  00A9                49     ET0     BIT     0A8H.1
+  00AB                50     ET1     BIT     0A8H.3
+  008D                51     TF0     BIT     088H.5
+  00AD                52     ET2     BIT     0A8H.5
+  008F                53     TF1     BIT     088H.7
+  00CF                54     TF2     BIT     0C8H.7
+  009A                55     RB8     BIT     098H.2
+  008C                56     TH0     DATA    08CH
+  00A8                57     EX0     BIT     0A8H.0
+  0088                58     IT0     BIT     088H.0
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE     2
+
+  008D                59     TH1     DATA    08DH
+  009B                60     TB8     BIT     098H.3
+  00AA                61     EX1     BIT     0A8H.2
+  008A                62     IT1     BIT     088H.2
+  00CD                63     TH2     DATA    0CDH
+  00D0                64     P       BIT     0D0H.0
+  009F                65     SM0     BIT     098H.7
+  008A                66     TL0     DATA    08AH
+  009E                67     SM1     BIT     098H.6
+  008B                68     TL1     DATA    08BH
+  009D                69     SM2     BIT     098H.5
+  00CC                70     TL2     DATA    0CCH
+  00B9                71     PT0     BIT     0B8H.1
+  00BB                72     PT1     BIT     0B8H.3
+  00D3                73     RS0     BIT     0D0H.3
+  00BD                74     PT2     BIT     0B8H.5
+  008C                75     TR0     BIT     088H.4
+  00D4                76     RS1     BIT     0D0H.4
+  008E                77     TR1     BIT     088H.6
+  00CA                78     TR2     BIT     0C8H.2
+  00B8                79     PX0     BIT     0B8H.0
+  00BA                80     PX1     BIT     0B8H.2
+  0083                81     DPH     DATA    083H
+  0082                82     DPL     DATA    082H
+  00CB                83     EXEN2   BIT     0C8H.3
+  009C                84     REN     BIT     098H.4
+  00C8                85     T2CON   DATA    0C8H
+  00B0                86     RXD     BIT     0B0H.0
+  00B1                87     TXD     BIT     0B0H.1
+  00D5                88     F0      BIT     0D0H.5
+  00D0                89     PSW     DATA    0D0H
+                      90     ?PR?rs232_init?TEXT1 SEGMENT CODE 
+                      91     ?PR?rs232_getchar?TEXT1                  SEGMENT CODE 
+                      92     ?PR?_rs232_putchar?TEXT1                 SEGMENT CODE 
+                      93     ?PR?_rs232_printstr?TEXT1                SEGMENT CODE 
+                      94     ?DT?_rs232_printstr?TEXT1                SEGMENT DATA OVERLAYABLE 
+                      95     ?PR?_rs232_printhex?TEXT1                SEGMENT CODE 
+                      96     ?PR?USB_reset?TEXT1  SEGMENT CODE 
+                      97     ?PR?EP0_senddata?TEXT1                   SEGMENT CODE 
+                      98     ?PR?setup_handler?TEXT1                  SEGMENT CODE 
+                      99     ?PR?_delay?TEXT1     SEGMENT CODE 
+                     100     ?PR?serial_routine?TEXT1                 SEGMENT CODE 
+                     101     ?PR?fun?TEXT1        SEGMENT CODE 
+                     102     ?PR?hardware_init?TEXT1                  SEGMENT CODE 
+                     103     ?PR?main?TEXT1       SEGMENT CODE 
+                     104     ?DT?main?TEXT1       SEGMENT DATA OVERLAYABLE 
+                     105     ?CO?TEXT1            SEGMENT CODE 
+                     106     ?C_INITSEG           SEGMENT CODE 
+                     107     ?DT?TEXT1            SEGMENT DATA 
+                     108             EXTRN   CODE (?C?CLDPTR)
+                     109             EXTRN   CODE (?C?CCASE)
+                     110             EXTRN   CODE (?C_STARTUP)
+                     111             PUBLIC  NeedZeroPacket
+                     112             PUBLIC  pSendData
+                     113             PUBLIC  SendLength
+                     114             PUBLIC  debugbuffer
+                     115             PUBLIC  DeviceDescriptor
+                     116             PUBLIC  main
+                     117             PUBLIC  hardware_init
+                     118             PUBLIC  fun
+                     119             PUBLIC  serial_routine
+                     120             PUBLIC  _delay
+                     121             PUBLIC  setup_handler
+                     122             PUBLIC  EP0_senddata
+                     123             PUBLIC  USB_reset
+                     124             PUBLIC  _rs232_printhex
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE     3
+
+                     125             PUBLIC  _rs232_printstr
+                     126             PUBLIC  _rs232_putchar
+                     127             PUBLIC  rs232_getchar
+                     128             PUBLIC  rs232_init
+                     129     
+----                 130             RSEG  ?DT?main?TEXT1
+0000                 131     ?main?BYTE:
+0000                 132              p?1249:   DS   2
+0002                 133             ORG  2
+0002                 134              i?1250:   DS   1
+                     135     
+----                 136             RSEG  ?DT?_rs232_printstr?TEXT1
+0000                 137     ?_rs232_printstr?BYTE:
+0000                 138             str?342:   DS   3
+                     139     
+----                 140             RSEG  ?DT?TEXT1
+0000                 141         debugbuffer:   DS   10
+000A                 142          SendLength:   DS   1
+000B                 143           pSendData:   DS   3
+000E                 144      NeedZeroPacket:   DS   1
+                     145     
+----                 146             RSEG  ?CO?TEXT1
+0000                 147     ?SC_0:
+0000 307800          148             DB  '0' ,'x' ,000H
+                     149     
+0003                 150     ?SC_3:
+0003 2000            151             DB  ' ' ,000H
+                     152     
+0005                 153     ?SC_5:
+0005 7265706C        154             DB  'r' ,'e' ,'p' ,'l' ,'y' ,'8' ,00DH,00AH,000H
+0009 79380D0A                
+000D 00                      
+                     155     
+000E                 156     ?SC_14:
+000E 7265706C        157             DB  'r' ,'e' ,'p' ,'l' ,'y' ,000H
+0012 7900                    
+                     158     
+0014                 159     ?SC_20:
+0014 0D0A00          160             DB  00DH,00AH,000H
+                     161     
+0017                 162     ?SC_23:
+0017 7265706C        163             DB  'r' ,'e' ,'p' ,'l' ,'y' ,'0' ,00DH,00AH,000H
+001B 79300D0A                
+001F 00                      
+                     164     
+0020                 165     ?SC_32:
+0020 555342B1        166             DB  'U' ,'S' ,'B' ,0B1H,0EAH,0D7H,0BCH,0CAH,0E4H,0C8H
+0024 EAD7BCCA                
+0028 E4C8                    
+002A EBC7EBC7        167             DB  0EBH,0C7H,0EBH,0C7H,0F3H,',' ,000H
+002E F32C00                  
+                     168     
+0031                 169     ?SC_49:
+0031 BBF1C8A1        170             DB  0BBH,0F1H,0C8H,0A1H,0C5H,0E4H,0D6H,0C3H,00DH,00AH
+0035 C5E4D6C3                
+0039 0D0A                    
+003B 00              171             DB  000H
+                     172     
+003C                 173     ?SC_60:
+003C BBF1C8A1        174             DB  0BBH,0F1H,0C8H,0A1H,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH
+0040 C3E8CAF6                
+0044 B7FB                    
+0046 2D2D2D2D        175             DB  '-' ,'-' ,'-' ,'-' ,000H
+004A 00                      
+                     176     
+004B                 177     ?SC_75:
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE     4
+
+004B C9E8B1B8        178             DB  0C9H,0E8H,0B1H,0B8H,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH
+004F C3E8CAF6                
+0053 B7FB                    
+0055 0D0A00          179             DB  00DH,00AH,000H
+                     180     
+0058                 181     ?SC_88:
+0058 C5E4D6C3        182             DB  0C5H,0E4H,0D6H,0C3H,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH
+005C C3E8CAF6                
+0060 B7FB                    
+0062 0D0A00          183             DB  00DH,00AH,000H
+                     184     
+0065                 185     ?SC_101:
+0065 D7D6B7FB        186             DB  0D7H,0D6H,0B7H,0FBH,0B4H,0AEH,0C3H,0E8H,0CAH,0F6H
+0069 B4AEC3E8                
+006D CAF6                    
+006F B7FB0D0A        187             DB  0B7H,0FBH,00DH,00AH,000H
+0073 00                      
+                     188     
+0074                 189     ?SC_116:
+0074 D3EFD1D4        190             DB  0D3H,0EFH,0D1H,0D4H,'I' ,'D' ,00DH,00AH,000H
+0078 49440D0A                
+007C 00                      
+                     191     
+007D                 192     ?SC_125:
+007D B3A7C9CC        193             DB  0B3H,0A7H,0C9H,0CCH,0C3H,0E8H,0CAH,0F6H,00DH,00AH
+0081 C3E8CAF6                
+0085 0D0A                    
+0087 00              194             DB  000H
+                     195     
+0088                 196     ?SC_136:
+0088 B2FAC6B7        197             DB  0B2H,0FAH,0C6H,0B7H,0C3H,0E8H,0CAH,0F6H,00DH,00AH
+008C C3E8CAF6                
+0090 0D0A                    
+0092 00              198             DB  000H
+                     199     
+0093                 200     ?SC_147:
+0093 B2FAC6B7        201             DB  0B2H,0FAH,0C6H,0B7H,0D0H,0F2H,0C1H,0D0H,0BAH,0C5H
+0097 D0F2C1D0                
+009B BAC5                    
+009D 0D0A00          202             DB  00DH,00AH,000H
+                     203     
+00A0                 204     ?SC_160:
+00A0 CEB4D6AA        205             DB  0CEH,0B4H,0D6H,0AAH,0B5H,0C4H,0CBH,0F7H,0D2H,0D6H
+00A4 B5C4CBF7                
+00A8 D2D6                    
+00AA B50D0A00        206             DB  0B5H,00DH,00AH,000H
+                     207     
+00AE                 208     ?SC_174:
+00AE B1A8B8E6        209             DB  0B1H,0A8H,0B8H,0E6H,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH
+00B2 C3E8CAF6                
+00B6 B7FB                    
+00B8 0D0A00          210             DB  00DH,00AH,000H
+                     211     
+00BB                 212     ?SC_187:
+00BB C6E4CBFB        213             DB  0C6H,0E4H,0CBH,0FBH,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH
+00BF C3E8CAF6                
+00C3 B7FB                    
+00C5 A3ACC3E8        214             DB  0A3H,0ACH,0C3H,0E8H,0CAH,0F6H,0B7H,0FBH,0B4H,0FAH
+00C9 CAF6B7FB                
+00CD B4FA                    
+00CF C2EBA3BA        215             DB  0C2H,0EBH,0A3H,0BAH,000H
+00D3 00                      
+                     216     
+00D4                 217     ?SC_212:
+00D4 B4EDCEF3        218             DB  0B4H,0EDH,0CEH,0F3H,0A3H,0BAH,0CEH,0B4H,0B6H,0A8H
+00D8 A3BACEB4                
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE     5
+
+00DC B6A8                    
+00DE D2E5B5C4        219             DB  0D2H,0E5H,0B5H,0C4H,0B1H,0EAH,0D7H,0BCH,0CAH,0E4H
+00E2 B1EAD7BC                
+00E6 CAE4                    
+00E8 C8EBC7EB        220             DB  0C8H,0EBH,0C7H,0EBH,0C7H,0F3H,0A1H,0A3H,00DH,00AH
+00EC C7F3A1A3                
+00F0 0D0A                    
+00F2 00              221             DB  000H
+                     222     
+00F3                 223     ?SC_243:
+00F3 B4EDCEF3        224             DB  0B4H,0EDH,0CEH,0F3H,0A3H,0BAH,0CEH,0B4H,0B6H,0A8H
+00F7 A3BACEB4                
+00FB B6A8                    
+00FD D2E5B5C4        225             DB  0D2H,0E5H,0B5H,0C4H,0CAH,0E4H,0C8H,0EBH,0C7H,0EBH
+0101 CAE4C8EB                
+0105 C7EB                    
+0107 C7F30D0A        226             DB  0C7H,0F3H,00DH,00AH,000H
+010B 00                      
+                     227     
+010C                 228     ?SC_268:
+010C 555342B1        229             DB  'U' ,'S' ,'B' ,0B1H,0EAH,0D7H,0BCH,0CAH,0E4H,0B3H
+0110 EAD7BCCA                
+0114 E4B3                    
+0116 F6C7EBC7        230             DB  0F6H,0C7H,0EBH,0C7H,0F3H,0A3H,0BAH,000H
+011A F3A3BA00                
+                     231     
+011E                 232     ?SC_286:
+011E C7E5B3CC        233             DB  0C7H,0E5H,0B3H,0CCH,0D8H,0D0H,0D4H,00DH,00AH,000H
+0122 D8D0D40D                
+0126 0A00                    
+                     234     
+0128                 235     ?SC_296:
+0128 C9E8D6C3        236             DB  0C9H,0E8H,0D6H,0C3H,0B5H,0D8H,0D6H,0B7H,'.' ,0B5H
+012C B5D8D6B7                
+0130 2EB5                    
+0132 D8D6B7CE        237             DB  0D8H,0D6H,0B7H,0CEH,0AAH,0A3H,0BAH,000H
+0136 AAA3BA00                
+                     238     
+013A                 239     ?SC_314:
+013A C9E8D6C3        240             DB  0C9H,0E8H,0D6H,0C3H,0C5H,0E4H,0D6H,0C3H,00DH,00AH
+013E C5E4D6C3                
+0142 0D0A                    
+0144 00              241             DB  000H
+                     242     
+0145                 243     ?SC_325:
+0145 B4EDCEF3        244             DB  0B4H,0EDH,0CEH,0F3H,0A3H,0BAH,0CEH,0B4H,0B6H,0A8H
+0149 A3BACEB4                
+014D B6A8                    
+014F D2E5B5C4        245             DB  0D2H,0E5H,0B5H,0C4H,0B1H,0EAH,0D7H,0BCH,0CAH,0E4H
+0153 B1EAD7BC                
+0157 CAE4                    
+0159 B3F6C7EB        246             DB  0B3H,0F6H,0C7H,0EBH,0C7H,0F3H,00DH,00AH,000H
+015D C7F30D0A                
+0161 00                      
+                     247     
+0162                 248     ?SC_354:
+0162 555342C0        249             DB  'U' ,'S' ,'B' ,0C0H,0E0H,0CAH,0E4H,0B3H,0F6H,0C7H
+0166 E0CAE4B3                
+016A F6C7                    
+016C EBC7F3A3        250             DB  0EBH,0C7H,0F3H,0A3H,0BAH,00DH,00AH,000H
+0170 BA0D0A00                
+                     251     
+0174                 252     ?SC_372:
+0174 C9E8D6C3        253             DB  0C9H,0E8H,0D6H,0C3H,0BFH,0D5H,0CFH,0D0H,00DH,00AH
+0178 BFD5CFD0                
+017C 0D0A                    
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE     6
+
+017E 00              254             DB  000H
+                     255     
+017F                 256     ?SC_383:
+017F CEB4D6AA        257             DB  0CEH,0B4H,0D6H,0AAH,0C7H,0EBH,0C7H,0F3H,00DH,00AH
+0183 C7EBC7F3                
+0187 0D0A                    
+0189 00              258             DB  000H
+                     259     
+018A                 260     ?SC_394:
+018A B4EDCEF3        261             DB  0B4H,0EDH,0CEH,0F3H,0A3H,0BAH,0CEH,0B4H,0B6H,0A8H
+018E A3BACEB4                
+0192 B6A8                    
+0194 D2E5B5C4        262             DB  0D2H,0E5H,0B5H,0C4H,0CAH,0E4H,0B3H,0F6H,0C7H,0EBH
+0198 CAE4B3F6                
+019C C7EB                    
+019E C7F30D0A        263             DB  0C7H,0F3H,00DH,00AH,000H
+01A2 00                      
+                     264     
+01A3                 265     ?SC_419:
+01A3 20455030        266             DB  ' ' ,'E' ,'P' ,'0' ,' ' ,'O' ,'u' ,'t' ,'!' ,00DH
+01A7 204F7574                
+01AB 210D                    
+01AD 0A00            267             DB  00AH,000H
+                     268     
+01AF                 269     ?SC_431:
+01AF 45503020        270             DB  'E' ,'P' ,'0' ,' ' ,'I' ,'n' ,'!' ,00DH,00AH,000H
+01B3 496E210D                
+01B7 0A00                    
+                     271     
+01B9                 272     ?SC_441:
+01B9 20455031        273             DB  ' ' ,'E' ,'P' ,'1' ,' ' ,'I' ,'n' ,'!' ,00DH,00AH
+01BD 20496E21                
+01C1 0D0A                    
+01C3 00              274             DB  000H
+                     275     
+01C4                 276     ?SC_452:
+01C4 55534220        277             DB  'U' ,'S' ,'B' ,' ' ,'s' ,'e' ,'t' ,'u' ,'p' ,' ' 
+01C8 73657475                
+01CC 7020                    
+01CE 6F766572        278             DB  'o' ,'v' ,'e' ,'r' ,'f' ,'l' ,'o' ,'w' ,'!' ,00DH
+01D2 666C6F77                
+01D6 210D                    
+01D8 0A00            279             DB  00AH,000H
+                     280     
+01DA                 281     ?SC_474:
+01DA 55534220        282             DB  'U' ,'S' ,'B' ,' ' ,'s' ,'e' ,'t' ,'u' ,'p' ,'!' 
+01DE 73657475                
+01E2 7021                    
+01E4 0D0A00          283             DB  00DH,00AH,000H
+                     284     
+01E7                 285     ?SC_487:
+01E7 55534220        286             DB  'U' ,'S' ,'B' ,' ' ,'r' ,'e' ,'s' ,'e' ,'t' ,'!' 
+01EB 72657365                
+01EF 7421                    
+01F1 0D0A00          287             DB  00DH,00AH,000H
+                     288     
+01F4                 289     ?SC_500:
+01F4 55534220        290             DB  'U' ,'S' ,'B' ,' ' ,'r' ,'e' ,'s' ,'u' ,'m' ,'e' 
+01F8 72657375                
+01FC 6D65                    
+01FE 210D0A00        291             DB  '!' ,00DH,00AH,000H
+                     292     
+0202                 293     ?SC_514:
+0202 55534220        294             DB  'U' ,'S' ,'B' ,' ' ,'s' ,'u' ,'s' ,'p' ,'e' ,'n' 
+0206 73757370                
+020A 656E                    
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE     7
+
+020C 64210D0A        295             DB  'd' ,'!' ,00DH,00AH,000H
+0210 00                      
+                     296     
+0211                 297     ?SC_529:
+0211 20556E6B        298             DB  ' ' ,'U' ,'n' ,'k' ,'n' ,'o' ,'w' ,'n' ,'!' ,00DH
+0215 6E6F776E                
+0219 210D                    
+021B 0A00            299             DB  00AH,000H
+                     300     
+021D                 301     ?SC_541:
+021D 48656C6C        302             DB  'H' ,'e' ,'l' ,'l' ,'o' ,' ' ,'w' ,'o' ,'r' ,'l' 
+0221 6F20776F                
+0225 726C                    
+0227 64210D0A        303             DB  'd' ,'!' ,00DH,00AH,000H
+022B 00                      
+                     304     
+022C                 305     ?SC_556:
+022C 45503049        306             DB  'E' ,'P' ,'0' ,'I' ,'N' ,' ' ,'b' ,'u' ,'f' ,'f' 
+0230 4E206275                
+0234 6666                    
+0236 65723A00        307             DB  'e' ,'r' ,':' ,000H
+                     308     
+023A                 309     ?SC_570:
+023A 4550304F        310             DB  'E' ,'P' ,'0' ,'O' ,'U' ,'T' ,' ' ,'b' ,'u' ,'f' 
+023E 55542062                
+0242 7566                    
+0244 6665723A        311             DB  'f' ,'e' ,'r' ,':' ,000H
+0248 00                      
+                     312     
+0249                 313     ?SC_585:
+0249 53455455        314             DB  'S' ,'E' ,'T' ,'U' ,'P' ,' ' ,'b' ,'u' ,'f' ,'f' 
+024D 50206275                
+0251 6666                    
+0253 65723A00        315             DB  'e' ,'r' ,':' ,000H
+                     316     
+0257                 317     ?SC_599:
+0257 0D0A6249        318             DB  00DH,00AH,'b' ,'I' ,'E' ,'P' ,'B' ,'C' ,'N' ,'T' 
+025B 45504243                
+025F 4E54                    
+0261 5F303A00        319             DB  '_' ,'0' ,':' ,000H
+                     320     
+0265                 321     ?SC_613:
+0265 0D0A624F        322             DB  00DH,00AH,'b' ,'O' ,'E' ,'P' ,'B' ,'C' ,'N' ,'T' 
+0269 45504243                
+026D 4E54                    
+026F 5F303A00        323             DB  '_' ,'0' ,':' ,000H
+                     324     
+0273                 325     ?SC_627:
+0273 0D0A6249        326             DB  00DH,00AH,'b' ,'I' ,'E' ,'P' ,'C' ,'N' ,'F' ,'G' 
+0277 4550434E                
+027B 4647                    
+027D 5F303A00        327             DB  '_' ,'0' ,':' ,000H
+                     328     
+0281                 329     ?SC_641:
+0281 0D0A624F        330             DB  00DH,00AH,'b' ,'O' ,'E' ,'P' ,'C' ,'N' ,'F' ,'G' 
+0285 4550434E                
+0289 4647                    
+028B 5F303A00        331             DB  '_' ,'0' ,':' ,000H
+                     332     
+028F                 333     ?SC_655:
+028F 0D0A6246        334             DB  00DH,00AH,'b' ,'F' ,'U' ,'N' ,'A' ,'D' ,'R' ,':' 
+0293 554E4144                
+0297 523A                    
+0299 00              335             DB  000H
+                     336     
+029A                 337     ?SC_666:
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE     8
+
+029A 0D0A6257        338             DB  00DH,00AH,'b' ,'W' ,'D' ,'C' ,'S' ,'R' ,':' ,000H
+029E 44435352                
+02A2 3A00                    
+                     339     
+02A4                 340     DeviceDescriptor:
+02A4 12              341             DB      012H
+02A5 01              342             DB      001H
+02A6 10              343             DB      010H
+02A7 01              344             DB      001H
+02A8 00              345             DB      000H
+02A9 00              346             DB      000H
+02AA 00              347             DB      000H
+02AB 08              348             DB      008H
+02AC 88              349             DB      088H
+02AD 88              350             DB      088H
+02AE 02              351             DB      002H
+02AF 00              352             DB      000H
+02B0 00              353             DB      000H
+02B1 01              354             DB      001H
+02B2 01              355             DB      001H
+02B3 02              356             DB      002H
+02B4 03              357             DB      003H
+02B5 01              358             DB      001H
+                     359     
+                     360     
+----                 361             RSEG  ?C_INITSEG
+0000 0A              362             DB      00AH
+0001 00       F      363             DB      debugbuffer
+0002 00              364             DB      000H
+0003 00000000        365             DB  000H,000H,000H,000H,000H,000H,000H,000H,000H
+0007 00000000                
+000B 00                      
+                     366     
+                     367     
+                     368     ; #include <reg52.h>
+                     369     ; #include "tusb3210.h"
+                     370     ; #include "serial.h"
+                     371     ; 
+                     372     ; sbit led=P1^1;
+                     373     ; 
+                     374     ; uint8 *pSendData;
+                     375     ; uint8 SendLength;
+                     376     ; uint8 NeedZeroPacket;
+                     377     ; uint8 debugbuffer[10]={0};
+                     378     
+----                 379             RSEG  ?PR?rs232_init?TEXT1
+0000                 380     rs232_init:
+                     381                             ; SOURCE LINE # 10
+                     382     ; #include "usb.h"
+                     383                             ; SOURCE LINE # 11
+                     384     ; 
+                     385                             ; SOURCE LINE # 12
+0000 53890F          386             ANL     TMOD,#0FH
+                     387     ; void delay(unsigned int k)
+                     388                             ; SOURCE LINE # 13
+0003 438920          389             ORL     TMOD,#020H
+                     390     ; {
+                     391                             ; SOURCE LINE # 14
+0006 758DF3          392             MOV     TH1,#0F3H
+                     393     ;       unsigned char i,j;
+                     394                             ; SOURCE LINE # 15
+0009 758BF3          395             MOV     TL1,#0F3H
+                     396     ;       for(;k;k--)
+                     397                             ; SOURCE LINE # 16
+000C 438780          398             ORL     PCON,#080H
+                     399     ;       for(i=200;i;i--)
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE     9
+
+                     400                             ; SOURCE LINE # 17
+000F 759850          401             MOV     SCON,#050H
+                     402     ;       for(j=200;j;j--);
+                     403                             ; SOURCE LINE # 18
+0012 D28E            404             SETB    TR1
+                     405     ; }
+                     406                             ; SOURCE LINE # 19
+0014 D2AF            407             SETB    EA
+                     408     ; 
+                     409                             ; SOURCE LINE # 20
+0016 22              410             RET     
+                     411     ; END OF rs232_init
+                     412     
+                     413     ; void serial_routine(void) interrupt 4 using 2
+                     414     
+----                 415             RSEG  ?PR?rs232_getchar?TEXT1
+0000                 416     rs232_getchar:
+                     417             USING   0
+                     418                             ; SOURCE LINE # 21
+                     419     ; {
+                     420                             ; SOURCE LINE # 22
+0000                 421     ?C0002:
+                     422     ;       if(RI)
+                     423     ;       {
+                     424                             ; SOURCE LINE # 24
+0000 3098FD          425             JNB     RI,?C0002
+0003                 426     ?C0003:
+                     427     ;               RI=0;
+                     428                             ; SOURCE LINE # 25
+0003 C298            429             CLR     RI
+                     430     ;       }
+                     431                             ; SOURCE LINE # 26
+                     432     ;---- Variable 'b?140' assigned to Register 'R7' ----
+0005 AF99            433             MOV     R7,SBUF
+                     434     ;       if(TI)
+                     435                             ; SOURCE LINE # 27
+                     436     ;       {
+                     437                             ; SOURCE LINE # 28
+0007                 438     ?C0004:
+0007 22              439             RET     
+                     440     ; END OF rs232_getchar
+                     441     
+                     442     ;               TI=0;
+                     443     
+----                 444             RSEG  ?PR?_rs232_putchar?TEXT1
+0000                 445     _rs232_putchar:
+                     446                             ; SOURCE LINE # 29
+                     447     ;---- Variable 'txd?241' assigned to Register 'R7' ----
+                     448     ;       }       
+                     449                             ; SOURCE LINE # 30
+                     450     ; }
+                     451                             ; SOURCE LINE # 31
+0000 8F99            452             MOV     SBUF,R7
+0002                 453     ?C0005:
+                     454     ; 
+                     455                             ; SOURCE LINE # 32
+0002 3099FD          456             JNB     TI,?C0005
+0005                 457     ?C0006:
+                     458     ; 
+                     459                             ; SOURCE LINE # 33
+0005 C299            460             CLR     TI
+                     461     ; 
+                     462                             ; SOURCE LINE # 34
+0007 22              463             RET     
+                     464     ; END OF _rs232_putchar
+                     465     
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    10
+
+                     466     ; 
+                     467     
+----                 468             RSEG  ?PR?_rs232_printstr?TEXT1
+0000                 469     L?0144:
+                     470             USING   0
+0000 7BFF            471             MOV     R3,#0FFH
+0002 7A00     F      472             MOV     R2,#HIGH (?SC_20)
+0004 7900     F      473             MOV     R1,#LOW (?SC_20)
+0006                 474     _rs232_printstr:
+                     475             USING   0
+                     476                             ; SOURCE LINE # 35
+0006 8B00     F      477             MOV     str?342,R3
+0008 8A00     F      478             MOV     str?342+01H,R2
+000A 8900     F      479             MOV     str?342+02H,R1
+                     480     ; void fun(void) interrupt 0 using 2
+                     481                             ; SOURCE LINE # 36
+000C                 482     ?C0008:
+                     483     ; {
+                     484                             ; SOURCE LINE # 37
+000C AB00     F      485             MOV     R3,str?342
+000E AA00     F      486             MOV     R2,str?342+01H
+0010 A900     F      487             MOV     R1,str?342+02H
+0012 120000   F      488             LCALL   ?C?CLDPTR
+0015 6016            489             JZ      ?C0012
+                     490     ;       EA=0;
+                     491                             ; SOURCE LINE # 38
+                     492     ;       switch(bVECINT)
+                     493                             ; SOURCE LINE # 39
+0017 0500     F      494             INC     str?342+02H
+0019 E500     F      495             MOV     A,str?342+02H
+001B 7002            496             JNZ     ?C0112
+001D 0500     F      497             INC     str?342+01H
+001F                 498     ?C0112:
+001F 14              499             DEC     A
+0020 F9              500             MOV     R1,A
+0021 120000   F      501             LCALL   ?C?CLDPTR
+0024 F599            502             MOV     SBUF,A
+0026                 503     ?C0010:
+                     504     ;       {
+                     505                             ; SOURCE LINE # 40
+0026 3099FD          506             JNB     TI,?C0010
+0029                 507     ?C0011:
+                     508     ;               case VECINT_OUTPUT_ENDPOINT0:
+                     509                             ; SOURCE LINE # 41
+0029 C299            510             CLR     TI
+                     511     ;                       bVECINT  = 0x00;
+                     512                             ; SOURCE LINE # 42
+002B 80DF            513             SJMP    ?C0008
+                     514     ; //                    OEP0InterruptHandler();
+                     515                             ; SOURCE LINE # 43
+002D                 516     ?C0012:
+002D 22              517             RET     
+                     518     ; END OF _rs232_printstr
+                     519     
+                     520     ;                       rs232_printstr(" EP0 Out!\r\n");
+                     521     
+----                 522             RSEG  ?PR?_rs232_printhex?TEXT1
+0000                 523     L?0142:
+                     524             USING   0
+0000                 525     L?0143:
+0000 E500     F      526             MOV     A,p?1249+01H
+0002 2500     F      527             ADD     A,i?1250
+0004 F582            528             MOV     DPL,A
+0006 E4              529             CLR     A
+0007 3500     F      530             ADDC    A,p?1249
+0009 F583            531             MOV     DPH,A
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    11
+
+000B E0              532             MOVX    A,@DPTR
+000C FF              533             MOV     R7,A
+000D                 534     _rs232_printhex:
+                     535             USING   0
+                     536                             ; SOURCE LINE # 44
+                     537     ;---- Variable 'b?443' assigned to Register 'R6' ----
+000D AE07            538             MOV     R6,AR7
+                     539     ;                       bOEPBCNT_0 = 0x00;
+                     540                             ; SOURCE LINE # 45
+                     541     ;                       bIEPBCNT_0=0x00;
+                     542     ;                       break;
+                     543     ; 
+                     544                             ; SOURCE LINE # 48
+000F 7BFF            545             MOV     R3,#0FFH
+0011 7A00     F      546             MOV     R2,#HIGH (?SC_0)
+0013 7900     F      547             MOV     R1,#LOW (?SC_0)
+0015 120000   F      548             LCALL   _rs232_printstr
+                     549     ;         case VECINT_INPUT_ENDPOINT0:
+                     550     ;                       bVECINT  = 0x00;
+                     551                             ; SOURCE LINE # 50
+0018 EE              552             MOV     A,R6
+0019 54F0            553             ANL     A,#0F0H
+001B C4              554             SWAP    A
+001C 540F            555             ANL     A,#0FH
+                     556     ;---- Variable 'hexvalue?444' assigned to Register 'R5' ----
+001E FD              557             MOV     R5,A
+                     558     ;                       rs232_printstr("EP0 In!\r\n");
+                     559                             ; SOURCE LINE # 51
+001F C3              560             CLR     C
+0020 940A            561             SUBB    A,#0AH
+0022 ED              562             MOV     A,R5
+0023 5004            563             JNC     ?C0013
+                     564     ;                       EP0_senddata();
+                     565                             ; SOURCE LINE # 52
+                     566     ;                       break;
+                     567                             ; SOURCE LINE # 53
+0025 2430            568             ADD     A,#030H
+                     569     ; 
+                     570                             ; SOURCE LINE # 54
+0027 8002            571             SJMP    ?C0116
+0029                 572     ?C0013:
+                     573     ;               case VECINT_INPUT_ENDPOINT1:
+                     574     ;               case 0x12:
+                     575                             ; SOURCE LINE # 56
+                     576     ;                       bVECINT = 0x00;
+                     577                             ; SOURCE LINE # 57
+0029 2437            578             ADD     A,#037H
+002B                 579     ?C0116:
+002B FF              580             MOV     R7,A
+002C 120000   F      581             LCALL   _rs232_putchar
+                     582     ; //                    IEP1InterruptHandler();
+                     583                             ; SOURCE LINE # 58
+002F                 584     ?C0014:
+                     585     ;                       rs232_printstr(" EP1 In!\r\n");
+                     586                             ; SOURCE LINE # 59
+002F EE              587             MOV     A,R6
+0030 540F            588             ANL     A,#0FH
+0032 FD              589             MOV     R5,A
+                     590     ;                       break;
+                     591                             ; SOURCE LINE # 60
+0033 C3              592             CLR     C
+0034 940A            593             SUBB    A,#0AH
+0036 ED              594             MOV     A,R5
+0037 5004            595             JNC     ?C0015
+                     596     ; 
+                     597                             ; SOURCE LINE # 61
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    12
+
+                     598     ;             case VECINT_STPOW_PACKET_RECEIVED:
+                     599                             ; SOURCE LINE # 62
+0039 2430            600             ADD     A,#030H
+                     601     ;                       bVECINT  = 0x00;
+                     602                             ; SOURCE LINE # 63
+003B 8002            603             SJMP    ?C0117
+003D                 604     ?C0015:
+                     605     ;                       bUSBSTA = USBSTA_STPOW;
+                     606     ;                       rs232_printstr("USB setup overflow!\r\n");
+                     607                             ; SOURCE LINE # 65
+                     608     ;                       setup_handler();
+                     609                             ; SOURCE LINE # 66
+003D 2437            610             ADD     A,#037H
+003F                 611     ?C0117:
+003F FF              612             MOV     R7,A
+0040 120000   F      613             LCALL   _rs232_putchar
+                     614     ;                       break;
+                     615                             ; SOURCE LINE # 67
+0043                 616     ?C0016:
+                     617     ; 
+                     618     ;             case VECINT_SETUP_PACKET_RECEIVED:
+                     619                             ; SOURCE LINE # 69
+0043 7BFF            620             MOV     R3,#0FFH
+0045 7A00     F      621             MOV     R2,#HIGH (?SC_3)
+0047 7900     F      622             MOV     R1,#LOW (?SC_3)
+0049 020000   F      623             LJMP    _rs232_printstr
+                     624     ; END OF _rs232_printhex
+                     625     
+                     626     
+----                 627             RSEG  ?PR?USB_reset?TEXT1
+0000                 628     USB_reset:
+                     629                             ; SOURCE LINE # 38
+                     630                             ; SOURCE LINE # 39
+                     631                             ; SOURCE LINE # 40
+0000 90FF80          632             MOV     DPTR,#0FF80H
+0003 7484            633             MOV     A,#084H
+0005 F0              634             MOVX    @DPTR,A
+                     635                             ; SOURCE LINE # 41
+0006 90FF82          636             MOV     DPTR,#0FF82H
+0009 F0              637             MOVX    @DPTR,A
+                     638                             ; SOURCE LINE # 42
+000A 90FF48          639             MOV     DPTR,#0FF48H
+000D E4              640             CLR     A
+000E F0              641             MOVX    @DPTR,A
+                     642                             ; SOURCE LINE # 43
+000F 90FF50          643             MOV     DPTR,#0FF50H
+0012 F0              644             MOVX    @DPTR,A
+                     645                             ; SOURCE LINE # 44
+0013 90FF58          646             MOV     DPTR,#0FF58H
+0016 F0              647             MOVX    @DPTR,A
+                     648                             ; SOURCE LINE # 45
+0017 90FF08          649             MOV     DPTR,#0FF08H
+001A F0              650             MOVX    @DPTR,A
+                     651                             ; SOURCE LINE # 46
+001B 90FF10          652             MOV     DPTR,#0FF10H
+001E F0              653             MOVX    @DPTR,A
+                     654                             ; SOURCE LINE # 47
+001F 90FF18          655             MOV     DPTR,#0FF18H
+0022 F0              656             MOVX    @DPTR,A
+                     657                             ; SOURCE LINE # 48
+0023 22              658             RET     
+                     659     ; END OF USB_reset
+                     660     
+                     661     
+----                 662             RSEG  ?PR?EP0_senddata?TEXT1
+0000                 663     EP0_senddata:
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    13
+
+                     664             USING   0
+                     665                             ; SOURCE LINE # 49
+                     666     ;---- Variable 'i?645' assigned to Register 'R4' ----
+                     667                             ; SOURCE LINE # 50
+                     668                             ; SOURCE LINE # 52
+0000 900000   F      669             MOV     DPTR,#DeviceDescriptor+07H
+0003 E4              670             CLR     A
+0004 93              671             MOVC    A,@A+DPTR
+0005 FF              672             MOV     R7,A
+0006 E500     F      673             MOV     A,SendLength
+0008 D3              674             SETB    C
+0009 9F              675             SUBB    A,R7
+000A 4042            676             JC      ?C0019
+                     677                             ; SOURCE LINE # 53
+                     678                             ; SOURCE LINE # 54
+000C E4              679             CLR     A
+000D FC              680             MOV     R4,A
+000E                 681     ?C0020:
+000E 900000   F      682             MOV     DPTR,#DeviceDescriptor+07H
+0011 E4              683             CLR     A
+0012 93              684             MOVC    A,@A+DPTR
+0013 FF              685             MOV     R7,A
+0014 EC              686             MOV     A,R4
+0015 C3              687             CLR     C
+0016 9F              688             SUBB    A,R7
+0017 5021            689             JNC     ?C0021
+                     690                             ; SOURCE LINE # 55
+                     691                             ; SOURCE LINE # 56
+0019 AB00     F      692             MOV     R3,pSendData
+001B 0500     F      693             INC     pSendData+02H
+001D E500     F      694             MOV     A,pSendData+02H
+001F AA00     F      695             MOV     R2,pSendData+01H
+0021 7002            696             JNZ     ?C0113
+0023 0500     F      697             INC     pSendData+01H
+0025                 698     ?C0113:
+0025 14              699             DEC     A
+0026 F9              700             MOV     R1,A
+0027 120000   F      701             LCALL   ?C?CLDPTR
+002A FE              702             MOV     R6,A
+002B 74F8            703             MOV     A,#0F8H
+002D 2C              704             ADD     A,R4
+002E F582            705             MOV     DPL,A
+0030 E4              706             CLR     A
+0031 34FE            707             ADDC    A,#0FEH
+0033 F583            708             MOV     DPH,A
+0035 EE              709             MOV     A,R6
+0036 F0              710             MOVX    @DPTR,A
+                     711                             ; SOURCE LINE # 57
+0037 0C              712             INC     R4
+0038 80D4            713             SJMP    ?C0020
+003A                 714     ?C0021:
+                     715                             ; SOURCE LINE # 58
+003A 90FF81          716             MOV     DPTR,#0FF81H
+003D 7408            717             MOV     A,#08H
+003F F0              718             MOVX    @DPTR,A
+                     719                             ; SOURCE LINE # 59
+0040 C3              720             CLR     C
+0041 E500     F      721             MOV     A,SendLength
+0043 9F              722             SUBB    A,R7
+0044 F500     F      723             MOV     SendLength,A
+                     724                             ; SOURCE LINE # 60
+0046 7BFF            725             MOV     R3,#0FFH
+0048 7A00     F      726             MOV     R2,#HIGH (?SC_5)
+004A 7900     F      727             MOV     R1,#LOW (?SC_5)
+                     728                             ; SOURCE LINE # 61
+004C 805A            729             SJMP    ?C0118
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    14
+
+004E                 730     ?C0019:
+                     731                             ; SOURCE LINE # 63
+                     732                             ; SOURCE LINE # 64
+004E E500     F      733             MOV     A,SendLength
+0050 6044            734             JZ      ?C0024
+                     735                             ; SOURCE LINE # 65
+                     736                             ; SOURCE LINE # 66
+0052 E4              737             CLR     A
+0053 FC              738             MOV     R4,A
+0054                 739     ?C0025:
+0054 EC              740             MOV     A,R4
+0055 C3              741             CLR     C
+0056 9500     F      742             SUBB    A,SendLength
+0058 5021            743             JNC     ?C0026
+                     744                             ; SOURCE LINE # 67
+                     745                             ; SOURCE LINE # 68
+005A AB00     F      746             MOV     R3,pSendData
+005C 0500     F      747             INC     pSendData+02H
+005E E500     F      748             MOV     A,pSendData+02H
+0060 AA00     F      749             MOV     R2,pSendData+01H
+0062 7002            750             JNZ     ?C0114
+0064 0500     F      751             INC     pSendData+01H
+0066                 752     ?C0114:
+0066 14              753             DEC     A
+0067 F9              754             MOV     R1,A
+0068 120000   F      755             LCALL   ?C?CLDPTR
+006B FF              756             MOV     R7,A
+006C 74F8            757             MOV     A,#0F8H
+006E 2C              758             ADD     A,R4
+006F F582            759             MOV     DPL,A
+0071 E4              760             CLR     A
+0072 34FE            761             ADDC    A,#0FEH
+0074 F583            762             MOV     DPH,A
+0076 EF              763             MOV     A,R7
+0077 F0              764             MOVX    @DPTR,A
+                     765                             ; SOURCE LINE # 69
+0078 0C              766             INC     R4
+0079 80D9            767             SJMP    ?C0025
+007B                 768     ?C0026:
+                     769     ;                       bVECINT  = 0x00;
+                     770                             ; SOURCE LINE # 70
+007B 90FF81          771             MOV     DPTR,#0FF81H
+007E E500     F      772             MOV     A,SendLength
+0080 F0              773             MOVX    @DPTR,A
+                     774     ;                       bUSBSTA = USBSTA_SETUP;
+                     775                             ; SOURCE LINE # 71
+0081 7BFF            776             MOV     R3,#0FFH
+0083 7A00     F      777             MOV     R2,#HIGH (?SC_14)
+0085 7900     F      778             MOV     R1,#LOW (?SC_14)
+0087 120000   F      779             LCALL   _rs232_printstr
+                     780     ;                       rs232_printstr("USB setup!\r\n");
+                     781                             ; SOURCE LINE # 72
+008A AF00     F      782             MOV     R7,SendLength
+008C 120000   F      783             LCALL   _rs232_printhex
+                     784     ;                       setup_handler();
+                     785                             ; SOURCE LINE # 73
+008F 120000   F      786             LCALL   L?0144
+                     787     ;                       break;
+                     788                             ; SOURCE LINE # 74
+0092 E4              789             CLR     A
+0093 F500     F      790             MOV     SendLength,A
+                     791     ; 
+                     792                             ; SOURCE LINE # 75
+0095 22              793             RET     
+0096                 794     ?C0024:
+                     795     ;             case VECINT_RSTR_INTERRUPT:
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    15
+
+                     796     ;                       bVECINT  = 0x00;
+                     797                             ; SOURCE LINE # 77
+                     798     ;                       bUSBSTA = USBSTA_RSTR;
+                     799                             ; SOURCE LINE # 78
+0096 E500     F      800             MOV     A,NeedZeroPacket
+0098 B40110          801             CJNE    A,#01H,?C0030
+                     802     ;                       USB_reset();
+                     803                             ; SOURCE LINE # 79
+                     804     ;                       rs232_printstr("USB reset!\r\n");
+                     805                             ; SOURCE LINE # 80
+009B 90FF81          806             MOV     DPTR,#0FF81H
+009E E4              807             CLR     A
+009F F0              808             MOVX    @DPTR,A
+                     809     ;                       break;
+                     810                             ; SOURCE LINE # 81
+00A0 F500     F      811             MOV     NeedZeroPacket,A
+                     812     ;               
+                     813                             ; SOURCE LINE # 82
+00A2 7BFF            814             MOV     R3,#0FFH
+00A4 7A00     F      815             MOV     R2,#HIGH (?SC_23)
+00A6 7900     F      816             MOV     R1,#LOW (?SC_23)
+00A8                 817     ?C0118:
+00A8 120000   F      818             LCALL   _rs232_printstr
+                     819     ;               case VECINT_RESR_INTERRUPT:
+                     820                             ; SOURCE LINE # 83
+                     821     ;                       bVECINT = 0x00;
+                     822                             ; SOURCE LINE # 84
+                     823     ;                       bUSBSTA = USBSTA_RESR;
+                     824                             ; SOURCE LINE # 85
+                     825     ;                       rs232_printstr("USB resume!\r\n");
+                     826                             ; SOURCE LINE # 86
+00AB                 827     ?C0030:
+00AB 22              828             RET     
+                     829     ; END OF EP0_senddata
+                     830     
+                     831     ;                       break;
+                     832     
+----                 833             RSEG  ?PR?setup_handler?TEXT1
+0000                 834     setup_handler:
+                     835             USING   0
+                     836                             ; SOURCE LINE # 87
+                     837     ;               
+                     838                             ; SOURCE LINE # 88
+                     839     ;               case VECINT_SUSR_INTERRUPT:
+                     840                             ; SOURCE LINE # 89
+0000 90FFFC          841             MOV     DPTR,#0FFFCH
+0003 E0              842             MOVX    A,@DPTR
+0004 4402            843             ORL     A,#02H
+0006 F0              844             MOVX    @DPTR,A
+                     845     ;                       bVECINT = 0x00;
+                     846     ;                       bUSBSTA = USBSTA_SUSR;
+                     847     ;                       rs232_printstr("USB suspend!\r\n");
+                     848     ;                       break;
+                     849                             ; SOURCE LINE # 93
+0007 90FF81          850             MOV     DPTR,#0FF81H
+000A 7480            851             MOV     A,#080H
+000C F0              852             MOVX    @DPTR,A
+                     853     ; 
+                     854                             ; SOURCE LINE # 94
+000D 90FF83          855             MOV     DPTR,#0FF83H
+0010 F0              856             MOVX    @DPTR,A
+                     857     ;               default:
+                     858                             ; SOURCE LINE # 95
+0011 90FF00          859             MOV     DPTR,#0FF00H
+0014 E0              860             MOVX    A,@DPTR
+0015 FF              861             MOV     R7,A
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    16
+
+0016 20E703          862             JB      ACC.7,$ + 6H
+0019 020000   F      863             LJMP    ?C0031
+                     864     ;                       rs232_printstr(" Unknown!\r\n");
+                     865                             ; SOURCE LINE # 96
+                     866     ;                       rs232_printhex(bVECINT);
+                     867                             ; SOURCE LINE # 97
+001C 90FFFC          868             MOV     DPTR,#0FFFCH
+001F E0              869             MOVX    A,@DPTR
+0020 4401            870             ORL     A,#01H
+0022 F0              871             MOVX    @DPTR,A
+                     872     ;                       bVECINT  = 0x00;
+                     873     ;                       break;
+                     874     ;       }
+                     875     ;       EA=1;
+                     876                             ; SOURCE LINE # 101
+0023 EF              877             MOV     A,R7
+0024 C4              878             SWAP    A
+0025 13              879             RRC     A
+0026 5403            880             ANL     A,#03H
+0028 6003            881             JZ      $ + 5H
+002A 020000   F      882             LJMP    ?C0050
+                     883     ; }
+                     884                             ; SOURCE LINE # 102
+                     885     ; void hardware_init(void)
+                     886                             ; SOURCE LINE # 103
+002D                 887     ?C0033:
+                     888     ; {
+                     889                             ; SOURCE LINE # 104
+002D 7BFF            890             MOV     R3,#0FFH
+002F 7A00     F      891             MOV     R2,#HIGH (?SC_32)
+0031 7900     F      892             MOV     R1,#LOW (?SC_32)
+0033 120000   F      893             LCALL   _rs232_printstr
+                     894     ;       bMCNFG=0x01;//SDW=1;XINT=0;
+                     895                             ; SOURCE LINE # 105
+0036 90FF01          896             MOV     DPTR,#0FF01H
+0039 E0              897             MOVX    A,@DPTR
+003A 24FA            898             ADD     A,#0FAH
+003C 6010            899             JZ      ?C0036
+003E 24FE            900             ADD     A,#0FEH
+0040 6003            901             JZ      $ + 5H
+0042 020000   F      902             LJMP    ?C0049
+                     903     ;       bPUR3=0x00;
+                     904                             ; SOURCE LINE # 106
+                     905     ;       bPUR2=0x00;
+                     906                             ; SOURCE LINE # 107
+0045                 907     ?C0035:
+                     908     ;       bPUR1=0x00;
+                     909                             ; SOURCE LINE # 108
+0045 7BFF            910             MOV     R3,#0FFH
+0047 7A00     F      911             MOV     R2,#HIGH (?SC_49)
+0049 7900     F      912             MOV     R1,#LOW (?SC_49)
+                     913     ;       bPUR0=0x00;//all pull up are connected to pins
+                     914                             ; SOURCE LINE # 109
+004B 020000   F      915             LJMP    ?C0134
+                     916     ;       bUSBCTL = 0x00;
+                     917                             ; SOURCE LINE # 110
+004E                 918     ?C0036:
+                     919     ;       bUSBMSK=USBMSK_STPOW|USBMSK_RWUP|USBMSK_SETUP|USBMSK_RESR|USBMSK_SUSR|USBMSK_RSTR;
+                     920                             ; SOURCE LINE # 111
+004E 7BFF            921             MOV     R3,#0FFH
+0050 7A00     F      922             MOV     R2,#HIGH (?SC_60)
+0052 7900     F      923             MOV     R1,#LOW (?SC_60)
+0054 120000   F      924             LCALL   _rs232_printstr
+                     925     ;       EA=1;
+                     926                             ; SOURCE LINE # 112
+0057 90FF03          927             MOV     DPTR,#0FF03H
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    17
+
+005A E0              928             MOVX    A,@DPTR
+005B 24FE            929             ADD     A,#0FEH
+005D 601B            930             JZ      ?C0039
+005F 14              931             DEC     A
+0060 6033            932             JZ      ?C0040
+0062 24E1            933             ADD     A,#0E1H
+0064 6076            934             JZ      ?C0047
+0066 2421            935             ADD     A,#021H
+0068 707B            936             JNZ     ?C0048
+                     937     ;       EX0=1;
+                     938                             ; SOURCE LINE # 113
+                     939     ;       ES=0;
+                     940                             ; SOURCE LINE # 114
+006A                 941     ?C0038:
+                     942     ;       IT0=0;
+                     943                             ; SOURCE LINE # 115
+006A 7BFF            944             MOV     R3,#0FFH
+006C 7A00     F      945             MOV     R2,#HIGH (?SC_75)
+006E 7900     F      946             MOV     R1,#LOW (?SC_75)
+0070 120000   F      947             LCALL   _rs232_printstr
+                     948     ;       USB_CONNECT;
+                     949     ; }
+                     950                             ; SOURCE LINE # 117
+0073 90FF83          951             MOV     DPTR,#0FF83H
+0076 E4              952             CLR     A
+0077 F0              953             MOVX    @DPTR,A
+                     954     ; void main(void)
+                     955                             ; SOURCE LINE # 118
+                     956     ; {
+                     957                             ; SOURCE LINE # 119
+                     958     ;       char xdata *p;
+                     959                             ; SOURCE LINE # 120
+                     960     ;       unsigned char i;
+                     961                             ; SOURCE LINE # 121
+0078 8009            962             SJMP    ?C0120
+                     963     ;       EX0=0;
+                     964                             ; SOURCE LINE # 122
+007A                 965     ?C0039:
+                     966     ;       led=0;
+                     967                             ; SOURCE LINE # 123
+007A 7BFF            968             MOV     R3,#0FFH
+007C 7A00     F      969             MOV     R2,#HIGH (?SC_88)
+007E 7900     F      970             MOV     R1,#LOW (?SC_88)
+0080 120000   F      971             LCALL   _rs232_printstr
+                     972     ;       rs232_init();
+                     973                             ; SOURCE LINE # 124
+0083                 974     ?C0120:
+0083 7500FF   F      975             MOV     pSendData,#0FFH
+0086 750000   F      976             MOV     pSendData+01H,#HIGH (DeviceDescriptor)
+0089 750000   F      977             MOV     pSendData+02H,#LOW (DeviceDescriptor)
+                     978     ;       rs232_printstr("Hello world!\r\n");
+                     979                             ; SOURCE LINE # 125
+008C 750010   F      980             MOV     SendLength,#010H
+                     981     ;       hardware_init();
+                     982                             ; SOURCE LINE # 126
+008F 120000   F      983             LCALL   EP0_senddata
+                     984     ;       
+                     985                             ; SOURCE LINE # 127
+0092 020000   F      986             LJMP    ?C0051
+                     987     ;       while(1)
+                     988                             ; SOURCE LINE # 128
+0095                 989     ?C0040:
+                     990     ;       {
+                     991                             ; SOURCE LINE # 129
+0095 7BFF            992             MOV     R3,#0FFH
+0097 7A00     F      993             MOV     R2,#HIGH (?SC_101)
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    18
+
+0099 7900     F      994             MOV     R1,#LOW (?SC_101)
+009B 120000   F      995             LCALL   _rs232_printstr
+                     996     ;               if(RI)
+                     997                             ; SOURCE LINE # 130
+009E 90FF02          998             MOV     DPTR,#0FF02H
+00A1 E0              999             MOVX    A,@DPTR
+00A2 14             1000             DEC     A
+00A3 6013           1001             JZ      ?C0043
+00A5 14             1002             DEC     A
+00A6 6019           1003             JZ      ?C0044
+00A8 14             1004             DEC     A
+00A9 601F           1005             JZ      ?C0045
+00AB 2403           1006             ADD     A,#03H
+00AD 7024           1007             JNZ     ?C0046
+                    1008     ;               {
+                    1009                             ; SOURCE LINE # 131
+                    1010     ;                       switch(SBUF)
+                    1011                             ; SOURCE LINE # 132
+00AF                1012     ?C0042:
+                    1013     ;                       {
+                    1014                             ; SOURCE LINE # 133
+00AF 7BFF           1015             MOV     R3,#0FFH
+00B1 7A00     F     1016             MOV     R2,#HIGH (?SC_116)
+00B3 7900     F     1017             MOV     R1,#LOW (?SC_116)
+00B5                1018     ?C0119:
+                    1019     ;                               case '#':
+                    1020     ;                                       rs232_printstr("EP0IN buffer:");
+                    1021                             ; SOURCE LINE # 135
+00B5 020000   F     1022             LJMP    ?C0134
+                    1023     ;                                       p=&bIEP0_BUFFER_ADDRESS;
+                    1024                             ; SOURCE LINE # 136
+00B8                1025     ?C0043:
+                    1026     ;                                       for(i=0;i<8;i++)
+                    1027                             ; SOURCE LINE # 137
+00B8 7BFF           1028             MOV     R3,#0FFH
+00BA 7A00     F     1029             MOV     R2,#HIGH (?SC_125)
+00BC 7900     F     1030             MOV     R1,#LOW (?SC_125)
+00BE                1031     ?C0121:
+                    1032     ;                                       {
+                    1033     ;                                               rs232_printhex(p[i]);
+                    1034                             ; SOURCE LINE # 139
+00BE 020000   F     1035             LJMP    ?C0134
+                    1036     ;                                       }
+                    1037                             ; SOURCE LINE # 140
+00C1                1038     ?C0044:
+                    1039     ;                                       rs232_printstr("\r\n");
+                    1040                             ; SOURCE LINE # 141
+00C1 7BFF           1041             MOV     R3,#0FFH
+00C3 7A00     F     1042             MOV     R2,#HIGH (?SC_136)
+00C5 7900     F     1043             MOV     R1,#LOW (?SC_136)
+00C7                1044     ?C0122:
+                    1045     ;                                       break;
+                    1046     ;                               case '$':
+                    1047                             ; SOURCE LINE # 143
+00C7 020000   F     1048             LJMP    ?C0134
+                    1049     ;                                       rs232_printstr("EP0OUT buffer:");
+                    1050                             ; SOURCE LINE # 144
+00CA                1051     ?C0045:
+                    1052     ;                                       p=&bOEP0_BUFFER_ADDRESS;
+                    1053                             ; SOURCE LINE # 145
+00CA 7BFF           1054             MOV     R3,#0FFH
+00CC 7A00     F     1055             MOV     R2,#HIGH (?SC_147)
+00CE 7900     F     1056             MOV     R1,#LOW (?SC_147)
+00D0                1057     ?C0123:
+                    1058     ;                                       for(i=0;i<8;i++)
+                    1059     ;                                       {
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    19
+
+                    1060                             ; SOURCE LINE # 147
+00D0 020000   F     1061             LJMP    ?C0134
+                    1062     ;                                               rs232_printhex(p[i]);
+                    1063                             ; SOURCE LINE # 148
+00D3                1064     ?C0046:
+                    1065     ;                                       }
+                    1066                             ; SOURCE LINE # 149
+00D3 7BFF           1067             MOV     R3,#0FFH
+00D5 7A00     F     1068             MOV     R2,#HIGH (?SC_160)
+00D7 7900     F     1069             MOV     R1,#LOW (?SC_160)
+00D9                1070     ?C0124:
+                    1071     ;                                       rs232_printstr("\r\n"); 
+                    1072     ;                                       break;
+                    1073                             ; SOURCE LINE # 151
+00D9 020000   F     1074             LJMP    ?C0134
+                    1075     ;                               case 'w':
+                    1076                             ; SOURCE LINE # 152
+                    1077     ;                                       rs232_printstr("SETUP buffer:");
+                    1078     ;                                       p=&bEP0_SETUP_ADDRESS;
+                    1079                             ; SOURCE LINE # 154
+                    1080     ;                                       for(i=0;i<8;i++)
+                    1081                             ; SOURCE LINE # 155
+00DC                1082     ?C0047:
+                    1083     ;                                       {
+                    1084                             ; SOURCE LINE # 156
+00DC 7BFF           1085             MOV     R3,#0FFH
+00DE 7A00     F     1086             MOV     R2,#HIGH (?SC_174)
+00E0 7900     F     1087             MOV     R1,#LOW (?SC_174)
+00E2                1088     ?C0125:
+                    1089     ;                                               rs232_printhex(p[i]);
+                    1090     ;                                       }
+                    1091                             ; SOURCE LINE # 158
+00E2 020000   F     1092             LJMP    ?C0134
+                    1093     ;                                       rs232_printstr("\r\n"); 
+                    1094                             ; SOURCE LINE # 159
+00E5                1095     ?C0048:
+                    1096     ;                                       break;
+                    1097                             ; SOURCE LINE # 160
+00E5 7BFF           1098             MOV     R3,#0FFH
+00E7 7A00     F     1099             MOV     R2,#HIGH (?SC_187)
+00E9 7900     F     1100             MOV     R1,#LOW (?SC_187)
+00EB 120000   F     1101             LCALL   _rs232_printstr
+                    1102     ;                               case 'q':
+                    1103                             ; SOURCE LINE # 161
+00EE 90FF03         1104             MOV     DPTR,#0FF03H
+00F1 E0             1105             MOVX    A,@DPTR
+00F2 FF             1106             MOV     R7,A
+00F3 120000   F     1107             LCALL   _rs232_printhex
+                    1108     ;                                       rs232_printstr("\r\nbIEPBCNT_0:");
+                    1109                             ; SOURCE LINE # 162
+00F6 7BFF           1110             MOV     R3,#0FFH
+00F8 7A00     F     1111             MOV     R2,#HIGH (?SC_20)
+00FA 7900     F     1112             MOV     R1,#LOW (?SC_20)
+00FC                1113     ?C0126:
+                    1114     ;                                       rs232_printhex(bIEPBCNT_0);
+                    1115                             ; SOURCE LINE # 163
+00FC 020000   F     1116             LJMP    ?C0134
+                    1117     ;                                       rs232_printstr("\r\nbOEPBCNT_0:");
+                    1118                             ; SOURCE LINE # 164
+                    1119     ;                                       rs232_printhex(bOEPBCNT_0);
+                    1120                             ; SOURCE LINE # 165
+                    1121     ;                                       rs232_printstr("\r\nbIEPCNFG_0:");
+                    1122     ;                                       rs232_printhex(bIEPCNFG_0);
+                    1123                             ; SOURCE LINE # 167
+00FF                1124     ?C0049:
+                    1125     ;                                       rs232_printstr("\r\nbOEPCNFG_0:");
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    20
+
+                    1126                             ; SOURCE LINE # 168
+00FF 7BFF           1127             MOV     R3,#0FFH
+0101 7A00     F     1128             MOV     R2,#HIGH (?SC_212)
+0103 7900     F     1129             MOV     R1,#LOW (?SC_212)
+0105                1130     ?C0127:
+                    1131     ;                                       rs232_printhex(bOEPCNFG_0);
+                    1132                             ; SOURCE LINE # 169
+0105 020000   F     1133             LJMP    ?C0134
+                    1134     ;                                       rs232_printstr("\r\nbFUNADR:");
+                    1135                             ; SOURCE LINE # 170
+                    1136     ;                                       rs232_printhex(bFUNADR);
+                    1137                             ; SOURCE LINE # 171
+                    1138     ;                                       rs232_printstr("\r\nbWDCSR:");
+                    1139                             ; SOURCE LINE # 172
+0108                1140     ?C0050:
+                    1141     ;                                       rs232_printhex(bWDCSR);
+                    1142                             ; SOURCE LINE # 173
+0108 7BFF           1143             MOV     R3,#0FFH
+010A 7A00     F     1144             MOV     R2,#HIGH (?SC_243)
+010C 7900     F     1145             MOV     R1,#LOW (?SC_243)
+010E                1146     ?C0128:
+                    1147     ;                                       break;
+                    1148                             ; SOURCE LINE # 174
+010E 020000   F     1149             LJMP    ?C0134
+                    1150     ;                               case 'e':
+                    1151                             ; SOURCE LINE # 175
+                    1152     ;                                       bUSBCTL|=0x80;
+                    1153                             ; SOURCE LINE # 176
+0111                1154     ?C0031:
+                    1155     ;                                       break;
+                    1156     ;                               default:
+                    1157                             ; SOURCE LINE # 178
+                    1158     ;                                       rs232_printstr("Hello world!\r\n");
+                    1159                             ; SOURCE LINE # 179
+0111 90FFFC         1160             MOV     DPTR,#0FFFCH
+0114 E0             1161             MOVX    A,@DPTR
+0115 54FE           1162             ANL     A,#0FEH
+0117 F0             1163             MOVX    @DPTR,A
+                    1164     ;                                       break;
+                    1165                             ; SOURCE LINE # 180
+0118 90FF00         1166             MOV     DPTR,#0FF00H
+011B E0             1167             MOVX    A,@DPTR
+011C FF             1168             MOV     R7,A
+011D C4             1169             SWAP    A
+011E 13             1170             RRC     A
+011F 5403           1171             ANL     A,#03H
+0121 14             1172             DEC     A
+0122 6065           1173             JZ      ?C0059
+0124 04             1174             INC     A
+0125 6003           1175             JZ      $ + 5H
+0127 020000   F     1176             LJMP    ?C0063
+                    1177     ;                       }
+                    1178                             ; SOURCE LINE # 181
+                    1179     ;                       RI=0;
+                    1180                             ; SOURCE LINE # 182
+012A                1181     ?C0053:
+                    1182     ;                       
+                    1183                             ; SOURCE LINE # 183
+012A 7BFF           1184             MOV     R3,#0FFH
+012C 7A00     F     1185             MOV     R2,#HIGH (?SC_268)
+012E 7900     F     1186             MOV     R1,#LOW (?SC_268)
+0130 120000   F     1187             LCALL   _rs232_printstr
+                    1188     ;               }
+                    1189                             ; SOURCE LINE # 184
+0133 90FF01         1190             MOV     DPTR,#0FF01H
+0136 E0             1191             MOVX    A,@DPTR
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    21
+
+0137 24FB           1192             ADD     A,#0FBH
+0139 6010           1193             JZ      ?C0056
+013B 24FC           1194             ADD     A,#0FCH
+013D 603A           1195             JZ      ?C0057
+013F 2408           1196             ADD     A,#08H
+0141 703E           1197             JNZ     ?C0058
+                    1198     ;               if(TI)
+                    1199                             ; SOURCE LINE # 185
+                    1200     ;               {
+                    1201                             ; SOURCE LINE # 186
+0143                1202     ?C0055:
+                    1203     ;                       TI=0;
+                    1204                             ; SOURCE LINE # 187
+0143 7BFF           1205             MOV     R3,#0FFH
+0145 7A00     F     1206             MOV     R2,#HIGH (?SC_286)
+0147 7900     F     1207             MOV     R1,#LOW (?SC_286)
+0149                1208     ?C0129:
+                    1209     ;               }
+                    1210                             ; SOURCE LINE # 188
+0149 8065           1211             SJMP    ?C0134
+                    1212     ;               led=~led;
+                    1213                             ; SOURCE LINE # 189
+014B                1214     ?C0056:
+                    1215     ;               delay(10);
+                    1216                             ; SOURCE LINE # 190
+014B 7BFF           1217             MOV     R3,#0FFH
+014D 7A00     F     1218             MOV     R2,#HIGH (?SC_296)
+014F 7900     F     1219             MOV     R1,#LOW (?SC_296)
+0151 120000   F     1220             LCALL   _rs232_printstr
+                    1221     ;       }
+                    1222                             ; SOURCE LINE # 191
+0154 90FF02         1223             MOV     DPTR,#0FF02H
+0157 E0             1224             MOVX    A,@DPTR
+0158 FF             1225             MOV     R7,A
+0159 120000   F     1226             LCALL   _rs232_printhex
+                    1227     ; }
+                    1228                             ; SOURCE LINE # 192
+015C 120000   F     1229             LCALL   L?0144
+                    1230     ; *** sync lost ***
+                    1231                             ; SOURCE LINE # 193
+015F 90FF02         1232             MOV     DPTR,#0FF02H
+0162 E0             1233             MOVX    A,@DPTR
+0163 90FFFF         1234             MOV     DPTR,#0FFFFH
+0166 F0             1235             MOVX    @DPTR,A
+                    1236     ; *** sync lost ***
+                    1237                             ; SOURCE LINE # 194
+0167 90FF83         1238             MOV     DPTR,#0FF83H
+016A E4             1239             CLR     A
+016B F0             1240             MOVX    @DPTR,A
+                    1241     ; *** sync lost ***
+                    1242                             ; SOURCE LINE # 195
+016C 90FF81         1243             MOV     DPTR,#0FF81H
+016F F0             1244             MOVX    @DPTR,A
+                    1245     ; *** sync lost ***
+                    1246                             ; SOURCE LINE # 196
+0170 90FF80         1247             MOV     DPTR,#0FF80H
+0173 E0             1248             MOVX    A,@DPTR
+0174 4420           1249             ORL     A,#020H
+0176 F0             1250             MOVX    @DPTR,A
+                    1251     ; *** sync lost ***
+                    1252                             ; SOURCE LINE # 197
+0177 803A           1253             SJMP    ?C0051
+                    1254     ; *** sync lost ***
+                    1255                             ; SOURCE LINE # 198
+0179                1256     ?C0057:
+                    1257     ; *** sync lost ***
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    22
+
+                    1258                             ; SOURCE LINE # 199
+0179 7BFF           1259             MOV     R3,#0FFH
+017B 7A00     F     1260             MOV     R2,#HIGH (?SC_314)
+017D 7900     F     1261             MOV     R1,#LOW (?SC_314)
+017F                1262     ?C0130:
+                    1263     ; *** sync lost ***
+                    1264     ; *** sync lost ***
+                    1265     ; *** sync lost ***
+                    1266     ; *** sync lost ***
+                    1267     ; *** sync lost ***
+                    1268     ; *** sync lost ***
+                    1269                             ; SOURCE LINE # 205
+017F 802F           1270             SJMP    ?C0134
+                    1271     ; *** sync lost ***
+                    1272                             ; SOURCE LINE # 206
+0181                1273     ?C0058:
+                    1274     ; *** sync lost ***
+                    1275                             ; SOURCE LINE # 207
+0181 7BFF           1276             MOV     R3,#0FFH
+0183 7A00     F     1277             MOV     R2,#HIGH (?SC_325)
+0185 7900     F     1278             MOV     R1,#LOW (?SC_325)
+0187                1279     ?C0131:
+                    1280     ; *** sync lost ***
+                    1281                             ; SOURCE LINE # 208
+0187 8027           1282             SJMP    ?C0134
+                    1283     ; *** sync lost ***
+                    1284                             ; SOURCE LINE # 209
+                    1285     ; *** sync lost ***
+                    1286                             ; SOURCE LINE # 210
+                    1287     ; *** sync lost ***
+                    1288                             ; SOURCE LINE # 211
+0189                1289     ?C0059:
+                    1290     ; *** sync lost ***
+                    1291                             ; SOURCE LINE # 212
+0189 7BFF           1292             MOV     R3,#0FFH
+018B 7A00     F     1293             MOV     R2,#HIGH (?SC_354)
+018D 7900     F     1294             MOV     R1,#LOW (?SC_354)
+018F 120000   F     1295             LCALL   _rs232_printstr
+                    1296     ; *** sync lost ***
+                    1297                             ; SOURCE LINE # 213
+0192 90FF01         1298             MOV     DPTR,#0FF01H
+0195 E0             1299             MOVX    A,@DPTR
+0196 24F6           1300             ADD     A,#0F6H
+0198 7008           1301             JNZ     ?C0062
+                    1302     ; *** sync lost ***
+                    1303                             ; SOURCE LINE # 214
+                    1304     ; *** sync lost ***
+                    1305                             ; SOURCE LINE # 215
+019A                1306     ?C0061:
+                    1307     ; *** sync lost ***
+                    1308                             ; SOURCE LINE # 216
+019A 7BFF           1309             MOV     R3,#0FFH
+019C 7A00     F     1310             MOV     R2,#HIGH (?SC_372)
+019E 7900     F     1311             MOV     R1,#LOW (?SC_372)
+01A0                1312     ?C0132:
+                    1313     ; *** sync lost ***
+                    1314     ; *** sync lost ***
+                    1315                             ; SOURCE LINE # 218
+01A0 800E           1316             SJMP    ?C0134
+                    1317     ; *** sync lost ***
+                    1318                             ; SOURCE LINE # 219
+01A2                1319     ?C0062:
+                    1320     ; *** sync lost ***
+                    1321                             ; SOURCE LINE # 220
+01A2 7BFF           1322             MOV     R3,#0FFH
+01A4 7A00     F     1323             MOV     R2,#HIGH (?SC_383)
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    23
+
+01A6 7900     F     1324             MOV     R1,#LOW (?SC_383)
+01A8                1325     ?C0133:
+                    1326     ; *** sync lost ***
+                    1327                             ; SOURCE LINE # 221
+01A8 8006           1328             SJMP    ?C0134
+                    1329     ; *** sync lost ***
+                    1330                             ; SOURCE LINE # 222
+                    1331     ; *** sync lost ***
+                    1332                             ; SOURCE LINE # 223
+                    1333     ; *** sync lost ***
+                    1334                             ; SOURCE LINE # 224
+01AA                1335     ?C0063:
+                    1336     ; *** sync lost ***
+                    1337                             ; SOURCE LINE # 225
+01AA 7BFF           1338             MOV     R3,#0FFH
+01AC 7A00     F     1339             MOV     R2,#HIGH (?SC_394)
+01AE 7900     F     1340             MOV     R1,#LOW (?SC_394)
+01B0                1341     ?C0134:
+01B0 120000   F     1342             LCALL   _rs232_printstr
+                    1343     ; *** sync lost ***
+                    1344                             ; SOURCE LINE # 226
+                    1345     ; *** sync lost ***
+                    1346                             ; SOURCE LINE # 227
+                    1347     ; *** sync lost ***
+                    1348                             ; SOURCE LINE # 228
+01B3                1349     ?C0051:
+                    1350     ; *** sync lost ***
+                    1351                             ; SOURCE LINE # 229
+01B3 90FFFC         1352             MOV     DPTR,#0FFFCH
+01B6 E0             1353             MOVX    A,@DPTR
+01B7 54FD           1354             ANL     A,#0FDH
+01B9 F0             1355             MOVX    @DPTR,A
+                    1356     ; *** sync lost ***
+                    1357     ; *** sync lost ***
+                    1358     ; *** sync lost ***
+                    1359     ; *** sync lost ***
+                    1360                             ; SOURCE LINE # 233
+01BA 22             1361             RET     
+                    1362     ; END OF setup_handler
+                    1363     
+                    1364     
+----                1365             RSEG  ?PR?_delay?TEXT1
+0000                1366     _delay:
+                    1367             USING   0
+                    1368                             ; SOURCE LINE # 13
+                    1369     ;---- Variable 'k?846' assigned to Register 'R6/R7' ----
+                    1370                             ; SOURCE LINE # 14
+                    1371                             ; SOURCE LINE # 16
+0000                1372     ?C0065:
+0000 EF             1373             MOV     A,R7
+0001 4E             1374             ORL     A,R6
+0002 600F           1375             JZ      ?C0074
+                    1376                             ; SOURCE LINE # 17
+                    1377     ;---- Variable 'i?847' assigned to Register 'R5' ----
+0004 7DC8           1378             MOV     R5,#0C8H
+0006                1379     ?C0068:
+                    1380                             ; SOURCE LINE # 18
+                    1381     ;---- Variable 'j?848' assigned to Register 'R4' ----
+0006 7CC8           1382             MOV     R4,#0C8H
+0008                1383     ?C0071:
+0008 DCFE           1384             DJNZ    R4,?C0071
+000A                1385     ?C0070:
+000A DDFA           1386             DJNZ    R5,?C0068
+000C                1387     ?C0067:
+000C EF             1388             MOV     A,R7
+000D 1F             1389             DEC     R7
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    24
+
+000E 70F0           1390             JNZ     ?C0065
+0010 1E             1391             DEC     R6
+0011                1392     ?C0115:
+0011 80ED           1393             SJMP    ?C0065
+                    1394                             ; SOURCE LINE # 19
+0013                1395     ?C0074:
+0013 22             1396             RET     
+                    1397     ; END OF _delay
+                    1398     
+----                1399     CSEG    AT      00023H
+0023 020000   F     1400             LJMP    serial_routine
+                    1401     
+                    1402     
+----                1403             RSEG  ?PR?serial_routine?TEXT1
+                    1404             USING   2
+0000                1405     serial_routine:
+                    1406                             ; SOURCE LINE # 21
+                    1407                             ; SOURCE LINE # 23
+0000 309802         1408             JNB     RI,?C0075
+                    1409                             ; SOURCE LINE # 24
+                    1410                             ; SOURCE LINE # 25
+0003 C298           1411             CLR     RI
+                    1412                             ; SOURCE LINE # 26
+0005                1413     ?C0075:
+                    1414                             ; SOURCE LINE # 27
+0005 309902         1415             JNB     TI,?C0077
+                    1416                             ; SOURCE LINE # 28
+                    1417                             ; SOURCE LINE # 29
+0008 C299           1418             CLR     TI
+                    1419                             ; SOURCE LINE # 30
+                    1420                             ; SOURCE LINE # 31
+000A                1421     ?C0077:
+000A 32             1422             RETI    
+                    1423     ; END OF serial_routine
+                    1424     
+----                1425     CSEG    AT      00003H
+0003 020000   F     1426             LJMP    fun
+                    1427     
+                    1428     
+----                1429             RSEG  ?PR?fun?TEXT1
+                    1430             USING   2
+0000                1431     fun:
+0000 C0E0           1432             PUSH    ACC
+0002 C083           1433             PUSH    DPH
+0004 C082           1434             PUSH    DPL
+0006 C0D0           1435             PUSH    PSW
+                    1436             USING   2
+0008 75D010         1437             MOV     PSW,#010H
+                    1438                             ; SOURCE LINE # 36
+                    1439                             ; SOURCE LINE # 38
+000B C2AF           1440             CLR     EA
+                    1441                             ; SOURCE LINE # 39
+000D 90FF92         1442             MOV     DPTR,#0FF92H
+0010 E0             1443             MOVX    A,@DPTR
+0011 120000   F     1444             LCALL   ?C?CCASE
+0014 0000     F     1445             DW      ?C0082
+0016 12             1446             DB      012H
+0017 0000     F     1447             DW      ?C0082
+0019 22             1448             DB      022H
+001A 0000     F     1449             DW      ?C0083
+001C 30             1450             DB      030H
+001D 0000     F     1451             DW      ?C0084
+001F 32             1452             DB      032H
+0020 0000     F     1453             DW      ?C0086
+0022 38             1454             DB      038H
+0023 0000     F     1455             DW      ?C0087
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    25
+
+0025 3A             1456             DB      03AH
+0026 0000     F     1457             DW      ?C0085
+0028 3C             1458             DB      03CH
+0029 0000     F     1459             DW      ?C0080
+002B 44             1460             DB      044H
+002C 0000     F     1461             DW      ?C0079
+002E 46             1462             DB      046H
+002F 0000           1463             DW      00H
+0031 0000     F     1464             DW      ?C0088
+                    1465                             ; SOURCE LINE # 40
+                    1466                             ; SOURCE LINE # 41
+0033                1467     ?C0079:
+                    1468                             ; SOURCE LINE # 42
+0033 90FF92         1469             MOV     DPTR,#0FF92H
+0036 E4             1470             CLR     A
+0037 F0             1471             MOVX    @DPTR,A
+                    1472                             ; SOURCE LINE # 44
+0038 7BFF           1473             MOV     R3,#0FFH
+003A 7A00     F     1474             MOV     R2,#HIGH (?SC_419)
+003C 7900     F     1475             MOV     R1,#LOW (?SC_419)
+003E 120000   F     1476             LCALL   _rs232_printstr
+                    1477                             ; SOURCE LINE # 45
+0041 90FF83         1478             MOV     DPTR,#0FF83H
+0044 E4             1479             CLR     A
+0045 F0             1480             MOVX    @DPTR,A
+                    1481                             ; SOURCE LINE # 46
+0046 90FF81         1482             MOV     DPTR,#0FF81H
+0049 F0             1483             MOVX    @DPTR,A
+                    1484                             ; SOURCE LINE # 47
+004A 020000   F     1485             LJMP    ?C0078
+                    1486                             ; SOURCE LINE # 49
+004D                1487     ?C0080:
+                    1488                             ; SOURCE LINE # 50
+004D 90FF92         1489             MOV     DPTR,#0FF92H
+0050 E4             1490             CLR     A
+0051 F0             1491             MOVX    @DPTR,A
+                    1492                             ; SOURCE LINE # 51
+0052 7BFF           1493             MOV     R3,#0FFH
+0054 7A00     F     1494             MOV     R2,#HIGH (?SC_431)
+0056 7900     F     1495             MOV     R1,#LOW (?SC_431)
+0058 120000   F     1496             LCALL   _rs232_printstr
+                    1497                             ; SOURCE LINE # 52
+005B 120000   F     1498             LCALL   EP0_senddata
+                    1499                             ; SOURCE LINE # 53
+005E 020000   F     1500             LJMP    ?C0078
+                    1501                             ; SOURCE LINE # 55
+                    1502                             ; SOURCE LINE # 56
+0061                1503     ?C0082:
+                    1504                             ; SOURCE LINE # 57
+0061 90FF92         1505             MOV     DPTR,#0FF92H
+0064 E4             1506             CLR     A
+0065 F0             1507             MOVX    @DPTR,A
+                    1508                             ; SOURCE LINE # 59
+0066 7BFF           1509             MOV     R3,#0FFH
+0068 7A00     F     1510             MOV     R2,#HIGH (?SC_441)
+006A 7900     F     1511             MOV     R1,#LOW (?SC_441)
+                    1512                             ; SOURCE LINE # 60
+006C 8065           1513             SJMP    ?C0138
+                    1514                             ; SOURCE LINE # 62
+006E                1515     ?C0083:
+                    1516                             ; SOURCE LINE # 63
+006E 90FF92         1517             MOV     DPTR,#0FF92H
+0071 E4             1518             CLR     A
+0072 F0             1519             MOVX    @DPTR,A
+                    1520                             ; SOURCE LINE # 64
+0073 90FFFE         1521             MOV     DPTR,#0FFFEH
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    26
+
+0076 04             1522             INC     A
+0077 F0             1523             MOVX    @DPTR,A
+                    1524                             ; SOURCE LINE # 65
+0078 7BFF           1525             MOV     R3,#0FFH
+007A 7A00     F     1526             MOV     R2,#HIGH (?SC_452)
+007C 7900     F     1527             MOV     R1,#LOW (?SC_452)
+                    1528                             ; SOURCE LINE # 66
+                    1529                             ; SOURCE LINE # 67
+007E 8011           1530             SJMP    ?C0136
+                    1531                             ; SOURCE LINE # 69
+0080                1532     ?C0084:
+                    1533                             ; SOURCE LINE # 70
+0080 90FF92         1534             MOV     DPTR,#0FF92H
+0083 E4             1535             CLR     A
+0084 F0             1536             MOVX    @DPTR,A
+                    1537                             ; SOURCE LINE # 71
+0085 90FFFE         1538             MOV     DPTR,#0FFFEH
+0088 7404           1539             MOV     A,#04H
+008A F0             1540             MOVX    @DPTR,A
+                    1541                             ; SOURCE LINE # 72
+008B 7BFF           1542             MOV     R3,#0FFH
+008D 7A00     F     1543             MOV     R2,#HIGH (?SC_474)
+008F 7900     F     1544             MOV     R1,#LOW (?SC_474)
+0091                1545     ?C0136:
+0091 120000   F     1546             LCALL   _rs232_printstr
+                    1547                             ; SOURCE LINE # 73
+0094 120000   F     1548             LCALL   setup_handler
+                    1549                             ; SOURCE LINE # 74
+0097 8055           1550             SJMP    ?C0078
+                    1551                             ; SOURCE LINE # 76
+0099                1552     ?C0085:
+                    1553                             ; SOURCE LINE # 77
+0099 90FF92         1554             MOV     DPTR,#0FF92H
+009C E4             1555             CLR     A
+009D F0             1556             MOVX    @DPTR,A
+                    1557                             ; SOURCE LINE # 78
+009E 90FFFE         1558             MOV     DPTR,#0FFFEH
+00A1 7480           1559             MOV     A,#080H
+00A3 F0             1560             MOVX    @DPTR,A
+                    1561                             ; SOURCE LINE # 79
+00A4 120000   F     1562             LCALL   USB_reset
+                    1563                             ; SOURCE LINE # 80
+00A7 7BFF           1564             MOV     R3,#0FFH
+00A9 7A00     F     1565             MOV     R2,#HIGH (?SC_487)
+00AB 7900     F     1566             MOV     R1,#LOW (?SC_487)
+00AD                1567     ?C0135:
+                    1568                             ; SOURCE LINE # 81
+00AD 8024           1569             SJMP    ?C0138
+                    1570                             ; SOURCE LINE # 83
+00AF                1571     ?C0086:
+                    1572                             ; SOURCE LINE # 84
+00AF 90FF92         1573             MOV     DPTR,#0FF92H
+00B2 E4             1574             CLR     A
+00B3 F0             1575             MOVX    @DPTR,A
+                    1576                             ; SOURCE LINE # 85
+00B4 90FFFE         1577             MOV     DPTR,#0FFFEH
+00B7 7420           1578             MOV     A,#020H
+00B9 F0             1579             MOVX    @DPTR,A
+                    1580                             ; SOURCE LINE # 86
+00BA 7BFF           1581             MOV     R3,#0FFH
+00BC 7A00     F     1582             MOV     R2,#HIGH (?SC_500)
+00BE 7900     F     1583             MOV     R1,#LOW (?SC_500)
+00C0                1584     ?C0137:
+                    1585                             ; SOURCE LINE # 87
+00C0 8011           1586             SJMP    ?C0138
+                    1587                             ; SOURCE LINE # 89
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    27
+
+00C2                1588     ?C0087:
+                    1589                             ; SOURCE LINE # 90
+00C2 90FF92         1590             MOV     DPTR,#0FF92H
+00C5 E4             1591             CLR     A
+00C6 F0             1592             MOVX    @DPTR,A
+                    1593                             ; SOURCE LINE # 91
+00C7 90FFFE         1594             MOV     DPTR,#0FFFEH
+00CA 7440           1595             MOV     A,#040H
+00CC F0             1596             MOVX    @DPTR,A
+                    1597                             ; SOURCE LINE # 92
+00CD 7BFF           1598             MOV     R3,#0FFH
+00CF 7A00     F     1599             MOV     R2,#HIGH (?SC_514)
+00D1 7900     F     1600             MOV     R1,#LOW (?SC_514)
+00D3                1601     ?C0138:
+00D3 120000   F     1602             LCALL   _rs232_printstr
+                    1603                             ; SOURCE LINE # 93
+00D6 8016           1604             SJMP    ?C0078
+                    1605                             ; SOURCE LINE # 95
+00D8                1606     ?C0088:
+                    1607                             ; SOURCE LINE # 96
+00D8 7BFF           1608             MOV     R3,#0FFH
+00DA 7A00     F     1609             MOV     R2,#HIGH (?SC_529)
+00DC 7900     F     1610             MOV     R1,#LOW (?SC_529)
+00DE 120000   F     1611             LCALL   _rs232_printstr
+                    1612                             ; SOURCE LINE # 97
+00E1 90FF92         1613             MOV     DPTR,#0FF92H
+00E4 E0             1614             MOVX    A,@DPTR
+00E5 FF             1615             MOV     R7,A
+00E6 120000   F     1616             LCALL   _rs232_printhex
+                    1617                             ; SOURCE LINE # 98
+00E9 90FF92         1618             MOV     DPTR,#0FF92H
+00EC E4             1619             CLR     A
+00ED F0             1620             MOVX    @DPTR,A
+                    1621                             ; SOURCE LINE # 99
+                    1622                             ; SOURCE LINE # 100
+00EE                1623     ?C0078:
+                    1624                             ; SOURCE LINE # 101
+00EE D2AF           1625             SETB    EA
+                    1626                             ; SOURCE LINE # 102
+00F0 D0D0           1627             POP     PSW
+00F2 D082           1628             POP     DPL
+00F4 D083           1629             POP     DPH
+00F6 D0E0           1630             POP     ACC
+00F8 32             1631             RETI    
+                    1632     ; END OF fun
+                    1633     
+                    1634     
+----                1635             RSEG  ?PR?hardware_init?TEXT1
+0000                1636     hardware_init:
+                    1637                             ; SOURCE LINE # 103
+                    1638                             ; SOURCE LINE # 104
+                    1639                             ; SOURCE LINE # 105
+0000 90FF90         1640             MOV     DPTR,#0FF90H
+0003 7401           1641             MOV     A,#01H
+0005 F0             1642             MOVX    @DPTR,A
+                    1643                             ; SOURCE LINE # 106
+0006 90FF97         1644             MOV     DPTR,#0FF97H
+0009 E4             1645             CLR     A
+000A F0             1646             MOVX    @DPTR,A
+                    1647                             ; SOURCE LINE # 107
+000B 90FF96         1648             MOV     DPTR,#0FF96H
+000E F0             1649             MOVX    @DPTR,A
+                    1650                             ; SOURCE LINE # 108
+000F 90FF95         1651             MOV     DPTR,#0FF95H
+0012 F0             1652             MOVX    @DPTR,A
+                    1653                             ; SOURCE LINE # 109
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    28
+
+0013 90FF94         1654             MOV     DPTR,#0FF94H
+0016 F0             1655             MOVX    @DPTR,A
+                    1656                             ; SOURCE LINE # 110
+0017 90FFFC         1657             MOV     DPTR,#0FFFCH
+001A F0             1658             MOVX    @DPTR,A
+                    1659                             ; SOURCE LINE # 111
+001B A3             1660             INC     DPTR
+001C 74E7           1661             MOV     A,#0E7H
+001E F0             1662             MOVX    @DPTR,A
+                    1663                             ; SOURCE LINE # 112
+001F D2AF           1664             SETB    EA
+                    1665                             ; SOURCE LINE # 113
+0021 D2A8           1666             SETB    EX0
+                    1667                             ; SOURCE LINE # 114
+0023 C2AC           1668             CLR     ES
+                    1669                             ; SOURCE LINE # 115
+0025 C288           1670             CLR     IT0
+                    1671                             ; SOURCE LINE # 116
+0027 90FFFC         1672             MOV     DPTR,#0FFFCH
+002A E0             1673             MOVX    A,@DPTR
+002B 4480           1674             ORL     A,#080H
+002D F0             1675             MOVX    @DPTR,A
+                    1676                             ; SOURCE LINE # 117
+002E 22             1677             RET     
+                    1678     ; END OF hardware_init
+                    1679     
+                    1680     
+----                1681             RSEG  ?PR?main?TEXT1
+0000                1682     main:
+                    1683             USING   0
+                    1684                             ; SOURCE LINE # 118
+                    1685                             ; SOURCE LINE # 119
+                    1686                             ; SOURCE LINE # 122
+0000 C2A8           1687             CLR     EX0
+                    1688                             ; SOURCE LINE # 123
+0002 C291           1689             CLR     led
+                    1690                             ; SOURCE LINE # 124
+0004 120000   F     1691             LCALL   rs232_init
+                    1692                             ; SOURCE LINE # 125
+0007 7BFF           1693             MOV     R3,#0FFH
+0009 7A00     F     1694             MOV     R2,#HIGH (?SC_541)
+000B 7900     F     1695             MOV     R1,#LOW (?SC_541)
+000D 120000   F     1696             LCALL   _rs232_printstr
+                    1697                             ; SOURCE LINE # 126
+0010 120000   F     1698             LCALL   hardware_init
+0013                1699     ?C0091:
+                    1700                             ; SOURCE LINE # 128
+                    1701                             ; SOURCE LINE # 129
+                    1702                             ; SOURCE LINE # 130
+0013 209803         1703             JB      RI,$ + 6H
+0016 020000   F     1704             LJMP    ?C0093
+                    1705                             ; SOURCE LINE # 131
+                    1706                             ; SOURCE LINE # 132
+0019 AF99           1707             MOV     R7,SBUF
+001B EF             1708             MOV     A,R7
+001C 24DC           1709             ADD     A,#0DCH
+001E 6036           1710             JZ      ?C0099
+0020 24BF           1711             ADD     A,#0BFH
+0022 7003           1712             JNZ     $ + 5H
+0024 020000   F     1713             LJMP    ?C0108
+0027 24F4           1714             ADD     A,#0F4H
+0029 6071           1715             JZ      ?C0107
+002B 24FA           1716             ADD     A,#0FAH
+002D 6047           1717             JZ      ?C0103
+002F 2454           1718             ADD     A,#054H
+0031 6003           1719             JZ      $ + 5H
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    29
+
+0033 020000   F     1720             LJMP    ?C0109
+                    1721                             ; SOURCE LINE # 133
+                    1722                             ; SOURCE LINE # 134
+0036                1723     ?C0095:
+                    1724                             ; SOURCE LINE # 135
+0036 7BFF           1725             MOV     R3,#0FFH
+0038 7A00     F     1726             MOV     R2,#HIGH (?SC_556)
+003A 7900     F     1727             MOV     R1,#LOW (?SC_556)
+003C 120000   F     1728             LCALL   _rs232_printstr
+                    1729                             ; SOURCE LINE # 136
+003F 7500FE   F     1730             MOV     p?1249,#0FEH
+0042 7500F8   F     1731             MOV     p?1249+01H,#0F8H
+                    1732                             ; SOURCE LINE # 137
+0045 E4             1733             CLR     A
+0046 F500     F     1734             MOV     i?1250,A
+0048                1735     ?C0096:
+                    1736                             ; SOURCE LINE # 138
+                    1737                             ; SOURCE LINE # 139
+0048 120000   F     1738             LCALL   L?0142
+                    1739                             ; SOURCE LINE # 140
+004B 0500     F     1740             INC     i?1250
+004D E500     F     1741             MOV     A,i?1250
+004F C3             1742             CLR     C
+0050 9408           1743             SUBB    A,#08H
+0052 40F4           1744             JC      ?C0096
+0054                1745     ?C0097:
+                    1746                             ; SOURCE LINE # 141
+                    1747                             ; SOURCE LINE # 142
+0054 803E           1748             SJMP    ?C0140
+                    1749                             ; SOURCE LINE # 143
+0056                1750     ?C0099:
+                    1751                             ; SOURCE LINE # 144
+0056 7BFF           1752             MOV     R3,#0FFH
+0058 7A00     F     1753             MOV     R2,#HIGH (?SC_570)
+005A 7900     F     1754             MOV     R1,#LOW (?SC_570)
+005C 120000   F     1755             LCALL   _rs232_printstr
+                    1756                             ; SOURCE LINE # 145
+005F 7500FE   F     1757             MOV     p?1249,#0FEH
+0062 7500F0   F     1758             MOV     p?1249+01H,#0F0H
+                    1759                             ; SOURCE LINE # 146
+0065 E4             1760             CLR     A
+0066 F500     F     1761             MOV     i?1250,A
+0068                1762     ?C0100:
+                    1763                             ; SOURCE LINE # 147
+                    1764                             ; SOURCE LINE # 148
+0068 120000   F     1765             LCALL   L?0142
+                    1766                             ; SOURCE LINE # 149
+006B 0500     F     1767             INC     i?1250
+006D E500     F     1768             MOV     A,i?1250
+006F C3             1769             CLR     C
+0070 9408           1770             SUBB    A,#08H
+0072 40F4           1771             JC      ?C0100
+0074                1772     ?C0101:
+                    1773                             ; SOURCE LINE # 150
+0074                1774     ?C0139:
+                    1775                             ; SOURCE LINE # 151
+0074 801E           1776             SJMP    ?C0140
+                    1777                             ; SOURCE LINE # 152
+0076                1778     ?C0103:
+                    1779                             ; SOURCE LINE # 153
+0076 7BFF           1780             MOV     R3,#0FFH
+0078 7A00     F     1781             MOV     R2,#HIGH (?SC_585)
+007A 7900     F     1782             MOV     R1,#LOW (?SC_585)
+007C 120000   F     1783             LCALL   _rs232_printstr
+                    1784                             ; SOURCE LINE # 154
+007F 7500FF   F     1785             MOV     p?1249,#0FFH
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    30
+
+0082 750000   F     1786             MOV     p?1249+01H,#00H
+                    1787                             ; SOURCE LINE # 155
+0085 E4             1788             CLR     A
+0086 F500     F     1789             MOV     i?1250,A
+0088                1790     ?C0104:
+                    1791                             ; SOURCE LINE # 156
+                    1792                             ; SOURCE LINE # 157
+0088 120000   F     1793             LCALL   L?0143
+                    1794                             ; SOURCE LINE # 158
+008B 0500     F     1795             INC     i?1250
+008D E500     F     1796             MOV     A,i?1250
+008F C3             1797             CLR     C
+0090 9408           1798             SUBB    A,#08H
+0092 40F4           1799             JC      ?C0104
+0094                1800     ?C0105:
+                    1801                             ; SOURCE LINE # 159
+0094                1802     ?C0140:
+0094 7BFF           1803             MOV     R3,#0FFH
+0096 7A00     F     1804             MOV     R2,#HIGH (?SC_20)
+0098 7900     F     1805             MOV     R1,#LOW (?SC_20)
+                    1806                             ; SOURCE LINE # 160
+009A 8077           1807             SJMP    ?C0141
+                    1808                             ; SOURCE LINE # 161
+009C                1809     ?C0107:
+                    1810                             ; SOURCE LINE # 162
+009C 7BFF           1811             MOV     R3,#0FFH
+009E 7A00     F     1812             MOV     R2,#HIGH (?SC_599)
+00A0 7900     F     1813             MOV     R1,#LOW (?SC_599)
+00A2 120000   F     1814             LCALL   _rs232_printstr
+                    1815                             ; SOURCE LINE # 163
+00A5 90FF81         1816             MOV     DPTR,#0FF81H
+00A8 E0             1817             MOVX    A,@DPTR
+00A9 FF             1818             MOV     R7,A
+00AA 120000   F     1819             LCALL   _rs232_printhex
+                    1820                             ; SOURCE LINE # 164
+00AD 7BFF           1821             MOV     R3,#0FFH
+00AF 7A00     F     1822             MOV     R2,#HIGH (?SC_613)
+00B1 7900     F     1823             MOV     R1,#LOW (?SC_613)
+00B3 120000   F     1824             LCALL   _rs232_printstr
+                    1825                             ; SOURCE LINE # 165
+00B6 90FF83         1826             MOV     DPTR,#0FF83H
+00B9 E0             1827             MOVX    A,@DPTR
+00BA FF             1828             MOV     R7,A
+00BB 120000   F     1829             LCALL   _rs232_printhex
+                    1830                             ; SOURCE LINE # 166
+00BE 7BFF           1831             MOV     R3,#0FFH
+00C0 7A00     F     1832             MOV     R2,#HIGH (?SC_627)
+00C2 7900     F     1833             MOV     R1,#LOW (?SC_627)
+00C4 120000   F     1834             LCALL   _rs232_printstr
+                    1835                             ; SOURCE LINE # 167
+00C7 90FF80         1836             MOV     DPTR,#0FF80H
+00CA E0             1837             MOVX    A,@DPTR
+00CB FF             1838             MOV     R7,A
+00CC 120000   F     1839             LCALL   _rs232_printhex
+                    1840                             ; SOURCE LINE # 168
+00CF 7BFF           1841             MOV     R3,#0FFH
+00D1 7A00     F     1842             MOV     R2,#HIGH (?SC_641)
+00D3 7900     F     1843             MOV     R1,#LOW (?SC_641)
+00D5 120000   F     1844             LCALL   _rs232_printstr
+                    1845                             ; SOURCE LINE # 169
+00D8 90FF82         1846             MOV     DPTR,#0FF82H
+00DB E0             1847             MOVX    A,@DPTR
+00DC FF             1848             MOV     R7,A
+00DD 120000   F     1849             LCALL   _rs232_printhex
+                    1850                             ; SOURCE LINE # 170
+00E0 7BFF           1851             MOV     R3,#0FFH
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    31
+
+00E2 7A00     F     1852             MOV     R2,#HIGH (?SC_655)
+00E4 7900     F     1853             MOV     R1,#LOW (?SC_655)
+00E6 120000   F     1854             LCALL   _rs232_printstr
+                    1855                             ; SOURCE LINE # 171
+00E9 90FFFF         1856             MOV     DPTR,#0FFFFH
+00EC E0             1857             MOVX    A,@DPTR
+00ED FF             1858             MOV     R7,A
+00EE 120000   F     1859             LCALL   _rs232_printhex
+                    1860                             ; SOURCE LINE # 172
+00F1 7BFF           1861             MOV     R3,#0FFH
+00F3 7A00     F     1862             MOV     R2,#HIGH (?SC_666)
+00F5 7900     F     1863             MOV     R1,#LOW (?SC_666)
+00F7 120000   F     1864             LCALL   _rs232_printstr
+                    1865                             ; SOURCE LINE # 173
+00FA 90FF93         1866             MOV     DPTR,#0FF93H
+00FD E0             1867             MOVX    A,@DPTR
+00FE FF             1868             MOV     R7,A
+00FF 120000   F     1869             LCALL   _rs232_printhex
+                    1870                             ; SOURCE LINE # 174
+0102 8012           1871             SJMP    ?C0094
+                    1872                             ; SOURCE LINE # 175
+0104                1873     ?C0108:
+                    1874                             ; SOURCE LINE # 176
+0104 90FFFC         1875             MOV     DPTR,#0FFFCH
+0107 E0             1876             MOVX    A,@DPTR
+0108 4480           1877             ORL     A,#080H
+010A F0             1878             MOVX    @DPTR,A
+                    1879                             ; SOURCE LINE # 177
+010B 8009           1880             SJMP    ?C0094
+                    1881                             ; SOURCE LINE # 178
+010D                1882     ?C0109:
+                    1883                             ; SOURCE LINE # 179
+010D 7BFF           1884             MOV     R3,#0FFH
+010F 7A00     F     1885             MOV     R2,#HIGH (?SC_541)
+0111 7900     F     1886             MOV     R1,#LOW (?SC_541)
+0113                1887     ?C0141:
+0113 120000   F     1888             LCALL   _rs232_printstr
+                    1889                             ; SOURCE LINE # 180
+                    1890                             ; SOURCE LINE # 181
+0116                1891     ?C0094:
+                    1892                             ; SOURCE LINE # 182
+0116 C298           1893             CLR     RI
+                    1894                             ; SOURCE LINE # 184
+0118                1895     ?C0093:
+                    1896                             ; SOURCE LINE # 185
+0118 309902         1897             JNB     TI,?C0110
+                    1898                             ; SOURCE LINE # 186
+                    1899                             ; SOURCE LINE # 187
+011B C299           1900             CLR     TI
+                    1901                             ; SOURCE LINE # 188
+011D                1902     ?C0110:
+                    1903                             ; SOURCE LINE # 189
+011D B291           1904             CPL     led
+                    1905                             ; SOURCE LINE # 190
+011F 7F0A           1906             MOV     R7,#0AH
+0121 7E00           1907             MOV     R6,#00H
+0123 120000   F     1908             LCALL   _delay
+                    1909                             ; SOURCE LINE # 191
+0126 020000   F     1910             LJMP    ?C0091
+                    1911     ; END OF main
+                    1912     
+                    1913             END
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    32
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                    T Y P E  V A L U E   ATTRIBUTES
+
+?C0002. . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?RS232_GETCHAR?TEXT1
+?C0003. . . . . . . . . .  C ADDR   0003H   R   SEG=?PR?RS232_GETCHAR?TEXT1
+?C0004. . . . . . . . . .  C ADDR   0007H   R   SEG=?PR?RS232_GETCHAR?TEXT1
+?C0005. . . . . . . . . .  C ADDR   0002H   R   SEG=?PR?_RS232_PUTCHAR?TEXT1
+?C0006. . . . . . . . . .  C ADDR   0005H   R   SEG=?PR?_RS232_PUTCHAR?TEXT1
+?C0008. . . . . . . . . .  C ADDR   000CH   R   SEG=?PR?_RS232_PRINTSTR?TEXT1
+?C0010. . . . . . . . . .  C ADDR   0026H   R   SEG=?PR?_RS232_PRINTSTR?TEXT1
+?C0011. . . . . . . . . .  C ADDR   0029H   R   SEG=?PR?_RS232_PRINTSTR?TEXT1
+?C0012. . . . . . . . . .  C ADDR   002DH   R   SEG=?PR?_RS232_PRINTSTR?TEXT1
+?C0013. . . . . . . . . .  C ADDR   0029H   R   SEG=?PR?_RS232_PRINTHEX?TEXT1
+?C0014. . . . . . . . . .  C ADDR   002FH   R   SEG=?PR?_RS232_PRINTHEX?TEXT1
+?C0015. . . . . . . . . .  C ADDR   003DH   R   SEG=?PR?_RS232_PRINTHEX?TEXT1
+?C0016. . . . . . . . . .  C ADDR   0043H   R   SEG=?PR?_RS232_PRINTHEX?TEXT1
+?C0019. . . . . . . . . .  C ADDR   004EH   R   SEG=?PR?EP0_SENDDATA?TEXT1
+?C0020. . . . . . . . . .  C ADDR   000EH   R   SEG=?PR?EP0_SENDDATA?TEXT1
+?C0021. . . . . . . . . .  C ADDR   003AH   R   SEG=?PR?EP0_SENDDATA?TEXT1
+?C0024. . . . . . . . . .  C ADDR   0096H   R   SEG=?PR?EP0_SENDDATA?TEXT1
+?C0025. . . . . . . . . .  C ADDR   0054H   R   SEG=?PR?EP0_SENDDATA?TEXT1
+?C0026. . . . . . . . . .  C ADDR   007BH   R   SEG=?PR?EP0_SENDDATA?TEXT1
+?C0030. . . . . . . . . .  C ADDR   00ABH   R   SEG=?PR?EP0_SENDDATA?TEXT1
+?C0031. . . . . . . . . .  C ADDR   0111H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0033. . . . . . . . . .  C ADDR   002DH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0035. . . . . . . . . .  C ADDR   0045H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0036. . . . . . . . . .  C ADDR   004EH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0038. . . . . . . . . .  C ADDR   006AH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0039. . . . . . . . . .  C ADDR   007AH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0040. . . . . . . . . .  C ADDR   0095H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0042. . . . . . . . . .  C ADDR   00AFH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0043. . . . . . . . . .  C ADDR   00B8H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0044. . . . . . . . . .  C ADDR   00C1H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0045. . . . . . . . . .  C ADDR   00CAH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0046. . . . . . . . . .  C ADDR   00D3H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0047. . . . . . . . . .  C ADDR   00DCH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0048. . . . . . . . . .  C ADDR   00E5H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0049. . . . . . . . . .  C ADDR   00FFH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0050. . . . . . . . . .  C ADDR   0108H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0051. . . . . . . . . .  C ADDR   01B3H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0053. . . . . . . . . .  C ADDR   012AH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0055. . . . . . . . . .  C ADDR   0143H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0056. . . . . . . . . .  C ADDR   014BH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0057. . . . . . . . . .  C ADDR   0179H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0058. . . . . . . . . .  C ADDR   0181H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0059. . . . . . . . . .  C ADDR   0189H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0061. . . . . . . . . .  C ADDR   019AH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0062. . . . . . . . . .  C ADDR   01A2H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0063. . . . . . . . . .  C ADDR   01AAH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0065. . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?_DELAY?TEXT1
+?C0067. . . . . . . . . .  C ADDR   000CH   R   SEG=?PR?_DELAY?TEXT1
+?C0068. . . . . . . . . .  C ADDR   0006H   R   SEG=?PR?_DELAY?TEXT1
+?C0070. . . . . . . . . .  C ADDR   000AH   R   SEG=?PR?_DELAY?TEXT1
+?C0071. . . . . . . . . .  C ADDR   0008H   R   SEG=?PR?_DELAY?TEXT1
+?C0074. . . . . . . . . .  C ADDR   0013H   R   SEG=?PR?_DELAY?TEXT1
+?C0075. . . . . . . . . .  C ADDR   0005H   R   SEG=?PR?SERIAL_ROUTINE?TEXT1
+?C0077. . . . . . . . . .  C ADDR   000AH   R   SEG=?PR?SERIAL_ROUTINE?TEXT1
+?C0078. . . . . . . . . .  C ADDR   00EEH   R   SEG=?PR?FUN?TEXT1
+?C0079. . . . . . . . . .  C ADDR   0033H   R   SEG=?PR?FUN?TEXT1
+?C0080. . . . . . . . . .  C ADDR   004DH   R   SEG=?PR?FUN?TEXT1
+?C0082. . . . . . . . . .  C ADDR   0061H   R   SEG=?PR?FUN?TEXT1
+?C0083. . . . . . . . . .  C ADDR   006EH   R   SEG=?PR?FUN?TEXT1
+?C0084. . . . . . . . . .  C ADDR   0080H   R   SEG=?PR?FUN?TEXT1
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    33
+
+?C0085. . . . . . . . . .  C ADDR   0099H   R   SEG=?PR?FUN?TEXT1
+?C0086. . . . . . . . . .  C ADDR   00AFH   R   SEG=?PR?FUN?TEXT1
+?C0087. . . . . . . . . .  C ADDR   00C2H   R   SEG=?PR?FUN?TEXT1
+?C0088. . . . . . . . . .  C ADDR   00D8H   R   SEG=?PR?FUN?TEXT1
+?C0091. . . . . . . . . .  C ADDR   0013H   R   SEG=?PR?MAIN?TEXT1
+?C0093. . . . . . . . . .  C ADDR   0118H   R   SEG=?PR?MAIN?TEXT1
+?C0094. . . . . . . . . .  C ADDR   0116H   R   SEG=?PR?MAIN?TEXT1
+?C0095. . . . . . . . . .  C ADDR   0036H   R   SEG=?PR?MAIN?TEXT1
+?C0096. . . . . . . . . .  C ADDR   0048H   R   SEG=?PR?MAIN?TEXT1
+?C0097. . . . . . . . . .  C ADDR   0054H   R   SEG=?PR?MAIN?TEXT1
+?C0099. . . . . . . . . .  C ADDR   0056H   R   SEG=?PR?MAIN?TEXT1
+?C0100. . . . . . . . . .  C ADDR   0068H   R   SEG=?PR?MAIN?TEXT1
+?C0101. . . . . . . . . .  C ADDR   0074H   R   SEG=?PR?MAIN?TEXT1
+?C0103. . . . . . . . . .  C ADDR   0076H   R   SEG=?PR?MAIN?TEXT1
+?C0104. . . . . . . . . .  C ADDR   0088H   R   SEG=?PR?MAIN?TEXT1
+?C0105. . . . . . . . . .  C ADDR   0094H   R   SEG=?PR?MAIN?TEXT1
+?C0107. . . . . . . . . .  C ADDR   009CH   R   SEG=?PR?MAIN?TEXT1
+?C0108. . . . . . . . . .  C ADDR   0104H   R   SEG=?PR?MAIN?TEXT1
+?C0109. . . . . . . . . .  C ADDR   010DH   R   SEG=?PR?MAIN?TEXT1
+?C0110. . . . . . . . . .  C ADDR   011DH   R   SEG=?PR?MAIN?TEXT1
+?C0112. . . . . . . . . .  C ADDR   001FH   R   SEG=?PR?_RS232_PRINTSTR?TEXT1
+?C0113. . . . . . . . . .  C ADDR   0025H   R   SEG=?PR?EP0_SENDDATA?TEXT1
+?C0114. . . . . . . . . .  C ADDR   0066H   R   SEG=?PR?EP0_SENDDATA?TEXT1
+?C0115. . . . . . . . . .  C ADDR   0011H   R   SEG=?PR?_DELAY?TEXT1
+?C0116. . . . . . . . . .  C ADDR   002BH   R   SEG=?PR?_RS232_PRINTHEX?TEXT1
+?C0117. . . . . . . . . .  C ADDR   003FH   R   SEG=?PR?_RS232_PRINTHEX?TEXT1
+?C0118. . . . . . . . . .  C ADDR   00A8H   R   SEG=?PR?EP0_SENDDATA?TEXT1
+?C0119. . . . . . . . . .  C ADDR   00B5H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0120. . . . . . . . . .  C ADDR   0083H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0121. . . . . . . . . .  C ADDR   00BEH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0122. . . . . . . . . .  C ADDR   00C7H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0123. . . . . . . . . .  C ADDR   00D0H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0124. . . . . . . . . .  C ADDR   00D9H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0125. . . . . . . . . .  C ADDR   00E2H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0126. . . . . . . . . .  C ADDR   00FCH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0127. . . . . . . . . .  C ADDR   0105H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0128. . . . . . . . . .  C ADDR   010EH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0129. . . . . . . . . .  C ADDR   0149H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0130. . . . . . . . . .  C ADDR   017FH   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0131. . . . . . . . . .  C ADDR   0187H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0132. . . . . . . . . .  C ADDR   01A0H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0133. . . . . . . . . .  C ADDR   01A8H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0134. . . . . . . . . .  C ADDR   01B0H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+?C0135. . . . . . . . . .  C ADDR   00ADH   R   SEG=?PR?FUN?TEXT1
+?C0136. . . . . . . . . .  C ADDR   0091H   R   SEG=?PR?FUN?TEXT1
+?C0137. . . . . . . . . .  C ADDR   00C0H   R   SEG=?PR?FUN?TEXT1
+?C0138. . . . . . . . . .  C ADDR   00D3H   R   SEG=?PR?FUN?TEXT1
+?C0139. . . . . . . . . .  C ADDR   0074H   R   SEG=?PR?MAIN?TEXT1
+?C0140. . . . . . . . . .  C ADDR   0094H   R   SEG=?PR?MAIN?TEXT1
+?C0141. . . . . . . . . .  C ADDR   0113H   R   SEG=?PR?MAIN?TEXT1
+?C?CCASE. . . . . . . . .  C ADDR   -----       EXT
+?C?CLDPTR . . . . . . . .  C ADDR   -----       EXT
+?CO?TEXT1 . . . . . . . .  C SEG    02B6H       REL=UNIT
+?C_INITSEG. . . . . . . .  C SEG    000CH       REL=UNIT
+?C_STARTUP. . . . . . . .  C ADDR   -----       EXT
+?DT?MAIN?TEXT1. . . . . .  D SEG    0003H       REL=UNIT
+?DT?TEXT1 . . . . . . . .  D SEG    000FH       REL=UNIT
+?DT?_RS232_PRINTSTR?TEXT1  D SEG    0003H       REL=UNIT
+?MAIN?BYTE. . . . . . . .  D ADDR   0000H   R   SEG=?DT?MAIN?TEXT1
+?PR?EP0_SENDDATA?TEXT1. .  C SEG    00ACH       REL=UNIT
+?PR?FUN?TEXT1 . . . . . .  C SEG    00F9H       REL=UNIT
+?PR?HARDWARE_INIT?TEXT1 .  C SEG    002FH       REL=UNIT
+?PR?MAIN?TEXT1. . . . . .  C SEG    0129H       REL=UNIT
+?PR?RS232_GETCHAR?TEXT1 .  C SEG    0008H       REL=UNIT
+?PR?RS232_INIT?TEXT1. . .  C SEG    0017H       REL=UNIT
+?PR?SERIAL_ROUTINE?TEXT1.  C SEG    000BH       REL=UNIT
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    34
+
+?PR?SETUP_HANDLER?TEXT1 .  C SEG    01BBH       REL=UNIT
+?PR?USB_RESET?TEXT1 . . .  C SEG    0024H       REL=UNIT
+?PR?_DELAY?TEXT1. . . . .  C SEG    0014H       REL=UNIT
+?PR?_RS232_PRINTHEX?TEXT1  C SEG    004CH       REL=UNIT
+?PR?_RS232_PRINTSTR?TEXT1  C SEG    002EH       REL=UNIT
+?PR?_RS232_PUTCHAR?TEXT1.  C SEG    0008H       REL=UNIT
+?SC_0 . . . . . . . . . .  C ADDR   0000H   R   SEG=?CO?TEXT1
+?SC_101 . . . . . . . . .  C ADDR   0065H   R   SEG=?CO?TEXT1
+?SC_116 . . . . . . . . .  C ADDR   0074H   R   SEG=?CO?TEXT1
+?SC_125 . . . . . . . . .  C ADDR   007DH   R   SEG=?CO?TEXT1
+?SC_136 . . . . . . . . .  C ADDR   0088H   R   SEG=?CO?TEXT1
+?SC_14. . . . . . . . . .  C ADDR   000EH   R   SEG=?CO?TEXT1
+?SC_147 . . . . . . . . .  C ADDR   0093H   R   SEG=?CO?TEXT1
+?SC_160 . . . . . . . . .  C ADDR   00A0H   R   SEG=?CO?TEXT1
+?SC_174 . . . . . . . . .  C ADDR   00AEH   R   SEG=?CO?TEXT1
+?SC_187 . . . . . . . . .  C ADDR   00BBH   R   SEG=?CO?TEXT1
+?SC_20. . . . . . . . . .  C ADDR   0014H   R   SEG=?CO?TEXT1
+?SC_212 . . . . . . . . .  C ADDR   00D4H   R   SEG=?CO?TEXT1
+?SC_23. . . . . . . . . .  C ADDR   0017H   R   SEG=?CO?TEXT1
+?SC_243 . . . . . . . . .  C ADDR   00F3H   R   SEG=?CO?TEXT1
+?SC_268 . . . . . . . . .  C ADDR   010CH   R   SEG=?CO?TEXT1
+?SC_286 . . . . . . . . .  C ADDR   011EH   R   SEG=?CO?TEXT1
+?SC_296 . . . . . . . . .  C ADDR   0128H   R   SEG=?CO?TEXT1
+?SC_3 . . . . . . . . . .  C ADDR   0003H   R   SEG=?CO?TEXT1
+?SC_314 . . . . . . . . .  C ADDR   013AH   R   SEG=?CO?TEXT1
+?SC_32. . . . . . . . . .  C ADDR   0020H   R   SEG=?CO?TEXT1
+?SC_325 . . . . . . . . .  C ADDR   0145H   R   SEG=?CO?TEXT1
+?SC_354 . . . . . . . . .  C ADDR   0162H   R   SEG=?CO?TEXT1
+?SC_372 . . . . . . . . .  C ADDR   0174H   R   SEG=?CO?TEXT1
+?SC_383 . . . . . . . . .  C ADDR   017FH   R   SEG=?CO?TEXT1
+?SC_394 . . . . . . . . .  C ADDR   018AH   R   SEG=?CO?TEXT1
+?SC_419 . . . . . . . . .  C ADDR   01A3H   R   SEG=?CO?TEXT1
+?SC_431 . . . . . . . . .  C ADDR   01AFH   R   SEG=?CO?TEXT1
+?SC_441 . . . . . . . . .  C ADDR   01B9H   R   SEG=?CO?TEXT1
+?SC_452 . . . . . . . . .  C ADDR   01C4H   R   SEG=?CO?TEXT1
+?SC_474 . . . . . . . . .  C ADDR   01DAH   R   SEG=?CO?TEXT1
+?SC_487 . . . . . . . . .  C ADDR   01E7H   R   SEG=?CO?TEXT1
+?SC_49. . . . . . . . . .  C ADDR   0031H   R   SEG=?CO?TEXT1
+?SC_5 . . . . . . . . . .  C ADDR   0005H   R   SEG=?CO?TEXT1
+?SC_500 . . . . . . . . .  C ADDR   01F4H   R   SEG=?CO?TEXT1
+?SC_514 . . . . . . . . .  C ADDR   0202H   R   SEG=?CO?TEXT1
+?SC_529 . . . . . . . . .  C ADDR   0211H   R   SEG=?CO?TEXT1
+?SC_541 . . . . . . . . .  C ADDR   021DH   R   SEG=?CO?TEXT1
+?SC_556 . . . . . . . . .  C ADDR   022CH   R   SEG=?CO?TEXT1
+?SC_570 . . . . . . . . .  C ADDR   023AH   R   SEG=?CO?TEXT1
+?SC_585 . . . . . . . . .  C ADDR   0249H   R   SEG=?CO?TEXT1
+?SC_599 . . . . . . . . .  C ADDR   0257H   R   SEG=?CO?TEXT1
+?SC_60. . . . . . . . . .  C ADDR   003CH   R   SEG=?CO?TEXT1
+?SC_613 . . . . . . . . .  C ADDR   0265H   R   SEG=?CO?TEXT1
+?SC_627 . . . . . . . . .  C ADDR   0273H   R   SEG=?CO?TEXT1
+?SC_641 . . . . . . . . .  C ADDR   0281H   R   SEG=?CO?TEXT1
+?SC_655 . . . . . . . . .  C ADDR   028FH   R   SEG=?CO?TEXT1
+?SC_666 . . . . . . . . .  C ADDR   029AH   R   SEG=?CO?TEXT1
+?SC_75. . . . . . . . . .  C ADDR   004BH   R   SEG=?CO?TEXT1
+?SC_88. . . . . . . . . .  C ADDR   0058H   R   SEG=?CO?TEXT1
+?_RS232_PRINTSTR?BYTE . .  D ADDR   0000H   R   SEG=?DT?_RS232_PRINTSTR?TEXT1
+AC. . . . . . . . . . . .  B ADDR   00D0H.6 A   
+ACC . . . . . . . . . . .  D ADDR   00E0H   A   
+AR7 . . . . . . . . . . .  D ADDR   0007H   A   
+B . . . . . . . . . . . .  D ADDR   00F0H   A   
+CP_RL2. . . . . . . . . .  B ADDR   00C8H.0 A   
+CY. . . . . . . . . . . .  B ADDR   00D0H.7 A   
+C_T2. . . . . . . . . . .  B ADDR   00C8H.1 A   
+DEBUGBUFFER . . . . . . .  D ADDR   0000H   R   SEG=?DT?TEXT1
+DEVICEDESCRIPTOR. . . . .  C ADDR   02A4H   R   SEG=?CO?TEXT1
+DPH . . . . . . . . . . .  D ADDR   0083H   A   
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    35
+
+DPL . . . . . . . . . . .  D ADDR   0082H   A   
+EA. . . . . . . . . . . .  B ADDR   00A8H.7 A   
+EP0_SENDDATA. . . . . . .  C ADDR   0000H   R   SEG=?PR?EP0_SENDDATA?TEXT1
+ES. . . . . . . . . . . .  B ADDR   00A8H.4 A   
+ET0 . . . . . . . . . . .  B ADDR   00A8H.1 A   
+ET1 . . . . . . . . . . .  B ADDR   00A8H.3 A   
+ET2 . . . . . . . . . . .  B ADDR   00A8H.5 A   
+EX0 . . . . . . . . . . .  B ADDR   00A8H.0 A   
+EX1 . . . . . . . . . . .  B ADDR   00A8H.2 A   
+EXEN2 . . . . . . . . . .  B ADDR   00C8H.3 A   
+EXF2. . . . . . . . . . .  B ADDR   00C8H.6 A   
+F0. . . . . . . . . . . .  B ADDR   00D0H.5 A   
+FUN . . . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?FUN?TEXT1
+HARDWARE_INIT . . . . . .  C ADDR   0000H   R   SEG=?PR?HARDWARE_INIT?TEXT1
+I?1250. . . . . . . . . .  D ADDR   0002H   R   SEG=?DT?MAIN?TEXT1
+IE. . . . . . . . . . . .  D ADDR   00A8H   A   
+IE0 . . . . . . . . . . .  B ADDR   0088H.1 A   
+IE1 . . . . . . . . . . .  B ADDR   0088H.3 A   
+INT0. . . . . . . . . . .  B ADDR   00B0H.2 A   
+INT1. . . . . . . . . . .  B ADDR   00B0H.3 A   
+IP. . . . . . . . . . . .  D ADDR   00B8H   A   
+IT0 . . . . . . . . . . .  B ADDR   0088H.0 A   
+IT1 . . . . . . . . . . .  B ADDR   0088H.2 A   
+L?0142. . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?_RS232_PRINTHEX?TEXT1
+L?0143. . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?_RS232_PRINTHEX?TEXT1
+L?0144. . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?_RS232_PRINTSTR?TEXT1
+LED . . . . . . . . . . .  B ADDR   0090H.1 A   
+MAIN. . . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?MAIN?TEXT1
+NEEDZEROPACKET. . . . . .  D ADDR   000EH   R   SEG=?DT?TEXT1
+OV. . . . . . . . . . . .  B ADDR   00D0H.2 A   
+P . . . . . . . . . . . .  B ADDR   00D0H.0 A   
+P0. . . . . . . . . . . .  D ADDR   0080H   A   
+P1. . . . . . . . . . . .  D ADDR   0090H   A   
+P2. . . . . . . . . . . .  D ADDR   00A0H   A   
+P3. . . . . . . . . . . .  D ADDR   00B0H   A   
+P?1249. . . . . . . . . .  D ADDR   0000H   R   SEG=?DT?MAIN?TEXT1
+PCON. . . . . . . . . . .  D ADDR   0087H   A   
+PS. . . . . . . . . . . .  B ADDR   00B8H.4 A   
+PSENDDATA . . . . . . . .  D ADDR   000BH   R   SEG=?DT?TEXT1
+PSW . . . . . . . . . . .  D ADDR   00D0H   A   
+PT0 . . . . . . . . . . .  B ADDR   00B8H.1 A   
+PT1 . . . . . . . . . . .  B ADDR   00B8H.3 A   
+PT2 . . . . . . . . . . .  B ADDR   00B8H.5 A   
+PX0 . . . . . . . . . . .  B ADDR   00B8H.0 A   
+PX1 . . . . . . . . . . .  B ADDR   00B8H.2 A   
+RB8 . . . . . . . . . . .  B ADDR   0098H.2 A   
+RCAP2H. . . . . . . . . .  D ADDR   00CBH   A   
+RCAP2L. . . . . . . . . .  D ADDR   00CAH   A   
+RCLK. . . . . . . . . . .  B ADDR   00C8H.5 A   
+RD. . . . . . . . . . . .  B ADDR   00B0H.7 A   
+REN . . . . . . . . . . .  B ADDR   0098H.4 A   
+RI. . . . . . . . . . . .  B ADDR   0098H.0 A   
+RS0 . . . . . . . . . . .  B ADDR   00D0H.3 A   
+RS1 . . . . . . . . . . .  B ADDR   00D0H.4 A   
+RS232_GETCHAR . . . . . .  C ADDR   0000H   R   SEG=?PR?RS232_GETCHAR?TEXT1
+RS232_INIT. . . . . . . .  C ADDR   0000H   R   SEG=?PR?RS232_INIT?TEXT1
+RXD . . . . . . . . . . .  B ADDR   00B0H.0 A   
+SBUF. . . . . . . . . . .  D ADDR   0099H   A   
+SCON. . . . . . . . . . .  D ADDR   0098H   A   
+SENDLENGTH. . . . . . . .  D ADDR   000AH   R   SEG=?DT?TEXT1
+SERIAL_ROUTINE. . . . . .  C ADDR   0000H   R   SEG=?PR?SERIAL_ROUTINE?TEXT1
+SETUP_HANDLER . . . . . .  C ADDR   0000H   R   SEG=?PR?SETUP_HANDLER?TEXT1
+SM0 . . . . . . . . . . .  B ADDR   0098H.7 A   
+SM1 . . . . . . . . . . .  B ADDR   0098H.6 A   
+SM2 . . . . . . . . . . .  B ADDR   0098H.5 A   
+SP. . . . . . . . . . . .  D ADDR   0081H   A   
+A51 MACRO ASSEMBLER  TEXT1                                                                05/31/2010 07:11:28 PAGE    36
+
+STR?342 . . . . . . . . .  D ADDR   0000H   R   SEG=?DT?_RS232_PRINTSTR?TEXT1
+T0. . . . . . . . . . . .  B ADDR   00B0H.4 A   
+T1. . . . . . . . . . . .  B ADDR   00B0H.5 A   
+T2. . . . . . . . . . . .  B ADDR   0090H.0 A   
+T2CON . . . . . . . . . .  D ADDR   00C8H   A   
+T2EX. . . . . . . . . . .  B ADDR   0090H.1 A   
+TB8 . . . . . . . . . . .  B ADDR   0098H.3 A   
+TCLK. . . . . . . . . . .  B ADDR   00C8H.4 A   
+TCON. . . . . . . . . . .  D ADDR   0088H   A   
+TEXT1 . . . . . . . . . .  N NUMB   -----       
+TF0 . . . . . . . . . . .  B ADDR   0088H.5 A   
+TF1 . . . . . . . . . . .  B ADDR   0088H.7 A   
+TF2 . . . . . . . . . . .  B ADDR   00C8H.7 A   
+TH0 . . . . . . . . . . .  D ADDR   008CH   A   
+TH1 . . . . . . . . . . .  D ADDR   008DH   A   
+TH2 . . . . . . . . . . .  D ADDR   00CDH   A   
+TI. . . . . . . . . . . .  B ADDR   0098H.1 A   
+TL0 . . . . . . . . . . .  D ADDR   008AH   A   
+TL1 . . . . . . . . . . .  D ADDR   008BH   A   
+TL2 . . . . . . . . . . .  D ADDR   00CCH   A   
+TMOD. . . . . . . . . . .  D ADDR   0089H   A   
+TR0 . . . . . . . . . . .  B ADDR   0088H.4 A   
+TR1 . . . . . . . . . . .  B ADDR   0088H.6 A   
+TR2 . . . . . . . . . . .  B ADDR   00C8H.2 A   
+TXD . . . . . . . . . . .  B ADDR   00B0H.1 A   
+USB_RESET . . . . . . . .  C ADDR   0000H   R   SEG=?PR?USB_RESET?TEXT1
+WR. . . . . . . . . . . .  B ADDR   00B0H.6 A   
+_DELAY. . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?_DELAY?TEXT1
+_RS232_PRINTHEX . . . . .  C ADDR   000DH   R   SEG=?PR?_RS232_PRINTHEX?TEXT1
+_RS232_PRINTSTR . . . . .  C ADDR   0006H   R   SEG=?PR?_RS232_PRINTSTR?TEXT1
+_RS232_PUTCHAR. . . . . .  C ADDR   0000H   R   SEG=?PR?_RS232_PUTCHAR?TEXT1
+
+
+REGISTER BANK(S) USED: 0 2 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

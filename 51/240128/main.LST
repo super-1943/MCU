@@ -1,0 +1,306 @@
+C51 COMPILER V8.02   MAIN                                                                  04/15/2009 09:59:54 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /*
+   2          240128（21脚）引脚说明：
+   3          
+   4          Pin NO. Symbol Description(Function) Remark
+   5          1 FG Module Frame Ground
+   6          2 VSS Ground
+   7          3 VDD Supply voltage for logic and LCE(+)
+   8          4 V0 Operating voltage for LCD variable
+   9          5 WR Data Write into T6963C
+  10          6 RD Chip enable Signal
+  11          7 CE Command/Data Selection
+  12          8 C/D Command/Data Selection
+  13          9 Reset Reset signal
+  14          10 DB0 Data bit 0
+  15          11 DB1 Data bit 1
+  16          12 DB2 Data bit 2
+  17          13 DB3 Data bit 3
+  18          14 DB4 Data bit 4
+  19          15 DB5 Data bit 5
+  20          16 DB6 Data bit 6
+  21          17 DB7 Data bit 7
+  22          18 FS Font Selection
+  23          19 VEE LCD 驱动负电压
+  24          20 LED(+) LED or EL Backlight
+  25          21 LED(-) LED or EL Backlight
+  26          
+  27          #include <at89x51.h>
+  28          #include <intrins.h>
+  29          void delay_us(unsigned char i)
+  30          {
+  31                  while(i--)
+  32                  {
+  33                          _nop_();
+  34                  }
+  35          }
+  36          
+  37          void delay_ms(unsigned char i)
+  38          {
+  39                  unsigned char j;
+  40                  while(i--)
+  41                  {
+  42                          for(j=4;j;j--)
+  43                          {
+  44                                  delay_us(100);
+  45                          }
+  46                  }
+  47          }
+  48          void delay_s(unsigned char i)
+  49          {
+  50                  unsigned char j;
+  51                  while(i--)
+  52                  {
+  53                          for(j=4;j;j--)
+  54                          {
+  55                                  delay_ms(100);
+C51 COMPILER V8.02   MAIN                                                                  04/15/2009 09:59:54 PAGE 2   
+
+  56                          }
+  57                  }
+  58          }
+  59          void main(void)
+  60          {
+  61                  while(1)
+  62                  {
+  63          
+  64                  }
+  65          }
+  66          */
+  67          #include <at89x51.h>
+  68          #define uchar unsigned char
+  69          #define uint unsigned int
+  70          unsigned char ACC0;
+  71          #define bf0_fg (bit)(ACC0&0x01)
+  72          #define bf1_fg (bit)(ACC0&0x02)
+  73          #define bf3_fg (bit)(ACC0&0x04)
+  74          
+  75          sbit lcd_wr = P3^6;
+  76          sbit lcd_rd = P3^7;
+  77          sbit lcd_cd = P2^0;
+  78          unsigned char code zimow[]=
+  79          {
+  80          /*--  文字:  赵  --*/
+  81          /*--  宋体12;  此字体下对应的点阵为：宽x高=16x16   --*/
+  82          0x08,0x00,0x08,0x00,0x08,0x04,0x7E,0x84,0x08,0x48,0x08,0x28,0xFF,0x10,0x08,0x10,
+  83          0x28,0x28,0x2F,0x28,0x28,0x44,0x28,0x84,0x58,0x00,0x48,0x00,0x87,0xFE,0x00,0x00,
+  84          /*--  调入了一幅图像：这是您新建的图像  --*/
+  85          /*--  宽度x高度=16x16  --*/
+  86          0x00,0x00,0x10,0x08,0x00,0x00,0x10,0x00,0x00,0x40,0x10,0x00,0x02,0x00,0x00,0x50,
+  87          0x12,0x00,0x00,0x00,0x00,0x00,0x10,0x88,0x00,0x28,0x04,0x80,0x80,0x08,0x00,0x00
+  88          };
+  89          unsigned char zimoc[];
+  90          void lcd_read(void) /*液晶读函数*/
+  91          {
+  92   1              EA=0;
+  93   1              P0 = 0xff;
+  94   1              lcd_cd = 1;
+  95   1              lcd_wr = 1;
+  96   1              lcd_rd = 0;
+  97   1              ACC0 = P0;
+  98   1              lcd_rd = 1;
+  99   1              EA=1;
+ 100   1      }
+ 101          
+ 102          void lcd_bf01(void) /*液晶单字节读写判忙函数*/
+ 103          {
+ 104   1              do
+ 105   1              lcd_read();
+ 106   1              while (!(bf0_fg && bf1_fg));
+ 107   1      }
+ 108          
+ 109          void lcd_bf3(void) /*液晶连续读写判忙函数*/
+ 110          {
+ 111   1              do
+ 112   1              lcd_read();
+ 113   1              while (!bf3_fg);
+ 114   1      }
+ 115          
+ 116          void lcd_stric(uchar datax) /*液晶单字节写命令函数*/
+ 117          {
+C51 COMPILER V8.02   MAIN                                                                  04/15/2009 09:59:54 PAGE 3   
+
+ 118   1              lcd_bf01();
+ 119   1              EA=0;
+ 120   1              lcd_cd = 1;
+ 121   1              lcd_rd = 1;
+ 122   1              lcd_wr = 0;
+ 123   1              P0 = datax;
+ 124   1              lcd_wr = 1;
+ 125   1              EA=1;
+ 126   1      }
+ 127          
+ 128          void lcd_data(uchar datax) /*液晶单字节写数据函数*/
+ 129          {
+ 130   1              EA=0;
+ 131   1              lcd_cd = 0;
+ 132   1              lcd_rd = 1;
+ 133   1              lcd_wr = 0;
+ 134   1              P0 = datax;
+ 135   1              lcd_wr = 1;
+ 136   1              EA=1;
+ 137   1      }
+ 138          
+ 139          void lcd_wt2(uchar data2,uchar comm) /*液晶双字节写函数*/
+ 140          {
+ 141   1              lcd_bf01();
+ 142   1              lcd_data(data2);
+ 143   1              lcd_stric(comm);
+ 144   1      }
+ 145          
+ 146          void lcd_wt3(uchar data1,uchar data2,uchar comm) /*液晶三字节写函数*/
+ 147          {
+ 148   1              lcd_bf01();
+ 149   1              lcd_data(data1);
+ 150   1              lcd_bf01();
+ 151   1              lcd_data(data2);
+ 152   1              lcd_stric(comm);
+ 153   1      }
+ 154          
+ 155          void lcd_clr(void) /*液晶清屏函数*/
+ 156          {
+ 157   1              uchar i,j=128;
+ 158   1              lcd_wt3(0,0,0x24);
+ 159   1              lcd_stric(0xb0);
+ 160   1              do
+ 161   1              {
+ 162   2                      i=30;
+ 163   2                      do
+ 164   2                      {
+ 165   3                              lcd_bf3();
+ 166   3                              lcd_data(0);
+ 167   3                              i--;
+ 168   3                      }
+ 169   2                      while (i);
+ 170   2                      j--;
+ 171   2              }
+ 172   1              while (j);
+ 173   1              lcd_stric(0xb2);
+ 174   1      }
+ 175          
+ 176          void lcd_init(void) /*液晶初始化函数*/
+ 177          {
+ 178   1              P2=0x90;
+ 179   1              lcd_wt3(0,0,0x40);
+C51 COMPILER V8.02   MAIN                                                                  04/15/2009 09:59:54 PAGE 4   
+
+ 180   1              lcd_wt3(30,0,0x41);
+ 181   1              lcd_wt3(0,0,0x42);
+ 182   1              lcd_wt3(30,0,0x43);
+ 183   1              lcd_stric(0xa4);
+ 184   1              lcd_stric(0x80);
+ 185   1              lcd_stric(0x9c);
+ 186   1      }
+ 187          
+ 188          void lcd_word(uchar o_x,uchar o_y,uchar zm_code) /*在 （o_x,0_y) 位置显示16*16点阵的汉字*/
+ 189          {
+ 190   1              uint xx,yy;
+ 191   1              uchar i=16;
+ 192   1              xx=o_y*30;
+ 193   1              xx+=o_x;
+ 194   1              yy=zm_code*0x20;
+ 195   1              do
+ 196   1              {
+ 197   2                      lcd_wt3(xx,xx/256,0x24);
+ 198   2                      lcd_wt2(zimow[yy],0xc0);
+ 199   2                      yy++;
+ 200   2                      lcd_wt2(zimow[yy],0xc0);
+ 201   2                      yy++;
+ 202   2                      xx+=30;
+ 203   2                      i--;
+ 204   2              }
+ 205   1              while (i);
+ 206   1      }
+ 207          
+ 208          void lcd_fwd(uchar o_x,uchar o_y,uchar zm_code)
+ 209          {
+ 210   1              uint xx,yy;
+ 211   1              uchar i=16;
+ 212   1              xx=o_y*30;
+ 213   1              xx+=o_x;
+ 214   1              yy=zm_code*0x20;
+ 215   1              do
+ 216   1              {
+ 217   2                      lcd_wt3(xx,xx/256,0x24);
+ 218   2                      lcd_wt2(~zimow[yy],0xc0);
+ 219   2                      yy++;
+ 220   2                      lcd_wt2(~zimow[yy],0xc0);
+ 221   2                      yy++;
+ 222   2                      xx+=30;
+ 223   2                      i--;
+ 224   2              }
+ 225   1              while (i);
+ 226   1      }
+ 227          
+ 228          void lcd_fbt(uchar o_x,uchar o_y,uchar zm_code)/*在 （o_x,0_y) 位置显示8*16点阵的汉字*/
+ 229          
+ 230          {
+ 231   1              uint xx,yy;
+ 232   1              uchar i=16;
+ 233   1              xx=o_y*30;
+ 234   1              xx+=o_x;
+ 235   1              yy=zm_code*0x10;
+ 236   1              do
+ 237   1              {
+ 238   2                      lcd_wt3(xx,xx/256,0x24);
+ 239   2                      lcd_wt2(~zimoc[yy],0xc0);
+ 240   2                      yy++;
+ 241   2                      xx+=30;
+C51 COMPILER V8.02   MAIN                                                                  04/15/2009 09:59:54 PAGE 5   
+
+ 242   2                      i--;
+ 243   2              }
+ 244   1              while (i);
+ 245   1      }
+ 246          
+ 247          void lcd_byte(uchar o_x,uchar o_y,uchar zm_code)
+ 248          {
+ 249   1              uint xx,yy;
+ 250   1              uchar i=16;
+ 251   1              xx=o_y*30;
+ 252   1              xx+=o_x;
+ 253   1              yy=zm_code*0x10;
+ 254   1              do
+ 255   1              {
+ 256   2                      lcd_wt3(xx,xx/256,0x24);
+ 257   2                      lcd_wt2(zimoc[yy],0xc0);
+ 258   2                      yy++;
+ 259   2                      xx+=30;
+ 260   2                      i--;
+ 261   2              }
+ 262   1              while (i);
+ 263   1      }
+ 264          
+ 265          void main(void)
+ 266          {
+ 267   1              lcd_init();
+ 268   1              while(1)
+ 269   1              {
+ 270   2                      lcd_word(0,0,0);
+ 271   2              }
+ 272   1      }
+ 273          
+ 274          
+ 275          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    529    ----
+   CONSTANT SIZE    =     64    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1      16
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

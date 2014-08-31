@@ -1,0 +1,5 @@
+"STARTUP.obj",
+"main.obj",
+".\wulei.LIB" 
+TO "mainpro" 
+RAMSIZE(256) 

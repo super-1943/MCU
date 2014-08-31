@@ -1,0 +1,594 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+E:\AllProject\51\nrf905\kkk.uv2
+Project File Date:  12/15/2009
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling Text1.c...
+nrf905.h(3): warning C318: can't open file 'avr/io.h'
+NRF905.H(61): error C141: syntax error near 'RF_CONFIG'
+NRF905.H(61): error C129: missing ';' before 'mynrf905'
+compiling nrf905.c...
+nrf905.h(3): warning C318: can't open file 'avr/io.h'
+NRF905.H(61): error C141: syntax error near 'RF_CONFIG'
+NRF905.H(61): error C129: missing ';' before 'mynrf905'
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+NRF905.H(61): error C141: syntax error near 'RF_CONFIG'
+NRF905.H(61): error C129: missing ';' before 'mynrf905'
+compiling nrf905.c...
+NRF905.H(61): error C141: syntax error near 'RF_CONFIG'
+NRF905.H(61): error C129: missing ';' before 'mynrf905'
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+NRF905.C(14): error C202: 'DDRG': undefined identifier
+NRF905.C(15): error C202: 'PORTG': undefined identifier
+NRF905.C(16): error C202: 'DDRE': undefined identifier
+NRF905.C(17): error C202: 'PORTE': undefined identifier
+NRF905.C(18): error C202: 'DDRB': undefined identifier
+NRF905.C(19): error C202: 'PORTB': undefined identifier
+NRF905.C(20): error C202: 'PORTB': undefined identifier
+NRF905.C(21): error C202: 'PORTB': undefined identifier
+NRF905.C(46): error C202: 'PORTB': undefined identifier
+NRF905.C(51): error C202: 'PORTB': undefined identifier
+NRF905.C(55): error C202: 'PORTB': undefined identifier
+NRF905.C(57): error C202: 'PORTB': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling nrf905.c...
+NRF905.C(15): error C202: 'PORTB': undefined identifier
+NRF905.C(16): error C202: 'PORTB': undefined identifier
+NRF905.C(41): error C202: 'PORTB': undefined identifier
+NRF905.C(46): error C202: 'PORTB': undefined identifier
+NRF905.C(50): error C202: 'PORTB': undefined identifier
+NRF905.C(52): error C202: 'PORTB': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+NRF905.C(15): error C202: 'PORTB': undefined identifier
+NRF905.C(16): error C202: 'PORTB': undefined identifier
+NRF905.C(41): error C202: 'PORTB': undefined identifier
+NRF905.C(46): error C202: 'PORTB': undefined identifier
+NRF905.C(50): error C202: 'PORTB': undefined identifier
+NRF905.C(52): error C202: 'PORTB': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(29): error C202: 'PORTB': undefined identifier
+compiling nrf905.c...
+NRF905.C(15): error C202: 'PORTB': undefined identifier
+NRF905.C(16): error C202: 'PORTB': undefined identifier
+NRF905.C(41): error C202: 'PORTB': undefined identifier
+NRF905.C(46): error C202: 'PORTB': undefined identifier
+NRF905.C(50): error C202: 'PORTB': undefined identifier
+NRF905.C(52): error C202: 'PORTB': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(29): error C202: 'PORTB': undefined identifier
+compiling nrf905.c...
+NRF905.C(15): error C202: 'PORTB': undefined identifier
+NRF905.C(16): error C202: 'PORTB': undefined identifier
+NRF905.C(41): error C202: 'PORTB': undefined identifier
+NRF905.C(46): error C202: 'PORTB': undefined identifier
+NRF905.C(50): error C202: 'PORTB': undefined identifier
+NRF905.C(52): error C202: 'PORTB': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(29): error C141: syntax error near ','
+compiling nrf905.c...
+NRF905.C(53): warning C206: 'asm': missing function-prototype
+NRF905.C(53): error C267: 'asm': requires ANSI-style prototype
+NRF905.C(67): error C141: syntax error near ')'
+NRF905.C(91): error C141: syntax error near ')'
+NRF905.C(109): error C141: syntax error near ','
+NRF905.C(138): error C141: syntax error near ','
+NRF905.C(178): error C141: syntax error near ','
+NRF905.C(187): error C141: syntax error near ','
+NRF905.C(196): error C141: syntax error near ','
+NRF905.C(198): error C141: syntax error near '=='
+NRF905.C(199): error C141: syntax error near '=='
+NRF905.C(200): error C141: syntax error near '=='
+NRF905.C(201): error C141: syntax error near ','
+NRF905.C(210): error C141: syntax error near '||'
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(36): warning C206: 'delay': missing function-prototype
+TEXT1.C(36): error C267: 'delay': requires ANSI-style prototype
+compiling nrf905.c...
+NRF905.C(53): warning C206: 'asm': missing function-prototype
+NRF905.C(53): error C267: 'asm': requires ANSI-style prototype
+NRF905.C(67): error C141: syntax error near ')'
+NRF905.C(91): error C141: syntax error near ')'
+NRF905.C(198): error C141: syntax error near '=='
+NRF905.C(199): error C141: syntax error near '=='
+NRF905.C(200): error C141: syntax error near '=='
+NRF905.C(210): error C141: syntax error near '||'
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+NRF905.C(53): warning C206: 'asm': missing function-prototype
+NRF905.C(53): error C267: 'asm': requires ANSI-style prototype
+NRF905.C(67): error C141: syntax error near ')'
+NRF905.C(91): error C141: syntax error near ')'
+NRF905.C(198): error C141: syntax error near '=='
+NRF905.C(199): error C141: syntax error near '=='
+NRF905.C(200): error C141: syntax error near '=='
+NRF905.C(210): error C141: syntax error near '||'
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+NRF905.C(53): warning C206: 'asm': missing function-prototype
+NRF905.C(53): error C267: 'asm': requires ANSI-style prototype
+NRF905.C(67): error C141: syntax error near ')'
+NRF905.C(91): error C141: syntax error near ')'
+NRF905.C(198): error C141: syntax error near '=='
+NRF905.C(199): error C141: syntax error near '=='
+NRF905.C(200): error C141: syntax error near '=='
+NRF905.C(210): error C141: syntax error near '||'
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+NRF905.C(67): error C141: syntax error near ')'
+NRF905.C(91): error C141: syntax error near ')'
+NRF905.C(198): error C141: syntax error near '=='
+NRF905.C(199): error C141: syntax error near '=='
+NRF905.C(200): error C141: syntax error near '=='
+NRF905.C(210): error C141: syntax error near '||'
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+NRF905.C(53): error C272: '__asm' requires src-control to be active
+NRF905.C(72): error C272: '__asm' requires src-control to be active
+NRF905.C(96): error C272: '__asm' requires src-control to be active
+NRF905.C(202): error C272: '__asm' requires src-control to be active
+Target not created
+Build target 'Target 1'
+compiling nrf905.c...
+assembling nrf905.src...
+nrf905.src(372): error A9: SYNTAX ERROR
+nrf905.src(428): error A9: SYNTAX ERROR
+nrf905.src(487): error A9: SYNTAX ERROR
+nrf905.src(797): error A9: SYNTAX ERROR
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+nrf905.h(5): error C305: unterminated string/char const
+compiling nrf905.c...
+nrf905.h(5): error C305: unterminated string/char const
+nrf905.c(53): error C305: unterminated string/char const
+nrf905.c(72): error C305: unterminated string/char const
+nrf905.c(96): error C305: unterminated string/char const
+nrf905.c(202): error C305: unterminated string/char const
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+assembling nrf905.src...
+nrf905.src(372): error A9: SYNTAX ERROR
+nrf905.src(372): error A3: ILLEGAL CHARACTER
+nrf905.src(428): error A9: SYNTAX ERROR
+nrf905.src(428): error A3: ILLEGAL CHARACTER
+nrf905.src(487): error A9: SYNTAX ERROR
+nrf905.src(487): error A3: ILLEGAL CHARACTER
+nrf905.src(797): error A9: SYNTAX ERROR
+nrf905.src(797): error A3: ILLEGAL CHARACTER
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+assembling nrf905.src...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READ_STATUS_NRF905?NRF905
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_FAST_CONFIG_NRF905?NRF905
+Program Size: data=100.0 xdata=0 code=822
+"kkk" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+assembling nrf905.src...
+nrf905.src(372): error A9: SYNTAX ERROR
+nrf905.src(428): error A9: SYNTAX ERROR
+nrf905.src(487): error A9: SYNTAX ERROR
+nrf905.src(797): error A9: SYNTAX ERROR
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+NRF905.C(53): error C202: '__asmNOP': undefined identifier
+NRF905.C(72): error C202: '__asmNOP': undefined identifier
+NRF905.C(96): error C202: '__asmNOP': undefined identifier
+NRF905.C(202): error C202: '__asmNOP': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+assembling nrf905.src...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READ_STATUS_NRF905?NRF905
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_FAST_CONFIG_NRF905?NRF905
+Program Size: data=100.0 xdata=0 code=822
+"kkk" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling nrf905.c...
+assembling nrf905.src...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READ_STATUS_NRF905?NRF905
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_FAST_CONFIG_NRF905?NRF905
+Program Size: data=100.0 xdata=0 code=822
+"kkk" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+assembling nrf905.src...
+nrf905.src(372): error A9: SYNTAX ERROR
+nrf905.src(428): error A9: SYNTAX ERROR
+nrf905.src(487): error A9: SYNTAX ERROR
+nrf905.src(797): error A9: SYNTAX ERROR
+Target not created
+Build target 'Target 1'
+compiling nrf905.c...
+assembling nrf905.src...
+nrf905.src(372): error A9: SYNTAX ERROR
+nrf905.src(428): error A9: SYNTAX ERROR
+nrf905.src(487): error A9: SYNTAX ERROR
+nrf905.src(797): error A9: SYNTAX ERROR
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+assembling nrf905.src...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READ_STATUS_NRF905?NRF905
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_FAST_CONFIG_NRF905?NRF905
+Program Size: data=100.0 xdata=0 code=822
+"kkk" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(28): error C272: '__asm' requires src-control to be active
+compiling nrf905.c...
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+assembling Text1.src...
+Text1.src(135): error A9: SYNTAX ERROR
+compiling nrf905.c...
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+assembling Text1.src...
+Text1.src(135): error A9: SYNTAX ERROR
+compiling nrf905.c...
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+assembling Text1.src...
+compiling nrf905.c...
+assembling nrf905.src...
+linking...
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C_START
+    MODULE:  STARTUP.obj (?C_STARTUP)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C_START
+    MODULE:  STARTUP.obj (?C_STARTUP)
+    ADDRESS: 0266H
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?CLDPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?CLDOPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0012H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 001EH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0027H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0031H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 003AH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0044H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 004DH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0057H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0060H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 006AH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CLDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0078H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 007FH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0086H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CLDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0094H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 009BH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CLDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00A9H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00B0H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00BEH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00C6H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00CEH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00D6H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CLDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00E0H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00E5H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00EAH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00F1H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CLDOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 022DH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0158H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0175H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 01DBH
+Program Size: data=112.0 xdata=0 code=627
+"kkk" - 0 Error(s), 37 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+assembling Text1.src...
+compiling nrf905.c...
+assembling nrf905.src...
+linking...
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C_START
+    MODULE:  STARTUP.obj (?C_STARTUP)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C_START
+    MODULE:  STARTUP.obj (?C_STARTUP)
+    ADDRESS: 0265H
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?CLDPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ?C?CLDOPTR
+    MODULE:  nrf905.obj (NRF905)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0012H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 001EH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0027H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0031H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 003AH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0044H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 004DH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0057H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ILDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0060H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?ISTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 006AH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CLDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0078H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 007FH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0086H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CLDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0094H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 009BH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CLDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00A9H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00B0H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00BEH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00C6H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00CEH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00D6H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CLDPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00E0H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00E5H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00EAH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 00F1H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CLDOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 022CH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0157H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 0174H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ?C?CSTOPTR
+    MODULE:  nrf905.obj (NRF905)
+    ADDRESS: 01DAH
+Program Size: data=112.0 xdata=0 code=626
+"kkk" - 0 Error(s), 37 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+compiling nrf905.c...
+assembling nrf905.src...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READ_STATUS_NRF905?NRF905
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_FAST_CONFIG_NRF905?NRF905
+Program Size: data=100.0 xdata=0 code=822
+"kkk" - 0 Error(s), 2 Warning(s).

@@ -1,0 +1,1017 @@
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN nrf905.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE nrf905.src PR(.\nrf905.ls1) EP DEBUG
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ; .\nrf905.SRC generated from: nrf905.c
+                       2     ; COMPILER INVOKED BY:
+                       3     ;        C:\Keil\C51\BIN\C51.EXE nrf905.c BROWSE DEBUG OBJECTEXTEND SRC(.\nrf905.SRC)
+                       4     
+                       5     $nomod51 
+                       6     
+                       7     NAME    NRF905
+                       8     
+  0080                 9     P0      DATA    080H
+  0090                10     P1      DATA    090H
+  00A0                11     P2      DATA    0A0H
+  00B0                12     P3      DATA    0B0H
+  00B4                13     T0      BIT     0B0H.4
+  00D6                14     AC      BIT     0D0H.6
+  00B5                15     T1      BIT     0B0H.5
+  00AF                16     EA      BIT     0A8H.7
+  00A8                17     IE      DATA    0A8H
+  00B7                18     RD      BIT     0B0H.7
+  00AC                19     ES      BIT     0A8H.4
+  00B8                20     IP      DATA    0B8H
+  0098                21     RI      BIT     098H.0
+  00B2                22     INT0    BIT     0B0H.2
+  00D7                23     CY      BIT     0D0H.7
+  0099                24     TI      BIT     098H.1
+  00B3                25     INT1    BIT     0B0H.3
+  00BC                26     PS      BIT     0B8H.4
+  0081                27     SP      DATA    081H
+  00D2                28     OV      BIT     0D0H.2
+  00B6                29     WR      BIT     0B0H.6
+  0099                30     SBUF    DATA    099H
+  0087                31     PCON    DATA    087H
+  0098                32     SCON    DATA    098H
+  0089                33     TMOD    DATA    089H
+  0088                34     TCON    DATA    088H
+  0089                35     IE0     BIT     088H.1
+  008B                36     IE1     BIT     088H.3
+  00F0                37     B       DATA    0F0H
+  00E0                38     ACC     DATA    0E0H
+  00A9                39     ET0     BIT     0A8H.1
+  00AB                40     ET1     BIT     0A8H.3
+  008D                41     TF0     BIT     088H.5
+  008F                42     TF1     BIT     088H.7
+  009A                43     RB8     BIT     098H.2
+  008C                44     TH0     DATA    08CH
+  00A8                45     EX0     BIT     0A8H.0
+  0088                46     IT0     BIT     088H.0
+  008D                47     TH1     DATA    08DH
+  009B                48     TB8     BIT     098H.3
+  00AA                49     EX1     BIT     0A8H.2
+  008A                50     IT1     BIT     088H.2
+  00D0                51     P       BIT     0D0H.0
+  009F                52     SM0     BIT     098H.7
+  008A                53     TL0     DATA    08AH
+  009E                54     SM1     BIT     098H.6
+  008B                55     TL1     DATA    08BH
+  009D                56     SM2     BIT     098H.5
+  00B9                57     PT0     BIT     0B8H.1
+  00BB                58     PT1     BIT     0B8H.3
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE     2
+
+  00D3                59     RS0     BIT     0D0H.3
+  008C                60     TR0     BIT     088H.4
+  00D4                61     RS1     BIT     0D0H.4
+  008E                62     TR1     BIT     088H.6
+  00B8                63     PX0     BIT     0B8H.0
+  00BA                64     PX1     BIT     0B8H.2
+  0083                65     DPH     DATA    083H
+  0082                66     DPL     DATA    082H
+  009C                67     REN     BIT     098H.4
+  00B0                68     RXD     BIT     0B0H.0
+  00B1                69     TXD     BIT     0B0H.1
+  00D5                70     F0      BIT     0D0H.5
+  00D0                71     PSW     DATA    0D0H
+                      72     ?PR?_delay_nrf905?NRF905                 SEGMENT CODE 
+                      73     ?PR?_init_port_nrf905?NRF905             SEGMENT CODE 
+                      74     ?DT?_init_port_nrf905?NRF905             SEGMENT DATA OVERLAYABLE 
+                      75     ?PR?_send_byte_nrf905?NRF905             SEGMENT CODE 
+                      76     ?PR?read_byte_nrf905?NRF905              SEGMENT CODE 
+                      77     ?PR?read_status_nrf905?NRF905            SEGMENT CODE 
+                      78     ?PR?_config_nrf905?NRF905                SEGMENT CODE 
+                      79     ?DT?_config_nrf905?NRF905                SEGMENT DATA OVERLAYABLE 
+                      80     ?PR?_fast_config_nrf905?NRF905           SEGMENT CODE 
+                      81     ?PR?_check_config_nrf905?NRF905          SEGMENT CODE 
+                      82     ?DT?_check_config_nrf905?NRF905          SEGMENT DATA OVERLAYABLE 
+                      83     ?PR?_transmit_nrf905?NRF905              SEGMENT CODE 
+                      84     ?DT?_transmit_nrf905?NRF905              SEGMENT DATA OVERLAYABLE 
+                      85     ?PR?_listen_nrf905?NRF905                SEGMENT CODE 
+                      86     ?DT?_listen_nrf905?NRF905                SEGMENT DATA OVERLAYABLE 
+                      87             EXTRN   CODE (?C?ILDPTR)
+                      88             EXTRN   CODE (?C?ISTPTR)
+                      89             EXTRN   CODE (?C?CLDPTR)
+                      90             EXTRN   CODE (?C?CSTPTR)
+                      91             EXTRN   CODE (?C?CSTOPTR)
+                      92             EXTRN   CODE (?C?CLDOPTR)
+                      93             PUBLIC  _listen_nrf905
+                      94             PUBLIC  _transmit_nrf905
+                      95             PUBLIC  ?_check_config_nrf905?BYTE
+                      96             PUBLIC  _check_config_nrf905
+                      97             PUBLIC  _fast_config_nrf905
+                      98             PUBLIC  _config_nrf905
+                      99             PUBLIC  read_status_nrf905
+                     100             PUBLIC  read_byte_nrf905
+                     101             PUBLIC  _send_byte_nrf905
+                     102             PUBLIC  _init_port_nrf905
+                     103             PUBLIC  _delay_nrf905
+                     104     
+----                 105             RSEG  ?DT?_check_config_nrf905?NRF905
+0000                 106     ?_check_config_nrf905?BYTE:
+0000                 107              pd?755:   DS   3
+0003                 108             ORG  3
+0003                 109             buf?756:   DS   3
+                     110     
+----                 111             RSEG  ?DT?_init_port_nrf905?NRF905
+0000                 112     ?_init_port_nrf905?BYTE:
+0000                 113              pa?141:   DS   3
+                     114     
+----                 115             RSEG  ?DT?_transmit_nrf905?NRF905
+0000                 116     ?_transmit_nrf905?BYTE:
+0000                 117            buff?858:   DS   3
+                     118     
+----                 119             RSEG  ?DT?_config_nrf905?NRF905
+0000                 120     ?_config_nrf905?BYTE:
+0000                 121              pd?548:   DS   3
+                     122     
+----                 123             RSEG  ?DT?_listen_nrf905?NRF905
+0000                 124     ?_listen_nrf905?BYTE:
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE     3
+
+0000                 125           rxbuf?960:   DS   3
+                     126     ; #include "nrf905.h"
+                     127     ; 
+                     128     ; 
+                     129     ; void delay_nrf905(unsigned int i)
+                     130     
+----                 131             RSEG  ?PR?_delay_nrf905?NRF905
+0000                 132     _delay_nrf905:
+                     133             USING   0
+                     134                             ; SOURCE LINE # 4
+                     135     ;---- Variable 'i?040' assigned to Register 'R6/R7' ----
+                     136     ; {
+                     137                             ; SOURCE LINE # 5
+0000                 138     ?C0001:
+                     139     ;   while(i--);
+                     140                             ; SOURCE LINE # 6
+0000 EF              141             MOV     A,R7
+0001 1F              142             DEC     R7
+0002 AC06            143             MOV     R4,AR6
+0004 7001            144             JNZ     ?C0050
+0006 1E              145             DEC     R6
+0007                 146     ?C0050:
+0007 4C              147             ORL     A,R4
+0008 70F6            148             JNZ     ?C0001
+                     149     ; }
+                     150                             ; SOURCE LINE # 7
+000A                 151     ?C0003:
+000A 22              152             RET     
+                     153     ; END OF _delay_nrf905
+                     154     
+                     155     ; /************************************
+                     156     ; Íê³ÉIO¿ÚµÄ³õÊ¼»¯ºÍ³õÊ¼Ê¾Ý£¨Ö»×ö³õÊ¼»¯µ«²»Ð´ÈëÎÞÏßÄ£¿é£¬
+                     157     ; ÎªºóÃæ×ö×¼±¸£©
+                     158     ; ************************************/
+                     159     ; void init_port_nrf905(RF_CONFIG *pa)
+                     160     
+----                 161             RSEG  ?PR?_init_port_nrf905?NRF905
+0000                 162     _init_port_nrf905:
+                     163             USING   0
+                     164                             ; SOURCE LINE # 12
+0000 8B00     F      165             MOV     pa?141,R3
+0002 8A00     F      166             MOV     pa?141+01H,R2
+0004 8900     F      167             MOV     pa?141+02H,R1
+                     168     ; {
+                     169                             ; SOURCE LINE # 13
+                     170     ; 
+                     171     ;   CSN_1;
+                     172     ;   SCK_0;
+                     173     ;   if(pa)
+                     174                             ; SOURCE LINE # 17
+0006 EA              175             MOV     A,R2
+0007 49              176             ORL     A,R1
+0008 4B              177             ORL     A,R3
+0009 7003            178             JNZ     $ + 5H
+000B 020000   F      179             LJMP    ?C0005
+                     180     ;   {
+                     181                             ; SOURCE LINE # 18
+                     182     ;     pa->DETAIL.CH_NO=1;          //ÖÐÐÄÆµÂÊÑ¡Ôñ
+                     183                             ; SOURCE LINE # 19
+000E 120000   F      184             LCALL   ?C?ILDPTR
+0011 E5F0            185             MOV     A,B
+0013 54FE            186             ANL     A,#0FEH
+0015 FE              187             MOV     R6,A
+0016 EE              188             MOV     A,R6
+0017 75F001          189             MOV     B,#01H
+001A 120000   F      190             LCALL   ?C?ISTPTR
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE     4
+
+                     191     ;     pa->DETAIL.AUTO_RETRAN=0;    //½ûÖ¹×Ô¶¯ÖØ·¢
+                     192                             ; SOURCE LINE # 20
+001D AB00     F      193             MOV     R3,pa?141
+001F AA00     F      194             MOV     R2,pa?141+01H
+0021 A900     F      195             MOV     R1,pa?141+02H
+0023 120000   F      196             LCALL   ?C?ILDPTR
+0026 FF              197             MOV     R7,A
+0027 E5F0            198             MOV     A,B
+0029 54DF            199             ANL     A,#0DFH
+002B 8FF0            200             MOV     B,R7
+002D 120000   F      201             LCALL   ?C?ISTPTR
+                     202     ;     pa->DETAIL.RX_RED_PWR=0;     //Õ³£Ä£Ê½£¨Ïà¶ÔÓÚµÍ¹¦ºÄÄ£Ê½£©
+                     203                             ; SOURCE LINE # 21
+0030 AB00     F      204             MOV     R3,pa?141
+0032 AA00     F      205             MOV     R2,pa?141+01H
+0034 A900     F      206             MOV     R1,pa?141+02H
+0036 120000   F      207             LCALL   ?C?ILDPTR
+0039 FF              208             MOV     R7,A
+003A E5F0            209             MOV     A,B
+003C 54EF            210             ANL     A,#0EFH
+003E 8FF0            211             MOV     B,R7
+0040 120000   F      212             LCALL   ?C?ISTPTR
+                     213     ;     pa->DETAIL.PA_PWR=3;         //Êä³ö¹¦ÂÊ+10db
+                     214                             ; SOURCE LINE # 22
+0043 AB00     F      215             MOV     R3,pa?141
+0045 AA00     F      216             MOV     R2,pa?141+01H
+0047 A900     F      217             MOV     R1,pa?141+02H
+0049 120000   F      218             LCALL   ?C?ILDPTR
+004C FF              219             MOV     R7,A
+004D E5F0            220             MOV     A,B
+004F 440C            221             ORL     A,#0CH
+0051 8FF0            222             MOV     B,R7
+0053 120000   F      223             LCALL   ?C?ISTPTR
+                     224     ;     pa->DETAIL.HFREQ_PLL=0;      //433Mhz ¶Î
+                     225                             ; SOURCE LINE # 23
+0056 AB00     F      226             MOV     R3,pa?141
+0058 AA00     F      227             MOV     R2,pa?141+01H
+005A A900     F      228             MOV     R1,pa?141+02H
+005C 120000   F      229             LCALL   ?C?ILDPTR
+005F FF              230             MOV     R7,A
+0060 E5F0            231             MOV     A,B
+0062 54FD            232             ANL     A,#0FDH
+0064 8FF0            233             MOV     B,R7
+0066 120000   F      234             LCALL   ?C?ISTPTR
+                     235     ;     pa->DETAIL.RX_AW=4;
+                     236                             ; SOURCE LINE # 24
+0069 AB00     F      237             MOV     R3,pa?141
+006B E500     F      238             MOV     A,pa?141+02H
+006D 2402            239             ADD     A,#02H
+006F F9              240             MOV     R1,A
+0070 E4              241             CLR     A
+0071 3500     F      242             ADDC    A,pa?141+01H
+0073 FA              243             MOV     R2,A
+0074 120000   F      244             LCALL   ?C?CLDPTR
+0077 54F8            245             ANL     A,#0F8H
+0079 4404            246             ORL     A,#04H
+007B 120000   F      247             LCALL   ?C?CSTPTR
+                     248     ;     pa->DETAIL.TX_AW=4;
+                     249                             ; SOURCE LINE # 25
+007E 548F            250             ANL     A,#08FH
+0080 4440            251             ORL     A,#040H
+0082 120000   F      252             LCALL   ?C?CSTPTR
+                     253     ;     pa->DETAIL.RX_DW=32;
+                     254                             ; SOURCE LINE # 26
+0085 AB00     F      255             MOV     R3,pa?141
+0087 E500     F      256             MOV     A,pa?141+02H
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE     5
+
+0089 2403            257             ADD     A,#03H
+008B F9              258             MOV     R1,A
+008C E4              259             CLR     A
+008D 3500     F      260             ADDC    A,pa?141+01H
+008F FA              261             MOV     R2,A
+0090 120000   F      262             LCALL   ?C?CLDPTR
+0093 54C0            263             ANL     A,#0C0H
+0095 4420            264             ORL     A,#020H
+0097 120000   F      265             LCALL   ?C?CSTPTR
+                     266     ;     pa->DETAIL.TX_DW=32;
+                     267                             ; SOURCE LINE # 27
+009A AB00     F      268             MOV     R3,pa?141
+009C E500     F      269             MOV     A,pa?141+02H
+009E 2404            270             ADD     A,#04H
+00A0 F9              271             MOV     R1,A
+00A1 E4              272             CLR     A
+00A2 3500     F      273             ADDC    A,pa?141+01H
+00A4 FA              274             MOV     R2,A
+00A5 120000   F      275             LCALL   ?C?CLDPTR
+00A8 54C0            276             ANL     A,#0C0H
+00AA 4420            277             ORL     A,#020H
+00AC 120000   F      278             LCALL   ?C?CSTPTR
+                     279     ;     pa->DETAIL.RX_ADDR[0]=0xcc;
+                     280                             ; SOURCE LINE # 28
+00AF AB00     F      281             MOV     R3,pa?141
+00B1 AA00     F      282             MOV     R2,pa?141+01H
+00B3 A900     F      283             MOV     R1,pa?141+02H
+00B5 900005          284             MOV     DPTR,#05H
+00B8 74CC            285             MOV     A,#0CCH
+00BA 120000   F      286             LCALL   ?C?CSTOPTR
+                     287     ;     pa->DETAIL.RX_ADDR[1]=0xcc;
+                     288                             ; SOURCE LINE # 29
+00BD 900006          289             MOV     DPTR,#06H
+00C0 74CC            290             MOV     A,#0CCH
+00C2 120000   F      291             LCALL   ?C?CSTOPTR
+                     292     ;     pa->DETAIL.RX_ADDR[2]=0xcc;
+                     293                             ; SOURCE LINE # 30
+00C5 900007          294             MOV     DPTR,#07H
+00C8 74CC            295             MOV     A,#0CCH
+00CA 120000   F      296             LCALL   ?C?CSTOPTR
+                     297     ;     pa->DETAIL.RX_ADDR[3]=0xcc;
+                     298                             ; SOURCE LINE # 31
+00CD 900008          299             MOV     DPTR,#08H
+00D0 74CC            300             MOV     A,#0CCH
+00D2 120000   F      301             LCALL   ?C?CSTOPTR
+                     302     ;     pa->DETAIL.CRC_MODE=0;       //8bit CRC
+                     303                             ; SOURCE LINE # 32
+00D5 E9              304             MOV     A,R1
+00D6 2409            305             ADD     A,#09H
+00D8 F9              306             MOV     R1,A
+00D9 E4              307             CLR     A
+00DA 3A              308             ADDC    A,R2
+00DB FA              309             MOV     R2,A
+00DC 120000   F      310             LCALL   ?C?CLDPTR
+00DF 547F            311             ANL     A,#07FH
+00E1 120000   F      312             LCALL   ?C?CSTPTR
+                     313     ;     pa->DETAIL.CRC_EN=1;         //Enable CRC check
+                     314                             ; SOURCE LINE # 33
+00E4 4440            315             ORL     A,#040H
+00E6 120000   F      316             LCALL   ?C?CSTPTR
+                     317     ;     pa->DETAIL.XOF=3;            //16MHz
+                     318                             ; SOURCE LINE # 34
+00E9 54C7            319             ANL     A,#0C7H
+00EB 4418            320             ORL     A,#018H
+00ED 120000   F      321             LCALL   ?C?CSTPTR
+                     322     ;   }
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE     6
+
+                     323                             ; SOURCE LINE # 35
+                     324     ; }
+                     325                             ; SOURCE LINE # 36
+00F0                 326     ?C0005:
+00F0 22              327             RET     
+                     328     ; END OF _init_port_nrf905
+                     329     
+                     330     ; 
+                     331     ; void send_byte_nrf905(unsigned char d)
+                     332     
+----                 333             RSEG  ?PR?_send_byte_nrf905?NRF905
+0000                 334     L?0051:
+                     335             USING   0
+0000 8D82            336             MOV     DPL,R5
+0002 758300          337             MOV     DPH,#00H
+0005 120000   F      338             LCALL   ?C?CLDOPTR
+0008 FF              339             MOV     R7,A
+0009                 340     _send_byte_nrf905:
+                     341             USING   0
+                     342                             ; SOURCE LINE # 38
+                     343     ;---- Variable 'd?242' assigned to Register 'R7' ----
+                     344     ; {
+                     345                             ; SOURCE LINE # 39
+                     346     ;   unsigned char i;
+                     347     ;   SCK_0;
+                     348     ;   for(i=0;i<8;i++)
+                     349                             ; SOURCE LINE # 42
+                     350     ;---- Variable 'i?243' assigned to Register 'R6' ----
+0009 E4              351             CLR     A
+000A FE              352             MOV     R6,A
+000B                 353     ?C0006:
+                     354     ;   {
+                     355                             ; SOURCE LINE # 43
+                     356     ;     if(d&0x80)
+                     357                             ; SOURCE LINE # 44
+                     358     ;     {
+                     359                             ; SOURCE LINE # 45
+                     360     ;       MOSI_1;
+                     361     ;     }
+                     362                             ; SOURCE LINE # 47
+                     363     ;     else
+                     364     ;     {
+                     365                             ; SOURCE LINE # 49
+                     366     ;       MOSI_0;
+                     367     ;     }
+                     368                             ; SOURCE LINE # 51
+000B                 369     ?C0010:
+                     370     ;     SCK_1;
+                     371     ;     _NOP();
+000B 00              372              NOP;
+                     373     ;     SCK_0;
+                     374     ;     d<<=1;
+                     375                             ; SOURCE LINE # 55
+000C EF              376             MOV     A,R7
+000D 25E0            377             ADD     A,ACC
+000F FF              378             MOV     R7,A
+                     379     ;   }
+                     380                             ; SOURCE LINE # 56
+0010 0E              381             INC     R6
+0011 BE08F7          382             CJNE    R6,#08H,?C0006
+                     383     ;   
+                     384     ; }
+                     385                             ; SOURCE LINE # 58
+0014                 386     ?C0011:
+0014 22              387             RET     
+                     388     ; END OF _send_byte_nrf905
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE     7
+
+                     389     
+                     390     ; unsigned char read_byte_nrf905(void)
+                     391     
+----                 392             RSEG  ?PR?read_byte_nrf905?NRF905
+0000                 393     read_byte_nrf905:
+                     394             USING   0
+                     395                             ; SOURCE LINE # 59
+                     396     ; {
+                     397                             ; SOURCE LINE # 60
+                     398     ;   unsigned char i,t=0;
+                     399                             ; SOURCE LINE # 61
+                     400     ;---- Variable 't?345' assigned to Register 'R7' ----
+0000 E4              401             CLR     A
+0001 FF              402             MOV     R7,A
+                     403     ;   SCK_0;
+                     404     ;   for(i=0;i<8;i++)
+                     405                             ; SOURCE LINE # 63
+                     406     ;---- Variable 'i?344' assigned to Register 'R6' ----
+0002 FE              407             MOV     R6,A
+0003                 408     ?C0012:
+                     409     ;   {
+                     410                             ; SOURCE LINE # 64
+                     411     ;     SCK_1;
+                     412     ;     t<<=1;
+                     413                             ; SOURCE LINE # 66
+0003 EF              414             MOV     A,R7
+0004 25E0            415             ADD     A,ACC
+0006 FF              416             MOV     R7,A
+                     417     ;     if(MISO_IN)
+                     418                             ; SOURCE LINE # 67
+                     419     ;     {
+                     420                             ; SOURCE LINE # 68
+                     421     ;       t|=0x01;
+                     422                             ; SOURCE LINE # 69
+0007 430701          423             ORL     AR7,#01H
+                     424     ;     }
+                     425                             ; SOURCE LINE # 70
+                     426     ;     SCK_0;
+                     427     ;     _NOP();
+000A 00              428              NOP;
+                     429     ;   }
+                     430                             ; SOURCE LINE # 73
+000B 0E              431             INC     R6
+000C BE08F4          432             CJNE    R6,#08H,?C0012
+000F                 433     ?C0013:
+                     434     ;   return t;
+                     435                             ; SOURCE LINE # 74
+                     436     ; }
+                     437                             ; SOURCE LINE # 75
+000F                 438     ?C0016:
+000F 22              439             RET     
+                     440     ; END OF read_byte_nrf905
+                     441     
+                     442     ; /*************************************
+                     443     ; º¯Ê×÷ÓÃ£º¶ÁÈ¡µ±Ç°×´Ì¬Öµ£¨AMºÍDR£©
+                     444     ; ·µ»ØÖµ£º  0xaa´ú±íÒÑ¾­½ÓÊÕµ½Ê¾Ý£¬µÈ´¶ÁÈ¡
+                     445     ;           0x00¡­¡­¡­¡­¡­¡­¡­¡­
+                     446     ; *************************************/
+                     447     ; unsigned char read_status_nrf905(void)
+                     448     
+----                 449             RSEG  ?PR?read_status_nrf905?NRF905
+0000                 450     read_status_nrf905:
+                     451             USING   0
+                     452                             ; SOURCE LINE # 81
+                     453     ; {
+                     454                             ; SOURCE LINE # 82
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE     8
+
+                     455     ;   unsigned char i,t=0;  
+                     456                             ; SOURCE LINE # 83
+                     457     ;---- Variable 't?447' assigned to Register 'R7' ----
+0000 E4              458             CLR     A
+0001 FF              459             MOV     R7,A
+                     460     ;   MOSI_0;
+                     461     ;   SCK_0;
+                     462     ;   CSN_0;
+                     463     ;   for(i=0;i<8;i++)
+                     464                             ; SOURCE LINE # 87
+                     465     ;---- Variable 'i?446' assigned to Register 'R6' ----
+0002 FE              466             MOV     R6,A
+0003                 467     ?C0017:
+                     468     ;   {
+                     469                             ; SOURCE LINE # 88
+                     470     ;     SCK_1;
+                     471     ;     t<<=1;
+                     472                             ; SOURCE LINE # 90
+0003 EF              473             MOV     A,R7
+0004 25E0            474             ADD     A,ACC
+0006 FF              475             MOV     R7,A
+                     476     ;     if(MISO_IN)
+                     477                             ; SOURCE LINE # 91
+                     478     ;     {
+                     479                             ; SOURCE LINE # 92
+                     480     ;       t|=0x01;
+                     481                             ; SOURCE LINE # 93
+0007 430701          482             ORL     AR7,#01H
+                     483     ;     }
+                     484                             ; SOURCE LINE # 94
+                     485     ;     SCK_0;
+                     486     ;     _NOP();
+000A 00              487              NOP;
+                     488     ;   }
+                     489                             ; SOURCE LINE # 97
+000B 0E              490             INC     R6
+000C BE08F4          491             CJNE    R6,#08H,?C0017
+000F                 492     ?C0018:
+                     493     ;   CSN_1;
+                     494     ;   return t;
+                     495                             ; SOURCE LINE # 99
+                     496     ; }
+                     497                             ; SOURCE LINE # 100
+000F                 498     ?C0021:
+000F 22              499             RET     
+                     500     ; END OF read_status_nrf905
+                     501     
+                     502     ; /*********************************
+                     503     ; º¯Ê×÷ÓÃ£ºÅäÖÃÎÞÏßÄ£¿é
+                     504     ; ²ÎÊÒªÇó£º½á¹¹ÌåÖ¸ÕëpdÖ¸ÏòÓÐÐ§Ê¾Ý
+                     505     ; º¯ÊÇ°×à£ºÍê³ÉIO¿Ú³õÊ¼»¯¼´¿ÉÅäÖÃ
+                     506     ; *********************************/
+                     507     ; void config_nrf905(RF_CONFIG * pd)
+                     508     
+----                 509             RSEG  ?PR?_config_nrf905?NRF905
+0000                 510     _config_nrf905:
+                     511             USING   0
+                     512                             ; SOURCE LINE # 106
+0000 8B00     F      513             MOV     pd?548,R3
+0002 8A00     F      514             MOV     pd?548+01H,R2
+0004 8900     F      515             MOV     pd?548+02H,R1
+                     516     ; {
+                     517                             ; SOURCE LINE # 107
+                     518     ;   unsigned char x;
+                     519     ;   STAND_BY_MODE;  
+                     520     ;   delay_nrf905(100);
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE     9
+
+                     521                             ; SOURCE LINE # 110
+0006 7F64            522             MOV     R7,#064H
+0008 7E00            523             MOV     R6,#00H
+000A 120000   F      524             LCALL   _delay_nrf905
+                     525     ;   CSN_0;
+                     526     ;   send_byte_nrf905(0x00);  //config
+                     527                             ; SOURCE LINE # 112
+000D E4              528             CLR     A
+000E FF              529             MOV     R7,A
+000F 120000   F      530             LCALL   _send_byte_nrf905
+                     531     ;   for(x=0;x<10;x++)
+                     532                             ; SOURCE LINE # 113
+                     533     ;---- Variable 'x?549' assigned to Register 'R5' ----
+0012 E4              534             CLR     A
+0013 FD              535             MOV     R5,A
+0014                 536     ?C0022:
+                     537     ;   {
+                     538                             ; SOURCE LINE # 114
+                     539     ;     send_byte_nrf905(pd->buffer[x]);
+                     540                             ; SOURCE LINE # 115
+0014 AB00     F      541             MOV     R3,pd?548
+0016 AA00     F      542             MOV     R2,pd?548+01H
+0018 A900     F      543             MOV     R1,pd?548+02H
+001A 120000   F      544             LCALL   L?0051
+                     545     ;   }
+                     546                             ; SOURCE LINE # 116
+001D 0D              547             INC     R5
+001E BD0AF3          548             CJNE    R5,#0AH,?C0022
+0021                 549     ?C0023:
+                     550     ;   CSN_1;
+                     551     ;   CSN_0;
+                     552     ;   send_byte_nrf905(WRITE_TX_ADDR);
+                     553                             ; SOURCE LINE # 119
+0021 7F22            554             MOV     R7,#022H
+0023 120000   F      555             LCALL   _send_byte_nrf905
+                     556     ;   send_byte_nrf905(0xcc);
+                     557                             ; SOURCE LINE # 120
+0026 7FCC            558             MOV     R7,#0CCH
+0028 120000   F      559             LCALL   _send_byte_nrf905
+                     560     ;   send_byte_nrf905(0xcc);
+                     561                             ; SOURCE LINE # 121
+002B 7FCC            562             MOV     R7,#0CCH
+002D 120000   F      563             LCALL   _send_byte_nrf905
+                     564     ;   send_byte_nrf905(0xcc);
+                     565                             ; SOURCE LINE # 122
+0030 7FCC            566             MOV     R7,#0CCH
+0032 120000   F      567             LCALL   _send_byte_nrf905
+                     568     ;   send_byte_nrf905(0xcc);
+                     569                             ; SOURCE LINE # 123
+0035 7FCC            570             MOV     R7,#0CCH
+0037 020000   F      571             LJMP    _send_byte_nrf905
+                     572     ; END OF _config_nrf905
+                     573     
+                     574     ;   CSN_1;
+                     575     ;   
+                     576     ; }
+                     577     ; /***********************************************************************
+                     578     ; º¯ÊËµÃ÷£º¿ìËÙÅäÖÃÖÐÐÄÆµÂÊºÍÊä³ö¹¦ÂÊ
+                     579     ; ×îÖÕ×÷ÓÃ£º
+                     580     ;         Ê¹CH_NO=ch_no;
+                     581     ;         HFREQ_PLL=hreq;
+                     582     ;         PA_PWR=pa;
+                     583     ; º¯ÊÇ°×à£ºÍê³ÉIO¿Ú³õÊ¼»¯¼´¿ÉÅäÖÃ
+                     584     ; ***********************************************************************/
+                     585     ; void fast_config_nrf905(unsigned int ch_no,unsigned char hfreq,unsigned char pa)
+                     586     
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE    10
+
+----                 587             RSEG  ?PR?_fast_config_nrf905?NRF905
+0000                 588     _fast_config_nrf905:
+                     589             USING   0
+                     590                             ; SOURCE LINE # 135
+                     591     ;---- Variable 'ch_no?650' assigned to Register 'DPTR' ----
+0000 8F82            592             MOV     DPL,R7
+0002 8E83            593             MOV     DPH,R6
+                     594     ;---- Variable 'pa?652' assigned to Register 'R3' ----
+                     595     ;---- Variable 'hfreq?651' assigned to Register 'R5' ----
+                     596     ; {
+                     597                             ; SOURCE LINE # 136
+                     598     ;   unsigned char i,j;
+                     599     ;   STAND_BY_MODE;  
+                     600     ;   i=ch_no&0xff;
+                     601                             ; SOURCE LINE # 139
+0004 EF              602             MOV     A,R7
+                     603     ;---- Variable 'i?653' assigned to Register 'R4' ----
+0005 FC              604             MOV     R4,A
+                     605     ;   j=(ch_no>>8)+((hfreq&0x01)<<1)+((pa&0x03)<<2)+0x80;
+                     606                             ; SOURCE LINE # 140
+0006 AF83            607             MOV     R7,DPH
+0008 ED              608             MOV     A,R5
+0009 5401            609             ANL     A,#01H
+000B 25E0            610             ADD     A,ACC
+000D 2F              611             ADD     A,R7
+000E FF              612             MOV     R7,A
+000F EB              613             MOV     A,R3
+0010 5403            614             ANL     A,#03H
+0012 FE              615             MOV     R6,A
+0013 25E0            616             ADD     A,ACC
+0015 25E0            617             ADD     A,ACC
+0017 2F              618             ADD     A,R7
+0018 2480            619             ADD     A,#080H
+001A FF              620             MOV     R7,A
+                     621     ;---- Variable 'j?654' assigned to Register 'R7' ----
+                     622     ;   CSN_0;
+                     623     ;   send_byte_nrf905(j);  
+                     624                             ; SOURCE LINE # 142
+001B 120000   F      625             LCALL   _send_byte_nrf905
+                     626     ;   send_byte_nrf905(i);
+                     627                             ; SOURCE LINE # 143
+001E AF04            628             MOV     R7,AR4
+0020 020000   F      629             LJMP    _send_byte_nrf905
+                     630     ; END OF _fast_config_nrf905
+                     631     
+                     632     ;   CSN_1;
+                     633     ; }  
+                     634     ; /**********************************************************
+                     635     ; º¯Ê×÷ÓÃ£º¼ì²éÅäÖÃ£¬°üÀ¨ÅäÖÃ×Ö½ÚºÍ·¢ËÍµØÖ·
+                     636     ; ²ÎÊÒªÇó£º½á¹¹ÌåÖ¸ÕëpdÖ¸ÏòÓÐÐ§ÇøÓò£¬buf³¤¶È4×Ö½Ú
+                     637     ; º¯ÊÇ°×à£º¶ÔÒÑ¾­ÅäÖÃºÃµÄÎÞÏßÄ£¿é»òÕß¸ÕÉÏµçµÄÄ£¿é¶¼¿ÉÒÔ½øÐÐ
+                     638     ; **********************************************************/
+                     639     ; void check_config_nrf905(RF_CONFIG * pd,unsigned char *buf)
+                     640     
+----                 641             RSEG  ?PR?_check_config_nrf905?NRF905
+0000                 642     _check_config_nrf905:
+                     643             USING   0
+                     644                             ; SOURCE LINE # 151
+0000 8B00     F      645             MOV     pd?755,R3
+0002 8A00     F      646             MOV     pd?755+01H,R2
+0004 8900     F      647             MOV     pd?755+02H,R1
+                     648     ; {
+                     649                             ; SOURCE LINE # 152
+                     650     ;   unsigned char i;
+                     651     ;   CSN_0;
+                     652     ;   send_byte_nrf905(READ_CONFIG);
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE    11
+
+                     653                             ; SOURCE LINE # 155
+0006 7F10            654             MOV     R7,#010H
+0008 120000   F      655             LCALL   _send_byte_nrf905
+                     656     ;   for(i=0;i<10;i++)
+                     657                             ; SOURCE LINE # 156
+                     658     ;---- Variable 'i?757' assigned to Register 'R5' ----
+000B E4              659             CLR     A
+000C FD              660             MOV     R5,A
+000D                 661     ?C0027:
+                     662     ;   {
+                     663                             ; SOURCE LINE # 157
+                     664     ;     pd->buffer[i]=read_byte_nrf905();
+                     665                             ; SOURCE LINE # 158
+000D 120000   F      666             LCALL   read_byte_nrf905
+0010 AB00     F      667             MOV     R3,pd?755
+0012 AA00     F      668             MOV     R2,pd?755+01H
+0014 A900     F      669             MOV     R1,pd?755+02H
+0016 8D82            670             MOV     DPL,R5
+0018 758300          671             MOV     DPH,#00H
+001B EF              672             MOV     A,R7
+001C 120000   F      673             LCALL   ?C?CSTOPTR
+                     674     ;   }
+                     675                             ; SOURCE LINE # 159
+001F 0D              676             INC     R5
+0020 BD0AEA          677             CJNE    R5,#0AH,?C0027
+0023                 678     ?C0028:
+                     679     ;   CSN_1;  
+                     680     ;   CSN_0;
+                     681     ;   send_byte_nrf905(READ_TX_ADDR);
+                     682                             ; SOURCE LINE # 162
+0023 7F23            683             MOV     R7,#023H
+0025 120000   F      684             LCALL   _send_byte_nrf905
+                     685     ;   for(i=0;i<4;i++)
+                     686                             ; SOURCE LINE # 163
+0028 E4              687             CLR     A
+0029 FD              688             MOV     R5,A
+002A                 689     ?C0030:
+                     690     ;   {
+                     691                             ; SOURCE LINE # 164
+                     692     ;     buf[i]=read_byte_nrf905();
+                     693                             ; SOURCE LINE # 165
+002A 120000   F      694             LCALL   read_byte_nrf905
+002D AB00     F      695             MOV     R3,buf?756
+002F AA00     F      696             MOV     R2,buf?756+01H
+0031 A900     F      697             MOV     R1,buf?756+02H
+0033 8D82            698             MOV     DPL,R5
+0035 758300          699             MOV     DPH,#00H
+0038 EF              700             MOV     A,R7
+0039 120000   F      701             LCALL   ?C?CSTOPTR
+                     702     ;   }
+                     703                             ; SOURCE LINE # 166
+003C 0D              704             INC     R5
+003D BD04EA          705             CJNE    R5,#04H,?C0030
+                     706     ;   CSN_1; 
+                     707     ; }
+                     708                             ; SOURCE LINE # 168
+0040                 709     ?C0033:
+0040 22              710             RET     
+                     711     ; END OF _check_config_nrf905
+                     712     
+                     713     ; /****************************************
+                     714     ; º¯Ê×÷ÓÃ£º½«32×Ö½ÚÊ¾Ý·¢ËÍ³öÈ¥
+                     715     ; ²ÎÊÒªÇó£ºbuff³¤¶ÈÎª32×Ö½Ú
+                     716     ; ·µ»ØÖµ  : ÎÞ
+                     717     ; º¯ÊÇ°×à£º½«ÎÞÏßÄ£¿éÅäÖÃºÃºó¼´¿É·¢ËÍÊ¾Ý
+                     718     ; ****************************************/
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE    12
+
+                     719     ; void transmit_nrf905(unsigned char *buff)
+                     720     
+----                 721             RSEG  ?PR?_transmit_nrf905?NRF905
+0000                 722     _transmit_nrf905:
+                     723             USING   0
+                     724                             ; SOURCE LINE # 175
+0000 8B00     F      725             MOV     buff?858,R3
+0002 8A00     F      726             MOV     buff?858+01H,R2
+0004 8900     F      727             MOV     buff?858+02H,R1
+                     728     ; {
+                     729                             ; SOURCE LINE # 176
+                     730     ;   unsigned char i;
+                     731     ;   STAND_BY_MODE;
+                     732     ;   CSN_0;
+                     733     ;   send_byte_nrf905(WRITE_TX_DATA);
+                     734                             ; SOURCE LINE # 180
+0006 7F20            735             MOV     R7,#020H
+0008 120000   F      736             LCALL   _send_byte_nrf905
+                     737     ;   for(i=0;i<32;i++)
+                     738                             ; SOURCE LINE # 181
+                     739     ;---- Variable 'i?859' assigned to Register 'R5' ----
+000B E4              740             CLR     A
+000C FD              741             MOV     R5,A
+000D                 742     ?C0034:
+                     743     ;   {
+                     744                             ; SOURCE LINE # 182
+                     745     ;     send_byte_nrf905(buff[i]);
+                     746                             ; SOURCE LINE # 183
+000D AB00     F      747             MOV     R3,buff?858
+000F AA00     F      748             MOV     R2,buff?858+01H
+0011 A900     F      749             MOV     R1,buff?858+02H
+0013 120000   F      750             LCALL   L?0051
+                     751     ;   }
+                     752                             ; SOURCE LINE # 184
+0016 0D              753             INC     R5
+0017 BD20F3          754             CJNE    R5,#020H,?C0034
+001A                 755     ?C0035:
+                     756     ;   CSN_1;
+                     757     ;   delay_nrf905(100);
+                     758                             ; SOURCE LINE # 186
+001A 7F64            759             MOV     R7,#064H
+001C 7E00            760             MOV     R6,#00H
+001E 020000   F      761             LJMP    _delay_nrf905
+                     762     ; END OF _transmit_nrf905
+                     763     
+                     764     ;   TX_MODE;  
+                     765     ; }
+                     766     ; /*************************************
+                     767     ; º¯Ê×÷ÓÃ£º¼àÌ
+                     768     ; ²ÎÊÒªÇó£ºrxbuf³¤¶È32×Ö½Ú
+                     769     ; *************************************/
+                     770     ; void listen_nrf905(unsigned char * rxbuf)
+                     771     
+----                 772             RSEG  ?PR?_listen_nrf905?NRF905
+0000                 773     _listen_nrf905:
+                     774             USING   0
+                     775                             ; SOURCE LINE # 193
+0000 8B00     F      776             MOV     rxbuf?960,R3
+0002 8A00     F      777             MOV     rxbuf?960+01H,R2
+0004 8900     F      778             MOV     rxbuf?960+02H,R1
+                     779     ; {
+                     780                             ; SOURCE LINE # 194
+                     781     ;   unsigned char ii;
+                     782     ;   RX_MODE;  
+                     783     ;   delay_nrf905(1000);
+                     784                             ; SOURCE LINE # 197
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE    13
+
+0006 7FE8            785             MOV     R7,#0E8H
+0008 7E03            786             MOV     R6,#03H
+000A 120000   F      787             LCALL   _delay_nrf905
+                     788     ;   while(CD_IN==0);
+                     789                             ; SOURCE LINE # 198
+                     790     ;   while(AM_IN==0);
+                     791                             ; SOURCE LINE # 199
+                     792     ;   while(DR_IN==0);
+                     793                             ; SOURCE LINE # 200
+000D                 794     ?C0043:
+                     795     ;   STAND_BY_MODE;
+                     796     ;   _NOP();
+000D 00              797              NOP;
+                     798     ;   CSN_0;
+                     799     ;   send_byte_nrf905(READ_RX_DATA);
+                     800                             ; SOURCE LINE # 204
+000E 7F24            801             MOV     R7,#024H
+0010 120000   F      802             LCALL   _send_byte_nrf905
+                     803     ;   for(ii=0;ii<32;ii++)
+                     804                             ; SOURCE LINE # 205
+                     805     ;---- Variable 'ii?961' assigned to Register 'R5' ----
+0013 E4              806             CLR     A
+0014 FD              807             MOV     R5,A
+0015                 808     ?C0044:
+                     809     ;   {
+                     810                             ; SOURCE LINE # 206
+                     811     ;     rxbuf[ii]=read_byte_nrf905();
+                     812                             ; SOURCE LINE # 207
+0015 120000   F      813             LCALL   read_byte_nrf905
+0018 AB00     F      814             MOV     R3,rxbuf?960
+001A AA00     F      815             MOV     R2,rxbuf?960+01H
+001C A900     F      816             MOV     R1,rxbuf?960+02H
+001E 8D82            817             MOV     DPL,R5
+0020 758300          818             MOV     DPH,#00H
+0023 EF              819             MOV     A,R7
+0024 120000   F      820             LCALL   ?C?CSTOPTR
+                     821     ;   }
+                     822                             ; SOURCE LINE # 208
+0027 0D              823             INC     R5
+0028 BD20EA          824             CJNE    R5,#020H,?C0044
+002B                 825     ?C0047:
+                     826     ;   CSN_1;// Disable spi
+                     827     ;   while(DR_IN||AM_IN);
+                     828                             ; SOURCE LINE # 210
+002B 80FE            829             SJMP    ?C0047
+                     830     ; END OF _listen_nrf905
+                     831     
+                     832             END
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE    14
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                          T Y P E  V A L U E   ATTRIBUTES
+
+?C0001. . . . . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?_DELAY_NRF905?NRF905
+?C0003. . . . . . . . . . . . .  C ADDR   000AH   R   SEG=?PR?_DELAY_NRF905?NRF905
+?C0005. . . . . . . . . . . . .  C ADDR   00F0H   R   SEG=?PR?_INIT_PORT_NRF905?NRF905
+?C0006. . . . . . . . . . . . .  C ADDR   000BH   R   SEG=?PR?_SEND_BYTE_NRF905?NRF905
+?C0010. . . . . . . . . . . . .  C ADDR   000BH   R   SEG=?PR?_SEND_BYTE_NRF905?NRF905
+?C0011. . . . . . . . . . . . .  C ADDR   0014H   R   SEG=?PR?_SEND_BYTE_NRF905?NRF905
+?C0012. . . . . . . . . . . . .  C ADDR   0003H   R   SEG=?PR?READ_BYTE_NRF905?NRF905
+?C0013. . . . . . . . . . . . .  C ADDR   000FH   R   SEG=?PR?READ_BYTE_NRF905?NRF905
+?C0016. . . . . . . . . . . . .  C ADDR   000FH   R   SEG=?PR?READ_BYTE_NRF905?NRF905
+?C0017. . . . . . . . . . . . .  C ADDR   0003H   R   SEG=?PR?READ_STATUS_NRF905?NRF905
+?C0018. . . . . . . . . . . . .  C ADDR   000FH   R   SEG=?PR?READ_STATUS_NRF905?NRF905
+?C0021. . . . . . . . . . . . .  C ADDR   000FH   R   SEG=?PR?READ_STATUS_NRF905?NRF905
+?C0022. . . . . . . . . . . . .  C ADDR   0014H   R   SEG=?PR?_CONFIG_NRF905?NRF905
+?C0023. . . . . . . . . . . . .  C ADDR   0021H   R   SEG=?PR?_CONFIG_NRF905?NRF905
+?C0027. . . . . . . . . . . . .  C ADDR   000DH   R   SEG=?PR?_CHECK_CONFIG_NRF905?NRF905
+?C0028. . . . . . . . . . . . .  C ADDR   0023H   R   SEG=?PR?_CHECK_CONFIG_NRF905?NRF905
+?C0030. . . . . . . . . . . . .  C ADDR   002AH   R   SEG=?PR?_CHECK_CONFIG_NRF905?NRF905
+?C0033. . . . . . . . . . . . .  C ADDR   0040H   R   SEG=?PR?_CHECK_CONFIG_NRF905?NRF905
+?C0034. . . . . . . . . . . . .  C ADDR   000DH   R   SEG=?PR?_TRANSMIT_NRF905?NRF905
+?C0035. . . . . . . . . . . . .  C ADDR   001AH   R   SEG=?PR?_TRANSMIT_NRF905?NRF905
+?C0043. . . . . . . . . . . . .  C ADDR   000DH   R   SEG=?PR?_LISTEN_NRF905?NRF905
+?C0044. . . . . . . . . . . . .  C ADDR   0015H   R   SEG=?PR?_LISTEN_NRF905?NRF905
+?C0047. . . . . . . . . . . . .  C ADDR   002BH   R   SEG=?PR?_LISTEN_NRF905?NRF905
+?C0050. . . . . . . . . . . . .  C ADDR   0007H   R   SEG=?PR?_DELAY_NRF905?NRF905
+?C?CLDOPTR. . . . . . . . . . .  C ADDR   -----       EXT
+?C?CLDPTR . . . . . . . . . . .  C ADDR   -----       EXT
+?C?CSTOPTR. . . . . . . . . . .  C ADDR   -----       EXT
+?C?CSTPTR . . . . . . . . . . .  C ADDR   -----       EXT
+?C?ILDPTR . . . . . . . . . . .  C ADDR   -----       EXT
+?C?ISTPTR . . . . . . . . . . .  C ADDR   -----       EXT
+?DT?_CHECK_CONFIG_NRF905?NRF905  D SEG    0006H       REL=UNIT
+?DT?_CONFIG_NRF905?NRF905 . . .  D SEG    0003H       REL=UNIT
+?DT?_INIT_PORT_NRF905?NRF905. .  D SEG    0003H       REL=UNIT
+?DT?_LISTEN_NRF905?NRF905 . . .  D SEG    0003H       REL=UNIT
+?DT?_TRANSMIT_NRF905?NRF905 . .  D SEG    0003H       REL=UNIT
+?PR?READ_BYTE_NRF905?NRF905 . .  C SEG    0010H       REL=UNIT
+?PR?READ_STATUS_NRF905?NRF905 .  C SEG    0010H       REL=UNIT
+?PR?_CHECK_CONFIG_NRF905?NRF905  C SEG    0041H       REL=UNIT
+?PR?_CONFIG_NRF905?NRF905 . . .  C SEG    003AH       REL=UNIT
+?PR?_DELAY_NRF905?NRF905. . . .  C SEG    000BH       REL=UNIT
+?PR?_FAST_CONFIG_NRF905?NRF905.  C SEG    0023H       REL=UNIT
+?PR?_INIT_PORT_NRF905?NRF905. .  C SEG    00F1H       REL=UNIT
+?PR?_LISTEN_NRF905?NRF905 . . .  C SEG    002DH       REL=UNIT
+?PR?_SEND_BYTE_NRF905?NRF905. .  C SEG    0015H       REL=UNIT
+?PR?_TRANSMIT_NRF905?NRF905 . .  C SEG    0021H       REL=UNIT
+?_CHECK_CONFIG_NRF905?BYTE. . .  D ADDR   0000H   R   SEG=?DT?_CHECK_CONFIG_NRF905?NRF905
+?_CONFIG_NRF905?BYTE. . . . . .  D ADDR   0000H   R   SEG=?DT?_CONFIG_NRF905?NRF905
+?_INIT_PORT_NRF905?BYTE . . . .  D ADDR   0000H   R   SEG=?DT?_INIT_PORT_NRF905?NRF905
+?_LISTEN_NRF905?BYTE. . . . . .  D ADDR   0000H   R   SEG=?DT?_LISTEN_NRF905?NRF905
+?_TRANSMIT_NRF905?BYTE. . . . .  D ADDR   0000H   R   SEG=?DT?_TRANSMIT_NRF905?NRF905
+AC. . . . . . . . . . . . . . .  B ADDR   00D0H.6 A   
+ACC . . . . . . . . . . . . . .  D ADDR   00E0H   A   
+AR4 . . . . . . . . . . . . . .  D ADDR   0004H   A   
+AR6 . . . . . . . . . . . . . .  D ADDR   0006H   A   
+AR7 . . . . . . . . . . . . . .  D ADDR   0007H   A   
+B . . . . . . . . . . . . . . .  D ADDR   00F0H   A   
+BUF?756 . . . . . . . . . . . .  D ADDR   0003H   R   SEG=?DT?_CHECK_CONFIG_NRF905?NRF905
+BUFF?858. . . . . . . . . . . .  D ADDR   0000H   R   SEG=?DT?_TRANSMIT_NRF905?NRF905
+CY. . . . . . . . . . . . . . .  B ADDR   00D0H.7 A   
+DPH . . . . . . . . . . . . . .  D ADDR   0083H   A   
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE    15
+
+DPL . . . . . . . . . . . . . .  D ADDR   0082H   A   
+EA. . . . . . . . . . . . . . .  B ADDR   00A8H.7 A   
+ES. . . . . . . . . . . . . . .  B ADDR   00A8H.4 A   
+ET0 . . . . . . . . . . . . . .  B ADDR   00A8H.1 A   
+ET1 . . . . . . . . . . . . . .  B ADDR   00A8H.3 A   
+EX0 . . . . . . . . . . . . . .  B ADDR   00A8H.0 A   
+EX1 . . . . . . . . . . . . . .  B ADDR   00A8H.2 A   
+F0. . . . . . . . . . . . . . .  B ADDR   00D0H.5 A   
+IE. . . . . . . . . . . . . . .  D ADDR   00A8H   A   
+IE0 . . . . . . . . . . . . . .  B ADDR   0088H.1 A   
+IE1 . . . . . . . . . . . . . .  B ADDR   0088H.3 A   
+INT0. . . . . . . . . . . . . .  B ADDR   00B0H.2 A   
+INT1. . . . . . . . . . . . . .  B ADDR   00B0H.3 A   
+IP. . . . . . . . . . . . . . .  D ADDR   00B8H   A   
+IT0 . . . . . . . . . . . . . .  B ADDR   0088H.0 A   
+IT1 . . . . . . . . . . . . . .  B ADDR   0088H.2 A   
+L?0051. . . . . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?_SEND_BYTE_NRF905?NRF905
+NRF905. . . . . . . . . . . . .  N NUMB   -----       
+OV. . . . . . . . . . . . . . .  B ADDR   00D0H.2 A   
+P . . . . . . . . . . . . . . .  B ADDR   00D0H.0 A   
+P0. . . . . . . . . . . . . . .  D ADDR   0080H   A   
+P1. . . . . . . . . . . . . . .  D ADDR   0090H   A   
+P2. . . . . . . . . . . . . . .  D ADDR   00A0H   A   
+P3. . . . . . . . . . . . . . .  D ADDR   00B0H   A   
+PA?141. . . . . . . . . . . . .  D ADDR   0000H   R   SEG=?DT?_INIT_PORT_NRF905?NRF905
+PCON. . . . . . . . . . . . . .  D ADDR   0087H   A   
+PD?548. . . . . . . . . . . . .  D ADDR   0000H   R   SEG=?DT?_CONFIG_NRF905?NRF905
+PD?755. . . . . . . . . . . . .  D ADDR   0000H   R   SEG=?DT?_CHECK_CONFIG_NRF905?NRF905
+PS. . . . . . . . . . . . . . .  B ADDR   00B8H.4 A   
+PSW . . . . . . . . . . . . . .  D ADDR   00D0H   A   
+PT0 . . . . . . . . . . . . . .  B ADDR   00B8H.1 A   
+PT1 . . . . . . . . . . . . . .  B ADDR   00B8H.3 A   
+PX0 . . . . . . . . . . . . . .  B ADDR   00B8H.0 A   
+PX1 . . . . . . . . . . . . . .  B ADDR   00B8H.2 A   
+RB8 . . . . . . . . . . . . . .  B ADDR   0098H.2 A   
+RD. . . . . . . . . . . . . . .  B ADDR   00B0H.7 A   
+READ_BYTE_NRF905. . . . . . . .  C ADDR   0000H   R   SEG=?PR?READ_BYTE_NRF905?NRF905
+READ_STATUS_NRF905. . . . . . .  C ADDR   0000H   R   SEG=?PR?READ_STATUS_NRF905?NRF905
+REN . . . . . . . . . . . . . .  B ADDR   0098H.4 A   
+RI. . . . . . . . . . . . . . .  B ADDR   0098H.0 A   
+RS0 . . . . . . . . . . . . . .  B ADDR   00D0H.3 A   
+RS1 . . . . . . . . . . . . . .  B ADDR   00D0H.4 A   
+RXBUF?960 . . . . . . . . . . .  D ADDR   0000H   R   SEG=?DT?_LISTEN_NRF905?NRF905
+RXD . . . . . . . . . . . . . .  B ADDR   00B0H.0 A   
+SBUF. . . . . . . . . . . . . .  D ADDR   0099H   A   
+SCON. . . . . . . . . . . . . .  D ADDR   0098H   A   
+SM0 . . . . . . . . . . . . . .  B ADDR   0098H.7 A   
+SM1 . . . . . . . . . . . . . .  B ADDR   0098H.6 A   
+SM2 . . . . . . . . . . . . . .  B ADDR   0098H.5 A   
+SP. . . . . . . . . . . . . . .  D ADDR   0081H   A   
+T0. . . . . . . . . . . . . . .  B ADDR   00B0H.4 A   
+T1. . . . . . . . . . . . . . .  B ADDR   00B0H.5 A   
+TB8 . . . . . . . . . . . . . .  B ADDR   0098H.3 A   
+TCON. . . . . . . . . . . . . .  D ADDR   0088H   A   
+TF0 . . . . . . . . . . . . . .  B ADDR   0088H.5 A   
+TF1 . . . . . . . . . . . . . .  B ADDR   0088H.7 A   
+TH0 . . . . . . . . . . . . . .  D ADDR   008CH   A   
+TH1 . . . . . . . . . . . . . .  D ADDR   008DH   A   
+TI. . . . . . . . . . . . . . .  B ADDR   0098H.1 A   
+TL0 . . . . . . . . . . . . . .  D ADDR   008AH   A   
+TL1 . . . . . . . . . . . . . .  D ADDR   008BH   A   
+TMOD. . . . . . . . . . . . . .  D ADDR   0089H   A   
+TR0 . . . . . . . . . . . . . .  B ADDR   0088H.4 A   
+TR1 . . . . . . . . . . . . . .  B ADDR   0088H.6 A   
+TXD . . . . . . . . . . . . . .  B ADDR   00B0H.1 A   
+WR. . . . . . . . . . . . . . .  B ADDR   00B0H.6 A   
+A51 MACRO ASSEMBLER  NRF905                                                               12/15/2009 15:29:54 PAGE    16
+
+_CHECK_CONFIG_NRF905. . . . . .  C ADDR   0000H   R   SEG=?PR?_CHECK_CONFIG_NRF905?NRF905
+_CONFIG_NRF905. . . . . . . . .  C ADDR   0000H   R   SEG=?PR?_CONFIG_NRF905?NRF905
+_DELAY_NRF905 . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?_DELAY_NRF905?NRF905
+_FAST_CONFIG_NRF905 . . . . . .  C ADDR   0000H   R   SEG=?PR?_FAST_CONFIG_NRF905?NRF905
+_INIT_PORT_NRF905 . . . . . . .  C ADDR   0000H   R   SEG=?PR?_INIT_PORT_NRF905?NRF905
+_LISTEN_NRF905. . . . . . . . .  C ADDR   0000H   R   SEG=?PR?_LISTEN_NRF905?NRF905
+_SEND_BYTE_NRF905 . . . . . . .  C ADDR   0009H   R   SEG=?PR?_SEND_BYTE_NRF905?NRF905
+_TRANSMIT_NRF905. . . . . . . .  C ADDR   0000H   R   SEG=?PR?_TRANSMIT_NRF905?NRF905
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

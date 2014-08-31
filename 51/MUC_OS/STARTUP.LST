@@ -1,0 +1,206 @@
+A51 MACRO ASSEMBLER  STARTUP                                                              05/17/2007 19:18:07 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.10
+OBJECT MODULE PLACED IN STARTUP.OBJ
+ASSEMBLER INVOKED BY: d:\Keil\C51\BIN\A51.EXE STARTUP.A51 SET(LARGE) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     $nomod51 
+                       2     ;------------------------------------------------------------------------------
+                       3     ;  This file is part of the C51 Compiler package
+                       4     ;  Copyright (c) 1988-2001 Keil Elektronik GmbH and Keil Software, Inc.
+                       5     ;------------------------------------------------------------------------------
+                       6     ;  STARTUP.A51:  This code is executed after processor reset.
+                       7     ;
+                       8     ;  To translate this file use A51 with the following invocation:
+                       9     ;
+                      10     ;     A51 STARTUP.A51
+                      11     ;
+                      12     ;  To link the modified STARTUP.OBJ file to your application use the following
+                      13     ;  BL51 invocation:
+                      14     ;
+                      15     ;     BL51 <your object file list>, STARTUP.OBJ <controls>
+                      16     ;
+                      17     ;------------------------------------------------------------------------------
+                      18     ;
+                      19     ;  User-defined Power-On Initialization of Memory
+                      20     ;
+                      21     ;  With the following EQU statements the initialization of memory
+                      22     ;  at processor reset can be defined:
+                      23     ;
+                      24     ;               ; the absolute start-address of IDATA memory is always 0
+  0080                25     IDATALEN        EQU     80H     ; the length of IDATA memory in bytes.
+                      26     ;
+  0000                27     XDATASTART      EQU     0H      ; the absolute start-address of XDATA memory
+  8000                28     XDATALEN        EQU     8000H   ; the length of XDATA memory in bytes.
+                      29     ;
+  0000                30     PDATASTART      EQU     0H      ; the absolute start-address of PDATA memory
+  0000                31     PDATALEN        EQU     0H      ; the length of PDATA memory in bytes.
+                      32     ;
+                      33     ;  Notes:  The IDATA space overlaps physically the DATA and BIT areas of the
+                      34     ;          8051 CPU. At minimum the memory space occupied from the C51 
+                      35     ;          run-time routines must be set to zero.
+                      36     ;------------------------------------------------------------------------------
+                      37     ;
+                      38     ;  Reentrant Stack Initilization
+                      39     ;
+                      40     ;  The following EQU statements define the stack pointer for reentrant
+                      41     ;  functions and initialized it:
+                      42     ;  ≥ı ºªØø…÷ÿ»Î∫Ø µƒ∂—’ª÷∏’Î
+                      43     ;  Stack Space for reentrant functions in the SMALL model.
+  0000                44     IBPSTACK        EQU     0       ; set to 1 if small reentrant is used.
+  0100                45     IBPSTACKTOP     EQU     0FFH+1  ; set top of stack to highest location+1.
+                      46     ;
+                      47     ;  Stack Space for reentrant functions in the LARGE model.      
+  0001                48     XBPSTACK        EQU     1       ; set to 1 if large reentrant is used.
+  8000                49     XBPSTACKTOP     EQU     7FFFH+1 ; set top of stack to highest location+1.
+                      50     ;
+                      51     ;  Stack Space for reentrant functions in the COMPACT model.    
+  0000                52     PBPSTACK        EQU     0       ; set to 1 if compact reentrant is used.
+  8000                53     PBPSTACKTOP     EQU     7FFFH+1; set top of stack to highest location+1.
+                      54     ;
+                      55     ;------------------------------------------------------------------------------
+                      56     ;
+                      57     ;  Page Definition for Using the Compact Model with 64 KByte xdata RAM
+                      58     ;
+A51 MACRO ASSEMBLER  STARTUP                                                              05/17/2007 19:18:07 PAGE     2
+
+                      59     ;  The following EQU statements define the xdata page used for pdata
+                      60     ;  variables. The EQU PPAGE must conform with the PPAGE control used
+                      61     ;  in the linker invocation.
+                      62     ;
+  0000                63     PPAGEENABLE     EQU     0       ; set to 1 if pdata object are used.
+  0000                64     PPAGE           EQU     0       ; define PPAGE number.
+                      65     ;
+                      66     ;------------------------------------------------------------------------------
+                      67     
+                      68     ; Standard SFR Symbols required in XBANKING.A51
+  00E0                69     ACC     DATA    0E0H
+  00F0                70     B       DATA    0F0H
+  0081                71     SP      DATA    81H
+  0082                72     DPL     DATA    82H
+  0083                73     DPH     DATA    83H
+                      74     
+                      75                     NAME    ?C_STARTUP
+                      76     
+                      77     
+                      78     ?C_C51STARTUP   SEGMENT   CODE
+                      79     ?STACK          SEGMENT   IDATA
+                      80     
+----                  81                     RSEG    ?STACK
+0000                  82                     DS      1
+                      83     
+                      84                     EXTRN CODE (?C_START)
+                      85                     PUBLIC  ?C_STARTUP
+                      86     
+----                  87                     CSEG    AT      0
+0000 020000   F       88     ?C_STARTUP:     LJMP    STARTUP1
+                      89     
+----                  90                     RSEG    ?C_C51STARTUP
+                      91     
+0000                  92     STARTUP1:
+                      93     
+                      94     IF IDATALEN <> 0
+0000 787F             95                     MOV     R0,#IDATALEN - 1
+0002 E4               96                     CLR     A
+0003 F6               97     IDATALOOP:      MOV     @R0,A
+0004 D8FD             98                     DJNZ    R0,IDATALOOP
+                      99     ENDIF
+                     100     
+                     101     IF XDATALEN <> 0
+0006 900000          102                     MOV     DPTR,#XDATASTART
+0009 7F00            103                     MOV     R7,#LOW (XDATALEN)
+                     104       IF (LOW (XDATALEN)) <> 0
+                                             MOV     R6,#(HIGH (XDATALEN)) +1
+                               ELSE
+000B 7E80            107                     MOV     R6,#HIGH (XDATALEN)
+                     108       ENDIF
+000D E4              109                     CLR     A
+000E F0              110     XDATALOOP:      MOVX    @DPTR,A
+000F A3              111                     INC     DPTR
+0010 DFFC            112                     DJNZ    R7,XDATALOOP
+0012 DEFA            113                     DJNZ    R6,XDATALOOP
+                     114     ENDIF
+                     115     
+                     116     IF PPAGEENABLE <> 0
+                                             MOV     P2,#PPAGE
+                             ENDIF
+                     119     
+                     120     IF PDATALEN <> 0
+                                             MOV     R0,#PDATASTART
+                                             MOV     R7,#LOW (PDATALEN)
+                                             CLR     A
+                             PDATALOOP:      MOVX    @R0,A
+A51 MACRO ASSEMBLER  STARTUP                                                              05/17/2007 19:18:07 PAGE     3
+
+                                             INC     R0
+                                             DJNZ    R7,PDATALOOP
+                             ENDIF
+                     128     
+                     129     IF IBPSTACK <> 0
+                             EXTRN DATA (?C_IBP)
+                             
+                                             MOV     ?C_IBP,#LOW IBPSTACKTOP
+                             ENDIF
+                     134     
+                     135     IF XBPSTACK <> 0
+                     136     EXTRN DATA (?C_XBP)
+                     137     
+0014 750080   F      138                     MOV     ?C_XBP,#HIGH XBPSTACKTOP
+0017 750000   F      139                     MOV     ?C_XBP+1,#LOW XBPSTACKTOP
+                     140     ENDIF
+                     141     
+                     142     IF PBPSTACK <> 0
+                             EXTRN DATA (?C_PBP)
+                                             MOV     ?C_PBP,#LOW PBPSTACKTOP
+                             ENDIF
+                     146     
+001A 758100   F      147                     MOV     SP,#?STACK-1
+                     148     ; This code is required if you use L51_BANK.A51 with Banking Mode 4
+                     149     ; EXTRN CODE (?B_SWITCH0)
+                     150     ;               CALL    ?B_SWITCH0      ; init bank mechanism to code bank 0
+001D 020000   F      151                     LJMP    ?C_START
+                     152     
+                     153                     END
+A51 MACRO ASSEMBLER  STARTUP                                                              05/17/2007 19:18:07 PAGE     4
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+?C_C51STARTUP. . .  C SEG    0020H       REL=UNIT
+?C_START . . . . .  C ADDR   -----       EXT
+?C_STARTUP . . . .  C ADDR   0000H   A   
+?C_XBP . . . . . .  D ADDR   -----       EXT
+?STACK . . . . . .  I SEG    0001H       REL=UNIT
+ACC. . . . . . . .  D ADDR   00E0H   A   
+B. . . . . . . . .  D ADDR   00F0H   A   
+DPH. . . . . . . .  D ADDR   0083H   A   
+DPL. . . . . . . .  D ADDR   0082H   A   
+IBPSTACK . . . . .  N NUMB   0000H   A   
+IBPSTACKTOP. . . .  N NUMB   0100H   A   
+IDATALEN . . . . .  N NUMB   0080H   A   
+IDATALOOP. . . . .  C ADDR   0003H   R   SEG=?C_C51STARTUP
+PBPSTACK . . . . .  N NUMB   0000H   A   
+PBPSTACKTOP. . . .  N NUMB   8000H   A   
+PDATALEN . . . . .  N NUMB   0000H   A   
+PDATASTART . . . .  N NUMB   0000H   A   
+PPAGE. . . . . . .  N NUMB   0000H   A   
+PPAGEENABLE. . . .  N NUMB   0000H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+STARTUP1 . . . . .  C ADDR   0000H   R   SEG=?C_C51STARTUP
+XBPSTACK . . . . .  N NUMB   0001H   A   
+XBPSTACKTOP. . . .  N NUMB   8000H   A   
+XDATALEN . . . . .  N NUMB   8000H   A   
+XDATALOOP. . . . .  C ADDR   000EH   R   SEG=?C_C51STARTUP
+XDATASTART . . . .  N NUMB   0000H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

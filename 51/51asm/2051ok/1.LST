@@ -1,0 +1,92 @@
+A51 MACRO ASSEMBLER  1                                                                    04/08/2010 23:54:58 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN 1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 1.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+  00B4                 1     SCL bit P3.4
+  00B5                 2     SDA bit P3.5
+                       3     
+0000                   4     org 0000h
+0000 020100            5     ljmp reset;
+0023                   6     org 0023h
+0023 209803            7     jb RI,rec;
+0026 C299              8     clr TI;
+0028 32                9     reti;
+0029                  10     rec:
+0029 C298             11     clr RI;
+002B E599             12     mov A,SBUF;
+002D F599             13     mov SBUF,A;
+002F 32               14     reti;
+0100                  15     org 0100h
+0100                  16     reset:
+0100 758153           17             mov SP,#53H;
+0103 758920           18             mov TMOD,#20h;T1:mode 2
+0106 758DFD           19             mov TH1,#0FDH
+0109 758BFD           20             mov TL1,#0FDH
+010C 758780           21             mov PCON,#80H;baudrate=19200@11059200Hz
+010F D28E             22             setb TR1;
+0111 D29E             23             setb SM1;
+0113 C29F             24             clr  SM0;mode 1,8bit,baud=2^SMOD/32*T1_overflow_rate
+0115 D29C             25             setb REN;
+0117 D2AF             26             setb EA;
+0119 D2AC             27             setb ES;
+011B 759055           28             mov P1,#55h;
+011E 3126             29             acall iic_init;
+0120 312B             30             acall iic_start;
+0122 3130             31             acall iic_stop;
+0124 80FE             32             sjmp $;
+                      33     
+0126                  34     iic_init:
+0126 D2B4             35             setb SCL;
+0128 D2B5             36             setb SDA;
+012A 22               37             ret;
+012B                  38     iic_start:
+012B 3126             39             acall iic_init;
+012D C2B5             40             clr SDA;
+012F 22               41             ret;
+0130                  42     iic_stop:
+0130 D2B4             43             setb SCL;
+0132 D2B5             44             setb SDA;
+0134 22               45             ret;
+                      46     end
+A51 MACRO ASSEMBLER  1                                                                    04/08/2010 23:54:58 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+ES . . . . . . . .  B ADDR   00A8H.4 A   
+IIC_INIT . . . . .  C ADDR   0126H   A   
+IIC_START. . . . .  C ADDR   012BH   A   
+IIC_STOP . . . . .  C ADDR   0130H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+PCON . . . . . . .  D ADDR   0087H   A   
+REC. . . . . . . .  C ADDR   0029H   A   
+REN. . . . . . . .  B ADDR   0098H.4 A   
+RESET. . . . . . .  C ADDR   0100H   A   
+RI . . . . . . . .  B ADDR   0098H.0 A   
+SBUF . . . . . . .  D ADDR   0099H   A   
+SCL. . . . . . . .  B ADDR   00B0H.4 A   
+SDA. . . . . . . .  B ADDR   00B0H.5 A   
+SM0. . . . . . . .  B ADDR   0098H.7 A   
+SM1. . . . . . . .  B ADDR   0098H.6 A   
+SP . . . . . . . .  D ADDR   0081H   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TI . . . . . . . .  B ADDR   0098H.1 A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

@@ -1,0 +1,155 @@
+C51 COMPILER V8.02   DESCRIPTOR                                                            06/03/2011 08:04:30 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE DESCRIPTOR
+OBJECT MODULE PLACED IN descriptor.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE descriptor.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "types.h"
+   2          
+   3          
+   4          code uint8 DeviceDescriptor[18]=
+   5          {
+   6          0x12,//bLength,长度18字节
+   7          0x01,//bDescriptorType,设备描述符
+   8          0x10,
+   9          0x01,//bcdUSB，usb1.1
+  10          0x00,//bDeviceClass，一般为0
+  11          0x00,//bDeviceSubClass,一般为0
+  12          0x00,//bDevicePortocol，设备协议
+  13          0x08,//bMaxPacketSize0，端点0最大包长，这里是8字节
+  14          0x88,
+  15          0x88,//VID
+  16          0x02,
+  17          0x00,//PID
+  18          0x00,
+  19          0x01,//设备版本号
+  20          0x01,
+  21          0x02,
+  22          0x03,
+  23          0x01
+  24          };
+  25          code uint8 LanguageId[4]=
+  26          {
+  27          0x04,//length
+  28          0x03,//string descriptor
+  29          0x09,//0x0409:America
+  30          0x04
+  31          };
+  32          code uint8 ManufacturerStringDescriptor[52]={
+  33          52,         //该描述符的长度为52字节
+  34          0x03,       //字符串描述符的类型编码为0x03
+  35          0x75, 0x8d, //赵
+  36          0x38, 0x6c, //永
+  37          0xd1, 0x79, //科
+  38          0x0c, 0x54, //同
+  39          0xd7, 0x5f, //志
+  40          0x1d, 0x60, //思
+  41          0xf3, 0x60, //想
+  42          0xef, 0x7a, //端
+  43          0x63, 0x6b, //正
+  44          0x0c, 0xff, //，
+  45          0x31, 0x72, //爱
+  46          0xfd, 0x56, //国
+  47          0x31, 0x72, //爱
+  48          0x5a, 0x51, //党
+  49          0x0c, 0xff, //，
+  50          0x0c, 0x54, //同
+  51          0x0f, 0x61, //意
+  52          0xa0, 0x52, //加
+  53          0x65, 0x51, //入
+  54          0x2d, 0x4e, //中
+  55          0xfd, 0x56, //国
+C51 COMPILER V8.02   DESCRIPTOR                                                            06/03/2011 08:04:30 PAGE 2   
+
+  56          0x71, 0x51, //共
+  57          0xa7, 0x4e, //产
+  58          0x5a, 0x51, //党
+  59          0x02, 0x30 //。
+  60          //注：请将最后一个多余的逗号删除
+  61          };
+  62          code uint8 ProductStringDescriptor[28]={
+  63          28,         //该描述符的长度为28字节
+  64          0x03,       //字符串描述符的类型编码为0x03
+  65          0x35, 0x75, //电
+  66          0x11, 0x81, //脑
+  67          0x08, 0x57, //圈
+  68          0x08, 0x57, //圈
+  69          0x84, 0x76, //的
+  70          0x75, 0x00, //u
+  71          0x73, 0x00, //s
+  72          0x62, 0x00, //b
+  73          0x1f, 0x77, //真
+  74          0xd6, 0x4e, //他
+  75          0x88, 0x59, //妈
+  76          0x5b, 0x72, //牛
+  77          0x3c, 0x90 //逼
+  78          //注：请将最后一个多余的逗号删除
+  79          };
+  80          code uint8 SerialNumberStringDescriptor[22]={
+  81          22,         //该描述符的长度为22字节
+  82          0x03,       //字符串描述符的类型编码为0x03
+  83          0x32, 0x00, //2
+  84          0x30, 0x00, //0
+  85          0x30, 0x00, //0
+  86          0x39, 0x00, //9
+  87          0x2d, 0x00, //-
+  88          0x31, 0x00, //1
+  89          0x32, 0x00, //2
+  90          0x2d, 0x00, //-
+  91          0x31, 0x00, //1
+  92          0x39, 0x00 //9
+  93          //注：请将最后一个多余的逗号删除
+  94          };
+  95          code uint8 ReportDescriptor[63] = {
+  96              0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
+  97              0x09, 0x06,                    // USAGE (Keyboard)
+  98              0xa1, 0x01,                    // COLLECTION (Application)
+  99              0x05, 0x07,                    //   USAGE_PAGE (Keyboard)
+ 100              0x19, 0xe0,                    //   USAGE_MINIMUM (Keyboard LeftControl)
+ 101              0x29, 0xe7,                    //   USAGE_MAXIMUM (Keyboard Right GUI)
+ 102              0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+ 103              0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
+ 104              0x75, 0x01,                    //   REPORT_SIZE (1)
+ 105              0x95, 0x08,                    //   REPORT_COUNT (8)
+ 106              0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+ 107              0x95, 0x01,                    //   REPORT_COUNT (1)
+ 108              0x75, 0x08,                    //   REPORT_SIZE (8)
+ 109              0x81, 0x03,                    //   INPUT (Cnst,Var,Abs)
+ 110              0x95, 0x05,                    //   REPORT_COUNT (5)
+ 111              0x75, 0x01,                    //   REPORT_SIZE (1)
+ 112              0x05, 0x08,                    //   USAGE_PAGE (LEDs)
+ 113              0x19, 0x01,                    //   USAGE_MINIMUM (Num Lock)
+ 114              0x29, 0x05,                    //   USAGE_MAXIMUM (Kana)
+ 115              0x91, 0x02,                    //   OUTPUT (Data,Var,Abs)
+ 116              0x95, 0x01,                    //   REPORT_COUNT (1)
+ 117              0x75, 0x03,                    //   REPORT_SIZE (3)
+C51 COMPILER V8.02   DESCRIPTOR                                                            06/03/2011 08:04:30 PAGE 3   
+
+ 118              0x91, 0x03,                    //   OUTPUT (Cnst,Var,Abs)
+ 119              0x95, 0x06,                    //   REPORT_COUNT (6)
+ 120              0x75, 0x08,                    //   REPORT_SIZE (8)
+ 121              0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+ 122              0x25, 0xFF,                    //   LOGICAL_MAXIMUM (101)
+ 123              0x05, 0x07,                    //   USAGE_PAGE (Keyboard)
+ 124              0x19, 0x00,                    //   USAGE_MINIMUM (Reserved (no event indicated))
+ 125              0x29, 0x65,                    //   USAGE_MAXIMUM (Keyboard Application)
+ 126              0x81, 0x00,                    //   INPUT (Data,Ary,Abs)
+ 127              0xc0                           // END_COLLECTION
+ 128          };
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =    187    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

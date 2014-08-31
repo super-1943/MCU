@@ -1,0 +1,186 @@
+BL51 BANKED LINKER/LOCATER V6.00                                                        05/23/2009  09:06:42  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.00, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE Text1.obj TO j
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  Text1.obj (TEXT1)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  j (TEXT1)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0003H     UNIT         ?DT?TEXT1
+            IDATA   000BH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0029H     UNIT         ?PR?MAIN?TEXT1
+            CODE    002CH     0014H     UNIT         ?PR?SEND_STR?TEXT1
+            CODE    0040H     0012H     UNIT         ?PR?_DELAYMS?TEXT1
+            CODE    0052H     0010H     UNIT         ?CO?TEXT1
+            CODE    0062H     000FH     UNIT         ?PR?SCAN_KEY?TEXT1
+            CODE    0071H     000CH     UNIT         ?C_C51STARTUP
+            CODE    007DH     0009H     UNIT         ?PR?PROC_KEY?TEXT1
+            CODE    0086H     0008H     UNIT         ?PR?_SEND_CHAR?TEXT1
+
+
+
+OVERLAY MAP OF MODULE:   j (TEXT1)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?TEXT1
+
+?PR?MAIN?TEXT1
+  +--> ?PR?SEND_STR?TEXT1
+  +--> ?PR?_SEND_CHAR?TEXT1
+
+?PR?SEND_STR?TEXT1
+  +--> ?CO?TEXT1
+
+
+
+SYMBOL TABLE OF MODULE:  j (TEXT1)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/23/2009  09:06:42  PAGE 2
+
+
+
+  -------         MODULE        TEXT1
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:00B0H         PUBLIC        P3
+  C:0086H         PUBLIC        _send_char
+  D:00A8H         PUBLIC        IE
+  B:0098H.0       PUBLIC        RI
+  B:0098H.1       PUBLIC        TI
+  D:0008H         PUBLIC        key_s
+  D:0009H         PUBLIC        key_v
+  C:0003H         PUBLIC        main
+  D:0099H         PUBLIC        SBUF
+  D:0087H         PUBLIC        PCON
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:008DH         PUBLIC        TH1
+  D:008BH         PUBLIC        TL1
+  C:0062H         PUBLIC        scan_key
+  D:000AH         PUBLIC        tmp
+  C:0040H         PUBLIC        _delayms
+  B:0088H.6       PUBLIC        TR1
+  C:0052H         PUBLIC        str
+  C:007DH         PUBLIC        proc_key
+  C:002CH         PUBLIC        send_str
+  B:00B0H.2       PUBLIC        K1
+  -------         PROC          MAIN
+  C:0003H         LINE#         23
+  C:0003H         LINE#         24
+  C:0003H         LINE#         25
+  C:0006H         LINE#         26
+  C:0009H         LINE#         27
+  C:000CH         LINE#         29
+  C:000FH         LINE#         30
+  C:0012H         LINE#         32
+  C:0014H         LINE#         33
+  C:0017H         LINE#         34
+  C:001AH         LINE#         35
+  C:001AH         LINE#         36
+  C:001AH         LINE#         37
+  C:001DH         LINE#         38
+  C:001DH         LINE#         39
+  C:001FH         LINE#         40
+  C:0022H         LINE#         41
+  C:0025H         LINE#         42
+  C:002AH         LINE#         43
+  C:002AH         LINE#         44
+  -------         ENDPROC       MAIN
+  -------         PROC          SCAN_KEY
+  C:0062H         LINE#         47
+  C:0062H         LINE#         49
+  C:0062H         LINE#         50
+  C:0065H         LINE#         51
+  C:006AH         LINE#         52
+  C:0070H         LINE#         53
+  -------         ENDPROC       SCAN_KEY
+  -------         PROC          PROC_KEY
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/23/2009  09:06:42  PAGE 3
+
+
+  C:007DH         LINE#         55
+  C:007DH         LINE#         57
+  C:007DH         LINE#         58
+  C:0082H         LINE#         59
+  C:0082H         LINE#         60
+  C:0085H         LINE#         61
+  C:0085H         LINE#         62
+  -------         ENDPROC       PROC_KEY
+  -------         PROC          _SEND_CHAR
+  D:0007H         SYMBOL        txd
+  C:0086H         LINE#         64
+  C:0086H         LINE#         66
+  C:0086H         LINE#         67
+  C:0088H         LINE#         68
+  C:008BH         LINE#         69
+  C:008DH         LINE#         70
+  -------         ENDPROC       _SEND_CHAR
+  -------         PROC          SEND_STR
+  -------         DO            
+  D:0007H         SYMBOL        i
+  -------         ENDDO         
+  C:002CH         LINE#         72
+  C:002CH         LINE#         74
+  C:002CH         LINE#         75
+  C:002EH         LINE#         76
+  C:0035H         LINE#         77
+  C:0035H         LINE#         78
+  C:0037H         LINE#         79
+  C:003AH         LINE#         80
+  C:003CH         LINE#         81
+  C:003DH         LINE#         82
+  C:003FH         LINE#         83
+  -------         ENDPROC       SEND_STR
+  -------         PROC          _DELAYMS
+  D:0007H         SYMBOL        ms
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:0040H         LINE#         85
+  C:0040H         LINE#         87
+  C:0040H         LINE#         89
+  C:0046H         LINE#         90
+  C:0046H         LINE#         91
+  C:0051H         LINE#         92
+  C:0051H         LINE#         93
+  -------         ENDPROC       _DELAYMS
+  -------         ENDMOD        TEXT1
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?SCAN_KEY?TEXT1
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PROC_KEY?TEXT1
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAYMS?TEXT1
+
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/23/2009  09:06:42  PAGE 4
+
+
+Program Size: data=12.0 xdata=0 code=142
+LINK/LOCATE RUN COMPLETE.  3 WARNING(S),  0 ERROR(S)

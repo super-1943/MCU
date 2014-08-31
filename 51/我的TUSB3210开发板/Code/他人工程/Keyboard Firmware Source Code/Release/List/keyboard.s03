@@ -1,0 +1,1724 @@
+	NAME	keyboard(17)
+	RSEG	CODE(0)
+	RSEG	CONST(0)
+	RSEG	I_UDATA(0)
+	RSEG	I_IDATA(0)
+	RSEG	I_CDATA(0)
+	RSEG	TUSB2136_DEBOUNCE_SEG(0)
+	PUBLIC	ClearKeyBoardBuffer
+	$DEFFN	ClearKeyBoardBuffer(0,1,0,0,32768,0,0,0)
+	EXTERN	GetVidPidSetting
+	$DEFFN	GetVidPidSetting(32768,0,0,0)
+	PUBLIC	IEP1InterruptHandler
+	$DEFFN	IEP1InterruptHandler(0,0,0,0,32768,0,0,0),memcpy,ClearKeyBoardBuffer
+	EXTERN	InitializeUsbFunction
+	$DEFFN	InitializeUsbFunction(32768,0,0,0)
+	EXTERN	InitializeUsbHub
+	$DEFFN	InitializeUsbHub(32768,0,0,0)
+	PUBLIC	OEP0SetLEDs
+	$DEFFN	OEP0SetLEDs(0,0,0,0,32768,0,0,0)
+	PUBLIC	UpdateIEP1WithKeypress
+	$DEFFN	UpdateIEP1WithKeypress(0,1,0,0,32768,0,0,0),ClearKeyBoardBuffer,\
+		memcmp,ClearKeyBoardBuffer
+	PUBLIC	bLED
+	EXTERN	bSuspended
+	PUBLIC	delay
+	$DEFFN	delay(0,0,0,0,32768,2,0,0)
+	EXTERN	deviceReady
+	PUBLIC	iep1Buffer
+	PUBLIC	intFlags
+	PUBLIC	keyDefs
+	PUBLIC	keypressBuffer
+	PUBLIC	keypressDebounce
+	PUBLIC	main
+	$DEFFN	main(0,7,0,0,32768,0,0,0),GetVidPidSetting,InitializeUsbHub,InitializeUsbFunction,\
+		ClearKeyBoardBuffer,strlen,strlen,strlen,UpdateIEP1WithKeypress
+	EXTERN	memcmp
+	$DEFFN	memcmp(32768,7,0,0)
+	EXTERN	memcpy
+	$DEFFN	memcpy(32768,7,0,0)
+	PUBLIC	modifierByte
+	PUBLIC	otherFlags
+	PUBLIC	previousIEP1packet
+	EXTERN	s0123
+	EXTERN	strlen
+	$DEFFN	strlen(32768,3,0,0)
+	EXTERN	?L_CMP_L01
+	EXTERN	?ST_A_R567_L17
+	EXTERN	?ST_A_R123_DISP_L17
+	EXTERN	?ST_A_R567_DISP_L17
+	EXTERN	?A_S_SWITCH_L05
+	EXTERN	?STO_R567_IR1_L20
+	EXTERN	?LD_R123_IR0_L20
+	EXTERN	?LD_R567_IR0_L20
+	EXTERN	?LD_R4567_CDPTR_L20
+	EXTERN	?CL8051S_5_50_L17
+	RSEG	CODE
+delay:
+?0087:
+	MOV	R0,#$LOCBI delay
+	MOV	A,R5
+	MOV	@R0,A
+	INC	R0
+	MOV	A,R4
+	MOV	@R0,A
+?0001:
+	MOV	R0,#$LOCBI delay
+	MOV	A,@R0
+	MOV	R5,A
+	INC	R0
+	MOV	A,@R0
+	MOV	R4,A
+	MOV	R0,#$LOCBI delay+1
+	MOV	A,@R0
+	DEC	@R0
+	DEC	R0
+	JNZ	?0088
+	DEC	@R0
+?0088:
+	MOV	A,R4
+	ORL	A,R5
+	JZ	?0000
+?0002:
+	SJMP	?0001
+?0000:
+	RET
+main:
+	CLR	A
+	MOV	DPTR,#65428
+	MOVX	@DPTR,A
+	CLR	A
+	MOV	DPTR,#65429
+	MOVX	@DPTR,A
+	CLR	A
+	MOV	DPTR,#65430
+	MOVX	@DPTR,A
+	CLR	A
+	MOV	DPTR,#65431
+	MOVX	@DPTR,A
+	MOV	P3,#255
+	MOV	P2,#255
+	MOV	P1,#255
+	MOV	P0,#255
+	LCALL	$REFFN GetVidPidSetting
+	LCALL	$REFFN InitializeUsbHub
+	LCALL	$REFFN InitializeUsbFunction
+	LCALL	$REFFN ClearKeyBoardBuffer
+	CLR	A
+	MOV	R5,A
+	INC	A
+	MOV	R0,#s0123
+	MOV	R4,A
+	MOV	A,@R0
+	JZ	?0089
+	XCH	A,R5
+?0090:
+	XCH	A,R4
+	ADD	A,ACC
+	XCH	A,R4
+	RLC	A
+	DJNZ	R5,?0090
+	MOV	R5,A
+?0089:
+	MOV	R0,#$LOCBI main
+	MOV	A,R5
+	MOV	@R0,A
+	INC	R0
+	MOV	A,R4
+	MOV	@R0,A
+?0004:
+	MOV	R0,#deviceReady
+	MOV	A,@R0
+	JNZ	?0003
+?0005:
+	SJMP	?0004
+?0003:
+	MOV	DPTR,#keypressDebounce
+	MOV	R6,#0
+	MOV	R7,#1
+	CLR	A
+?0091:
+	MOVX	@DPTR,A
+	INC	DPTR
+	DJNZ	R6,?0091
+	DJNZ	R7,?0091
+	MOV	R7,#1
+	MOV	R6,#0
+?0007:
+?0008:
+?0006:
+?0011:
+?0012:
+	MOV	R0,#bSuspended
+	MOV	A,@R0
+	JZ	?0014
+?0013:
+	MOV	A,#255
+	MOV	DPTR,#65428
+	MOVX	@DPTR,A
+	MOV	A,#255
+	MOV	DPTR,#65429
+	MOVX	@DPTR,A
+	MOV	A,#195
+	MOV	DPTR,#65431
+	MOVX	@DPTR,A
+	MOV	P0,#0
+	MOV	P1,#0
+	MOV	P3,#255
+	CLR	P3.6
+	CLR	P3.7
+	CLR	P3.0
+	CLR	P3.1
+	SETB	IE.2
+	ORL	PCON,#1
+	CLR	IE.2
+	CLR	A
+	MOV	DPTR,#65428
+	MOVX	@DPTR,A
+	CLR	A
+	MOV	DPTR,#65429
+	MOVX	@DPTR,A
+	CLR	A
+	MOV	DPTR,#65431
+	MOVX	@DPTR,A
+	MOV	R0,#bSuspended
+	MOV	@R0,#0
+?0014:
+	MOV	R0,#deviceReady
+	MOV	A,@R0
+	JNZ	?0016
+?0015:
+	SJMP	?0011
+?0016:
+	MOV	R0,#keypressBuffer
+	MOV	A,@R0
+	JZ	$+5
+	LJMP	?0018
+?0017:
+	MOV	R0,#$LOCBI main+6
+	MOV	@R0,#0
+	MOV	R0,#modifierByte
+	MOV	@R0,#0
+	MOV	R0,#$LOCBI main+4
+	MOV	@R0,#18
+?0020:
+	MOV	R0,#$LOCBI main+4
+	MOV	A,@R0
+	JNZ	$+5
+	LJMP	?0019
+?0021:
+	MOV	P0,#255
+	MOV	P1,#255
+	ORL	P3,#192
+	MOV	R0,#$LOCBI main+4
+	MOV	A,@R0
+	LCALL	?A_S_SWITCH_L05
+	DB	1
+	DB	17
+	DW	?0042
+	DW	?0024
+	DW	?0025
+	DW	?0026
+	DW	?0027
+	DW	?0028
+	DW	?0029
+	DW	?0030
+	DW	?0031
+	DW	?0032
+	DW	?0033
+	DW	?0034
+	DW	?0035
+	DW	?0036
+	DW	?0037
+	DW	?0038
+	DW	?0039
+	DW	?0040
+	DW	?0041
+?0024:
+	CLR	P1.0
+	SJMP	?0023
+?0025:
+	CLR	P1.1
+	SJMP	?0023
+?0026:
+	CLR	P1.2
+	SJMP	?0023
+?0027:
+	CLR	P1.3
+	SJMP	?0023
+?0028:
+	CLR	P1.4
+	SJMP	?0023
+?0029:
+	CLR	P1.5
+	SJMP	?0023
+?0030:
+	CLR	P1.6
+	SJMP	?0023
+?0031:
+	CLR	P1.7
+	SJMP	?0023
+?0032:
+	CLR	P3.6
+	SJMP	?0023
+?0033:
+	CLR	P0.0
+	SJMP	?0023
+?0034:
+	CLR	P0.1
+	SJMP	?0023
+?0035:
+	CLR	P0.2
+	SJMP	?0023
+?0036:
+	CLR	P0.3
+	SJMP	?0023
+?0037:
+	CLR	P0.4
+	SJMP	?0023
+?0038:
+	CLR	P0.5
+	SJMP	?0023
+?0039:
+	CLR	P0.6
+	SJMP	?0023
+?0040:
+	CLR	P0.7
+	SJMP	?0023
+?0041:
+	CLR	P3.7
+	SJMP	?0023
+?0042:
+	SJMP	?0023
+?0023:
+	MOV	A,P2
+	CPL	A
+	MOV	R0,#$LOCBI main+5
+	MOV	@R0,A
+	MOV	R0,#$LOCBI main+5
+	MOV	A,@R0
+	DEC	A
+	JZ	?0043
+	MOV	R0,#$LOCBI main+5
+	MOV	A,@R0
+	XRL	A,#2
+	JZ	?0043
+	MOV	R0,#$LOCBI main+5
+	MOV	A,@R0
+	XRL	A,#4
+	JZ	?0043
+	MOV	R0,#$LOCBI main+5
+	MOV	A,@R0
+	XRL	A,#8
+	JZ	?0043
+	MOV	R0,#$LOCBI main+5
+	MOV	A,@R0
+	XRL	A,#16
+	JZ	?0043
+	MOV	R0,#$LOCBI main+5
+	MOV	A,@R0
+	XRL	A,#32
+	JZ	?0043
+	MOV	R0,#$LOCBI main+5
+	MOV	A,@R0
+	XRL	A,#64
+	JZ	?0043
+	MOV	R0,#$LOCBI main+5
+	MOV	A,@R0
+	CJNE	A,#128,$+5
+	SJMP	$+5
+	LJMP	?0044
+?0045:
+?0046:
+?0043:
+?0048:
+	MOV	R0,#$LOCBI main+6
+	MOV	A,@R0
+	MOV	B,#9
+	MUL	AB
+	ADD	A,#LOW(keyDefs+2)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(keyDefs+2)
+	MOV	DPH,A
+	LCALL	?LD_R4567_CDPTR_L20
+	MOV	R0,#$LOCBI main+4
+	MOV	A,@R0
+	MOV	R0,A
+	CLR	A
+	MOV	R1,A
+	MOV	R2,A
+	MOV	R3,A
+	MOV	A,#3
+	LCALL	?L_CMP_L01
+	JZ	$+5
+	LJMP	?0047
+?0049:
+	MOV	R0,#$LOCBI main+6
+	MOV	A,@R0
+	MOV	B,#9
+	MUL	AB
+	ADD	A,#LOW(keyDefs+2)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(keyDefs+2)
+	MOV	DPH,A
+	LCALL	?LD_R4567_CDPTR_L20
+	MOV	R0,#$LOCBI main+4
+	MOV	A,@R0
+	MOV	R0,A
+	CLR	A
+	MOV	R1,A
+	MOV	R2,A
+	MOV	R3,A
+	MOV	A,#13
+	LCALL	?L_CMP_L01
+	JZ	$+5
+	LJMP	?0051
+?0050:
+	MOV	R0,#$LOCBI main+6
+	MOV	A,@R0
+	MOV	B,#9
+	MUL	AB
+	ADD	A,#LOW(keyDefs+6)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(keyDefs+6)
+	MOV	DPH,A
+	CLR	A
+	MOVC	A,@A+DPTR
+	MOV	R0,#$LOCBI main+5
+	ANL	A,@R0
+	JNZ	$+5
+	LJMP	?0053
+	MOV	R0,#$LOCBI main+6
+	MOV	A,@R0
+	MOV	B,#9
+	MUL	AB
+	ADD	A,#LOW(keyDefs)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(keyDefs)
+	MOV	DPH,A
+	MOV	R0,#$LOCBI main+1
+	MOV	A,#1
+	MOVC	A,@A+DPTR
+	ANL	A,@R0
+	MOV	R4,A
+	DEC	R0
+	CLR	A
+	MOVC	A,@A+DPTR
+	ANL	A,@R0
+	ORL	A,R4
+	JZ	?0053
+?0055:
+?0054:
+?0052:
+	MOV	R0,#$LOCBI main+6
+	MOV	A,@R0
+	MOV	B,#9
+	MUL	AB
+	ADD	A,#LOW(keyDefs+8)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(keyDefs+8)
+	MOV	DPH,A
+	CLR	A
+	MOVC	A,@A+DPTR
+	JZ	?0057
+?0056:
+	MOV	R0,#$LOCBI main+6
+	MOV	A,@R0
+	MOV	B,#9
+	MUL	AB
+	ADD	A,#LOW(keyDefs+8)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(keyDefs+8)
+	MOV	DPH,A
+	CLR	A
+	MOVC	A,@A+DPTR
+	MOV	R0,#modifierByte
+	MOV	R4,A
+	MOV	A,@R0
+	ORL	A,R4
+	MOV	R1,#modifierByte
+	MOV	@R1,A
+	SJMP	?0058
+?0057:
+	MOV	R5,#keypressBuffer
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LCALL	$REFFN strlen
+	MOV	A,R4
+	ADD	A,#250
+	JC	?0060
+?0059:
+	MOV	R0,#$LOCBI main+6
+	MOV	A,@R0
+	MOV	B,#9
+	MUL	AB
+	ADD	A,#LOW(keyDefs+7)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(keyDefs+7)
+	MOV	DPH,A
+	CLR	A
+	MOVC	A,@A+DPTR
+	PUSH	ACC
+	MOV	R5,#keypressBuffer
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LCALL	$REFFN strlen
+	MOV	A,R4
+	ADD	A,#keypressBuffer
+	MOV	R4,A
+	POP	ACC
+	XCH	A,R4
+	MOV	R0,A
+	XCH	A,R4
+	MOV	@R0,A
+?0060:
+?0058:
+?0053:
+?0051:
+	MOV	R0,#$LOCBI main+6
+	INC	@R0
+	LJMP	?0048
+?0047:
+	MOV	R0,#$LOCBI main+6
+	MOV	A,@R0
+	MOV	B,#9
+	MUL	AB
+	ADD	A,#LOW(keyDefs+2)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(keyDefs+2)
+	MOV	DPH,A
+	LCALL	?LD_R4567_CDPTR_L20
+	MOV	A,R4
+	ORL	A,R5
+	ORL	A,R6
+	ORL	A,R7
+	JZ	?0061
+	MOV	R5,#keypressBuffer
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LCALL	$REFFN strlen
+	MOV	A,R4
+	ADD	A,#250
+	JNC	?0062
+?0063:
+?0064:
+?0061:
+	SJMP	?0019
+?0062:
+?0044:
+	MOV	R0,#$LOCBI main+4
+	DEC	@R0
+	LJMP	?0020
+?0019:
+	LCALL	$REFFN UpdateIEP1WithKeypress
+?0018:
+	LJMP	?0011
+?0010:
+	RET
+ClearKeyBoardBuffer:
+	MOV	R0,#keypressBuffer
+	MOV	R2,#6
+	CLR	A
+?0092:
+	MOV	@R0,A
+	INC	R0
+	DJNZ	R2,?0092
+	MOV	R2,#6
+?0066:
+?0067:
+?0065:
+	RET
+UpdateIEP1WithKeypress:
+	MOV	DPTR,#65354
+	MOVX	A,@DPTR
+	XRL	A,#128
+	JZ	?0070
+?0069:
+	LJMP	$REFFN ClearKeyBoardBuffer
+?0070:
+	MOV	R0,#modifierByte
+	MOV	A,@R0
+	MOV	R4,A
+	MOV	R0,#iep1Buffer
+	LCALL	?LD_R567_IR0_L20
+	MOV	A,R4
+	LCALL	?ST_A_R567_L17
+	CLR	A
+	MOV	DPTR,#1
+	LCALL	?ST_A_R567_DISP_L17
+	MOV	R0,#$LOCBI UpdateIEP1WithKeypress
+	MOV	@R0,#0
+?0072:
+	MOV	R0,#$LOCBI UpdateIEP1WithKeypress
+	MOV	A,@R0
+	ADD	A,#250
+	JC	?0071
+?0073:
+	MOV	R0,#$LOCBI UpdateIEP1WithKeypress
+	MOV	A,@R0
+	MOV	R7,A
+	ADD	A,#keypressBuffer
+	MOV	R0,A
+	MOV	A,@R0
+	MOV	R4,A
+	MOV	R0,#iep1Buffer
+	LCALL	?LD_R123_IR0_L20
+	MOV	DPL,R7
+	MOV	DPH,#0
+	INC	DPTR
+	INC	DPTR
+	MOV	A,R4
+	LCALL	?ST_A_R123_DISP_L17
+	INC	R7
+	MOV	R0,#$LOCBI UpdateIEP1WithKeypress
+	MOV	A,R7
+	MOV	@R0,A
+	SJMP	?0072
+?0071:
+	MOV	R0,#$PRMBI memcmp+6
+	MOV	@R0,#8
+	CLR	A
+	MOV	R0,#$PRMBI memcmp+3
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,A
+	INC	R0
+	MOV	@R0,#previousIEP1packet
+	MOV	R0,#iep1Buffer
+	LCALL	?LD_R567_IR0_L20
+	LCALL	$REFFN memcmp
+	CJNE	R4,#0,?0076
+?0075:
+	LJMP	$REFFN ClearKeyBoardBuffer
+?0076:
+	MOV	A,#8
+	MOV	DPTR,#65354
+	MOVX	@DPTR,A
+?0077:
+	RET
+IEP1InterruptHandler:
+	MOV	R0,#$PRMBI memcpy+6
+	MOV	@R0,#8
+	MOV	R0,#iep1Buffer
+	LCALL	?LD_R567_IR0_L20
+	MOV	R1,#$PRMBI memcpy+3
+	LCALL	?STO_R567_IR1_L20
+	MOV	R5,#previousIEP1packet
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+	LCALL	$REFFN memcpy
+	LJMP	$REFFN ClearKeyBoardBuffer
+OEP0SetLEDs:
+	MOV	R0,#bLED
+	MOV	A,@R0
+	JNB	ACC.0,?0079
+?0078:
+	CLR	P3.4
+	SJMP	?0080
+?0079:
+	SETB	P3.4
+?0080:
+	MOV	R0,#bLED
+	MOV	A,@R0
+	JNB	ACC.1,?0082
+?0081:
+	CLR	P3.3
+	SJMP	?0083
+?0082:
+	SETB	P3.3
+?0083:
+	MOV	R0,#bLED
+	MOV	A,@R0
+	JNB	ACC.2,?0085
+?0084:
+	CLR	P3.2
+	SJMP	?0086
+?0085:
+	SETB	P3.2
+?0086:
+	RET
+	RSEG	CONST
+keyDefs:
+	DW	1
+	DD	18
+	DB	2
+	DB	227
+	DB	8
+	DW	2
+	DD	18
+	DB	128
+	DB	30
+	DB	0
+	DW	6
+	DD	18
+	DB	'@'
+	DB	4
+	DB	0
+	DW	6
+	DD	18
+	DB	' '
+	DB	13
+	DB	0
+	DW	6
+	DD	18
+	DB	16
+	DB	22
+	DB	0
+	DW	4
+	DD	18
+	DB	128
+	DB	'S'
+	DB	0
+	DW	8
+	DD	18
+	DB	128
+	DB	20
+	DB	0
+	DW	8
+	DD	18
+	DB	'@'
+	DB	26
+	DB	0
+	DW	8
+	DD	18
+	DB	' '
+	DB	8
+	DB	0
+	DW	8
+	DD	18
+	DB	16
+	DB	21
+	DB	0
+	DW	8
+	DD	18
+	DB	8
+	DB	23
+	DB	0
+	DW	8
+	DD	18
+	DB	4
+	DB	28
+	DB	0
+	DW	8
+	DD	18
+	DB	2
+	DB	24
+	DB	0
+	DW	1
+	DD	17
+	DB	128
+	DB	230
+	DB	'@'
+	DW	1
+	DD	17
+	DB	' '
+	DB	226
+	DB	4
+	DW	1
+	DD	17
+	DB	8
+	DB	'G'
+	DB	0
+	DW	1
+	DD	17
+	DB	4
+	DB	'F'
+	DB	0
+	DW	2
+	DD	17
+	DB	128
+	DB	31
+	DB	0
+	DW	6
+	DD	17
+	DB	'@'
+	DB	5
+	DB	0
+	DW	6
+	DD	17
+	DB	' '
+	DB	14
+	DB	0
+	DW	6
+	DD	17
+	DB	16
+	DB	23
+	DB	0
+	DW	4
+	DD	17
+	DB	128
+	DB	'9'
+	DB	0
+	DW	8
+	DD	17
+	DB	128
+	DB	'&'
+	DB	0
+	DW	8
+	DD	17
+	DB	'@'
+	DB	'%'
+	DB	0
+	DW	8
+	DD	17
+	DB	' '
+	DB	'$'
+	DB	0
+	DW	8
+	DD	17
+	DB	16
+	DB	')'
+	DB	0
+	DW	8
+	DD	17
+	DB	8
+	DB	225
+	DB	2
+	DW	8
+	DD	17
+	DB	4
+	DB	19
+	DB	0
+	DW	8
+	DD	17
+	DB	2
+	DB	18
+	DB	0
+	DW	8
+	DD	17
+	DB	1
+	DB	12
+	DB	0
+	DW	1
+	DD	16
+	DB	128
+	DB	','
+	DB	0
+	DW	1
+	DD	16
+	DB	'@'
+	DB	'('
+	DB	0
+	DW	1
+	DD	16
+	DB	' '
+	DB	'>'
+	DB	0
+	DW	1
+	DD	16
+	DB	16
+	DB	'*'
+	DB	0
+	DW	1
+	DD	16
+	DB	4
+	DB	'C'
+	DB	0
+	DW	1
+	DD	16
+	DB	2
+	DB	'B'
+	DB	0
+	DW	1
+	DD	16
+	DB	1
+	DB	'1'
+	DB	0
+	DW	2
+	DD	16
+	DB	128
+	DB	' '
+	DB	0
+	DW	6
+	DD	16
+	DB	'@'
+	DB	6
+	DB	0
+	DW	6
+	DD	16
+	DB	' '
+	DB	15
+	DB	0
+	DW	6
+	DD	16
+	DB	16
+	DB	24
+	DB	0
+	DW	4
+	DD	16
+	DB	128
+	DB	'G'
+	DB	0
+	DW	8
+	DD	16
+	DB	128
+	DB	4
+	DB	0
+	DW	8
+	DD	16
+	DB	'@'
+	DB	22
+	DB	0
+	DW	8
+	DD	16
+	DB	' '
+	DB	7
+	DB	0
+	DW	8
+	DD	16
+	DB	16
+	DB	9
+	DB	0
+	DW	8
+	DD	16
+	DB	8
+	DB	10
+	DB	0
+	DW	8
+	DD	16
+	DB	4
+	DB	11
+	DB	0
+	DW	8
+	DD	16
+	DB	2
+	DB	13
+	DB	0
+	DW	8
+	DD	16
+	DB	1
+	DB	'6'
+	DB	0
+	DW	1
+	DD	15
+	DB	128
+	DB	'8'
+	DB	0
+	DW	1
+	DD	15
+	DB	' '
+	DB	'4'
+	DB	0
+	DW	1
+	DD	15
+	DB	16
+	DB	'/'
+	DB	0
+	DW	1
+	DD	15
+	DB	8
+	DB	19
+	DB	0
+	DW	1
+	DD	15
+	DB	4
+	DB	''''
+	DB	0
+	DW	1
+	DD	15
+	DB	2
+	DB	'-'
+	DB	0
+	DW	1
+	DD	15
+	DB	1
+	DB	'3'
+	DB	0
+	DW	6
+	DD	15
+	DB	128
+	DB	'!'
+	DB	0
+	DW	6
+	DD	15
+	DB	'@'
+	DB	7
+	DB	0
+	DW	6
+	DD	15
+	DB	' '
+	DB	16
+	DB	0
+	DW	6
+	DD	15
+	DB	16
+	DB	25
+	DB	0
+	DW	8
+	DD	15
+	DB	128
+	DB	'#'
+	DB	0
+	DW	8
+	DD	15
+	DB	'@'
+	DB	'"'
+	DB	0
+	DW	8
+	DD	15
+	DB	' '
+	DB	'!'
+	DB	0
+	DW	8
+	DD	15
+	DB	16
+	DB	'J'
+	DB	0
+	DW	8
+	DD	15
+	DB	8
+	DB	230
+	DB	'@'
+	DW	8
+	DD	15
+	DB	4
+	DB	'4'
+	DB	0
+	DW	8
+	DD	15
+	DB	2
+	DB	15
+	DB	0
+	DW	8
+	DD	15
+	DB	1
+	DB	14
+	DB	0
+	DW	1
+	DD	14
+	DB	'@'
+	DB	'7'
+	DB	0
+	DW	1
+	DD	14
+	DB	16
+	DB	'@'
+	DB	0
+	DW	1
+	DD	14
+	DB	8
+	DB	18
+	DB	0
+	DW	1
+	DD	14
+	DB	4
+	DB	'&'
+	DB	0
+	DW	1
+	DD	14
+	DB	2
+	DB	'A'
+	DB	0
+	DW	1
+	DD	14
+	DB	1
+	DB	15
+	DB	0
+	DW	6
+	DD	14
+	DB	128
+	DB	'"'
+	DB	0
+	DW	6
+	DD	14
+	DB	'@'
+	DB	8
+	DB	0
+	DW	6
+	DD	14
+	DB	' '
+	DB	17
+	DB	0
+	DW	6
+	DD	14
+	DB	16
+	DB	26
+	DB	0
+	DW	8
+	DD	14
+	DB	128
+	DB	29
+	DB	0
+	DW	8
+	DD	14
+	DB	'@'
+	DB	27
+	DB	0
+	DW	8
+	DD	14
+	DB	' '
+	DB	6
+	DB	0
+	DW	8
+	DD	14
+	DB	16
+	DB	25
+	DB	0
+	DW	8
+	DD	14
+	DB	8
+	DB	5
+	DB	0
+	DW	8
+	DD	14
+	DB	4
+	DB	17
+	DB	0
+	DW	8
+	DD	14
+	DB	2
+	DB	16
+	DB	0
+	DW	8
+	DD	14
+	DB	1
+	DB	224
+	DB	1
+	DW	1
+	DD	13
+	DB	'@'
+	DB	'6'
+	DB	0
+	DW	1
+	DD	13
+	DB	' '
+	DB	'?'
+	DB	0
+	DW	1
+	DD	13
+	DB	16
+	DB	'0'
+	DB	0
+	DW	1
+	DD	13
+	DB	8
+	DB	12
+	DB	0
+	DW	1
+	DD	13
+	DB	4
+	DB	'%'
+	DB	0
+	DW	1
+	DD	13
+	DB	2
+	DB	'.'
+	DB	0
+	DW	1
+	DD	13
+	DB	1
+	DB	14
+	DB	0
+	DW	6
+	DD	13
+	DB	128
+	DB	'#'
+	DB	0
+	DW	6
+	DD	13
+	DB	'@'
+	DB	9
+	DB	0
+	DW	6
+	DD	13
+	DB	' '
+	DB	18
+	DB	0
+	DW	6
+	DD	13
+	DB	16
+	DB	27
+	DB	0
+	DW	8
+	DD	13
+	DB	128
+	DB	' '
+	DB	0
+	DW	8
+	DD	13
+	DB	'@'
+	DB	31
+	DB	0
+	DW	8
+	DD	13
+	DB	' '
+	DB	30
+	DB	0
+	DW	8
+	DD	13
+	DB	16
+	DB	'M'
+	DB	0
+	DW	8
+	DD	13
+	DB	8
+	DB	'('
+	DB	0
+	DW	8
+	DD	13
+	DB	4
+	DB	'R'
+	DB	0
+	DW	8
+	DD	13
+	DB	2
+	DB	'1'
+	DB	0
+	DW	8
+	DD	13
+	DB	1
+	DB	'8'
+	DB	0
+	DW	1
+	DD	12
+	DB	128
+	DB	17
+	DB	0
+	DW	1
+	DD	12
+	DB	'@'
+	DB	16
+	DB	0
+	DW	1
+	DD	12
+	DB	' '
+	DB	11
+	DB	0
+	DW	1
+	DD	12
+	DB	16
+	DB	28
+	DB	0
+	DW	1
+	DD	12
+	DB	8
+	DB	24
+	DB	0
+	DW	1
+	DD	12
+	DB	4
+	DB	'$'
+	DB	0
+	DW	1
+	DD	12
+	DB	2
+	DB	'#'
+	DB	0
+	DW	1
+	DD	12
+	DB	1
+	DB	13
+	DB	0
+	DW	6
+	DD	12
+	DB	128
+	DB	'$'
+	DB	0
+	DW	6
+	DD	12
+	DB	'@'
+	DB	10
+	DB	0
+	DW	6
+	DD	12
+	DB	' '
+	DB	19
+	DB	0
+	DW	6
+	DD	12
+	DB	16
+	DB	28
+	DB	0
+	DW	8
+	DD	12
+	DB	128
+	DB	'L'
+	DB	0
+	DW	8
+	DD	12
+	DB	'@'
+	DB	''''
+	DB	0
+	DW	8
+	DD	12
+	DB	' '
+	DB	'I'
+	DB	0
+	DW	8
+	DD	12
+	DB	16
+	DB	'O'
+	DB	0
+	DW	8
+	DD	12
+	DB	8
+	DB	','
+	DB	0
+	DW	8
+	DD	12
+	DB	4
+	DB	'Q'
+	DB	0
+	DW	8
+	DD	12
+	DB	2
+	DB	'P'
+	DB	0
+	DW	8
+	DD	12
+	DB	1
+	DB	'7'
+	DB	0
+	DW	1
+	DD	11
+	DB	128
+	DB	5
+	DB	0
+	DW	1
+	DD	11
+	DB	'@'
+	DB	25
+	DB	0
+	DW	1
+	DD	11
+	DB	' '
+	DB	10
+	DB	0
+	DW	1
+	DD	11
+	DB	16
+	DB	23
+	DB	0
+	DW	1
+	DD	11
+	DB	8
+	DB	21
+	DB	0
+	DW	1
+	DD	11
+	DB	4
+	DB	'!'
+	DB	0
+	DW	1
+	DD	11
+	DB	2
+	DB	'"'
+	DB	0
+	DW	1
+	DD	11
+	DB	1
+	DB	9
+	DB	0
+	DW	6
+	DD	11
+	DB	128
+	DB	'%'
+	DB	0
+	DW	6
+	DD	11
+	DB	'@'
+	DB	11
+	DB	0
+	DW	6
+	DD	11
+	DB	' '
+	DB	20
+	DB	0
+	DW	6
+	DD	11
+	DB	16
+	DB	29
+	DB	0
+	DW	1
+	DD	10
+	DB	'@'
+	DB	6
+	DB	0
+	DW	1
+	DD	10
+	DB	' '
+	DB	'='
+	DB	0
+	DW	1
+	DD	10
+	DB	16
+	DB	'<'
+	DB	0
+	DW	1
+	DD	10
+	DB	8
+	DB	8
+	DB	0
+	DW	1
+	DD	10
+	DB	4
+	DB	' '
+	DB	0
+	DW	1
+	DD	10
+	DB	2
+	DB	';'
+	DB	0
+	DW	1
+	DD	10
+	DB	1
+	DB	7
+	DB	0
+	DW	6
+	DD	10
+	DB	128
+	DB	'&'
+	DB	0
+	DW	6
+	DD	10
+	DB	'@'
+	DB	12
+	DB	0
+	DW	6
+	DD	10
+	DB	' '
+	DB	21
+	DB	0
+	DW	6
+	DD	10
+	DB	16
+	DB	'9'
+	DB	0
+	DW	1
+	DD	9
+	DB	'@'
+	DB	27
+	DB	0
+	DW	1
+	DD	9
+	DB	16
+	DB	'9'
+	DB	0
+	DW	1
+	DD	9
+	DB	8
+	DB	26
+	DB	0
+	DW	1
+	DD	9
+	DB	4
+	DB	31
+	DB	0
+	DW	1
+	DD	9
+	DB	2
+	DB	':'
+	DB	0
+	DW	1
+	DD	9
+	DB	1
+	DB	22
+	DB	0
+	DW	8
+	DD	9
+	DB	128
+	DB	':'
+	DB	0
+	DW	8
+	DD	9
+	DB	'@'
+	DB	';'
+	DB	0
+	DW	8
+	DD	9
+	DB	' '
+	DB	'<'
+	DB	0
+	DW	8
+	DD	9
+	DB	16
+	DB	'='
+	DB	0
+	DW	8
+	DD	9
+	DB	8
+	DB	'>'
+	DB	0
+	DW	8
+	DD	9
+	DB	4
+	DB	'?'
+	DB	0
+	DW	8
+	DD	9
+	DB	2
+	DB	'@'
+	DB	0
+	DW	1
+	DD	8
+	DB	'@'
+	DB	29
+	DB	0
+	DW	1
+	DD	8
+	DB	' '
+	DB	')'
+	DB	0
+	DW	1
+	DD	8
+	DB	16
+	DB	'+'
+	DB	0
+	DW	1
+	DD	8
+	DB	8
+	DB	20
+	DB	0
+	DW	1
+	DD	8
+	DB	4
+	DB	30
+	DB	0
+	DW	1
+	DD	8
+	DB	2
+	DB	'5'
+	DB	0
+	DW	1
+	DD	8
+	DB	1
+	DB	4
+	DB	0
+	DW	8
+	DD	8
+	DB	4
+	DB	'A'
+	DB	0
+	DW	8
+	DD	8
+	DB	2
+	DB	'B'
+	DB	0
+	DW	8
+	DD	8
+	DB	1
+	DB	'C'
+	DB	0
+	DW	1
+	DD	7
+	DB	128
+	DB	'Q'
+	DB	0
+	DW	1
+	DD	7
+	DB	'@'
+	DB	'S'
+	DB	0
+	DW	1
+	DD	7
+	DB	16
+	DB	'\'
+	DB	0
+	DW	1
+	DD	7
+	DB	8
+	DB	'_'
+	DB	0
+	DW	1
+	DD	7
+	DB	4
+	DB	'D'
+	DB	0
+	DW	1
+	DD	7
+	DB	2
+	DB	'L'
+	DB	0
+	DW	1
+	DD	7
+	DB	1
+	DB	'Y'
+	DB	0
+	DW	1
+	DD	6
+	DB	128
+	DB	'O'
+	DB	0
+	DW	1
+	DD	6
+	DB	'@'
+	DB	'T'
+	DB	0
+	DW	1
+	DD	6
+	DB	' '
+	DB	'b'
+	DB	0
+	DW	1
+	DD	6
+	DB	16
+	DB	']'
+	DB	0
+	DW	1
+	DD	6
+	DB	8
+	DB	'`'
+	DB	0
+	DW	1
+	DD	6
+	DB	4
+	DB	'E'
+	DB	0
+	DW	1
+	DD	6
+	DB	2
+	DB	'I'
+	DB	0
+	DW	1
+	DD	6
+	DB	1
+	DB	'Z'
+	DB	0
+	DW	1
+	DD	5
+	DB	'@'
+	DB	229
+	DB	' '
+	DW	1
+	DD	5
+	DB	16
+	DB	225
+	DB	2
+	DW	1
+	DD	4
+	DB	8
+	DB	'e'
+	DB	0
+	DW	1
+	DD	4
+	DB	1
+	DB	231
+	DB	128
+	DW	1
+	DD	3
+	DB	128
+	DB	'V'
+	DB	0
+	DW	1
+	DD	3
+	DB	'@'
+	DB	'U'
+	DB	0
+	DW	1
+	DD	3
+	DB	' '
+	DB	'c'
+	DB	0
+	DW	1
+	DD	3
+	DB	16
+	DB	'^'
+	DB	0
+	DW	1
+	DD	3
+	DB	8
+	DB	'a'
+	DB	0
+	DW	1
+	DD	3
+	DB	4
+	DB	'N'
+	DB	0
+	DW	1
+	DD	3
+	DB	2
+	DB	'K'
+	DB	0
+	DW	1
+	DD	3
+	DB	1
+	DB	'['
+	DB	0
+	DW	1
+	DD	2
+	DB	128
+	DB	'P'
+	DB	0
+	DW	1
+	DD	2
+	DB	'@'
+	DB	'H'
+	DB	0
+	DW	1
+	DD	2
+	DB	' '
+	DB	'R'
+	DB	0
+	DW	1
+	DD	2
+	DB	8
+	DB	'W'
+	DB	0
+	DW	1
+	DD	2
+	DB	4
+	DB	'M'
+	DB	0
+	DW	1
+	DD	2
+	DB	2
+	DB	'J'
+	DB	0
+	DW	1
+	DD	2
+	DB	1
+	DB	'X'
+	DB	0
+	DW	1
+	DD	1
+	DB	'@'
+	DB	228
+	DB	16
+	DW	1
+	DD	1
+	DB	2
+	DB	224
+	DB	1
+	DW	65535
+	DD	0
+	DB	0
+	DB	0
+	DB	0
+	RSEG	I_UDATA
+keypressBuffer:
+	DS	7
+previousIEP1packet:
+	DS	8
+	RSEG	I_IDATA
+intFlags:
+	DS	1
+otherFlags:
+	DS	1
+bLED:
+	DS	1
+modifierByte:
+	DS	1
+iep1Buffer:
+	DS	3
+	RSEG	I_CDATA
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0,0,0
+	RSEG	TUSB2136_DEBOUNCE_SEG
+keypressDebounce:
+	DS	256
+	END

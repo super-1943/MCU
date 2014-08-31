@@ -1,0 +1,21 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+C:\Documents and Settings\Administrator\×ÀÃæ\test\TUSB2136.uv2
+Project File Date:  05/17/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+linking...
+Program Size: data=9.0 xdata=0 code=38
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling Text1.c...
+linking...
+Program Size: data=9.0 xdata=0 code=38
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).

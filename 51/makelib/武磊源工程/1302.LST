@@ -1,0 +1,941 @@
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE 1302
+OBJECT MODULE PLACED IN 1302.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 1302.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<1602.h>
+   2          #include<1302.h>
+   3          #include<hongwai.h>
+   4          extern unsigned char a[];         //不能只写extern丢掉unsigned char
+   5          unsigned char code digit[11]={"0123456789-"};     //定义字符数组显示数字
+   6          bit K1_FLAG=0;                          //定义按键标志位，当按下K1键时，该位置1，K1键未按下时，该位为0。
+   7          unsigned char QH_FLAG=1;//按键控制年月日时分切换标志
+   8          char time_buf[7] ={0,0,0,0,0,0,0};              //DS1302时间缓冲区，存放秒、分、时、日、月、星期、年
+   9          
+  10          
+  11          /*****************************************************
+  12          函数功能：延时若干微秒
+  13          入口参数：n
+  14          ***************************************************/ 
+  15          void Ds1302_delaynus(unsigned char n)
+  16          {
+  17   1       unsigned char i;
+  18   1       for(i=0;i<n;i++);
+  19   1      }
+  20          /*****************************************************
+  21          函数功能：延时1ms
+  22          ***************************************************/
+  23          void Ds1302_delay1ms()
+  24          {
+  25   1                      unsigned char i,j;      
+  26   1                      for(i=0;i<10;i++)
+  27   1                      for(j=0;j<33;j++)
+  28   1                 ;             
+  29   1       }
+  30          
+  31          /*********************************************************/
+  32          void Ds1302_beep()              //蜂鸣器响一声函数
+  33          {
+  34   1        unsigned char i;
+  35   1        for (i=0;i<100;i++)
+  36   1         {
+  37   2         Ds1302_delay1ms();
+  38   2         BEEP=!BEEP;       //BEEP取反
+  39   2         } 
+  40   1         BEEP=1;           //关闭蜂鸣器
+  41   1       //  Ds1302_delay(250);       //延时     
+  42   1      }
+  43          
+  44          /*****************************************************
+  45          函数功能：向1302写一个字节数据
+  46          入口参数：x
+  47          ***************************************************/ 
+  48          void Ds1302_Write(unsigned char dat)
+  49          {
+  50   1        unsigned char i; 
+  51   1        SCLK=0;            //拉低SCLK，为脉冲上升沿写入数据做好准备
+  52   1        //Ds1302_delaynus(2);       //稍微等待，使硬件做好准备
+  53   1        for(i=0;i<8;i++)      //连续写8个二进制位数据
+  54   1          {
+  55   2                   DATA=dat&0x01;    //取出dat的第0位数据写入1302  低位在前，高位在后
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 2   
+
+  56   2              //       Ds1302_delaynus(2);       //稍微等待，使硬件做好准备
+  57   2                       SCLK=1;           //上升沿写入数据
+  58   2              //       Ds1302_delaynus(2);      //稍微等待，使硬件做好准备
+  59   2                       SCLK=0;           //重新拉低SCLK，形成脉冲
+  60   2                       dat>>=1;          //将dat的各数据位右移1位，准备写入下一个数据位
+  61   2                }
+  62   1              
+  63   1       }
+  64          /*****************************************************
+  65          函数功能：根据命令字，向1302写一个字节数据
+  66          入口参数：Cmd，储存命令字；dat，储存待写的数据
+  67          ***************************************************/ 
+  68          void Ds1302_WriteSet(unsigned char Cmd,unsigned char dat)
+  69           {        
+  70   1              RST=0;           //禁止数据传递
+  71   1              SCLK=0;          //确保写数居前SCLK被拉低
+  72   1                  RST=1;           //启动数据传输
+  73   1                  Ds1302_delaynus(2);     //稍微等待，使硬件做好准备
+  74   1                  Ds1302_Write(Cmd);  //写入命令字
+  75   1                  Ds1302_Write(dat);  //写数据
+  76   1                  SCLK=1;          //将时钟电平置于高电平状态
+  77   1                  RST=0;           //禁止数据传递
+  78   1       }
+  79          /*****************************************************
+  80          函数功能：从1302读一个字节数据
+  81          入口参数：x
+  82          ***************************************************/ 
+  83           unsigned char Ds1302_Read(void)
+  84           {
+  85   1          unsigned char i,dat;
+  86   1      //      Ds1302_delaynus(2);       //稍微等待，使硬件做好准备
+  87   1              for(i=0;i<8;i++)   //连续读8个二进制位数据
+  88   1               {       dat>>=1;
+  89   2                       if(DATA==1)    //如果读出的数据是1
+  90   2                       dat|=0x80;    //将1取出，写在dat的最高位
+  91   2                       SCLK=1;       //将SCLK置于高电平，为下降沿读出
+  92   2                       //Ds1302_delaynus(2);  //稍微等待
+  93   2                       SCLK=0;       //拉低SCLK，形成脉冲下降沿
+  94   2                      // Ds1302_delaynus(2);  //稍微等待
+  95   2                }      
+  96   1        return dat;        //将读出的数据返回
+  97   1      }  
+  98          /*****************************************************
+  99          函数功能：根据命令字，从1302读取一个字节数据
+ 100          入口参数：Cmd
+ 101          注：读出的数据必须按‘格式’转化，不能直接用
+ 102          ***************************************************/ 
+ 103          unsigned char  Ds1302_ReadSet(unsigned char Cmd)
+ 104           {
+ 105   1        unsigned char dat;
+ 106   1        RST=0;                 //拉低RST
+ 107   1        SCLK=0;                //确保写数居前SCLK被拉低
+ 108   1        RST=1;                 //启动数据传输
+ 109   1        Ds1302_Write(Cmd);       //写入命令字
+ 110   1        dat=Ds1302_Read();       //读出数据
+ 111   1        SCLK=1;              //将时钟电平置于已知状态
+ 112   1        RST=0;               //禁止数据传递
+ 113   1        return dat;          //将读出的数据返回
+ 114   1      }
+ 115          /*****************************************************
+ 116          函数功能： 1302进行初始化设置
+ 117          ***************************************************/ 
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 3   
+
+ 118          void Ds1302_Int(void)
+ 119          {       
+ 120   1          unsigned char flag;
+ 121   1         
+ 122   1          flag= Ds1302_ReadSet(0x81);
+ 123   1              if(flag&0x80)   {      //判断时钟芯片是否关闭
+ 124   2          Ds1302_WriteSet(0x8E,0x00);                 //根据写状态寄存器命令字，写入不保护指令 
+ 125   2              Ds1302_WriteSet(0x80,((55/10)<<4|(55%10)));   //根据写秒寄存器命令字，写入秒的初始值
+ 126   2              Ds1302_WriteSet(0x82,((59/10)<<4|(59%10)));   //根据写分寄存器命令字，写入分的初始值
+ 127   2              Ds1302_WriteSet(0x84,((23/10)<<4|(23%10))); //根据写小时寄存器命令字，写入小时的初始值
+ 128   2              Ds1302_WriteSet(0x86,((30/10)<<4|(18%10))); //根据写日寄存器命令字，写入日的初始值
+ 129   2              Ds1302_WriteSet(0x88,((3/10)<<4|(6%10))); //根据写月寄存器命令字，写入月的初始值
+ 130   2              Ds1302_WriteSet(0x8c,((11/10)<<4|(9%10)));  //根据写年寄存器命令字，写入年的初始值
+ 131   2              Ds1302_WriteSet(0x90,0xa5);                //打开充电功能 选择2K电阻充电方式
+ 132   2              Ds1302_WriteSet(0x8E,0x80);                        //根据写状态寄存器命令字，写入保护指令
+ 133   2        }      
+ 134   1      
+ 135   1        /*--------------------这是每次都初始化的语句-----------------*/
+ 136   1         
+ 137   1        /* Ds1302_WriteSet(0x8E,0x00);                 //根据写状态寄存器命令字，写入不保护指令
+ 138   1         Ds1302_WriteSet(0x80,((55/10)<<4|(55%10)));   //根据写秒寄存器命令字，写入秒的初始值
+ 139   1      
+ 140   1              Ds1302_WriteSet(0x82,((59/10)<<4|(59%10)));   //根据写分寄存器命令字，写入分的初始值
+ 141   1      
+ 142   1              Ds1302_WriteSet(0x84,((23/10)<<4|(23%10))); //根据写小时寄存器命令字，写入小时的初始值
+ 143   1      
+ 144   1              Ds1302_WriteSet(0x86,((30/10)<<4|(18%10))); //根据写日寄存器命令字，写入日的初始值
+ 145   1      
+ 146   1              Ds1302_WriteSet(0x88,((3/10)<<4|(6%10))); //根据写月寄存器命令字，写入月的初始值
+ 147   1      
+ 148   1              Ds1302_WriteSet(0x8c,((11/10)<<4|(9%10)));   //根据写年寄存器命令字，写入年的初始值
+ 149   1      
+ 150   1              Ds1302_WriteSet(0x90,0xa5);                //打开充电功能 选择2K电阻充电方式
+ 151   1      
+ 152   1              Ds1302_WriteSet(0x8E,0x80);              //根据写状态寄存器命令字，写入保护指令 */
+ 153   1      
+ 154   1                                                      
+ 155   1      }
+ 156           /**************************************************************
+ 157          以下是1302数据的显示程序
+ 158          **************************************************************/
+ 159          /*****************************************************
+ 160          函数功能：显示秒
+ 161          入口参数：x
+ 162          ***************************************************/ 
+ 163          void Ds1302_DisplaySecond(unsigned char x)
+ 164          {
+ 165   1       unsigned char i,j;     //j,k分别储存十位和个位
+ 166   1              i=x/10;//取十位
+ 167   1              j=x%10;//取个位     
+ 168   1              Lcd_WriteAddress(0x49);    //写显示地址,将在第2行第7列开始显示
+ 169   1              Lcd_delay(1);
+ 170   1              Lcd_WriteData(digit[i]);    //将百位数字的字符常量写入LCD
+ 171   1              Lcd_delay(1);
+ 172   1              Lcd_WriteData(digit[j]);    //将十位数字的字符常量写入LCD
+ 173   1              Lcd_delay(1);                    //延时1ms给硬件一点反应时间            
+ 174   1       }
+ 175          
+ 176          /*****************************************************
+ 177          函数功能：显示分钟
+ 178          入口参数：x
+ 179          ***************************************************/ 
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 4   
+
+ 180          void Ds1302_DisplayMinute(unsigned char x)
+ 181          {
+ 182   1       unsigned char i,j;     //j,k十位和个位
+ 183   1              i=x/10;//取十位
+ 184   1              j=x%10;//取个位     
+ 185   1              Lcd_WriteAddress(0x46);    //写显示地址,将在第2行第7列开始显示
+ 186   1              Lcd_delay(1);
+ 187   1              Lcd_WriteData(digit[i]);    //将百位数字的字符常量写入LCD
+ 188   1              Lcd_delay(1);
+ 189   1              Lcd_WriteData(digit[j]);    //将十位数字的字符常量写入LCD
+ 190   1              Lcd_delay(1);                    //延时1ms给硬件一点反应时间           
+ 191   1       }
+ 192          /*****************************************************
+ 193          函数功能：显示小时
+ 194          入口参数：x
+ 195          ***************************************************/ 
+ 196          void Ds1302_DisplayHour(unsigned char x)
+ 197          {
+ 198   1       unsigned char i,j;     //j,k十位和个位
+ 199   1              i=x/10;//取十位
+ 200   1              j=x%10;//取个位     
+ 201   1              Lcd_WriteAddress(0x43);    //写显示地址,将在第2行第7列开始显示
+ 202   1              Lcd_delay(1);
+ 203   1              Lcd_WriteData(digit[i]);    //将百位数字的字符常量写入LCD
+ 204   1              Lcd_delay(1);
+ 205   1              Lcd_WriteData(digit[j]);    //将十位数字的字符常量写入LCD
+ 206   1              Lcd_delay(1);              //延时1ms给硬件一点反应时间            
+ 207   1       }
+ 208           /*****************************************************
+ 209          函数功能：显示日
+ 210          入口参数：x
+ 211          ***************************************************/ 
+ 212          void Ds1302_DisplayDay(unsigned char x)
+ 213          {
+ 214   1              unsigned char i,j;     //j,k十位和个位
+ 215   1              i=x/10;//取十位
+ 216   1              j=x%10;//取个位     
+ 217   1              Lcd_WriteAddress(0x0d);    //写显示地址,将在第2行第7列开始显示
+ 218   1              Lcd_delay(1);
+ 219   1              Lcd_WriteData(digit[i]);    //将十位数字的字符常量写入LCD
+ 220   1              Lcd_delay(1);
+ 221   1              Lcd_WriteData(digit[j]);    //将个位数字的字符常量写入LCD
+ 222   1              Lcd_delay(1);              //延时1ms给硬件一点反应时间           
+ 223   1       }
+ 224           /*****************************************************
+ 225          函数功能：显示月
+ 226          入口参数：x
+ 227          ***************************************************/ 
+ 228          void Ds1302_DisplayMonth(unsigned char x)
+ 229          {
+ 230   1       unsigned char i,j;     //j,k分别储存十位和个位
+ 231   1              i=x/10;//取十位
+ 232   1              j=x%10;//取个位     
+ 233   1              Lcd_WriteAddress(0x0a);    //写显示地址,将在第2行第7列开始显示
+ 234   1              Lcd_delay(1);
+ 235   1              Lcd_WriteData(digit[i]);    //将十位位数字的字符常量写入LCD
+ 236   1              Lcd_delay(1);
+ 237   1              Lcd_WriteData(digit[j]);    //将个位数字的字符常量写入LCD
+ 238   1              Lcd_delay(1);              //延时1ms给硬件一点反应时间            
+ 239   1       }
+ 240          /*****************************************************
+ 241          函数功能：显示年
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 5   
+
+ 242          入口参数：x
+ 243          ***************************************************/ 
+ 244          void Ds1302_DisplayYear(unsigned char x)
+ 245          {
+ 246   1       unsigned char i,j;     //j,k分别储存十位和个位
+ 247   1              i=x/10;//取十位
+ 248   1              j=x%10;//取个位     
+ 249   1              Lcd_WriteAddress(0x07);    //写显示地址,将在第2行第7列开始显示
+ 250   1              Lcd_delay(1);
+ 251   1              Lcd_WriteData(digit[i]);    //将十位位数字的字符常量写入LCD
+ 252   1              Lcd_delay(1);
+ 253   1              Lcd_WriteData(digit[j]);    //将个位数字的字符常量写入LCD
+ 254   1              Lcd_delay(1);                   //延时1ms给硬件一点反应时间           
+ 255   1       }
+ 256          /**********************************************************
+ 257          函数功能：在对应位置显示date ——
+ 258          *********************************************************/
+ 259          void Ds1302_QLShow(void)
+ 260          { Lcd_WriteAddress(0x00);  //写Date的显示地址,将在第1行第2列开始显示
+ 261   1        Lcd_delay(1);
+ 262   1        Lcd_WriteData('D');      //将字符常量写入LCD
+ 263   1         Lcd_delay(1);
+ 264   1        Lcd_WriteData('a');      //将字符常量写入LCD
+ 265   1         Lcd_delay(1);
+ 266   1        Lcd_WriteData('t');      //将字符常量写入LCD
+ 267   1         Lcd_delay(1);
+ 268   1        Lcd_WriteData('e');      //将字符常量写入LCD
+ 269   1         Lcd_delay(1);
+ 270   1        Lcd_WriteData(':');      //将字符常量写入LCD
+ 271   1         Lcd_delay(1);
+ 272   1         Lcd_WriteData('2');      //将字符常量写入LCD
+ 273   1         Lcd_delay(1);
+ 274   1        Lcd_WriteData('0');      //将字符常量写入LCD
+ 275   1         Lcd_delay(1);
+ 276   1        Lcd_WriteAddress(0x09);  //写年月分隔符的显示地址， 显示在第1行第9列
+ 277   1         Lcd_delay(1);
+ 278   1        Lcd_WriteData('-');      //将字符常量写入LCD
+ 279   1         Lcd_delay(1);
+ 280   1        Lcd_WriteAddress(0x0c);  //写月日分隔符的显示地址， 显示在第1行第12列
+ 281   1         Lcd_delay(1);
+ 282   1        Lcd_WriteData('-');      //将字符常量写入LCD
+ 283   1         Lcd_delay(1);
+ 284   1       Lcd_WriteAddress(0x0f);  //写月日分隔符的显示地址， 显示在第1行第12列
+ 285   1         Lcd_delay(1);
+ 286   1        Lcd_WriteData(' ');      //将字符常量写入LCD    //写入空格防止屏幕显示乱码
+ 287   1         Lcd_delay(1);
+ 288   1        Lcd_WriteAddress(0x45);  //写小时与分钟分隔符的显示地址， 显示在第2行第6列
+ 289   1         Lcd_delay(1);
+ 290   1        Lcd_WriteData(':');      //将字符常量写入LCD
+ 291   1         Lcd_delay(1);
+ 292   1        Lcd_WriteAddress(0x48);  //写分钟与秒分隔符的显示地址， 显示在第2行第9列
+ 293   1         Lcd_delay(1);
+ 294   1        Lcd_WriteData(':');      //将字符常量写入LCD
+ 295   1         Lcd_delay(1);
+ 296   1      }
+ 297          /**********************************************************************************
+ 298          函数功能：读取时间
+ 299          **********************************************************************************/
+ 300           void time_get_show(void)
+ 301          { unsigned char second,minute,hour,day,month,year;      //分别储存苗、分、小时，日，月，年
+ 302   1        unsigned char ReadValue;   //储存从1302读取的数据
+ 303   1        if(K1_FLAG==0)
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 6   
+
+ 304   1        {
+ 305   2         if(K1==0)                            //若K1键按下
+ 306   2              {
+ 307   3                              Lcd_delay(10);          //延时10ms去抖
+ 308   3                              if(K1==0)
+ 309   3                              {
+ 310   4                                      while(!K1);             //等待K1键释放
+ 311   4                                      Ds1302_beep();          //蜂鸣器响一声
+ 312   4                                      K1_FLAG=1;              //K1键标志位置1，以便进行时钟调整
+ 313   4                                      ReadValue=Ds1302_ReadSet(0x8d);
+ 314   4                                      time_buf[6]=((ReadValue&0xf0)>>4)*10 + (ReadValue&0x0F);//将读出数据转化
+ 315   4                                      ReadValue=Ds1302_ReadSet(0x89);
+ 316   4                                      time_buf[4]=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F);//将读出数据转化
+ 317   4                              ReadValue=Ds1302_ReadSet(0x87);
+ 318   4                                      time_buf[3]=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F);//将读出数据转化
+ 319   4                                      ReadValue=Ds1302_ReadSet(0x85);
+ 320   4                                      time_buf[2]=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F);//将读出数据转化
+ 321   4                              ReadValue=Ds1302_ReadSet(0x83);
+ 322   4                                      time_buf[1]=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F);//将读出数据转化
+ 323   4                                      Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 324   4                      Lcd_delay(5);
+ 325   4                                      Lcd_WriteData('Y');
+ 326   4                                      Lcd_delay(5); 
+ 327   4                                      QH_FLAG=1; //按K1是要“归零”
+ 328   4                              }
+ 329   3              }
+ 330   2                    if(a[2]==wl2)            //定义红外功能
+ 331   2                      {               
+ 332   3                              K1_FLAG=1;              //K1键标志位置1，以便进行时钟调整
+ 333   3                                      ReadValue=Ds1302_ReadSet(0x8d);
+ 334   3                                      time_buf[6]=((ReadValue&0xf0)>>4)*10 + (ReadValue&0x0F);//将读出数据转化
+ 335   3                                      ReadValue=Ds1302_ReadSet(0x89);
+ 336   3                                      time_buf[4]=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F);//将读出数据转化
+ 337   3                              ReadValue=Ds1302_ReadSet(0x87);
+ 338   3                                      time_buf[3]=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F);//将读出数据转化
+ 339   3                                      ReadValue=Ds1302_ReadSet(0x85);
+ 340   3                                      time_buf[2]=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F);//将读出数据转化
+ 341   3                              ReadValue=Ds1302_ReadSet(0x83);
+ 342   3                                      time_buf[1]=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F);//将读出数据转化
+ 343   3                                      Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 344   3                      Lcd_delay(1);
+ 345   3                                      Lcd_WriteData('Y');
+ 346   3                                      Lcd_delay(1); 
+ 347   3                                      QH_FLAG=1; //按K1是要“归零”
+ 348   3                                  a[2]=0;     
+ 349   3                      }
+ 350   2              }
+ 351   1      
+ 352   1        if(K1_FLAG==1)
+ 353   1                      { 
+ 354   2                      KeyProcess();           //若K1_FLAG为1，则进行走时调整
+ 355   2                      }
+ 356   1        else{
+ 357   2        Lcd_WriteAddress(0x40);    //显示三个空格防止乱码
+ 358   2              Lcd_delay(1);
+ 359   2              Lcd_WriteData(' ');    
+ 360   2              Lcd_delay(1);
+ 361   2              Lcd_WriteData(' ');    
+ 362   2              Lcd_delay(1);              
+ 363   2              Lcd_WriteData(' ');    
+ 364   2              Lcd_delay(1);        //延时1ms给硬件一点反应时间 
+ 365   2      
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 7   
+
+ 366   2          ReadValue = Ds1302_ReadSet(0x81);   //从秒寄存器读数据
+ 367   2           second=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F);//将读出数据转化
+ 368   2                Ds1302_DisplaySecond(second);          //显示秒
+ 369   2                ReadValue = Ds1302_ReadSet(0x83);  //从分寄存器读
+ 370   2           minute=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F); //将读出数据转化
+ 371   2                Ds1302_DisplayMinute(minute);        //显示分
+ 372   2           ReadValue = Ds1302_ReadSet(0x85);  //从时寄存器读
+ 373   2           hour=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F); //将读出数据转化
+ 374   2                Ds1302_DisplayHour(hour);                  //显示小时
+ 375   2           ReadValue = Ds1302_ReadSet(0x87);  //从分寄存器读
+ 376   2           day=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F); //将读出数据转化
+ 377   2                Ds1302_DisplayDay(day);                //显示日
+ 378   2                ReadValue = Ds1302_ReadSet(0x89);  //从分寄存器读
+ 379   2           month=((ReadValue&0x70)>>4)*10 + (ReadValue&0x0F); //将读出数据转化
+ 380   2                Ds1302_DisplayMonth(month);            //显示月
+ 381   2                ReadValue = Ds1302_ReadSet(0x8d);  //从分寄存器读
+ 382   2           year=((ReadValue&0xf0)>>4)*10 + (ReadValue&0x0F); //将读出数据转化
+ 383   2                Ds1302_DisplayYear(year);              //显示年
+ 384   2      
+ 385   2                Lcd_WriteAddress(0x4b);    //显示四个空格防止乱码
+ 386   2              Lcd_delay(1);
+ 387   2              Lcd_WriteData(' ');    
+ 388   2              Lcd_delay(1);
+ 389   2              Lcd_WriteData(' ');
+ 390   2              Lcd_delay(1);
+ 391   2              Lcd_WriteData(' ');    
+ 392   2              Lcd_delay(1);              
+ 393   2              Lcd_WriteData(' ');    
+ 394   2              Lcd_delay(1);        //延时1ms给硬件一点反应时间
+ 395   2      
+ 396   2                  }
+ 397   1      }
+ 398          /********以下是按键处理函数********/
+ 399          void KeyProcess()
+ 400          {
+ 401   1        unsigned char min16,hour16,day16,month16,year16;                              //定义16进制的分钟和小时变量
+ 402   1        Ds1302_WriteSet(0x8e,0x00);                   //DS1302写保护控制字，允许写
+ 403   1        Ds1302_WriteSet(0x80,0x80);                   //时钟停止运行
+ 404   1         if(K2==0)                               //K2键用来对小时进行加1调整
+ 405   1        {
+ 406   2              Lcd_delay(10);                          //延时去抖
+ 407   2              if(K2==0)
+ 408   2              {
+ 409   3                              while(!K2);                                             //等待K2键释放
+ 410   3                              Ds1302_beep();    
+ 411   3                              QH_FLAG++;
+ 412   3                              if(QH_FLAG>5)
+ 413   3                              { QH_FLAG=1;
+ 414   4                              }       
+ 415   3                                
+ 416   3                 switch(QH_FLAG)
+ 417   3                      {case 1:
+ 418   4                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 419   4                      Lcd_delay(1);
+ 420   4                                      Lcd_WriteData('Y');
+ 421   4                                      Lcd_delay(1); break;
+ 422   4                       case 2:
+ 423   4                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 424   4                      Lcd_delay(1);
+ 425   4                                      Lcd_WriteData('M');
+ 426   4                                      Lcd_delay(1);  break;
+ 427   4                   case 3:
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 8   
+
+ 428   4                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 429   4                      Lcd_delay(1);
+ 430   4                                      Lcd_WriteData('D');
+ 431   4                                      Lcd_delay(1);  break;
+ 432   4                        case 4:
+ 433   4                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 434   4                      Lcd_delay(1);
+ 435   4                                      Lcd_WriteData('H');
+ 436   4                                      Lcd_delay(1);  break;
+ 437   4                        case 5:
+ 438   4                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 439   4                      Lcd_delay(1);
+ 440   4                                      Lcd_WriteData('F');
+ 441   4                                      Lcd_delay(1);  break;
+ 442   4                      }                                      
+ 443   3              }
+ 444   2                      }
+ 445   1      
+ 446   1                      if(a[2]==wl6)                              // 类似K2键     向右切换年月日
+ 447   1              {
+ 448   2                               QH_FLAG++;
+ 449   2                              if(QH_FLAG>5)
+ 450   2                              { QH_FLAG=1;
+ 451   3                                  }   
+ 452   2                                
+ 453   2                 switch(QH_FLAG)
+ 454   2                      {case 1:
+ 455   3                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 456   3                      Lcd_delay(1);
+ 457   3                                      Lcd_WriteData('Y');
+ 458   3                                      Lcd_delay(1); break;
+ 459   3                       case 2:
+ 460   3                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 461   3                      Lcd_delay(1);
+ 462   3                                      Lcd_WriteData('M');
+ 463   3                                      Lcd_delay(1);  break;
+ 464   3                   case 3:
+ 465   3                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 466   3                      Lcd_delay(1);
+ 467   3                                      Lcd_WriteData('D');
+ 468   3                                      Lcd_delay(1);  break;
+ 469   3                        case 4:
+ 470   3                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 471   3                      Lcd_delay(1);
+ 472   3                                      Lcd_WriteData('H');
+ 473   3                                      Lcd_delay(1);  break;
+ 474   3                        case 5:
+ 475   3                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 476   3                      Lcd_delay(1);
+ 477   3                                      Lcd_WriteData('F');
+ 478   3                                      Lcd_delay(1);  break;
+ 479   3                      }                                      
+ 480   2                               a[2]=0;
+ 481   2      
+ 482   2                }
+ 483   1                if(a[2]==wl7)                              // 类似K2键           向左切换年月日
+ 484   1              {
+ 485   2                               QH_FLAG--;
+ 486   2                              if(QH_FLAG<1)
+ 487   2                              { QH_FLAG=5;
+ 488   3                                  }   
+ 489   2                                
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 9   
+
+ 490   2                 switch(QH_FLAG)
+ 491   2                      {case 1:
+ 492   3                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 493   3                      Lcd_delay(1);
+ 494   3                                      Lcd_WriteData('Y');
+ 495   3                                      Lcd_delay(1); break;
+ 496   3                       case 2:
+ 497   3                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 498   3                      Lcd_delay(1);
+ 499   3                                      Lcd_WriteData('M');
+ 500   3                                      Lcd_delay(1);  break;
+ 501   3                   case 3:
+ 502   3                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 503   3                      Lcd_delay(1);
+ 504   3                                      Lcd_WriteData('D');
+ 505   3                                      Lcd_delay(1);  break;
+ 506   3                        case 4:
+ 507   3                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 508   3                      Lcd_delay(1);
+ 509   3                                      Lcd_WriteData('H');
+ 510   3                                      Lcd_delay(1);  break;
+ 511   3                        case 5:
+ 512   3                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 513   3                      Lcd_delay(1);
+ 514   3                                      Lcd_WriteData('F');
+ 515   3                                      Lcd_delay(1);  break;
+ 516   3                      }                                      
+ 517   2                               a[2]=0;
+ 518   2      
+ 519   2                }
+ 520   1      
+ 521   1              if(K3==0)                              // K3键用来进行加1调整
+ 522   1              {
+ 523   2                      Lcd_delay(10);                      //延时去抖
+ 524   2              if(K3==0)                                
+ 525   2                      {
+ 526   3                              while(!K3);                                             //等待K3键释放
+ 527   3                              Ds1302_beep();
+ 528   3                              switch(QH_FLAG)
+ 529   3                      {       case 1:       
+ 530   4                              time_buf[6]=time_buf[6]+1;                      //年加1
+ 531   4                      if(time_buf[6]>99) time_buf[6]=0;               //当分钟加到60时初始化为0
+ 532   4                      year16=time_buf[6]/10*16+time_buf[6]%10;  //将所得的分钟数据转变成16进制数据
+ 533   4                              Ds1302_WriteSet(0x8c,year16);                //将调整后的分钟数据写入DS1302     reak
+ 534   4                              Lcd_WriteAddress(0x07);    //写显示地址,将在第2行第7列开始显示
+ 535   4                      Lcd_delay(1);
+ 536   4                      Lcd_WriteData(digit[time_buf[6]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 537   4                      Lcd_delay(1);
+ 538   4                      Lcd_WriteData(digit[time_buf[6]%10]);    //将十位数字的字符常量写入LCD
+ 539   4                      Lcd_delay(1);
+ 540   4                              break;
+ 541   4      
+ 542   4                              case 2:        
+ 543   4                              time_buf[4]=time_buf[4]+1;                      //月加1
+ 544   4                      if(time_buf[4]>12) time_buf[4]=1;               //当分钟加到60时初始化为0
+ 545   4                      month16=time_buf[4]/10*16+time_buf[4]%10;  //将所得的分钟数据转变成16进制数据
+ 546   4                              Ds1302_WriteSet(0x88,month16);                //将调整后的分钟数据写入DS1302    reak
+ 547   4                  Lcd_WriteAddress(0x0a);    //写显示地址,将在第2行第7列开始显示
+ 548   4                      Lcd_delay(1);
+ 549   4                      Lcd_WriteData(digit[time_buf[4]/10]);    //将百位数字的字符常量写入LCD
+ 550   4                      Lcd_delay(1);
+ 551   4                      Lcd_WriteData(digit[time_buf[4]%10]);    //将十位数字的字符常量写入LCD
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 10  
+
+ 552   4                      Lcd_delay(1);
+ 553   4                              break;
+ 554   4      
+ 555   4                              case 3:        
+ 556   4                              time_buf[3]=time_buf[3]+1;         //日加1      
+ 557   4                               if((time_buf[4]==1)||(time_buf[4]==3)||(time_buf[4]==5)||(time_buf[4]==7)||(time_buf[4]==8)||(time_buf
+             -[4]==10)||(time_buf[4]==12))
+ 558   4                                 {if(time_buf[3]>31)
+ 559   5                                          time_buf[3]=1;  
+ 560   5                                      }
+ 561   4                              if((time_buf[4]==4)||(time_buf[4]==6)||(time_buf[4]==9)||(time_buf[4]==11))
+ 562   4                                 {if(time_buf[3]>30)
+ 563   5                                          time_buf[3]=1;  
+ 564   5                                      }
+ 565   4                               if(time_buf[4]==2)
+ 566   4                               {      if((time_buf[6]%4)&&(time_buf[3]>28)) time_buf[3]=1;
+ 567   5                                  if(!(time_buf[6]%4)&&(time_buf[3]>29)) time_buf[3]=1;
+ 568   5                               }
+ 569   4                               day16=time_buf[3]/10*16+time_buf[3]%10;
+ 570   4                               Ds1302_WriteSet(0x86,day16);                //将调整后的分钟数据写入DS1302     reak
+ 571   4                           Lcd_WriteAddress(0x0d);    //写显示地址,将在第2行第7列开始显示
+ 572   4                       Lcd_delay(1);
+ 573   4                       Lcd_WriteData(digit[time_buf[3]/10]);    //将百位数字的字符常量写入LCD
+ 574   4                       Lcd_delay(1);
+ 575   4                       Lcd_WriteData(digit[time_buf[3]%10]);    //将十位数字的字符常量写入LCD
+ 576   4                       Lcd_delay(1);
+ 577   4                               break;
+ 578   4      
+ 579   4                               case 4:        
+ 580   4                               time_buf[2]=time_buf[2]+1;                     //小时加1
+ 581   4                       if(time_buf[2]>23) time_buf[2]=0;              //当分钟加到60时初始化为0
+ 582   4                       hour16=time_buf[2]/10*16+time_buf[2]%10;  //将所得的分钟数据转变成16进制数据
+ 583   4                               Ds1302_WriteSet(0x84,hour16);                //将调整后的分钟数据写入DS1302    reak
+ 584   4                               Lcd_WriteAddress(0x43);    //写显示地址,将在第2行第7列开始显示
+ 585   4                       Lcd_delay(1);
+ 586   4                       Lcd_WriteData(digit[time_buf[2]/10]);    //将百位数字的字符常量写入LCD
+ 587   4                       Lcd_delay(1);
+ 588   4                       Lcd_WriteData(digit[time_buf[2]%10]);    //将十位数字的字符常量写入LCD
+ 589   4                       Lcd_delay(1);
+ 590   4                       break;
+ 591   4      
+ 592   4                               case 5:        
+ 593   4                              time_buf[1]=time_buf[1]+1;                      //小时加1
+ 594   4                      if(time_buf[1]>59) time_buf[1]=0;               //当分钟加到60时初始化为0
+ 595   4                      min16=time_buf[1]/10*16+time_buf[1]%10;  //将所得的分钟数据转变成16进制数据
+ 596   4                              Ds1302_WriteSet(0x82,min16);                //将调整后的分钟数据写入DS1302      reak
+ 597   4                              Lcd_WriteAddress(0x46);    //写显示地址,将在第2行第7列开始显示
+ 598   4                      Lcd_delay(1);
+ 599   4                      Lcd_WriteData(digit[time_buf[1]/10]);    //将百位数字的字符常量写入LCD
+ 600   4                      Lcd_delay(1);
+ 601   4                      Lcd_WriteData(digit[time_buf[1]%10]);    //将十位数字的字符常量写入LCD
+ 602   4                      Lcd_delay(1);
+ 603   4                       break;
+ 604   4                               }
+ 605   3      
+ 606   3                }
+ 607   2              }
+ 608   1      
+ 609   1                      if(a[2]==wl4)                                                           //红外 加
+ 610   1                      {  
+ 611   2                      switch(QH_FLAG)
+ 612   2                      {       case 1:       
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 11  
+
+ 613   3                              time_buf[6]=time_buf[6]+1;                      //年加1
+ 614   3                      if(time_buf[6]>99) time_buf[6]=0;               //当分钟加到60时初始化为0
+ 615   3                      year16=time_buf[6]/10*16+time_buf[6]%10;  //将所得的分钟数据转变成16进制数据
+ 616   3                              Ds1302_WriteSet(0x8c,year16);                //将调整后的分钟数据写入DS1302     reak
+ 617   3                              Lcd_WriteAddress(0x07);    //写显示地址,将在第2行第7列开始显示
+ 618   3                      Lcd_delay(1);
+ 619   3                      Lcd_WriteData(digit[time_buf[6]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 620   3                      Lcd_delay(1);
+ 621   3                      Lcd_WriteData(digit[time_buf[6]%10]);    //将十位数字的字符常量写入LCD
+ 622   3                      Lcd_delay(1);
+ 623   3                              break;
+ 624   3      
+ 625   3                              case 2:        
+ 626   3                              time_buf[4]=time_buf[4]+1;                      //月加1
+ 627   3                      if(time_buf[4]>12) time_buf[4]=1;               //当分钟加到60时初始化为0
+ 628   3                      month16=time_buf[4]/10*16+time_buf[4]%10;  //将所得的分钟数据转变成16进制数据
+ 629   3                              Ds1302_WriteSet(0x88,month16);                //将调整后的分钟数据写入DS1302    reak
+ 630   3                  Lcd_WriteAddress(0x0a);    //写显示地址,将在第2行第7列开始显示
+ 631   3                      Lcd_delay(1);
+ 632   3                      Lcd_WriteData(digit[time_buf[4]/10]);    //将百位数字的字符常量写入LCD
+ 633   3                      Lcd_delay(1);
+ 634   3                      Lcd_WriteData(digit[time_buf[4]%10]);    //将十位数字的字符常量写入LCD
+ 635   3                      Lcd_delay(1);
+ 636   3                              break;
+ 637   3      
+ 638   3                              case 3:        
+ 639   3                              time_buf[3]=time_buf[3]+1;         //日加1      考虑闰年 月份
+ 640   3                              if((time_buf[4]==1)||(time_buf[4]==3)||(time_buf[4]==5)||(time_buf[4]==7)||(time_buf[4]==8)||(time_buf[
+             -4]==10)||(time_buf[4]==12))
+ 641   3                                 {if(time_buf[3]>31)
+ 642   4                                          time_buf[3]=1;  
+ 643   4                                      }
+ 644   3                              if((time_buf[4]==4)||(time_buf[4]==6)||(time_buf[4]==9)||(time_buf[4]==11))
+ 645   3                                 {if(time_buf[3]>30)
+ 646   4                                          time_buf[3]=1;  
+ 647   4                                      }
+ 648   3                               if(time_buf[4]==2)
+ 649   3                               {      if((time_buf[6]%4)&&(time_buf[3]>28)) time_buf[3]=1;
+ 650   4                                  if(!(time_buf[6]%4)&&(time_buf[3]>29)) time_buf[3]=1;
+ 651   4                               }
+ 652   3                               day16=time_buf[3]/10*16+time_buf[3]%10;
+ 653   3                               Ds1302_WriteSet(0x86,day16);                //将调整后的分钟数据写入DS1302     reak
+ 654   3                           Lcd_WriteAddress(0x0d);    //写显示地址,将在第2行第7列开始显示
+ 655   3                       Lcd_delay(1);
+ 656   3                       Lcd_WriteData(digit[time_buf[3]/10]);    //将百位数字的字符常量写入LCD
+ 657   3                       Lcd_delay(1);
+ 658   3                       Lcd_WriteData(digit[time_buf[3]%10]);    //将十位数字的字符常量写入LCD
+ 659   3                       Lcd_delay(1);
+ 660   3                               break;
+ 661   3      
+ 662   3                               case 4:        
+ 663   3                               time_buf[2]=time_buf[2]+1;                     //小时加1
+ 664   3                       if(time_buf[2]>23) time_buf[2]=0;              //当分钟加到60时初始化为0
+ 665   3                       hour16=time_buf[2]/10*16+time_buf[2]%10;  //将所得的分钟数据转变成16进制数据
+ 666   3                               Ds1302_WriteSet(0x84,hour16);                //将调整后的分钟数据写入DS1302    reak
+ 667   3                               Lcd_WriteAddress(0x43);    //写显示地址,将在第2行第7列开始显示
+ 668   3                       Lcd_delay(1);
+ 669   3                       Lcd_WriteData(digit[time_buf[2]/10]);    //将百位数字的字符常量写入LCD
+ 670   3                       Lcd_delay(1);
+ 671   3                       Lcd_WriteData(digit[time_buf[2]%10]);    //将十位数字的字符常量写入LCD
+ 672   3                       Lcd_delay(1);
+ 673   3                       break;
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 12  
+
+ 674   3      
+ 675   3                               case 5:        
+ 676   3                              time_buf[1]=time_buf[1]+1;                      //小时加1
+ 677   3                      if(time_buf[1]>59) time_buf[1]=0;               //当分钟加到60时初始化为0
+ 678   3                      min16=time_buf[1]/10*16+time_buf[1]%10;  //将所得的分钟数据转变成16进制数据
+ 679   3                              Ds1302_WriteSet(0x82,min16);                //将调整后的分钟数据写入DS1302      reak
+ 680   3                              Lcd_WriteAddress(0x46);    //写显示地址,将在第2行第7列开始显示
+ 681   3                      Lcd_delay(1);
+ 682   3                      Lcd_WriteData(digit[time_buf[1]/10]);    //将百位数字的字符常量写入LCD
+ 683   3                      Lcd_delay(1);
+ 684   3                      Lcd_WriteData(digit[time_buf[1]%10]);    //将十位数字的字符常量写入LCD
+ 685   3                      Lcd_delay(1);
+ 686   3                       break;
+ 687   3                               }
+ 688   2                              a[2]=0;
+ 689   2                }
+ 690   1      
+ 691   1      
+ 692   1                 if(K4==0)                              // 减
+ 693   1              {               Lcd_delay(10);                      //延时去抖
+ 694   2              if(K4==0)                                
+ 695   2                       {
+ 696   3                              while(!K4);                                             //等待K4键释放
+ 697   3                              Ds1302_beep();
+ 698   3                              switch(QH_FLAG)
+ 699   3                         {    
+ 700   4                          case 1:       
+ 701   4                              time_buf[6]=time_buf[6]-1;                      //年减1
+ 702   4                      if(time_buf[6]<0) time_buf[6]=99;               //当年到60时初始化为0
+ 703   4                      year16=time_buf[6]/10*16+time_buf[6]%10;  //将所得的分钟数据转变成16进制数据
+ 704   4                              Ds1302_WriteSet(0x8c,year16);                //将调整后的分钟数据写入DS1302     reak
+ 705   4                              Lcd_WriteAddress(0x07);    //写显示地址,将在第2行第7列开始显示
+ 706   4                      Lcd_delay(1);
+ 707   4                      Lcd_WriteData(digit[time_buf[6]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 708   4                      Lcd_delay(1);
+ 709   4                      Lcd_WriteData(digit[time_buf[6]%10]);    //将十位数字的字符常量写入LCD
+ 710   4                      Lcd_delay(1);
+ 711   4                              break;
+ 712   4                              case 2:        
+ 713   4                              time_buf[4]=time_buf[4]-1;                      //年减1
+ 714   4                      if(time_buf[4]<1) time_buf[4]=12;               //当分钟加到60时初始化为0
+ 715   4                      month16=time_buf[4]/10*16+time_buf[4]%10;  //将所得的分钟数据转变成16进制数据
+ 716   4                              Ds1302_WriteSet(0x88,month16);                //将调整后的分钟数据写入DS1302    reak
+ 717   4                              Lcd_WriteAddress(0x0a);    //写显示地址,将在第2行第7列开始显示
+ 718   4                      Lcd_delay(1);
+ 719   4                      Lcd_WriteData(digit[time_buf[4]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 720   4                      Lcd_delay(1);
+ 721   4                      Lcd_WriteData(digit[time_buf[4]%10]);    //将十位数字的字符常量写入LCD
+ 722   4                      Lcd_delay(1);
+ 723   4                              break;
+ 724   4                              case 3:        
+ 725   4                              time_buf[3]=time_buf[3]-1;                      //年减1
+ 726   4                      if((time_buf[4]==1)||(time_buf[4]==3)||(time_buf[4]==5)||(time_buf[4]==7)||(time_buf[4]==8)||(tim
+             -e_buf[4]==10)||(time_buf[4]==12))
+ 727   4                                 {if(time_buf[3]<1)
+ 728   5                                          time_buf[3]=31;  
+ 729   5                                      }
+ 730   4                              if((time_buf[4]==4)||(time_buf[4]==6)||(time_buf[4]==9)||(time_buf[4]==11))
+ 731   4                                 {if(time_buf[3]<1)
+ 732   5                                          time_buf[3]=30;  
+ 733   5                                      }
+ 734   4                               if(time_buf[4]==2)
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 13  
+
+ 735   4                               {      if((time_buf[6]%4)&&(time_buf[3]<1)) time_buf[3]=28;
+ 736   5                                  if(!(time_buf[6]%4)&&(time_buf[3]<1)) time_buf[3]=29;
+ 737   5                               }
+ 738   4                      day16=time_buf[3]/10*16+time_buf[3]%10;  //将所得的分钟数据转变成16进制数据
+ 739   4                              Ds1302_WriteSet(0x86,day16);                //将调整后的分钟数据写入DS1302      reak
+ 740   4                              Lcd_WriteAddress(0x0d);    //写显示地址,将在第2行第7列开始显示
+ 741   4                      Lcd_delay(1);
+ 742   4                      Lcd_WriteData(digit[time_buf[3]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 743   4                      Lcd_delay(1);
+ 744   4                      Lcd_WriteData(digit[time_buf[3]%10]);    //将十位数字的字符常量写入LCD
+ 745   4                      Lcd_delay(1);
+ 746   4                              break;
+ 747   4                               case 4:        
+ 748   4                              time_buf[2]=time_buf[2]-1;                      //年减1
+ 749   4                      if(time_buf[2]<0) time_buf[2]=23;               //当分钟加到60时初始化为0
+ 750   4                      hour16=time_buf[2]/10*16+time_buf[2]%10;  //将所得的分钟数据转变成16进制数据
+ 751   4                              Ds1302_WriteSet(0x84,hour16);                //将调整后的分钟数据写入DS1302     reak
+ 752   4                              Lcd_WriteAddress(0x43);    //写显示地址,将在第2行第7列开始显示
+ 753   4                      Lcd_delay(1);
+ 754   4                      Lcd_WriteData(digit[time_buf[2]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 755   4                      Lcd_delay(1);
+ 756   4                      Lcd_WriteData(digit[time_buf[2]%10]);    //将十位数字的字符常量写入LCD
+ 757   4                      Lcd_delay(1);
+ 758   4                              break;
+ 759   4      
+ 760   4                               case 5:        
+ 761   4                              time_buf[1]=time_buf[1]-1;                      //年减1
+ 762   4                      if(time_buf[1]<0) time_buf[1]=59;               //当分钟加到60时初始化为0
+ 763   4                      min16=time_buf[1]/10*16+time_buf[1]%10;  //将所得的分钟数据转变成16进制数据
+ 764   4                              Ds1302_WriteSet(0x82,min16);                //将调整后的分钟数据写入DS1302      reak
+ 765   4                              Lcd_WriteAddress(0x46);    //写显示地址,将在第2行第7列开始显示
+ 766   4                      Lcd_delay(1);
+ 767   4                      Lcd_WriteData(digit[time_buf[1]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 768   4                      Lcd_delay(1);
+ 769   4                      Lcd_WriteData(digit[time_buf[1]%10]);    //将十位数字的字符常量写入LCD
+ 770   4                      Lcd_delay(1);
+ 771   4                              break;
+ 772   4              }
+ 773   3              }
+ 774   2      
+ 775   2              }
+ 776   1                if(a[2]==wl5)                              // 红外减
+ 777   1              {
+ 778   2                              switch(QH_FLAG)
+ 779   2                         {    
+ 780   3                          case 1:       
+ 781   3                              time_buf[6]=time_buf[6]-1;                      //年减1
+ 782   3                      if(time_buf[6]<0) time_buf[6]=99;               //当年到60时初始化为0
+ 783   3                      year16=time_buf[6]/10*16+time_buf[6]%10;  //将所得的分钟数据转变成16进制数据
+ 784   3                              Ds1302_WriteSet(0x8c,year16);                //将调整后的分钟数据写入DS1302     reak
+ 785   3                              Lcd_WriteAddress(0x07);    //写显示地址,将在第2行第7列开始显示
+ 786   3                      Lcd_delay(1);
+ 787   3                      Lcd_WriteData(digit[time_buf[6]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 788   3                      Lcd_delay(1);
+ 789   3                      Lcd_WriteData(digit[time_buf[6]%10]);    //将十位数字的字符常量写入LCD
+ 790   3                      Lcd_delay(1);
+ 791   3                              break;
+ 792   3                              case 2:        
+ 793   3                              time_buf[4]=time_buf[4]-1;                      //月减1
+ 794   3                      if(time_buf[4]<1) time_buf[4]=12;               //当分钟加到60时初始化为0
+ 795   3                      month16=time_buf[4]/10*16+time_buf[4]%10;  //将所得的分钟数据转变成16进制数据
+ 796   3                              Ds1302_WriteSet(0x88,month16);                //将调整后的分钟数据写入DS1302    reak
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 14  
+
+ 797   3                              Lcd_WriteAddress(0x0a);    //写显示地址,将在第2行第7列开始显示
+ 798   3                      Lcd_delay(1);
+ 799   3                      Lcd_WriteData(digit[time_buf[4]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 800   3                      Lcd_delay(1);
+ 801   3                      Lcd_WriteData(digit[time_buf[4]%10]);    //将十位数字的字符常量写入LCD
+ 802   3                      Lcd_delay(1);
+ 803   3                              break;
+ 804   3                              case 3:        
+ 805   3                              time_buf[3]=time_buf[3]-1;                      //日减1
+ 806   3                      if((time_buf[4]==1)||(time_buf[4]==3)||(time_buf[4]==5)||(time_buf[4]==7)||(time_buf[4]==8)||(tim
+             -e_buf[4]==10)||(time_buf[4]==12))
+ 807   3                                 {if(time_buf[3]<1)
+ 808   4                                          time_buf[3]=31;  
+ 809   4                                      }
+ 810   3                              if((time_buf[4]==4)||(time_buf[4]==6)||(time_buf[4]==9)||(time_buf[4]==11))
+ 811   3                                 {if(time_buf[3]<1)
+ 812   4                                          time_buf[3]=30;  
+ 813   4                                      }
+ 814   3                               if(time_buf[4]==2)
+ 815   3                               {      if((time_buf[6]%4)&&(time_buf[3]<1)) time_buf[3]=28;
+ 816   4                                  if(!(time_buf[6]%4)&&(time_buf[3]<1)) time_buf[3]=29;
+ 817   4                               }
+ 818   3                      day16=time_buf[3]/10*16+time_buf[3]%10;  //将所得的分钟数据转变成16进制数据
+ 819   3                              Ds1302_WriteSet(0x86,day16);                //将调整后的分钟数据写入DS1302      reak
+ 820   3                              Lcd_WriteAddress(0x0d);    //写显示地址,将在第2行第7列开始显示
+ 821   3                      Lcd_delay(1);
+ 822   3                      Lcd_WriteData(digit[time_buf[3]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 823   3                      Lcd_delay(1);
+ 824   3                      Lcd_WriteData(digit[time_buf[3]%10]);    //将十位数字的字符常量写入LCD
+ 825   3                      Lcd_delay(1);
+ 826   3                              break;
+ 827   3                               case 4:        
+ 828   3                              time_buf[2]=time_buf[2]-1;                      //年减1
+ 829   3                      if(time_buf[2]<0) time_buf[2]=23;               //当分钟加到60时初始化为0
+ 830   3                      hour16=time_buf[2]/10*16+time_buf[2]%10;  //将所得的分钟数据转变成16进制数据
+ 831   3                              Ds1302_WriteSet(0x84,hour16);                //将调整后的分钟数据写入DS1302     reak
+ 832   3                              Lcd_WriteAddress(0x43);    //写显示地址,将在第2行第7列开始显示
+ 833   3                      Lcd_delay(1);
+ 834   3                      Lcd_WriteData(digit[time_buf[2]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 835   3                      Lcd_delay(1);
+ 836   3                      Lcd_WriteData(digit[time_buf[2]%10]);    //将十位数字的字符常量写入LCD
+ 837   3                      Lcd_delay(1);
+ 838   3                              break;
+ 839   3      
+ 840   3                               case 5:        
+ 841   3                              time_buf[1]=time_buf[1]-1;                      //年减1
+ 842   3                      if(time_buf[1]<0) time_buf[1]=59;               //当分钟加到60时初始化为0
+ 843   3                      min16=time_buf[1]/10*16+time_buf[1]%10;  //将所得的分钟数据转变成16进制数据
+ 844   3                              Ds1302_WriteSet(0x82,min16);                //将调整后的分钟数据写入DS1302      reak
+ 845   3                              Lcd_WriteAddress(0x46);    //写显示地址,将在第2行第7列开始显示
+ 846   3                      Lcd_delay(1);
+ 847   3                      Lcd_WriteData(digit[time_buf[1]/10]);    //将百位数字的字符常量写入LCD,不能直接写入，必须转化
+ 848   3                      Lcd_delay(1);
+ 849   3                      Lcd_WriteData(digit[time_buf[1]%10]);    //将十位数字的字符常量写入LCD
+ 850   3                      Lcd_delay(1);
+ 851   3                              break;
+ 852   3              }
+ 853   2                               a[2]=0;
+ 854   2      
+ 855   2              }
+ 856   1      
+ 857   1              if(K1==0)                               //K1键是确认键
+C51 COMPILER V8.02   1302                                                                  04/02/2011 21:57:14 PAGE 15  
+
+ 858   1              {
+ 859   2                      Lcd_delay(10);          //延时去抖
+ 860   2                      if(K1==0)
+ 861   2                      {
+ 862   3                              while(!K1);                     //等待K4键释放
+ 863   3                              Ds1302_beep();
+ 864   3                              Ds1302_WriteSet(0x80,0x00);  //调整完毕后，启动时钟运行
+ 865   3                              Ds1302_WriteSet(0x8e,0x80);  //写保护控制字，禁止写
+ 866   3                              K1_FLAG=0;                      //将K1键按下标志位清零 
+ 867   3                              Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 868   3                  Lcd_delay(1);
+ 869   3                          Lcd_WriteData(' ');
+ 870   3                          Lcd_delay(1 );  
+ 871   3                      }
+ 872   2              }
+ 873   1              if(a[2]==wl2)                           //K4键是确认键
+ 874   1              {
+ 875   2                      
+ 876   2                              
+ 877   2                              Ds1302_WriteSet(0x80,0x00);  //调整完毕后，启动时钟运行
+ 878   2                              Ds1302_WriteSet(0x8e,0x80);  //写保护控制字，禁止写
+ 879   2                              K1_FLAG=0;                      //将K1键按下标志位清零 
+ 880   2                               Lcd_WriteAddress(0x4d);  // 设置显示位置为第一行的第1个字
+ 881   2                      Lcd_delay(1);
+ 882   2                                      Lcd_WriteData(' ');
+ 883   2                                      Lcd_delay(1); 
+ 884   2                                      a[2]=0; 
+ 885   2              }
+ 886   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   4572    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8      18
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

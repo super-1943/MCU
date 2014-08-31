@@ -1,0 +1,189 @@
+; .\Text1.SRC generated from: Text1.c
+; COMPILER INVOKED BY:
+;        C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND SRC(.\Text1.SRC)
+
+$NOMOD51
+
+NAME	TEXT1
+
+P0	DATA	080H
+P1	DATA	090H
+P2	DATA	0A0H
+P3	DATA	0B0H
+T0	BIT	0B0H.4
+AC	BIT	0D0H.6
+T1	BIT	0B0H.5
+EA	BIT	0A8H.7
+IE	DATA	0A8H
+RD	BIT	0B0H.7
+ES	BIT	0A8H.4
+IP	DATA	0B8H
+RI	BIT	098H.0
+INT0	BIT	0B0H.2
+CY	BIT	0D0H.7
+TI	BIT	098H.1
+INT1	BIT	0B0H.3
+PS	BIT	0B8H.4
+SP	DATA	081H
+OV	BIT	0D0H.2
+WR	BIT	0B0H.6
+SBUF	DATA	099H
+PCON	DATA	087H
+SCON	DATA	098H
+TMOD	DATA	089H
+TCON	DATA	088H
+IE0	BIT	088H.1
+IE1	BIT	088H.3
+B	DATA	0F0H
+ACC	DATA	0E0H
+ET0	BIT	0A8H.1
+ET1	BIT	0A8H.3
+TF0	BIT	088H.5
+TF1	BIT	088H.7
+RB8	BIT	098H.2
+TH0	DATA	08CH
+EX0	BIT	0A8H.0
+IT0	BIT	088H.0
+TH1	DATA	08DH
+TB8	BIT	098H.3
+EX1	BIT	0A8H.2
+IT1	BIT	088H.2
+P	BIT	0D0H.0
+SM0	BIT	098H.7
+TL0	DATA	08AH
+SM1	BIT	098H.6
+TL1	DATA	08BH
+SM2	BIT	098H.5
+PT0	BIT	0B8H.1
+PT1	BIT	0B8H.3
+RS0	BIT	0D0H.3
+TR0	BIT	088H.4
+RS1	BIT	0D0H.4
+TR1	BIT	088H.6
+PX0	BIT	0B8H.0
+PX1	BIT	0B8H.2
+DPH	DATA	083H
+DPL	DATA	082H
+REN	BIT	098H.4
+RXD	BIT	0B0H.0
+TXD	BIT	0B0H.1
+F0	BIT	0D0H.5
+PSW	DATA	0D0H
+?PR?main?TEXT1       SEGMENT CODE 
+?DT?TEXT1            SEGMENT DATA 
+	EXTRN	CODE (_check_config_nrf905)
+	EXTRN	DATA (?_check_config_nrf905?BYTE)
+	EXTRN	CODE (_init_port_nrf905)
+	EXTRN	CODE (_transmit_nrf905)
+	EXTRN	CODE (_config_nrf905)
+	EXTRN	CODE (_delay_nrf905)
+	EXTRN	CODE (_listen_nrf905)
+	EXTRN	CODE (?C_STARTUP)
+	PUBLIC	j
+	PUBLIC	i
+	PUBLIC	a?
+	PUBLIC	txbuf
+	PUBLIC	rxbuf
+	PUBLIC	state
+	PUBLIC	txaddr
+	PUBLIC	rxaddr
+	PUBLIC	main
+
+	RSEG  ?DT?TEXT1
+         rxaddr:   DS   4
+         txaddr:   DS   4
+          state:   DS   1
+          rxbuf:   DS   32
+          txbuf:   DS   32
+             a?:   DS   10
+              i:   DS   1
+              j:   DS   1
+; #include <reg51.h>
+; 
+; #include "nrf905.h"
+; /********************
+; /OE---PG4
+; DIR---PE4
+; 
+; CSN--------PB0         o
+; SCK--------PB1         o
+; MOSI-------PB2         o
+; MISO-------PB3         i
+; TXE--------PB4         o
+; CE---------PB5         o
+; PWR--------PB6         o
+; AM---------PE7         i
+; DR---------PE6         i
+; CD---------PE5         i
+; ********************/
+; unsigned char i,j;
+; unsigned char txbuf[32];//发送缓存
+; unsigned char rxbuf[32];//接收缓存
+; unsigned char txaddr[4];//发送地址
+; unsigned char rxaddr[4];//接收地址
+; unsigned char state;//当前状态：0空闲；1接收；2发射
+; RF_CONFIG a;//全局变量，便于观察配置寄存器
+; void main(void)
+
+	RSEG  ?PR?main?TEXT1
+main:
+	USING	0
+			; SOURCE LINE # 26
+; {
+			; SOURCE LINE # 27
+; 
+; 	init_port_nrf905(&a);
+			; SOURCE LINE # 29
+	MOV  	R3,#00H
+	MOV  	R2,#HIGH (a?)
+	MOV  	R1,#LOW (a?)
+	LCALL	_init_port_nrf905
+; 	STAND_BY_MODE;
+; 	delay_nrf905(100);
+			; SOURCE LINE # 31
+	MOV  	R7,#064H
+	MOV  	R6,#00H
+	LCALL	_delay_nrf905
+; 	config_nrf905(&a);
+			; SOURCE LINE # 32
+	MOV  	R3,#00H
+	MOV  	R2,#HIGH (a?)
+	MOV  	R1,#LOW (a?)
+	LCALL	_config_nrf905
+; 	check_config_nrf905(&a,txaddr);
+			; SOURCE LINE # 33
+	MOV  	?_check_config_nrf905?BYTE+03H,#00H
+	MOV  	?_check_config_nrf905?BYTE+04H,#HIGH (txaddr)
+	MOV  	?_check_config_nrf905?BYTE+05H,#LOW (txaddr)
+	MOV  	R3,#00H
+	MOV  	R2,#HIGH (a?)
+	MOV  	R1,#LOW (a?)
+	LCALL	_check_config_nrf905
+?C0001:
+; 	while(1)
+			; SOURCE LINE # 34
+; 	{
+			; SOURCE LINE # 35
+; 		transmit_nrf905(txbuf);
+			; SOURCE LINE # 36
+	MOV  	R3,#00H
+	MOV  	R2,#HIGH (txbuf)
+	MOV  	R1,#LOW (txbuf)
+	LCALL	_transmit_nrf905
+; 		delay_nrf905(1000);
+			; SOURCE LINE # 37
+	MOV  	R7,#0E8H
+	MOV  	R6,#03H
+	LCALL	_delay_nrf905
+; 		listen_nrf905(rxbuf);
+			; SOURCE LINE # 38
+	MOV  	R3,#00H
+	MOV  	R2,#HIGH (rxbuf)
+	MOV  	R1,#LOW (rxbuf)
+	LCALL	_listen_nrf905
+; 	}
+			; SOURCE LINE # 39
+	SJMP 	?C0001
+; END OF main
+
+	END

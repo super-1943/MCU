@@ -1,0 +1,7 @@
+"STARTUP.obj",
+"Text1.obj",
+"serial.obj",
+"descriptor.obj",
+"usb.obj" 
+TO "TUSB2136" 
+RAMSIZE(256) 

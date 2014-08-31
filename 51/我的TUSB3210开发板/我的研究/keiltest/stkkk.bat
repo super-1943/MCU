@@ -1,0 +1,2 @@
+HEX2BIN TUSB2136.HEX TUSB2136.BIN
+copy TUSB2136.BIN c:\windows\system32\drivers\ /Y

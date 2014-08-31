@@ -1,0 +1,53 @@
+A51 MACRO ASSEMBLER  SERIAL_COMMUNICATION                                                 01/19/2009 23:19:27 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN Serial Communication.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE Serial Communication.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+0030                   1                     ORG             30H
+0030 758160            2     START:  MOV             SP,#60H
+0033 759850            3                     MOV             SCON,#01010000B         ;…Ë∂®¥Æ––∑Ω Ω£∫
+                       4                                                                             ;8Œª“Ï≤Ω£¨‘ –ÌΩ” ’
+0036 758920            5                     MOV             TMOD,#20H                       ;…Ë∂®º∆ ∆˜1Œ™ƒ£ Ω2
+0039 438780            6                     ORL             PCON,#10000000B         ;≤®Ãÿ¬ º”±∂
+003C 758DF3            7                     MOV             TH1,#0F3H                       ;…Ë∂®≤®Ãÿ¬ Œ™4800
+003F 758BF3            8                     MOV             TL1,#0F3H
+0042 D28E              9                     SETB    TR1                                     ;º∆ ∆˜1ø™ ºº∆ ±
+0044                  10     AGAIN:
+                      11     ;               JNB             RI,$                            ;µ»¥Ω” ’ÕÍ≥…
+0044 C298             12                     CLR             RI                                      ;«ÂΩ” ’±Í÷æ
+0046 7430             13                     MOV             A,#30h                          ;Ω” ’ æ›ÀÕª∫≥Â«¯
+0048 F599             14                     MOV             SBUF,A                          ;∑¢ÀÕ ’µΩµƒ æ›
+004A 3099FD           15                     JNB             TI,$                            ;µ»¥∑¢ÀÕÕÍ≥…
+004D C299             16                     CLR             TI                                      ;«Â∑¢ÀÕ±Í÷æ
+004F 80F3             17                     SJMP    AGAIN
+                      18                     END
+A51 MACRO ASSEMBLER  SERIAL_COMMUNICATION                                                 01/19/2009 23:19:27 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+AGAIN. . . . . . .  C ADDR   0044H   A   
+PCON . . . . . . .  D ADDR   0087H   A   
+RI . . . . . . . .  B ADDR   0098H.0 A   
+SBUF . . . . . . .  D ADDR   0099H   A   
+SCON . . . . . . .  D ADDR   0098H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+START. . . . . . .  C ADDR   0030H   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TI . . . . . . . .  B ADDR   0098H.1 A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

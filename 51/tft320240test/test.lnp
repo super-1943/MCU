@@ -1,0 +1,6 @@
+"STARTUP.obj",
+"main.obj",
+"tft320240.obj",
+"ziku.obj" 
+TO "test" 
+RAMSIZE(256) 

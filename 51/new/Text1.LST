@@ -1,0 +1,164 @@
+C51 COMPILER V7.00  TEXT1                                                                  07/28/2008 10:30:30 PAGE 1   
+
+
+C51 COMPILER V7.00, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Elecs\Keilc\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          /*
+   2          
+   3                  在Proteus 7.1sp2下
+   4          */
+   5          
+   6          #include <reg51.h>
+   7          #include <absacc.h>
+   8          
+   9          #define uint unsigned int
+  10          #define uchar unsigned char
+  11          
+  12          sbit P10=P1^0;
+  13          sbit P11=P1^1;
+  14          sbit P12=P1^2;
+  15          sbit P13=P1^3;
+  16          sbit P14=P1^4;
+  17          sbit P15=P1^5;
+  18          sbit P16=P1^6;
+  19          sbit P17=P1^7;
+  20          
+  21          uchar code ledcode[]={0x3f,0x06,0x5b,0x4f,
+  22                                                          0x66,0x6d,0x7d,0x07,
+  23                                                          0x7f,0x6f,0x77,0x7c,
+  24                                                          0x39,0x5e,0x7b,0x71,0x00,0x40};
+  25          bit key_flag=0;
+  26          
+  27          void delay_10ms();
+  28          void keyscan();
+  29          
+  30          void main()
+  31          {       
+  32   1              IE=0X00;
+  33   1              
+  34   1              while(1)
+  35   1              {       
+  36   2                      keyscan();
+  37   2              }//while
+  38   1      
+  39   1      }//fun
+  40          
+  41          
+  42          void keyscan(void)
+  43          {
+  44   1              //******************扫第1列************
+  45   1                P14=0;
+  46   1                if(P10==0)
+  47   1                {
+  48   2                      delay_10ms();
+  49   2                      P0=ledcode[1];
+  50   2                      }
+  51   1                if(P11==0)
+  52   1                {delay_10ms();
+  53   2                P0=ledcode[6];
+  54   2              }
+  55   1      
+C51 COMPILER V7.00  TEXT1                                                                  07/28/2008 10:30:30 PAGE 2   
+
+  56   1                if(P12==0)
+  57   1                {delay_10ms();
+  58   2                P0=ledcode[7];
+  59   2              }
+  60   1                if(P13==0)
+  61   1                {delay_10ms();
+  62   2                P0=ledcode[16];
+  63   2              }
+  64   1                P1=0xff;  
+  65   1                //**************扫第2列******************
+  66   1                P15=0;
+  67   1                        if(P10==0)
+  68   1                {
+  69   2                      delay_10ms();
+  70   2                      P0=ledcode[2];
+  71   2                      }
+  72   1                if(P11==0)
+  73   1                {delay_10ms();
+  74   2                P0=ledcode[5];
+  75   2              }
+  76   1      
+  77   1                if(P12==0)
+  78   1                {delay_10ms();
+  79   2                P0=ledcode[8];
+  80   2              }
+  81   1                if(P13==0)
+  82   1                {delay_10ms();
+  83   2                P0=ledcode[0];
+  84   2              }
+  85   1                P1=0xff;     
+  86   1                //***************扫第3列*********************
+  87   1                P16=0;
+  88   1                        if(P10==0)
+  89   1                {
+  90   2                      delay_10ms();
+  91   2                      P0=ledcode[3];
+  92   2                      }
+  93   1                if(P11==0)
+  94   1                {delay_10ms();
+  95   2                P0=ledcode[4];
+  96   2              }
+  97   1      
+  98   1                if(P12==0)
+  99   1                {delay_10ms();
+ 100   2                P0=ledcode[9];
+ 101   2              }
+ 102   1                if(P13==0)
+ 103   1                {delay_10ms();
+ 104   2                P0=ledcode[16];
+ 105   2              }
+ 106   1                P1=0xff;                      
+ 107   1              //***************扫第4列************************
+ 108   1                P17=0;
+ 109   1                        if(P10==0)
+ 110   1                {
+ 111   2                      delay_10ms();
+ 112   2                      P0=ledcode[10];
+ 113   2                      }
+ 114   1                if(P11==0)
+ 115   1                {delay_10ms();
+ 116   2                P0=ledcode[11];
+ 117   2              }
+C51 COMPILER V7.00  TEXT1                                                                  07/28/2008 10:30:30 PAGE 3   
+
+ 118   1      
+ 119   1                if(P12==0)
+ 120   1                {delay_10ms();
+ 121   2                P0=ledcode[12];
+ 122   2              }
+ 123   1                if(P13==0)
+ 124   1                {delay_10ms();
+ 125   2                P0=ledcode[13];
+ 126   2              }
+ 127   1                P1=0xff;      
+ 128   1      
+ 129   1      }
+ 130          
+ 131          
+ 132          void delay_10ms(void)
+ 133          {
+ 134   1              uchar i,j;
+ 135   1              for(i=0;i<100;i++);
+ 136   1                      for(j=0;j<80;j++);
+ 137   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    250    ----
+   CONSTANT SIZE    =     18    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

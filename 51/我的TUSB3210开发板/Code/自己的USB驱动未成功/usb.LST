@@ -1,0 +1,258 @@
+C51 COMPILER V8.02   USB                                                                   08/06/2012 16:19:22 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE USB
+OBJECT MODULE PLACED IN usb.OBJ
+COMPILER INVOKED BY: C:\KEIL\C51\BIN\C51.EXE usb.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "types.h"
+   3          #include "tusb3210.h"
+   4          #include "usb.h"
+   5          #include "serial.h"
+   6          
+   7          uint8 *pSendData;
+   8          uint8 SendLength;
+   9          uint8 NeedZeroPacket;
+  10          enum STATEMACHINE kkkstate;
+  11          
+  12          void hardware_init(void)
+  13          {
+  14   1              USB_DISCONNECT;
+  15   1              bMCNFG=0x01;//SDW=1;XINT=0;
+  16   1              bPUR3=0x00;
+  17   1              bPUR2=0x00;
+  18   1              bPUR1=0x00;
+  19   1              bPUR0=0x00;//all pull up are connected to pins
+  20   1              bWDCSR=0x00;
+  21   1              
+  22   1              bUSBCTL=0x00;
+  23   1              bUSBMSK=USBMSK_STPOW|USBMSK_RWUP|USBMSK_SETUP|USBMSK_RESR|USBMSK_SUSR|USBMSK_RSTR;
+  24   1              bFUNADR=0x00;
+  25   1              bIEPCNFG_0=EPCNF_UBME|EPCNF_USBIE;
+  26   1              bIEPBCNT_0=EPBCT_NAK;
+  27   1              bOEPCNFG_0=EPCNF_UBME|EPCNF_USBIE;
+  28   1              bOEPBCNT_0=EPBCT_NAK;
+  29   1              
+  30   1              
+  31   1              kkkstate=STATE_IDLE;
+  32   1              
+  33   1              
+  34   1              EX0=1;
+  35   1              ES=1;
+  36   1              PS=1;
+  37   1              IT0=0;
+  38   1              USB_CONNECT;
+  39   1              EA=1;
+  40   1      }
+  41          uint8 EP0_put(uint8 len)
+  42          {
+  43   1              uint8 i;
+  44   1              if(len>8)
+  45   1              {
+  46   2                      for(i=0;i<8;i++)
+  47   2                      {
+  48   3                              *(pbIEP0_BUFFER_ADDRESS+i)=*pSendData++;
+  49   3                      }
+  50   2                      return 8;
+  51   2              }
+  52   1              else
+  53   1              {
+  54   2                      for(i=0;i<len;i++)
+  55   2                      {
+C51 COMPILER V8.02   USB                                                                   08/06/2012 16:19:22 PAGE 2   
+
+  56   3                              *(pbIEP0_BUFFER_ADDRESS+i)=*pSendData++;
+  57   3                      }
+  58   2                      return len;
+  59   2              }
+  60   1      }
+  61          void EP0_senddata(void)
+  62          {
+  63   1              unsigned char i;
+  64   1              if(kkkstate==STATE_GETDSC)
+  65   1              {
+  66   2                      i=EP0_put(SendLength);
+  67   2                      SendLength-=i;
+  68   2                      pSendData+=i;
+  69   2                      bIEPBCNT_0=i;
+  70   2                      SETUP_IN;
+  71   2                      if(SendLength==0)
+  72   2                      {
+  73   3                              kkkstate=STATE_IDLE;
+  74   3                      }
+  75   2              }
+  76   1              else if(kkkstate==STATE_IDLE)
+  77   1              {
+  78   2                      SETUP_OUT;
+  79   2                      bOEPBCNT_0=0;           
+  80   2              }
+  81   1              else if(kkkstate==STATE_SETADDR)
+  82   1              {
+  83   2                      SETUP_OUT;
+  84   2                      bOEPBCNT_0=0;
+  85   2                      kkkstate=STATE_IDLE;
+  86   2              }
+  87   1              else
+  88   1              {
+  89   2                      
+  90   2              }
+  91   1      
+  92   1      }
+  93          void setup_handler(void)
+  94          {
+  95   1              unsigned char i,buffer[8];
+  96   1              ENTER_SETUP;
+  97   1              rs232_printstr("\r\n");
+  98   1              for(i=0;i<8;i++)
+  99   1              {
+ 100   2                      buffer[i]=pbEP0_SETUP_ADDRESS[i];
+ 101   2              }
+ 102   1              for(i=0;i<8;i++)
+ 103   1              {
+ 104   2                      rs232_printhex(buffer[i]);
+ 105   2                      rs232_printstr(" ");
+ 106   2              }
+ 107   1              rs232_printstr("\r\n");
+ 108   1              if(bmRequestType&0x80)//in
+ 109   1              {
+ 110   2                      SETUP_IN;//tusb3210 to host
+ 111   2                      switch(bRequest)
+ 112   2                      {
+ 113   3                      case GET_CONFIGURATION:
+ 114   3                              rs232_printstr("GET CFG;\r\n");
+ 115   3                              break;
+ 116   3                      case GET_DESCRIPTOR:
+ 117   3                              rs232_printstr("Get Desc->");
+C51 COMPILER V8.02   USB                                                                   08/06/2012 16:19:22 PAGE 3   
+
+ 118   3                              kkkstate=STATE_GETDSC;
+ 119   3                              switch(bValueH)
+ 120   3                              {
+ 121   4                              case 1:
+ 122   4                                      rs232_printstr("Dev\r\n");
+ 123   4                                      pSendData=DeviceDescriptor;
+ 124   4                                      SendLength=18;
+ 125   4                                      EP0_senddata();
+ 126   4                                      bOEPBCNT_0=0;
+ 127   4                                      break;
+ 128   4                              case 0x02:
+ 129   4                                      rs232_printstr("Cfg\r\n");
+ 130   4                              //      pSendData=ConfigurationDescriptor;
+ 131   4                                      SendLength=0;
+ 132   4                                      EP0_senddata();
+ 133   4                                      bOEPBCNT_0=0;
+ 134   4                                      break;
+ 135   4                              case 0x03:
+ 136   4                                      rs232_printstr("Str->\r\n");
+ 137   4                                      switch(bValueL)
+ 138   4                                      {
+ 139   5                                      case 0:
+ 140   5                                              rs232_printstr("LangID\r\n");
+ 141   5                                              pSendData=LanguageId;
+ 142   5                                              SendLength=LanguageId[0];
+ 143   5                                              break;
+ 144   5                                      case 1:
+ 145   5                                              rs232_printstr("Vendor\r\n");
+ 146   5                                              pSendData=ManufacturerStringDescriptor;
+ 147   5                                              SendLength=ManufacturerStringDescriptor[0];
+ 148   5                                              break;
+ 149   5                                      case 2:
+ 150   5                                              rs232_printstr("Prod\r\n");
+ 151   5                                              pSendData=ProductStringDescriptor;
+ 152   5                                              SendLength=ProductStringDescriptor[0];
+ 153   5                                              break;
+ 154   5                                      case 3:
+ 155   5                                              rs232_printstr("Ser\r\n");
+ 156   5                                              pSendData=SerialNumberStringDescriptor;
+ 157   5                                              SendLength=SerialNumberStringDescriptor[0];
+ 158   5                                              break;
+ 159   5                                      default:
+ 160   5                                              rs232_printstr("Unkn\r\n");
+ 161   5                                              SendLength=0;
+ 162   5                                              break;
+ 163   5                                      }
+ 164   4                                      if(bLengthL<SendLength)
+ 165   4                                      {
+ 166   5                                              SendLength=bLengthL;
+ 167   5                                      }
+ 168   4                                      EP0_senddata();
+ 169   4                                      bOEPBCNT_0=0;
+ 170   4                                      break;  
+ 171   4                              case 0x22://report descriptor
+ 172   4                                      rs232_printstr("Repo\r\n");     
+ 173   4                                      pSendData=ReportDescriptor;
+ 174   4                                      SendLength=sizeof(ReportDescriptor);
+*** WARNING C198 IN LINE 174 OF USB.C: sizeof returns zero
+ 175   4                                      if(bLengthL<SendLength)
+ 176   4                                      {
+ 177   5                                              SendLength=bLengthL;
+ 178   5                                      }
+C51 COMPILER V8.02   USB                                                                   08/06/2012 16:19:22 PAGE 4   
+
+ 179   4                                      EP0_senddata();
+ 180   4                                      break;
+ 181   4                              default:
+ 182   4                                      rs232_printstr("Other：");
+ 183   4                                      rs232_printhex(bValueH);
+ 184   4                                      rs232_printstr("\r\n");
+ 185   4                                      break;
+ 186   4                              }
+ 187   3                              break;                  
+ 188   3      
+ 189   3                      default:
+ 190   3                              rs232_printstr("Error\r\n");
+ 191   3                              break;                          
+ 192   3                      }
+ 193   2              }
+ 194   1              else
+ 195   1              {
+ 196   2                      SETUP_OUT;
+ 197   2                      switch(bRequest)
+ 198   2                      {
+ 199   3                      case CLEAR_FEATURE:
+ 200   3                              rs232_printstr("CLFE\r\n");
+ 201   3                              break;
+ 202   3                      case SET_ADDRESS:
+ 203   3                              rs232_printstr("SA:");
+ 204   3                              rs232_printhex(bValueL);
+ 205   3                              rs232_printstr("\r\n");
+ 206   3                              kkkstate=STATE_SETADDR;
+ 207   3                              bFUNADR=bValueL;
+ 208   3                              SETUP_IN;//期待IN数据包
+ 209   3                              bIEPBCNT_0=0;
+ 210   3                              break;
+ 211   3                      case SET_CONFIGURATION:
+ 212   3                              rs232_printstr("SC\r\n");
+ 213   3                              SendLength=0;
+ 214   3                              bIEPCNFG_0&=~EPCNF_TOGLE;
+ 215   3                              bIEPBCNT_0=0;
+ 216   3                              bOEPBCNT_0=0;
+ 217   3                              break;
+ 218   3                      case 0x0a://Set_Idle
+ 219   3                              rs232_printstr("SetIdle\r\n");
+ 220   3                              bIEPBCNT_0=0;
+ 221   3                              bOEPBCNT_0=0;
+ 222   3                              break;
+ 223   3                      default:
+ 224   3                              rs232_printstr("Unkn\r\n");
+ 225   3                              break;
+ 226   3                      }
+ 227   2              }
+ 228   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    818    ----
+   CONSTANT SIZE    =    134    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      6       9
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

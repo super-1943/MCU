@@ -1,0 +1,66 @@
+C51 COMPILER V8.02   TEXT1                                                                 02/11/2011 17:51:21 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          
+   3          volatile unsigned char count=0;
+   4          
+   5          void delay_ms(unsigned int k)
+   6          {
+   7   1              unsigned char i,j;
+   8   1              for(;k;k--)
+   9   1              for(i=20;i;i--)
+  10   1              for(j=100;j;j--);
+  11   1      }
+  12          
+  13          void timer_int0(void) interrupt 1 using 2
+  14          {
+  15   1              if(count)
+  16   1              {
+  17   2                      P0^=0xff;
+  18   2                      count=0;
+  19   2              }
+  20   1              else
+  21   1              {
+  22   2                      count++;
+  23   2              }
+  24   1      }
+  25          
+  26          void main(void)
+  27          {
+  28   1              
+  29   1              P0=0x55;
+  30   1              delay_ms(1000);
+  31   1              TMOD=0x02;
+  32   1              TH0=38;
+  33   1              TL0=38;
+  34   1              TR0=1;
+  35   1              ET0=1;
+  36   1              EX1=0;
+  37   1              EX0=0;
+  38   1              EA=1;
+  39   1              while(1)
+  40   1              {
+  41   2      
+  42   2              }
+  43   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     70    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

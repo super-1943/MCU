@@ -1,0 +1,15 @@
+Removed Pin From Net: NetName=GND Pin=C1-2
+Removed Pin From Net: NetName=GND Pin=C2-2
+Removed Pin From Net: NetName=GND Pin=C3-2
+Removed Pin From Net: NetName=GND Pin=P1-4
+Removed Pin From Net: NetName=VCC_EXT Pin=P4-3
+Removed Pin From Net: NetName=GND Pin=R1-2
+Removed Member From Class: ClassName=51shiyanban Member=C1
+Removed Member From Class: ClassName=51shiyanban Member=C2
+Removed Member From Class: ClassName=51shiyanban Member=C3
+Removed Member From Class: ClassName=51shiyanban Member=F1
+Removed Member From Class: ClassName=51shiyanban Member=P1
+Removed Member From Class: ClassName=51shiyanban Member=P4
+Removed Member From Class: ClassName=51shiyanban Member=R1
+Removed Member From Class: ClassName=51shiyanban Member=R1
+Added Pin To Net: NetName=VCC_EXT Pin=SW1-5

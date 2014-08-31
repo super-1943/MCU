@@ -1,0 +1,178 @@
+C51 COMPILER V8.02   MAIN                                                                  01/26/2009 16:33:26 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <at89x51.h>
+   2          #include <intrins.h>
+   3          sbit _RST=P2^0;
+   4          sbit SCLK=P2^2;
+   5          sbit IO_DATA=P2^1;
+   6          //Command define
+   7          #define SecondReadCommand 0x81        //秒单元，读
+   8          #define SecondWriteCommand 0x80       //秒单元，写
+   9          #define MinuteReadCommand 0x83            //分单元，读
+  10          #define MinuteWriteCommand 0x82           //分单元，写
+  11          #define HourReadCommand 0x85                    //时单元，读
+  12          #define HourWriteCommand 0x84                   //时单元，写
+  13          #define DateReadCommand 0x87                    //日单元，读
+  14          #define DateWriteCommand 0x86                   //日单元，写
+  15          #define MonthReadCommand 0x89                   //月单元，读
+  16          #define MonthWriteCommand 0x88                  //月单元，写
+  17          #define WeekReadCommand 0x8b                    //周单元，读
+  18          #define WeekWriteCommand 0x8a                   //周单元，写
+  19          #define YearReadCommand 0x8d                    //年单元，读
+  20          #define YearWriteCommand 0x8c                   //年单元，写
+  21          #define CtrlReadCommand 0x8f                    //控制单元，读
+  22          #define CtrlWriteCommand 0x8e                   //控制单元，写
+  23          #define ChargeReadCommand 0x91                  //充电单元，读
+  24          #define ChargeWriteCommand 0x90                 //充电单元，写
+  25          #define BatModeReadCommand 0xbf                 //批量模式单元，读
+  26          #define BatModeWriteCommand 0xbe                //批量模式单元，写
+  27          #define RamBatReadCommand 0xff                  //RAM批量读
+  28          #define RamBatWriteCommand 0xfe                 //RAM批量写
+  29          //special data
+  30          #define HoldClock 0x80                  //SecondWriteCommand 0x80 
+  31          #define GoClock 0x00                    //SecondWriteCommand 0x80 
+  32          #define WriteEnable 0x00                        //CtrlWriteCommand 0x8e         控制单元，写
+  33          #define WriteForbidden 0x80                     //CtrlWriteCommand 0x8e         控制单元，写
+  34          #define ChargeEnable 0xa0
+  35          #define ChargeDiodes1 0x04                      //1 diode
+  36          #define ChargeDiodes2 0x08                      //2 diodes
+  37          #define ChargeResistors0 0x00                   
+  38          #define ChargeResistors2 0x01
+  39          #define ChargeResistors4 0x02
+  40          #define ChargeResistors8 0x03
+  41          #define NoCharge 0x00
+  42          
+  43          
+  44          void delay(unsigned char x)
+  45          {
+  46   1              unsigned char i,j;
+  47   1              while(x--)
+  48   1              {
+  49   2                      for(i=43;i;i--)
+  50   2                      for(j=73;j;j--);
+  51   2              }
+  52   1      }
+  53          void init1302(void)
+  54          {
+  55   1              _RST=0;
+C51 COMPILER V8.02   MAIN                                                                  01/26/2009 16:33:26 PAGE 2   
+
+  56   1              _nop_();
+  57   1              SCLK=0;
+  58   1              _nop_();
+  59   1              
+  60   1      }
+  61          //向ds1302写入
+  62          void putchar(unsigned char d)
+  63          {
+  64   1              unsigned char i,t;
+  65   1              for(i=0;i<8;i++)
+  66   1              {
+  67   2                      t=d&0x01;
+  68   2                      d>>=1;
+  69   2                      if(t)
+  70   2                      {
+  71   3                              IO_DATA=1;
+  72   3                              SCLK=0;
+  73   3                              SCLK=1;
+  74   3                      }
+  75   2                      else
+  76   2                      {
+  77   3                              IO_DATA=0;
+  78   3                              SCLK=0;
+  79   3                              SCLK=1;
+  80   3                      }
+  81   2              }
+  82   1      }
+  83          void getchar(unsigned char *d)
+  84          {
+  85   1              unsigned char i,t=0;
+  86   1              bit s;
+  87   1              *d=0;
+  88   1              for(i=0;i<8;i++)
+  89   1              {
+  90   2                      t>>=1;
+  91   2                      SCLK=1;
+  92   2                      SCLK=0;
+  93   2                      _nop_();
+  94   2                      s=IO_DATA;
+  95   2                      if(s)
+  96   2                      {
+  97   3                              t|=0x80;
+  98   3                      }
+  99   2                      else
+ 100   2                      {
+ 101   3                              t&=0x7f;
+ 102   3                      }
+ 103   2              }
+ 104   1              *d=t;
+ 105   1      }
+ 106          
+ 107          void write1302(unsigned char com,unsigned char d)
+ 108          {
+ 109   1              init1302();
+ 110   1              _RST=1;
+ 111   1              _nop_();
+ 112   1              putchar(com);
+ 113   1              _nop_();
+ 114   1              putchar(d);
+ 115   1              _nop_();
+ 116   1              _RST=0;
+ 117   1      
+C51 COMPILER V8.02   MAIN                                                                  01/26/2009 16:33:26 PAGE 3   
+
+ 118   1      }
+ 119          unsigned char read1302(unsigned char com)
+ 120          {
+ 121   1              unsigned char s;        
+ 122   1              init1302();
+ 123   1      
+ 124   1              _RST=1;
+ 125   1              _nop_();
+ 126   1              putchar(com);
+ 127   1              _nop_();
+ 128   1              getchar(&s);
+ 129   1              _nop_();
+ 130   1              _RST=0;
+ 131   1              return s;
+ 132   1      }
+ 133                                  
+ 134                                  
+ 135          
+ 136          void main(void)
+ 137          {
+ 138   1              write1302(CtrlWriteCommand,WriteEnable);
+ 139   1              _nop_();
+ 140   1              write1302(ChargeWriteCommand,0xa9);
+ 141   1              _nop_();
+ 142   1              write1302(0x80,0x00);
+ 143   1      
+ 144   1              while(1)
+ 145   1              {
+ 146   2      //              P0=read1302(HourReadCommand);
+ 147   2      //              P2=read1302(MinuteReadCommand);
+ 148   2                      P1=read1302(SecondReadCommand);
+ 149   2                      delay(64);
+ 150   2              }
+ 151   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    175    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

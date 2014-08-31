@@ -1,0 +1,115 @@
+C51 COMPILER V8.02   TEXT1                                                                 06/01/2009 14:59:55 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          sbit oe=P1^0;
+   3          sbit addrl=P2^0;
+   4          sbit addrh=P2^1;
+   5          sbit ckl=P2^3;
+   6          sbit sck=P2^4;
+   7          sbit red=P2^5;
+   8          sbit green=P2^6;
+   9          #define addr(a) (addrl=a&0x01,addrh=a&0x02)
+  10          unsigned char code table[]={
+  11          0x00,0x60,
+  12          0x00,0x30,
+  13          0x00,0x18,
+  14          0xFF,0xFC,
+  15          0xFF,0xFE,
+  16          0x00,0x1C,
+  17          0x00,0x30,
+  18          0x00,0x60
+  19          };
+  20          unsigned char code heart[]={
+  21          0x00,0x00,0x31,0x80,0x4A,0x40,0x44,0x40,0x20,0xB6,0x11,0x49,0x0A,0x22,0x04,0x1C};
+  22          #ifdef GREEN_ON
+              
+              #endif
+  25          void delay(void)
+  26          {
+  27   1              unsigned char i,j;
+  28   1              for(i=200;i;i--)
+  29   1              for(j=20;j;j--);
+  30   1      }
+  31          void sendbyte(unsigned char t)
+  32          {
+  33   1              unsigned char i;
+  34   1              oe=1;
+  35   1              ckl=0;
+  36   1              sck=0;
+  37   1              green=0;
+  38   1              for(i=0;i<8;i++)
+  39   1              {
+  40   2                      red=t&0x01;
+  41   2                      ckl=0;
+  42   2                      ckl=1;
+  43   2                      t>>=1;
+  44   2              }       
+  45   1      }
+  46          void sendline(unsigned char line,unsigned char *t)
+  47          {
+  48   1      //      oe=1;
+  49   1              sck=0;
+  50   1              addr(line);
+  51   1              sendbyte(t[1]);
+  52   1              sendbyte(t[9]);
+  53   1              sendbyte(t[0]);
+  54   1              sendbyte(t[8]);
+  55   1              sck=1;
+C51 COMPILER V8.02   TEXT1                                                                 06/01/2009 14:59:55 PAGE 2   
+
+  56   1              oe=0;
+  57   1      }
+  58          void show(void)
+  59          {
+  60   1              sendline(3,table);
+  61   1              delay();
+  62   1              sendline(2,table+2);
+  63   1              delay();
+  64   1              sendline(1,table+4);
+  65   1              delay();
+  66   1              sendline(0,table+6);
+  67   1              delay();
+  68   1      }
+  69          void show1(void)
+  70          {
+  71   1              sendline(3,heart);
+  72   1              delay();
+  73   1              sendline(2,heart+2);
+  74   1              delay();
+  75   1              sendline(1,heart+4);
+  76   1              delay();
+  77   1              sendline(0,heart+6);
+  78   1              delay();
+  79   1      }
+  80          void main(void)
+  81          {
+  82   1              unsigned char i,j;
+  83   1              while(1)
+  84   1              {
+  85   2                      for(i=100;i;i--)
+  86   2                      show1();
+  87   2                      for(j=100;j;j--)
+  88   2                      show();         
+  89   2              }
+  90   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    192    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

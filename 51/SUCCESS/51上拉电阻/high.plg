@@ -1,0 +1,46 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+C:\Documents and Settings\Administrator\My Documents\51\high.uv2
+Project File Date:  02/04/2009
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(17): error C272: '__asm' requires src-control to be active
+MAIN.C(18): error C272: '__asm' requires src-control to be active
+Target not created
+Build target 'Target 1'
+linking...
+Program Size: data=20.0 xdata=0 code=176
+creating hex file from "high"...
+"high" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=20.0 xdata=0 code=176
+creating hex file from "high"...
+"high" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=20.0 xdata=0 code=176
+creating hex file from "high"...
+"high" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=20.0 xdata=0 code=176
+creating hex file from "high"...
+"high" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(17): error C272: '__asm' requires src-control to be active
+MAIN.C(18): error C272: '__asm' requires src-control to be active
+Target not created
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(27): error C202: 'mov': undefined identifier
+MAIN.C(27): error C141: syntax error near 'r0'
+MAIN.C(28): error C202: 'movx': undefined identifier
+MAIN.C(28): error C141: syntax error near 'a'
+Target not created

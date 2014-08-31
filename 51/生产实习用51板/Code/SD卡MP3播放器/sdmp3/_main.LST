@@ -1,0 +1,118 @@
+C51 COMPILER V8.02   _MAIN                                                                 04/22/2011 18:12:41 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE _MAIN
+OBJECT MODULE PLACED IN _main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE _main.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "znFAT.h"
+   2          #include "myfun.h"
+   3          #include "vs1003.h"
+   4          #include "uart.h"
+   5          #include"LCD1602.h"
+   6          //#include <reg51.h>
+   7          /**************************************************************
+   8                     +-------------------------------------+
+   9                     | ÕñÄÏµç×Ó  ÊµÑé´úÂë Ö® SD¿¨MP3²¥·ÅÆ÷ |
+  10                     +-------------------------------------+
+  11            ´ËÔ´Âë°æÈ¨Êô ÕñÄÏ È«È¨ÏíÓÐ£¬ÈçÓûÒýÓÃ£¬¾´ÇëÊðÃû²¢¸æÖª
+  12                  ÑÏ½ûËæÒâÓÃÓÚÉÌÒµÄ¿µÄ£¬Î¥Õß±Ø¾¿£¬ºó¹û×Ô¸º
+  13                   ÕñÄÏµç×Ó 
+  14                       ->²úÆ·ÍøÕ¾ http://www.znmcu.cn/
+  15                       ->²úÆ·Íøµê http://shop.znmcu.cn/
+  16                       ->²úÆ·×ÉÑ¯ QQ:987582714 
+  17                                              MSN:yzn07@126.com
+  18                                      WW:yzn07
+  19            ÔËÐÐ»·¾³£ºSTC51 1Tµ¥Æ¬»ú 22.1184M¾§Õñ  ÍÆ¼öÊ¹ÓÃ STC12C5A60S2
+  20            ³ÌÐòËµÃ÷£ºÔÚ´ËÊµÑéÖÐ£¬¶ÁÈ¡SD¿¨£¨ÊÂÏÈ¾­¹ýFAT32¸ñÊ½»¯£©¸ùÄ¿Â¼ÏÂ
+  21                      µÄËùÓÐÒôÆµÎÄ¼þ£¨MP3¡¢WMA¡¢MIDIÓëWAV£©¡£¶ÁÎÄ¼þÊ±£¬ÎÒ
+  22                                  ÃÇÊ¹ÓÃÕñÄÏµÄznFAT£¬²¢Í¨¹ýÊý¾ÝÖØ¶¨Ïò¹¦ÄÜ½«¶Áµ½µÄÊý¾Ý
+  23                                  Ö±½ÓËÍµ½VS1003½øÐÐ½âÂë²¥·Å£¬ÔÚ²Ù×÷µÄ¹ý³ÌÖÐ´®¿ÚÊä³ö
+  24                                  Ïà¹ØÐÅÏ¢¡£
+  25                                  ÒòÎª51µ¥Æ¬»úµÄËÙ¶ÈÈÔÈ»ÓÐÏÞ£¬¼ÓÖ® SD¿¨¡¢VS1003µÄÍ¨ÐÅ
+  26                                  ¶¼´®ÐÐ£¬¶øÇÒSPIÒ²ÊÇIOÄ£ÄâµÄ£¬ÔÙ¼ÓÖ®ÖÐ¼ä»¹ÓÐznFATÕâÑù
+  27                                  Ò»¸öÎÄ¼þÏµÍ³²ã£¬Òò´Ë²¥·ÅµÄMP3ÎÄ¼þÂëÂÊ²»¿ÉÌ«¸ß¡£ÕñÄÏ
+  28                                  ½¨ÒéÊ¹ÓÃ64KBPS×óÓÒµÄMP3ÎªÒË¡£
+  29            ×¢£ºÏà¹Ø½Ì³ÌÇë²Î¼û 
+  30               ¡¶ÕñÄÏ´øÄã×÷ÊµÑé¡·51°æ Ö® ¡¶SD¿¨MP3²¥·ÅÆ÷¡· Ò»¼¯                             
+  31          **************************************************************/
+  32          
+  33          unsigned char Dev_No; //Éè±¸ºÅ           //ÔÚznfat.hÖÐÊ¹ÓÃ
+  34          struct znFAT_Init_Arg *pArg; //ÓÃÓÚÖ¸ÕëÎÄ¼þÏµÍ³²ÎÊý¼¯ºÏµÄÖ¸Õë
+  35          
+  36          struct znFAT_Init_Arg Init_Arg_SDCARD; //ÎÄ¼þÏµÍ³²ÎÊý¼¯ºÏ£¬ÓÃÓÚ¼ÇÂ¼ÎÄ¼þÏµÍ³µÄÖØÒª²ÎÊý
+  37          struct FileInfoStruct FileInfo_MP3;     //ÎÄ¼þ²ÎÊý¼¯ºÏ
+  38          
+  39          unsigned char n=0; //ÎÄ¼þÐòºÅ£¬²»¶ÏµÝÔöÒÔÊµÏÖÎÄ¼þÃ¶¾Ù
+  40          int Lcd_j=0;
+  41          
+  42          
+  43          
+  44          void main()
+  45          {  
+  46   1              LcdInt();
+  47   1              // LcdShow();
+  48   1              //  LcdShow_init();
+  49   1              UART_Init(); //´®¿Ú³õÊ¼»¯
+  50   1              znFAT_Device_Init(); //´æ´¢Éè±¸³õÊ¼»¯
+  51   1              pArg=&Init_Arg_SDCARD;  //Ö¸ÕëÖ¸ÏòSD¿¨ÎÄ¼þÏµÍ³²ÎÊý¼¯ºÏ£¬znFAT½«´ÓÕâ¸ö¼¯ºÏÖÐ»ñÈ¡²ÎÊý
+  52   1              Dev_No=SDCARD; //Éè±¸ºÅÎªSDCARD£¬znFATÒÀÕÕ´ËÉè±¸ºÅÑ¡Ôñ´æ´¢Éè±¸Çý¶¯
+  53   1              
+  54   1              znFAT_Init();   //ÎÄ¼þÏµÍ³³õÊ¼»¯
+  55   1              UART_Put_Inf("×Ü´æ´¢ÈÝÁ¿£º(×Ö½Ú)",pArg->Total_Size);  //´Ó´®¿ÚÊä³ö¸÷ÖÖ²ÎÊýÐÅÏ¢
+C51 COMPILER V8.02   _MAIN                                                                 04/22/2011 18:12:41 PAGE 2   
+
+  56   1              UART_Put_Inf("Ã¿ÉÈÇø×Ö½Ú£º(¸ö)",pArg->BytesPerSector);
+  57   1              UART_Put_Inf("Ã¿´ØÉÈÇø£º(¸ö)",pArg->SectorsPerClust);
+  58   1              
+  59   1              VS_Reset(); //VS1003¸´Î»³õÊ¼»¯
+  60   1              while(!znFAT_Open_File(&FileInfo_MP3,"\\*.mp3",n,1))    //´ò¿ªSD¿¨¸ùÄ¿Â¼ÏÂËùÓÐMP3ÎÄ¼þÖÐµÄµÚn¸ö
+  61   1              {  
+  62   2                      UART_Send_Str("===========================================================\n");
+  63   2                      UART_Send_Str("´ò¿ªÎÄ¼þ³É¹¦\n"); //´Ó´®¿ÚÊä³öÎÄ¼þ²ÎÊýÐÅÏ¢
+  64   2                      UART_Send_Str("ÎÄ¼þÃûÎª£º");
+  65   2                      UART_Send_Str(FileInfo_MP3.FileName);             
+  66   2                      
+  67   2                      UART_Send_Enter();
+  68   2                      UART_Put_Inf("ÎÄ¼þ´óÐ¡(×Ö½Ú)£º",FileInfo_MP3.FileSize);
+  69   2                      UART_Put_Inf("ÎÄ¼þµ±Ç°Æ«ÒÆÁ¿(×Ö½Ú)£º",FileInfo_MP3.FileCurOffset);
+  70   2                      
+  71   2                      UART_Send_Str("ÎÄ¼þ´´½¨Ê±¼ä£º\n");
+  72   2                      UART_Put_Num(FileInfo_MP3.FileCreateDate.year);UART_Send_Str("Äê");
+  73   2                      UART_Put_Num(FileInfo_MP3.FileCreateDate.month);UART_Send_Str("ÔÂ");
+  74   2                      UART_Put_Num(FileInfo_MP3.FileCreateDate.day);UART_Send_Str("ÈÕ");
+  75   2                      UART_Put_Num(FileInfo_MP3.FileCreateTime.hour);UART_Send_Str("Ê±");
+  76   2                      UART_Put_Num(FileInfo_MP3.FileCreateTime.min);UART_Send_Str("·Ö");
+  77   2                      UART_Put_Num(FileInfo_MP3.FileCreateTime.sec);UART_Send_Str("Ãë");
+  78   2                      UART_Send_Enter();
+  79   2                      
+  80   2                      VS_Reset(); //VS1003¸´Î»³õÊ¼»¯    //±ØÐëÃ¿Ê×¸è¶¼¸´Î»£¬·ñÔòÖ»ÄÜ²¥·ÅÒ»Ê×
+  81   2                      UART_Send_Str1( FileInfo_MP3.FileName);
+  82   2                      VS_sin_test(200); //ÕýÏÒ²âÊÔ£¬¿ÉÒÔÌýµ½Ò»ÉùµÎ
+  83   2                      
+  84   2                      znFAT_Read_FileX(&FileInfo_MP3,0,FileInfo_MP3.FileSize,VS_Send_Dat); //µ÷ÓÃ¶ÁÈ¡ÎÄ¼þº¯Êý(ÖØ¶¨Ïò)£¬½«Êý¾ÝË
+             -ÍÖÁVS1003
+  85   2                      VS_Flush_Buffer(); //Çå¿ÕVS1003µÄÊý¾Ý»º³åÇø
+  86   2                      
+  87   2                      n++;
+  88   2              }
+  89   1              UART_Send_Str("===========================================================\n");
+  90   1              UART_Put_Inf("ÎÄ¼þÁÐ¾ÙÍê±Ï£¬¹²ÓÐÎÄ¼þ(¸ö)£º",n);
+  91   1              while(1);
+  92   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1017    ----
+   CONSTANT SIZE    =    305    ----
+   XDATA SIZE       =     99       5
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

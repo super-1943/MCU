@@ -1,0 +1,207 @@
+BL51 BANKED LINKER/LOCATER V6.00                                                        05/13/2009  19:39:33  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.00, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE Text1.obj TO chen
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  Text1.obj (TEXT1)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  chen (TEXT1)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     001AH     UNIT         ?DT?TEXT1
+            DATA    0022H     0003H     UNIT         _DATA_GROUP_
+            IDATA   0025H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0003H     ABSOLUTE     
+            CODE    0006H     000AH     UNIT         ?PR?T1?TEXT1
+            CODE    0010H     0001H     UNIT         ?PR?INT0?TEXT1
+            CODE    0011H     0001H     UNIT         ?PR?INT1?TEXT1
+                    0012H     0001H                  *** GAP ***
+            CODE    0013H     0003H     ABSOLUTE     
+            CODE    0016H     0005H     UNIT         ?PR?SHORTDELAY?TEXT1
+            CODE    001BH     0003H     ABSOLUTE     
+            CODE    001EH     008CH     UNIT         ?C_C51STARTUP
+            CODE    00AAH     0047H     UNIT         ?PR?_SHOW?TEXT1
+            CODE    00F1H     002DH     UNIT         ?C?LIB_CODE
+            CODE    011EH     0026H     UNIT         ?PR?MAIN?TEXT1
+            CODE    0144H     0021H     UNIT         ?C_INITSEG
+            CODE    0165H     000FH     UNIT         ?PR?_DELAY?TEXT1
+            CODE    0174H     000AH     UNIT         ?PR?_BUZZER?TEXT1
+
+
+
+OVERLAY MAP OF MODULE:   chen (TEXT1)
+
+
+SEGMENT                          DATA_GROUP 
+  +--> CALLED SEGMENT          START    LENGTH
+----------------------------------------------
+?C_C51STARTUP                  -----    -----
+  +--> ?PR?MAIN?TEXT1
+  +--> ?C_INITSEG
+
+?PR?MAIN?TEXT1                 -----    -----
+  +--> ?PR?_SHOW?TEXT1
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/13/2009  19:39:33  PAGE 2
+
+
+
+?PR?_SHOW?TEXT1                0022H    0003H
+  +--> ?PR?_DELAY?TEXT1
+
+
+
+SYMBOL TABLE OF MODULE:  chen (TEXT1)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        TEXT1
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  C:0174H         PUBLIC        _buzzer
+  D:0008H         PUBLIC        table
+  D:00A8H         PUBLIC        IE
+  D:00B8H         PUBLIC        IP
+  D:0019H         PUBLIC        tcount
+  C:00AAH         PUBLIC        _show
+  C:0006H         PUBLIC        t1
+  C:011EH         PUBLIC        main
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  C:0016H         PUBLIC        shortdelay
+  B:00A8H.3       PUBLIC        ET1
+  B:00A8H.0       PUBLIC        EX0
+  D:008DH         PUBLIC        TH1
+  D:008BH         PUBLIC        TL1
+  B:0090H.3       PUBLIC        buz
+  B:0088H.6       PUBLIC        TR1
+  D:00C8H         PUBLIC        T2CON
+  C:0165H         PUBLIC        _delay
+  D:00D0H         PUBLIC        PSW
+  C:0010H         PUBLIC        int0
+  C:0011H         PUBLIC        int1
+  D:001AH         PUBLIC        buffer
+  -------         PROC          _DELAY
+  D:0007H         SYMBOL        j
+  -------         DO            
+  D:0006H         SYMBOL        i
+  D:0005H         SYMBOL        k
+  -------         ENDDO         
+  C:0165H         LINE#         23
+  C:0165H         LINE#         24
+  C:0165H         LINE#         26
+  C:0167H         LINE#         27
+  C:0169H         LINE#         28
+  C:0173H         LINE#         29
+  -------         ENDPROC       _DELAY
+  -------         PROC          _SHOW
+  D:0022H         SYMBOL        buf
+  -------         DO            
+  D:0004H         SYMBOL        i
+  -------         ENDDO         
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/13/2009  19:39:33  PAGE 3
+
+
+  C:00AAH         LINE#         30
+  C:00B0H         LINE#         31
+  C:00B0H         LINE#         33
+  C:00B6H         LINE#         34
+  C:00BCH         LINE#         35
+  C:00C1H         LINE#         36
+  C:00C6H         LINE#         37
+  C:00C7H         LINE#         38
+  C:00C7H         LINE#         39
+  C:00DDH         LINE#         40
+  C:00E2H         LINE#         41
+  C:00E9H         LINE#         42
+  C:00ECH         LINE#         43
+  C:00F0H         LINE#         44
+  -------         ENDPROC       _SHOW
+  -------         PROC          INT0
+  C:0010H         LINE#         45
+  C:0010H         LINE#         48
+  -------         ENDPROC       INT0
+  -------         PROC          INT1
+  C:0011H         LINE#         50
+  C:0011H         LINE#         52
+  -------         ENDPROC       INT1
+  -------         PROC          T1
+  C:0006H         LINE#         53
+  C:0006H         LINE#         55
+  C:0009H         LINE#         56
+  C:000CH         LINE#         57
+  C:000FH         LINE#         58
+  -------         ENDPROC       T1
+  -------         PROC          SHORTDELAY
+  -------         DO            
+  D:0007H         SYMBOL        i
+  -------         ENDDO         
+  C:0016H         LINE#         59
+  C:0016H         LINE#         60
+  C:0016H         LINE#         62
+  C:001AH         LINE#         63
+  -------         ENDPROC       SHORTDELAY
+  -------         PROC          _BUZZER
+  D:0007H         SYMBOL        i
+  C:0174H         LINE#         64
+  C:0174H         LINE#         65
+  C:0174H         LINE#         66
+  C:0176H         LINE#         67
+  C:0179H         LINE#         68
+  C:017BH         LINE#         69
+  -------         ENDPROC       _BUZZER
+  -------         PROC          MAIN
+  -------         DO            
+  D:0007H         SYMBOL        i
+  -------         ENDDO         
+  C:011EH         LINE#         71
+  C:011EH         LINE#         72
+  C:011EH         LINE#         74
+  C:0120H         LINE#         75
+  C:0122H         LINE#         76
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/13/2009  19:39:33  PAGE 4
+
+
+  C:0125H         LINE#         77
+  C:0128H         LINE#         78
+  C:012BH         LINE#         79
+  C:012DH         LINE#         82
+  C:012DH         LINE#         83
+  C:012DH         LINE#         84
+  C:0137H         LINE#         85
+  C:0139H         LINE#         86
+  C:0139H         LINE#         87
+  C:0139H         LINE#         88
+  C:0142H         LINE#         89
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        TEXT1
+
+  -------         MODULE        ?C?CLDOPTR
+  C:00F1H         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BUZZER?TEXT1
+
+Program Size: data=38.0 xdata=0 code=381
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)

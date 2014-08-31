@@ -1,0 +1,112 @@
+ UsbCrypt
+
+ Timestamp is 40057274 (Wed Jan 14 08:46:44 2004)
+
+ Preferred load address is 00010000
+
+ Start         Length     Name                   Class
+ 0001:00000000 0000333aH .text                   CODE
+ 0002:00000000 00000090H .idata$5                DATA
+ 0002:00000090 0000003cH .rdata                  DATA
+ 0002:000000cc 0000004aH .rdata$debug            DATA
+ 0003:00000000 0000000cH .data                   DATA
+ 0003:00000020 00000260H .bss                    DATA
+ 0004:00000000 0000003cH .idata$2                CODE
+ 0004:0000003c 00000014H .idata$3                CODE
+ 0004:00000050 00000090H .idata$4                CODE
+ 0004:000000e0 00000318H .idata$6                CODE
+ 0005:00000000 000000d0H .rsrc$01                DATA
+ 0005:000000d0 000005c0H .rsrc$02                DATA
+
+  Address         Publics by Value              Rva+Base     Lib:Object
+
+ 0001:00000050       _DriverEntry@8             00010350 f   crmain.obj
+ 0001:00000150       _USBCryptSurpriseRemoval@8 00010450 f   crpnp.obj
+ 0001:00000150       _UsbCrypt_Clean@8          00010450 f   crmain.obj
+ 0001:00000160       _UsbCrypt_Unload@4         00010460 f   crmain.obj
+ 0001:000001d3       _SendUSBRequest@12         000104d3 f   crmain.obj
+ 0001:000003dc       _UsbCrypt_AddDevice@8      000106dc f   crpnp.obj
+ 0001:00000685       _UsbCrypt_PnPHandler@8     00010985 f   crpnp.obj
+ 0001:000009fb       _StartUSBCryptDevice@8     00010cfb f   crpnp.obj
+ 0001:00000b80       _IrpGenericCompletionRoutine@12 00010e80 f   crpnp.obj
+ 0001:00000bcd       _StopUSBCryptDevice@8      00010ecd f   crpnp.obj
+ 0001:00000d10       _RemoveCryptDevice@12      00011010 f   crpnp.obj
+ 0001:00000ebe       _CancelRemove@8            000111be f   crpnp.obj
+ 0001:000010db       _CryptCapabilities@8       000113db f   crpnp.obj
+ 0001:000014b5       _PnPMinorFunctionString@4  000117b5 f   crpnp.obj
+ 0001:0000162c       _UsbCrypt_Create@8         0001192c f   crio.obj
+ 0001:000016d0       _UsbCrypt_Close@8          000119d0 f   crio.obj
+ 0001:00001778       _UsbCrypt_Read@8           00011a78 f   crio.obj
+ 0001:00001918       _UsbCrypt_Write@8          00011c18 f   crio.obj
+ 0001:00001b53       _UsbCrypt_DeviceCtrl@8     00011e53 f   crio.obj
+ 0001:00001dd0       _SwapBytes@4               000120d0 f   crio.obj
+ 0001:00001ee7       _GetProgress@8             000121e7 f   crio.obj
+ 0001:00001fe0       _SendBulkIntTransfer@24    000122e0 f   crio.obj
+ 0001:000020d9       _ConfigureDriver@4         000123d9 f   crconfig.obj
+ 0001:00002154       _GetUSBDeviceDescripitor@4 00012454 f   crconfig.obj
+ 0001:0000237b       _GetUSBConfigDescriptor@4  0001267b f   crconfig.obj
+ 0001:000025dd       _SetupInterfaces@4         000128dd f   crconfig.obj
+ 0001:0000294a       _SaveInterfaceInfo@12      00012c4a f   crconfig.obj
+ 0001:00002b96       _DumpInterfaceInfo@8       00012e96 f   crconfig.obj
+ 0001:00002d42       _UsbCrypt_WmiRequest@8     00013042 f   crwmi.obj
+ 0001:00002ee0       _UsbCrypt_QueryWmiRegInfo@24 000131e0 f   crwmi.obj
+ 0001:00002fa9       _UsbCrypt_QueryWmiDataBlock@32 000132a9 f   crwmi.obj
+ 0001:00003060       _UsbCrypt_SetWmiDataItem@28 00013360 f   crwmi.obj
+ 0001:000030f0       _UsbCrypt_SetWmiDataBlock@24 000133f0 f   crwmi.obj
+ 0001:00003282       _WMIMinorFunctionString@4  00013582 f   crwmi.obj
+ 0001:00003316       _DbgPrint                  00013616 f   ntoskrnl:ntoskrnl.exe
+ 0001:0000331c       _IoAllocateWorkItem@4      0001361c f   ntoskrnl:ntoskrnl.exe
+ 0001:00003322       _IoQueueWorkItem@16        00013622 f   ntoskrnl:ntoskrnl.exe
+ 0001:00003328       _IoFreeWorkItem@4          00013628 f   ntoskrnl:ntoskrnl.exe
+ 0001:0000332e       _WmiSystemControl@16       0001362e f   wmilib:WMILIB.SYS
+ 0001:00003334       _WmiCompleteRequest@20     00013634 f   wmilib:WMILIB.SYS
+ 0002:00000000       __imp__USBD_CreateConfigurationRequestEx@8 00013680     usbd:USBD.SYS
+ 0002:00000004       __imp__USBD_ParseConfigurationDescriptorEx@28 00013684     usbd:USBD.SYS
+ 0002:00000008       \177USBD_NULL_THUNK_DATA   00013688     usbd:USBD.SYS
+ 0002:0000000c       __imp__WmiSystemControl@16 0001368c     wmilib:WMILIB.SYS
+ 0002:00000010       __imp__WmiCompleteRequest@20 00013690     wmilib:WMILIB.SYS
+ 0002:00000014       \177WMILIB_NULL_THUNK_DATA 00013694     wmilib:WMILIB.SYS
+ 0002:00000018       __imp__KeInitializeEvent@12 00013698     ntoskrnl:ntoskrnl.exe
+ 0002:0000001c       __imp__IoAllocateWorkItem@4 0001369c     ntoskrnl:ntoskrnl.exe
+ 0002:00000020       __imp__IoInitializeRemoveLockEx@20 000136a0     ntoskrnl:ntoskrnl.exe
+ 0002:00000024       __imp__IoDetachDevice@4    000136a4     ntoskrnl:ntoskrnl.exe
+ 0002:00000028       __imp__IoRegisterDeviceInterface@16 000136a8     ntoskrnl:ntoskrnl.exe
+ 0002:0000002c       __imp__IoAttachDeviceToDeviceStack@8 000136ac     ntoskrnl:ntoskrnl.exe
+ 0002:00000030       __imp__PoSetPowerState@12  000136b0     ntoskrnl:ntoskrnl.exe
+ 0002:00000034       __imp__IoDeleteDevice@4    000136b4     ntoskrnl:ntoskrnl.exe
+ 0002:00000038       __imp__IoWMIRegistrationControl@8 000136b8     ntoskrnl:ntoskrnl.exe
+ 0002:0000003c       __imp__IoCreateDevice@28   000136bc     ntoskrnl:ntoskrnl.exe
+ 0002:00000040       __imp_@IofCompleteRequest@8 000136c0     ntoskrnl:ntoskrnl.exe
+ 0002:00000044       __imp__IoBuildDeviceIoControlRequest@36 000136c4     ntoskrnl:ntoskrnl.exe
+ 0002:00000048       __imp__IoSetDeviceInterfaceState@8 000136c8     ntoskrnl:ntoskrnl.exe
+ 0002:0000004c       __imp__KeSetEvent@12       000136cc     ntoskrnl:ntoskrnl.exe
+ 0002:00000050       __imp__ExFreePool@4        000136d0     ntoskrnl:ntoskrnl.exe
+ 0002:00000054       __imp__ExAllocatePoolWithTag@12 000136d4     ntoskrnl:ntoskrnl.exe
+ 0002:00000058       __imp__IoReleaseRemoveLockAndWaitEx@12 000136d8     ntoskrnl:ntoskrnl.exe
+ 0002:0000005c       __imp__IoAcquireRemoveLockEx@20 000136dc     ntoskrnl:ntoskrnl.exe
+ 0002:00000060       __imp__RtlFreeUnicodeString@4 000136e0     ntoskrnl:ntoskrnl.exe
+ 0002:00000064       __imp__IoFreeWorkItem@4    000136e4     ntoskrnl:ntoskrnl.exe
+ 0002:00000068       __imp__IoReleaseRemoveLockEx@12 000136e8     ntoskrnl:ntoskrnl.exe
+ 0002:0000006c       __imp__MmMapLockedPagesSpecifyCache@24 000136ec     ntoskrnl:ntoskrnl.exe
+ 0002:00000070       __imp__RtlInitUnicodeString@8 000136f0     ntoskrnl:ntoskrnl.exe
+ 0002:00000074       __imp__DbgPrint            000136f4     ntoskrnl:ntoskrnl.exe
+ 0002:00000078       __imp__KeWaitForSingleObject@20 000136f8     ntoskrnl:ntoskrnl.exe
+ 0002:0000007c       __imp_@IofCallDriver@8     000136fc     ntoskrnl:ntoskrnl.exe
+ 0002:00000080       __imp__RtlAssert@16        00013700     ntoskrnl:ntoskrnl.exe
+ 0002:00000084       __imp__IoQueueWorkItem@16  00013704     ntoskrnl:ntoskrnl.exe
+ 0002:00000088       __imp__memmove             00013708     ntoskrnl:ntoskrnl.exe
+ 0002:0000008c       \177ntoskrnl_NULL_THUNK_DATA 0001370c     ntoskrnl:ntoskrnl.exe
+ 0002:000000ac       _GUID_CLASS_USBCRYPT       0001372c     crmain.obj
+ 0002:000000bc       _USBCRYPT_WMI_STD_DATA_GUID 0001373c     crwmi.obj
+ 0003:00000000       _USBCryptGuidList          00013800     crwmi.obj
+ 0003:00000020       _g_RegistryPathBuf         00013820     <common>
+ 0003:00000278       _g_RegPath                 00013a78     <common>
+ 0004:00000000       __IMPORT_DESCRIPTOR_ntoskrnl 00013a80     ntoskrnl:ntoskrnl.exe
+ 0004:00000014       __IMPORT_DESCRIPTOR_WMILIB 00013a94     wmilib:WMILIB.SYS
+ 0004:00000028       __IMPORT_DESCRIPTOR_USBD   00013aa8     usbd:USBD.SYS
+ 0004:0000003c       __NULL_IMPORT_DESCRIPTOR   00013abc     ntoskrnl:ntoskrnl.exe
+
+ entry point at        0001:00000050
+
+ Static symbols
+

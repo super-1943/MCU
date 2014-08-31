@@ -1,0 +1,72 @@
+A51 MACRO ASSEMBLER  MAIN                                                                 01/26/2009 19:52:59 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN main.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE main.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     EXTRN code (WriteLCDCommand,WriteLCDData,InitLCD,ClearLCD,GotoxyLCD,DisplayLCDString);
+  0030                 2     LCDX EQU 30h
+  0031                 3     LCDY EQU 31h
+                       4     
+0000                   5     org 0000h;
+0000 0140              6             ajmp main;
+0040                   7     org 0040h;
+0040                   8     main:
+0040 758140            9             mov sp,#40h;
+0043 120000   F       10             call InitLCD;
+0046 120000   F       11             call ClearLCD;
+0049 753001           12             mov LCDX,#1;
+004C 753100           13             mov LCDY,#0
+004F 120000   F       14             call GotoxyLCD;
+0052 90006D           15             mov dptr,#table0;
+0055 7910             16             mov r1,#16;
+0057 120000   F       17             call DisplayLCDString;
+                      18             
+005A 753002           19             mov LCDX,#2;
+005D 753100           20             mov LCDY,#0
+0060 120000   F       21             call GotoxyLCD;
+0063 900078           22             mov dptr,#table1
+0066 7910             23             mov r1,#16;
+0068 120000   F       24             call DisplayLCDString;
+006B 80FE             25             sjmp $;
+                      26             
+006D                  27     table0:
+006D 48656C6C         28             DB "Hello Keilc"
+0071 6F204B65                
+0075 696C63                  
+0078                  29     table1:
+0078 4C434420         30             DB "LCD Test Display"
+007C 54657374                
+0080 20446973                
+0084 706C6179                
+                      31             
+                      32     END
+A51 MACRO ASSEMBLER  MAIN                                                                 01/26/2009 19:52:59 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+CLEARLCD . . . . .  C ADDR   -----       EXT
+DISPLAYLCDSTRING .  C ADDR   -----       EXT
+GOTOXYLCD. . . . .  C ADDR   -----       EXT
+INITLCD. . . . . .  C ADDR   -----       EXT
+LCDX . . . . . . .  N NUMB   0030H   A   
+LCDY . . . . . . .  N NUMB   0031H   A   
+MAIN . . . . . . .  C ADDR   0040H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+TABLE0 . . . . . .  C ADDR   006DH   A   
+TABLE1 . . . . . .  C ADDR   0078H   A   
+WRITELCDCOMMAND. .  C ADDR   -----       EXT
+WRITELCDDATA . . .  C ADDR   -----       EXT
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

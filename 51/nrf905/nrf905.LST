@@ -1,0 +1,240 @@
+C51 COMPILER V8.02   NRF905                                                                12/15/2009 15:29:54 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE NRF905
+OBJECT MODULE PLACED IN nrf905.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE nrf905.c BROWSE DEBUG OBJECTEXTEND SRC(.\nrf905.SRC)
+
+line level    source
+
+   1          #include "nrf905.h"
+   2          
+   3          
+   4          void delay_nrf905(unsigned int i)
+   5          {
+   6   1        while(i--);
+   7   1      }
+   8          /************************************
+   9          完成IO口的初始化和初始数据（只做初始化但不写入无线模块，
+  10          为后面做准备）
+  11          ************************************/
+  12          void init_port_nrf905(RF_CONFIG *pa)
+  13          {
+  14   1      
+  15   1        CSN_1;
+  16   1        SCK_0;
+  17   1        if(pa)
+  18   1        {
+  19   2          pa->DETAIL.CH_NO=1;          //中心频率选择
+  20   2          pa->DETAIL.AUTO_RETRAN=0;    //禁止自动重发
+  21   2          pa->DETAIL.RX_RED_PWR=0;     //正常模式（相对于低功耗模式）
+  22   2          pa->DETAIL.PA_PWR=3;         //输出功率+10db
+  23   2          pa->DETAIL.HFREQ_PLL=0;      //433Mhz 段
+  24   2          pa->DETAIL.RX_AW=4;
+  25   2          pa->DETAIL.TX_AW=4;
+  26   2          pa->DETAIL.RX_DW=32;
+  27   2          pa->DETAIL.TX_DW=32;
+  28   2          pa->DETAIL.RX_ADDR[0]=0xcc;
+  29   2          pa->DETAIL.RX_ADDR[1]=0xcc;
+  30   2          pa->DETAIL.RX_ADDR[2]=0xcc;
+  31   2          pa->DETAIL.RX_ADDR[3]=0xcc;
+  32   2          pa->DETAIL.CRC_MODE=0;       //8bit CRC
+  33   2          pa->DETAIL.CRC_EN=1;         //Enable CRC check
+  34   2          pa->DETAIL.XOF=3;            //16MHz
+  35   2        }
+  36   1      }
+  37          
+  38          void send_byte_nrf905(unsigned char d)
+  39          {
+  40   1        unsigned char i;
+  41   1        SCK_0;
+  42   1        for(i=0;i<8;i++)
+  43   1        {
+  44   2          if(d&0x80)
+  45   2          {
+  46   3            MOSI_1;
+  47   3          }
+  48   2          else
+  49   2          {
+  50   3            MOSI_0;
+  51   3          }
+  52   2          SCK_1;
+  53   2          _NOP();
+  54   2          SCK_0;
+  55   2          d<<=1;
+C51 COMPILER V8.02   NRF905                                                                12/15/2009 15:29:54 PAGE 2   
+
+  56   2        }
+  57   1        
+  58   1      }
+  59          unsigned char read_byte_nrf905(void)
+  60          {
+  61   1        unsigned char i,t=0;
+  62   1        SCK_0;
+  63   1        for(i=0;i<8;i++)
+  64   1        {
+  65   2          SCK_1;
+  66   2          t<<=1;
+  67   2          if(MISO_IN)
+  68   2          {
+  69   3            t|=0x01;
+  70   3          }
+  71   2          SCK_0;
+  72   2          _NOP();
+  73   2        }
+  74   1        return t;
+  75   1      }
+  76          /*************************************
+  77          函数作用：读取当前状态值（AM和DR）
+  78          返回值：  0xaa代表已经接收到数据，等待读取
+  79                    0x00……………………
+  80          *************************************/
+  81          unsigned char read_status_nrf905(void)
+  82          {
+  83   1        unsigned char i,t=0;  
+  84   1        MOSI_0;
+  85   1        SCK_0;
+  86   1        CSN_0;
+  87   1        for(i=0;i<8;i++)
+  88   1        {
+  89   2          SCK_1;
+  90   2          t<<=1;
+  91   2          if(MISO_IN)
+  92   2          {
+  93   3            t|=0x01;
+  94   3          }
+  95   2          SCK_0;
+  96   2          _NOP();
+  97   2        }
+  98   1        CSN_1;
+  99   1        return t;
+ 100   1      }
+ 101          /*********************************
+ 102          函数作用：配置无线模块
+ 103          参数要求：结构体指针pd指向有效数据
+ 104          函数前奏：完成IO口初始化即可配置
+ 105          *********************************/
+ 106          void config_nrf905(RF_CONFIG * pd)
+ 107          {
+ 108   1        unsigned char x;
+ 109   1        STAND_BY_MODE;  
+ 110   1        delay_nrf905(100);
+ 111   1        CSN_0;
+ 112   1        send_byte_nrf905(0x00);  //config
+ 113   1        for(x=0;x<10;x++)
+ 114   1        {
+ 115   2          send_byte_nrf905(pd->buffer[x]);
+ 116   2        }
+ 117   1        CSN_1;
+C51 COMPILER V8.02   NRF905                                                                12/15/2009 15:29:54 PAGE 3   
+
+ 118   1        CSN_0;
+ 119   1        send_byte_nrf905(WRITE_TX_ADDR);
+ 120   1        send_byte_nrf905(0xcc);
+ 121   1        send_byte_nrf905(0xcc);
+ 122   1        send_byte_nrf905(0xcc);
+ 123   1        send_byte_nrf905(0xcc);
+ 124   1        CSN_1;
+ 125   1        
+ 126   1      }
+ 127          /***********************************************************************
+ 128          函数说明：快速配置中心频率和输出功率
+ 129          最终作用：
+ 130                  使CH_NO=ch_no;
+ 131                  HFREQ_PLL=hreq;
+ 132                  PA_PWR=pa;
+ 133          函数前奏：完成IO口初始化即可配置
+ 134          ***********************************************************************/
+ 135          void fast_config_nrf905(unsigned int ch_no,unsigned char hfreq,unsigned char pa)
+ 136          {
+ 137   1        unsigned char i,j;
+ 138   1        STAND_BY_MODE;  
+ 139   1        i=ch_no&0xff;
+ 140   1        j=(ch_no>>8)+((hfreq&0x01)<<1)+((pa&0x03)<<2)+0x80;
+ 141   1        CSN_0;
+ 142   1        send_byte_nrf905(j);  
+ 143   1        send_byte_nrf905(i);
+ 144   1        CSN_1;
+ 145   1      }  
+ 146          /**********************************************************
+ 147          函数作用：检查配置，包括配置字节和发送地址
+ 148          参数要求：结构体指针pd指向有效区域，buf长度4字节
+ 149          函数前奏：对已经配置好的无线模块或者刚上电的模块都可以进行
+ 150          **********************************************************/
+ 151          void check_config_nrf905(RF_CONFIG * pd,unsigned char *buf)
+ 152          {
+ 153   1        unsigned char i;
+ 154   1        CSN_0;
+ 155   1        send_byte_nrf905(READ_CONFIG);
+ 156   1        for(i=0;i<10;i++)
+ 157   1        {
+ 158   2          pd->buffer[i]=read_byte_nrf905();
+ 159   2        }
+ 160   1        CSN_1;  
+ 161   1        CSN_0;
+ 162   1        send_byte_nrf905(READ_TX_ADDR);
+ 163   1        for(i=0;i<4;i++)
+ 164   1        {
+ 165   2          buf[i]=read_byte_nrf905();
+ 166   2        }
+ 167   1        CSN_1; 
+ 168   1      }
+ 169          /****************************************
+ 170          函数作用：将32字节数据发送出去
+ 171          参数要求：buff长度为32字节
+ 172          返回值  : 无
+ 173          函数前奏：将无线模块配置好后即可发送数据
+ 174          ****************************************/
+ 175          void transmit_nrf905(unsigned char *buff)
+ 176          {
+ 177   1        unsigned char i;
+ 178   1        STAND_BY_MODE;
+ 179   1        CSN_0;
+C51 COMPILER V8.02   NRF905                                                                12/15/2009 15:29:54 PAGE 4   
+
+ 180   1        send_byte_nrf905(WRITE_TX_DATA);
+ 181   1        for(i=0;i<32;i++)
+ 182   1        {
+ 183   2          send_byte_nrf905(buff[i]);
+ 184   2        }
+ 185   1        CSN_1;
+ 186   1        delay_nrf905(100);
+ 187   1        TX_MODE;  
+ 188   1      }
+ 189          /*************************************
+ 190          函数作用：监听
+ 191          参数要求：rxbuf长度32字节
+ 192          *************************************/
+ 193          void listen_nrf905(unsigned char * rxbuf)
+ 194          {
+ 195   1        unsigned char ii;
+ 196   1        RX_MODE;  
+ 197   1        delay_nrf905(1000);
+ 198   1        while(CD_IN==0);
+ 199   1        while(AM_IN==0);
+ 200   1        while(DR_IN==0);
+ 201   1        STAND_BY_MODE;
+ 202   1        _NOP();
+ 203   1        CSN_0;
+ 204   1        send_byte_nrf905(READ_RX_DATA);
+ 205   1        for(ii=0;ii<32;ii++)
+ 206   1        {
+ 207   2          rxbuf[ii]=read_byte_nrf905();
+ 208   2        }
+ 209   1        CSN_1;// Disable spi
+ 210   1        while(DR_IN||AM_IN);
+ 211   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    549    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      18
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

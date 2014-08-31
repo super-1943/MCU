@@ -1,0 +1,119 @@
+C51 COMPILER V8.02   TEXT1                                                                 05/23/2009 09:06:41 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /*
+   2          *         单片机接收主机的数据,然后将数据传送到P0口, 并传回给主机;             *
+   3          *         当按下K1=P3.2 时, 单片机发送字www.hificat.com" 给主机       *                                   
+             -                *
+   4          *                                                                              *
+   5          */   
+   6          
+   7          #include <reg51.h>
+   8          #include <intrins.h>
+   9          
+  10          unsigned char key_s, key_v, tmp;
+  11          
+  12          char code str[] = "www.hificat.com";
+  13          
+  14          
+  15          void send_str();
+  16          bit     scan_key();
+  17          void proc_key();
+  18          void delayms(unsigned char ms);
+  19          void send_char(unsigned char txd);
+  20          
+  21          sbit    K1 = P3^2;
+  22          
+  23          main()
+  24          {
+  25   1              TMOD = 0x20;                    // 定时器1工作于8位自动重载模式, 用于产生波特率
+  26   1              TH1 = 0xFD;                             // 波特率9600
+  27   1              TL1 = 0xFD;
+  28   1              
+  29   1              SCON = 0x50;                    // 设定串行口工作方式
+  30   1              PCON &= 0xef;                   // 波特率不倍增
+  31   1                      
+  32   1              TR1 = 1;                                // 启动定时器1
+  33   1              IE = 0x0;                               // 禁止任何中断
+  34   1              send_str();
+  35   1              while(1)
+  36   1              {
+  37   2                      if(RI)                                          // 是否有数据到来
+  38   2                      {
+  39   3                              RI = 0;
+  40   3                              tmp = SBUF;                             // 暂存接收到的数据
+  41   3                              P0 = tmp;                               // 数据传送到P0口
+  42   3                              send_char(tmp);                 // 回传接收到的数据
+  43   3                      }               
+  44   2              }
+  45   1      }
+  46          
+  47          bit scan_key()  
+  48          // 扫描按键
+  49          {
+  50   1              key_s = 0x00;
+  51   1              key_s |= K1;
+  52   1              return(key_s ^ key_v);  
+  53   1      }
+  54          
+C51 COMPILER V8.02   TEXT1                                                                 05/23/2009 09:06:41 PAGE 2   
+
+  55          void proc_key()
+  56          // 键处理
+  57          {
+  58   1              if((key_v & 0x01) == 0)
+  59   1              {                       // K1按下
+  60   2                      send_str();                             // 传送字串"welcome!...
+  61   2              }
+  62   1      }
+  63          
+  64          void send_char(unsigned char txd)
+  65          // 传送一个字符
+  66          {
+  67   1              SBUF = txd;
+  68   1              while(!TI);                             // 等特数据传送
+  69   1              TI = 0;                                 // 清除数据传送标志
+  70   1      }
+  71          
+  72          void send_str()
+  73          // 传送字串
+  74          {
+  75   1              unsigned char i = 0;
+  76   1              while(str[i] != '\0')
+  77   1              {
+  78   2                      SBUF = str[i];
+  79   2                      while(!TI);                             // 等特数据传送
+  80   2                      TI = 0;                                 // 清除数据传送标志
+  81   2                      i++;                                    // 下一个字符
+  82   2              }       
+  83   1      }
+  84          
+  85          void delayms(unsigned char ms)  
+  86          // 延时子程序
+  87          {                                               
+  88   1              unsigned char i;
+  89   1              while(ms--)
+  90   1              {
+  91   2                      for(i = 0; i < 120; i++);
+  92   2              }
+  93   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    111    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,102 @@
+USB接口的高速数据采集卡的设计与实现
+本文来自学习网(www.gzu521.com)，原文地址：http://www.gzu521.com/paper/article/computer/200707/24755.htm
+
+
+摘要：讨论了基于usb接口的高速数据采集卡的实现。
+该系统采用ti公司的tusb3210芯片作为usb通信及主控芯片，完全符合usb1.1协议，是一种新型的数据采集卡。 
+关键词：usb a/d fifo 
+
+
+固件现代工业生产和科学研究对数据采集的要求日益提高，在瞬态信号测量、图像处理等一些高速、高精度的测量中，需要进行高速数据采集。现在通用的高速数据采集卡一般多是pci卡或isa卡，存在以下缺点：安装麻烦；价格昂贵；受计算机插槽数量、地址、中断资源限制，可扩展性差；在一些电磁干扰性强的测试现场，无法专门对其做电磁屏蔽，导致采集的数据失真。通用串行总线usb是1995年康柏、微软、ibm、dec等公司为解决传统总线不足而推广的一种新型的通信标准。该总线接口具有安装方便、高带宽、易于扩展等优点，已逐渐成为现代数据传输的发展趋势。基于usb的高速数据采集卡充分利用usb总线的上述优点，有效解决了传统高速数据采集卡的缺陷。1 usb数据采集卡原理
+
+
+1.1 usb简介通用串行总线适用于净usb外围设备连接到主机上，通过pci总线与pc内部的系统总线连接，实现数据传送。同时usb又是一种通信协议，支持主系统与其外设之间的数据传送。usb器件支持热插拔，可以即插即用。usb1.1支持两种传输速度，既低速1.5mbps和高速12mbps，在usb2.0中其速度提高到480mbps。usb具有四种传输方式，既控制方式（control mode）、中断传输方式（interrupt mode）、批量传输方式（bulk mode）和等时传输方式（iochronous mode）。考虑到usb传输速度较高，如果用只实现usb接口的芯片外加普通控制器（如8051），其处理速度就会很慢而达不到usb传输的要求；如果采用高速微处理器（如dsp），虽然满足了usb传输速率，但成本较高。所以选择了ti公司内置usb接口的微控制器芯片tusb3210，开发了具有usb接口的高速数据采集卡。
+
+
+
+1.2 系统原理图系统原理图如图1所示。  
+   
+
+
+整个系统以tusb3210为核心，负责启动a/d转换，控制fifo的读写及采样频率的设定，与主机之间的通信及数据传输。2 usb数据采集卡硬件2.1 
+tusb3210芯片tusb3210是ti公司推出的内嵌8052内核并带有usb接口的微控制器芯片。tusb3210有256字节的内部ram，8k字节的程序ram，512字节的usb数据缓冲和端点描述块edb（endpoint descriptor blocks），4个通用的gpio端口p0、p1、p2、p3，i2c接口电路，看门狗电路等。tusb3210的usb接口符合usb1.1协议，有4个输入端点（input endpoint）和4个输出端点（output end-point），支持全速和低速传输速率，并具有usb协议所规定的4种传输方式。tusb3210的usb接口采用串行接口引擎（sie）编码和解码串行数据，并且进行校验、位填充，执行usb所需要的其他信号。这样采用硬件完成usb协议，简化了固件代码的编制。tusb3210采用基于内部ram的解决方案，允许通过i2c总线从串行eeprom中读入固件或从主机中下载固件程序。这项功能便于设备的开发与在线升级。
+
+
+2.2 a/d芯片max1449max1449是maxim公司生产的10位、105msps、单3.3v电源、低功耗的高速a/d芯片。它采用差分输入，带有高宽带采样/保持（t/h）的10阶段流水线（pipeline）型结构的adc，如图2。采样信号每半个时钟周期通过一个流水线段，完成连续转换到数据输出共需5.5个时钟周期。每个流水线首先通过一个1.5位的闪速adc对输入电压量化，由dac产生一个对应于量化结果的电压并与输入电压作差，输出电压放大2倍后送到下一级流水线处理。每级流水线提供1位的分辨率，并进行差错校正，得到良好的线性和低失调。 
+
+max1449提供一个2.048v的精确带隙基准源，用来设定adc满量程范围，也可以用外部基准源改变量程范围。max1449的最大差分输入电压范围为2v。
+
+
+2.3 输入信号处理电路max1449芯片的输入信号为差分输入时有最佳的采样效果。在本系统中用ti的hts4503作为单端输入到差分输出的转换电路。ths4503高性能的全差分运放，带宽可达270mhz，具有非常好的线性，在100mhz下可支持11位的a/d转换要求，适合作为a/d变换的前端接口电路。具体电路见图3所示。
+
+
+
+2.4 fifo和时钟发生电路高速a/d变换的数据不能直接通过usb送入主机，系统中通过fifo来缓冲数据。本系统采用ti公司sn74v293芯片。它的容量为65536×18或131072×9，最快读写周期为6ns，可以满足100mhz采样数据的存储。用户可以选择输入、输出宽度，当选择输入、输出宽度为18时，可存储64k×10位的数据。如果选择输入、输出为9位，则可使存储容量扩大到128×9位，这样对精度要求不高的用户可以获得更多数据。sn74v293有独立的读写时钟控制电路，允许读写操作同时进行。sn74v293内部有满、空、半满输出信号以及可编程设定的几乎满和几乎空输出信号，通过这些信号控制器可以灵活控制fifo的读写操作。对于高速数据采集系统，时钟信号很重要。在本系统中选用dallas公司的ds1073时钟芯片。ds1073是无需外部元件的频率振荡器。通过dallas独有的1-wire技术，可以设定内部的分频器数值，实现输出频率从27.3khz～100mhz可调，从而方便地改变采样时钟，简化电路设计。max1449数据输出时下降沿有效，而fifo写入时上升沿锁存数据。系统中采用ds90lc028a实现对时钟信号的取反。  
+
+2.5 pcb板制作由于是高速a/d采集，在制作pcb板时有一些需要注意的地方。电路板最好使用多层板，元件尽量选用表面封装器件。这样可以减小元器件之间的距离，减小寄生电感、寄生电容，同时减小电路板的尺寸。所有的旁路电容都要尽量靠近芯片的电源管脚。模拟公共地和数字公共地要分开，选一点通过低值表贴电阻（1～5ω）、磁珠或直接连接，以免数字地电流干扰模拟地。电源最好用线性稳压电源，a/d和前端处理电路要用同一电源地输出，减小电源波动对采集的影响。3 usb高速数据采集卡的软件开发一个usb设备，软件设计是必不可少的。usb应用系统软件设计分为三部分：usb外设端的固件（firmware）、主机操作系统上的客户驱动程序以及主机应用软件。主机应用软件通过客户驱动程序与系统usbi（usb device interface）进行通信，由系统产生usb数据的传送动作；固件则响应各种来自系统的usb标准请求，完成各种数据的交换工作和事件处理。
+
+
+
+3.1 usb接口编程固件程序主要是实现usb通信。tusb3210采用sie来管理usb通信。当主机与芯片进行usb通信时，会产生外部中断0，通过中断矢量寄存器判断。setup_packed_int、input_endpoint0_int、output_endpoint0_int这三个中断主要用于与主机建立连接、进行控制传输或中断传输；input_endpoint1_int、output_endpoint1_int这两个中断主要在批量传输时使用。在固件中分别执行不同的中断程序来实现usb的数据传输。void ex0_int(void) interrupt 0 //外部中断0
+{
+	EA=disable; //关中断
+	switch (bBECint)//确定中断id
+	{
+	case vecint_output_endpoint0:
+		bvecfint=0x00;
+		ep0qutputinterrupthandler()；
+		break;
+	case vecint_input_endpoint0:
+		bbecint=0x00;
+		ep0inputinterrupthandler()；
+		break；
+	case vecint_output_endpoint1:
+		bvecint=0x00;
+		ep1outputinterrupthandler();
+		break;
+	case vecint_input_endpoint1:
+		bvecint=0x00;
+		ep1inputinterrupthandler();
+		break;
+	case vecint_setup_packet_received:
+		setuppacketinterrupthandler();
+		busbsta=usbsta_setup;
+		bvecint=0x00;
+		break;
+	default:break; //不知道中断id
+	}
+	EA=enable; //开中断
+}
+
+
+
+3.2 主机软件设计笔者首先开发tusb3210在主机中的驱动程序。用winddk3.0开发了win2000下的驱动程序，实现了控制传输、中断传输和批传输的标准接口函数。在应用程序开发中，可用vc++编制应用程序。可以把usb设备当成文件来操作，利用createfile得到usb句柄，用deviceiocontrol来进行控制传输，用readfile、writefile进行批量传输。程序实例如下：
+
+handle m_husbsample； //usb句柄
+m_husbsample=createfile(
+\\.\usbsampl0，
+generic_read|generic_write，
+file_share_read|file_share_write，
+nuli，
+open_existing，
+0，
+null
+）； //打开usb句柄
+
+deviceiocontrol(
+m_husbsample,
+ioctl_usbsampl_reboot, 
+null,
+0,
+null,
+0,
+&length,
+null
+); //控制传输
+writefile(m_husbsample,pbuffer,writelength,&writelength,null); //批量输出传输
+readfile(m_husbsample,pbuffer,64,&lgngth,null); //批量输入传输
+
+closehandle(m_husbsample); 
+
+//关闭usb句柄使用上述函数编制usb高速数据采集卡的主机软件。通过以上设计实现了基于usb数据采集卡的基本功能。但还有一些如信号的触发、事件的捕获功能还需完善；需开发基于usb2.0的系统，进一步提高数据传输的速率。 
+本文来自学习网(www.gzu521.com)，原文地址：http://www.gzu521.com/paper/article/computer/200707/24755.htm

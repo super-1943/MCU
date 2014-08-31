@@ -1,0 +1,366 @@
+C51 COMPILER V8.02   PEC                                                                   07/21/2010 10:42:04 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE PEC
+OBJECT MODULE PLACED IN pec.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE pec.c BROWSE DEFINE(WORK_AROUND_192) DEBUG OBJECTEXTEND CODE
+
+line level    source
+
+   1          #include "types.h"
+   2          
+   3          
+   4          // CRC-8 look-up table for PEC byte calculation
+   5          BYTE code crc8_table[256] = {
+   6              0x00, // entry 0x00
+   7              0x07, // entry 0x01
+   8              0x0E, // entry 0x02
+   9              0x09, // entry 0x03
+  10              0x1C, // entry 0x04
+  11              0x1B, // entry 0x05
+  12              0x12, // entry 0x06
+  13              0x15, // entry 0x07
+  14              0x38, // entry 0x08
+  15              0x3F, // entry 0x09
+  16              0x36, // entry 0x0A
+  17              0x31, // entry 0x0B
+  18              0x24, // entry 0x0C
+  19              0x23, // entry 0x0D
+  20              0x2A, // entry 0x0E
+  21              0x2D, // entry 0x0F
+  22              0x70, // entry 0x10
+  23              0x77, // entry 0x11
+  24              0x7E, // entry 0x12
+  25              0x79, // entry 0x13
+  26              0x6C, // entry 0x14
+  27              0x6B, // entry 0x15
+  28              0x62, // entry 0x16
+  29              0x65, // entry 0x17
+  30              0x48, // entry 0x18
+  31              0x4F, // entry 0x19
+  32              0x46, // entry 0x1A
+  33              0x41, // entry 0x1B
+  34              0x54, // entry 0x1C
+  35              0x53, // entry 0x1D
+  36              0x5A, // entry 0x1E
+  37              0x5D, // entry 0x1F
+  38              0xE0, // entry 0x20
+  39              0xE7, // entry 0x21
+  40              0xEE, // entry 0x22
+  41              0xE9, // entry 0x23
+  42              0xFC, // entry 0x24
+  43              0xFB, // entry 0x25
+  44              0xF2, // entry 0x26
+  45              0xF5, // entry 0x27
+  46              0xD8, // entry 0x28
+  47              0xDF, // entry 0x29
+  48              0xD6, // entry 0x2A
+  49              0xD1, // entry 0x2B
+  50              0xC4, // entry 0x2C
+  51              0xC3, // entry 0x2D
+  52              0xCA, // entry 0x2E
+  53              0xCD, // entry 0x2F
+  54              0x90, // entry 0x30
+  55              0x97, // entry 0x31
+C51 COMPILER V8.02   PEC                                                                   07/21/2010 10:42:04 PAGE 2   
+
+  56              0x9E, // entry 0x32
+  57              0x99, // entry 0x33
+  58              0x8C, // entry 0x34
+  59              0x8B, // entry 0x35
+  60              0x82, // entry 0x36
+  61              0x85, // entry 0x37
+  62              0xA8, // entry 0x38
+  63              0xAF, // entry 0x39
+  64              0xA6, // entry 0x3A
+  65              0xA1, // entry 0x3B
+  66              0xB4, // entry 0x3C
+  67              0xB3, // entry 0x3D
+  68              0xBA, // entry 0x3E
+  69              0xBD, // entry 0x3F
+  70              0xC7, // entry 0x40
+  71              0xC0, // entry 0x41
+  72              0xC9, // entry 0x42
+  73              0xCE, // entry 0x43
+  74              0xDB, // entry 0x44
+  75              0xDC, // entry 0x45
+  76              0xD5, // entry 0x46
+  77              0xD2, // entry 0x47
+  78              0xFF, // entry 0x48
+  79              0xF8, // entry 0x49
+  80              0xF1, // entry 0x4A
+  81              0xF6, // entry 0x4B
+  82              0xE3, // entry 0x4C
+  83              0xE4, // entry 0x4D
+  84              0xED, // entry 0x4E
+  85              0xEA, // entry 0x4F
+  86              0xB7, // entry 0x50
+  87              0xB0, // entry 0x51
+  88              0xB9, // entry 0x52
+  89              0xBE, // entry 0x53
+  90              0xAB, // entry 0x54
+  91              0xAC, // entry 0x55
+  92              0xA5, // entry 0x56
+  93              0xA2, // entry 0x57
+  94              0x8F, // entry 0x58
+  95              0x88, // entry 0x59
+  96              0x81, // entry 0x5A
+  97              0x86, // entry 0x5B
+  98              0x93, // entry 0x5C
+  99              0x94, // entry 0x5D
+ 100              0x9D, // entry 0x5E
+ 101              0x9A, // entry 0x5F
+ 102              0x27, // entry 0x60
+ 103              0x20, // entry 0x61
+ 104              0x29, // entry 0x62
+ 105              0x2E, // entry 0x63
+ 106              0x3B, // entry 0x64
+ 107              0x3C, // entry 0x65
+ 108              0x35, // entry 0x66
+ 109              0x32, // entry 0x67
+ 110              0x1F, // entry 0x68
+ 111              0x18, // entry 0x69
+ 112              0x11, // entry 0x6A
+ 113              0x16, // entry 0x6B
+ 114              0x03, // entry 0x6C
+ 115              0x04, // entry 0x6D
+ 116              0x0D, // entry 0x6E
+ 117              0x0A, // entry 0x6F
+C51 COMPILER V8.02   PEC                                                                   07/21/2010 10:42:04 PAGE 3   
+
+ 118              0x57, // entry 0x70
+ 119              0x50, // entry 0x71
+ 120              0x59, // entry 0x72
+ 121              0x5E, // entry 0x73
+ 122              0x4B, // entry 0x74
+ 123              0x4C, // entry 0x75
+ 124              0x45, // entry 0x76
+ 125              0x42, // entry 0x77
+ 126              0x6F, // entry 0x78
+ 127              0x68, // entry 0x79
+ 128              0x61, // entry 0x7A
+ 129              0x66, // entry 0x7B
+ 130              0x73, // entry 0x7C
+ 131              0x74, // entry 0x7D
+ 132              0x7D, // entry 0x7E
+ 133              0x7A, // entry 0x7F
+ 134              0x89, // entry 0x80
+ 135              0x8E, // entry 0x81
+ 136              0x87, // entry 0x82
+ 137              0x80, // entry 0x83
+ 138              0x95, // entry 0x84
+ 139              0x92, // entry 0x85
+ 140              0x9B, // entry 0x86
+ 141              0x9C, // entry 0x87
+ 142              0xB1, // entry 0x88
+ 143              0xB6, // entry 0x89
+ 144              0xBF, // entry 0x8A
+ 145              0xB8, // entry 0x8B
+ 146              0xAD, // entry 0x8C
+ 147              0xAA, // entry 0x8D
+ 148              0xA3, // entry 0x8E
+ 149              0xA4, // entry 0x8F
+ 150              0xF9, // entry 0x90
+ 151              0xFE, // entry 0x91
+ 152              0xF7, // entry 0x92
+ 153              0xF0, // entry 0x93
+ 154              0xE5, // entry 0x94
+ 155              0xE2, // entry 0x95
+ 156              0xEB, // entry 0x96
+ 157              0xEC, // entry 0x97
+ 158              0xC1, // entry 0x98
+ 159              0xC6, // entry 0x99
+ 160              0xCF, // entry 0x9A
+ 161              0xC8, // entry 0x9B
+ 162              0xDD, // entry 0x9C
+ 163              0xDA, // entry 0x9D
+ 164              0xD3, // entry 0x9E
+ 165              0xD4, // entry 0x9F
+ 166              0x69, // entry 0xA0
+ 167              0x6E, // entry 0xA1
+ 168              0x67, // entry 0xA2
+ 169              0x60, // entry 0xA3
+ 170              0x75, // entry 0xA4
+ 171              0x72, // entry 0xA5
+ 172              0x7B, // entry 0xA6
+ 173              0x7C, // entry 0xA7
+ 174              0x51, // entry 0xA8
+ 175              0x56, // entry 0xA9
+ 176              0x5F, // entry 0xAA
+ 177              0x58, // entry 0xAB
+ 178              0x4D, // entry 0xAC
+ 179              0x4A, // entry 0xAD
+C51 COMPILER V8.02   PEC                                                                   07/21/2010 10:42:04 PAGE 4   
+
+ 180              0x43, // entry 0xAE
+ 181              0x44, // entry 0xAF
+ 182              0x19, // entry 0xB0
+ 183              0x1E, // entry 0xB1
+ 184              0x17, // entry 0xB2
+ 185              0x10, // entry 0xB3
+ 186              0x05, // entry 0xB4
+ 187              0x02, // entry 0xB5
+ 188              0x0B, // entry 0xB6
+ 189              0x0C, // entry 0xB7
+ 190              0x21, // entry 0xB8
+ 191              0x26, // entry 0xB9
+ 192              0x2F, // entry 0xBA
+ 193              0x28, // entry 0xBB
+ 194              0x3D, // entry 0xBC
+ 195              0x3A, // entry 0xBD
+ 196              0x33, // entry 0xBE
+ 197              0x34, // entry 0xBF
+ 198              0x4E, // entry 0xC0
+ 199              0x49, // entry 0xC1
+ 200              0x40, // entry 0xC2
+ 201              0x47, // entry 0xC3
+ 202              0x52, // entry 0xC4
+ 203              0x55, // entry 0xC5
+ 204              0x5C, // entry 0xC6
+ 205              0x5B, // entry 0xC7
+ 206              0x76, // entry 0xC8
+ 207              0x71, // entry 0xC9
+ 208              0x78, // entry 0xCA
+ 209              0x7F, // entry 0xCB
+ 210              0x6A, // entry 0xCC
+ 211              0x6D, // entry 0xCD
+ 212              0x64, // entry 0xCE
+ 213              0x63, // entry 0xCF
+ 214              0x3E, // entry 0xD0
+ 215              0x39, // entry 0xD1
+ 216              0x30, // entry 0xD2
+ 217              0x37, // entry 0xD3
+ 218              0x22, // entry 0xD4
+ 219              0x25, // entry 0xD5
+ 220              0x2C, // entry 0xD6
+ 221              0x2B, // entry 0xD7
+ 222              0x06, // entry 0xD8
+ 223              0x01, // entry 0xD9
+ 224              0x08, // entry 0xDA
+ 225              0x0F, // entry 0xDB
+ 226              0x1A, // entry 0xDC
+ 227              0x1D, // entry 0xDD
+ 228              0x14, // entry 0xDE
+ 229              0x13, // entry 0xDF
+ 230              0xAE, // entry 0xE0
+ 231              0xA9, // entry 0xE1
+ 232              0xA0, // entry 0xE2
+ 233              0xA7, // entry 0xE3
+ 234              0xB2, // entry 0xE4
+ 235              0xB5, // entry 0xE5
+ 236              0xBC, // entry 0xE6
+ 237              0xBB, // entry 0xE7
+ 238              0x96, // entry 0xE8
+ 239              0x91, // entry 0xE9
+ 240              0x98, // entry 0xEA
+ 241              0x9F, // entry 0xEB
+C51 COMPILER V8.02   PEC                                                                   07/21/2010 10:42:04 PAGE 5   
+
+ 242              0x8A, // entry 0xEC
+ 243              0x8D, // entry 0xED
+ 244              0x84, // entry 0xEE
+ 245              0x83, // entry 0xEF
+ 246              0xDE, // entry 0xF0
+ 247              0xD9, // entry 0xF1
+ 248              0xD0, // entry 0xF2
+ 249              0xD7, // entry 0xF3
+ 250              0xC2, // entry 0xF4
+ 251              0xC5, // entry 0xF5
+ 252              0xCC, // entry 0xF6
+ 253              0xCB, // entry 0xF7
+ 254              0xE6, // entry 0xF8
+ 255              0xE1, // entry 0xF9
+ 256              0xE8, // entry 0xFA
+ 257              0xEF, // entry 0xFB
+ 258              0xFA, // entry 0xFC
+ 259              0xFD, // entry 0xFD
+ 260              0xF4, // entry 0xFE
+ 261              0xF3  // entry 0xFF
+ 262          };
+ 263          
+ 264          
+ 265          BYTE calc_pec(BYTE start_crc8, BYTE length, BYTE* start_addr);
+ 266          
+ 267          
+ 268          // function: calculate PEC byte based on a 256-entry CRC-8 look-up table
+ 269          // entries: start_addr - starting address of memory, based on which a PEC byte will be calculated
+ 270          //          start_crc8 - the starting CRC-8 value
+ 271          //          length   - # of bytes to calculate on
+ 272          // return: an 8-bit CRC-8 that will be used as the PEC byte
+ 273          BYTE calc_pec(BYTE start_crc8, BYTE length, BYTE* start_addr)
+ 274          {
+ 275   1          BYTE i = 0;
+ 276   1          BYTE crc8 = start_crc8;
+ 277   1      
+ 278   1          for (; i < length; i++)
+ 279   1          {
+ 280   2              crc8 ^= *(start_addr+i); // XOR the previous CRC-8 result with the new byte of data
+ 281   2              crc8 = crc8_table[crc8];
+ 282   2          }
+ 283   1      
+ 284   1          return crc8;
+ 285   1      }
+ 286          
+C51 COMPILER V8.02   PEC                                                                   07/21/2010 10:42:04 PAGE 6   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _calc_pec (BEGIN)
+                                           ; SOURCE LINE # 273
+0000 8B00        R     MOV     start_addr,R3
+0002 8A00        R     MOV     start_addr+01H,R2
+0004 8900        R     MOV     start_addr+02H,R1
+;---- Variable 'length' assigned to Register 'R5' ----
+;---- Variable 'start_crc8' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 274
+                                           ; SOURCE LINE # 275
+;---- Variable 'i' assigned to Register 'R6' ----
+0006 E4                CLR     A
+0007 FE                MOV     R6,A
+                                           ; SOURCE LINE # 276
+;---- Variable 'crc8' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 278
+0008         ?C0001:
+0008 EE                MOV     A,R6
+0009 C3                CLR     C
+000A 9D                SUBB    A,R5
+000B 5019              JNC     ?C0002
+                                           ; SOURCE LINE # 279
+                                           ; SOURCE LINE # 280
+000D AB00        R     MOV     R3,start_addr
+000F AA00        R     MOV     R2,start_addr+01H
+0011 A900        R     MOV     R1,start_addr+02H
+0013 8E82              MOV     DPL,R6
+0015 758300            MOV     DPH,#00H
+0018 120000      E     LCALL   ?C?CLDOPTR
+001B 6207              XRL     AR7,A
+                                           ; SOURCE LINE # 281
+001D EF                MOV     A,R7
+001E 900000      R     MOV     DPTR,#crc8_table
+0021 93                MOVC    A,@A+DPTR
+0022 FF                MOV     R7,A
+                                           ; SOURCE LINE # 282
+0023 0E                INC     R6
+0024 80E2              SJMP    ?C0001
+0026         ?C0002:
+                                           ; SOURCE LINE # 284
+                                           ; SOURCE LINE # 285
+0026         ?C0004:
+0026 22                RET     
+             ; FUNCTION _calc_pec (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     39    ----
+   CONSTANT SIZE    =    256    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

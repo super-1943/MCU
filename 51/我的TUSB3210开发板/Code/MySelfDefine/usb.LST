@@ -1,0 +1,2871 @@
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE USB
+OBJECT MODULE PLACED IN usb.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE usb.c BROWSE DEFINE(WORK_AROUND_192) DEBUG OBJECTEXTEND CODE
+
+line level    source
+
+   1          #include "reg52modified.h"
+   2          #include "types.h"
+   3          #include "tusb2136.h"
+   4          #include "usb.h"
+   5          #include "serial.h"
+   6          
+   7          
+   8          tDEVICE_REQUEST xdata tSetupPacket _at_ 0xff00;
+   9          tEDB0 xdata tEndPoint0DescriptorBlock  _at_ 0xff80;
+  10          tEDB xdata tInputEndPointDescriptorBlock[3]_at_ 0xff48;
+  11          tEDB xdata tOutputEndPointDescriptorBlock[3] _at_ 0xff08;
+  12          BYTE xdata abIEP0Buffer[EP0_MAX_PACKET_SIZE]  _at_ 0xfef8;
+  13          BYTE xdata abOEP0Buffer[EP0_MAX_PACKET_SIZE] _at_ 0xfef0;
+  14          BYTE xdata abDescriptor[SIZEOF_DEVICE_DESCRIPTOR]  _at_ 0xfe80;
+  15          BYTE xdata pbOutBufferAddress[EP_MAX_PACKET_SIZE] _at_ 0xfd80; // ENDPOINT 1 OUT X buffer
+  16          BYTE xdata pb48BufferAddress[EP_MAX_PACKET_SIZE] _at_ 0xfdc0;  // use ENDPOINT 1 OUT Y buffer space for bu
+             -ffering the 1st 
+  17                                                                         // half of 96-byte block write for UCD9110 
+             -flash programming
+  18          BYTE xdata pbInBufferAddress[EP_MAX_PACKET_SIZE] _at_ 0xfe00;  // ENDPOINT 1 IN X buffer
+  19          
+  20          #ifdef WORK_AROUND_192
+  21          BYTE xdata pb145BufferAddress[160] _at_ 0xfe40;  // WW
+  22          #endif
+  23          
+  24          /***************************************************************************
+  25           * Section:    Declarations                                                *
+  26           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+  27           * Description: This section of the code declares global and external      *
+  28           *    variables, as well as functions, etc.                                *
+  29           ***************************************************************************/
+  30          
+  31          // EXTERNAL DECLARATIONS 
+  32          extern BYTE code abromReportDescriptor[SIZEOF_REPORT_DESCRIPTOR];
+  33          extern unsigned char intFlags; // From keyboard.c
+  34          extern unsigned char otherFlags; // From keyboard.c
+  35          extern void IEP1InterruptHandler(void); // From keyboard.c
+  36          extern void UsbReset(void); // From usbinit.c
+  37          extern void OEP0SetLEDs(void);
+  38          extern BYTE code abromReportDescriptor[SIZEOF_REPORT_DESCRIPTOR];
+  39          extern BYTE code abromConfigurationDescriptorGroup[SIZEOF_BOOTCODE_CONFIG_DESC_GROUP];
+  40          extern BYTE code abromDeviceDescriptor[SIZEOF_DEVICE_DESCRIPTOR];
+  41          extern BYTE code LanguageId[];
+  42          extern BYTE code ProductStringDescriptor[];
+  43          extern BYTE code SerialNumberStringDescriptor[];
+  44          extern BYTE code ManufacturerStringDescriptor[];
+  45          
+  46          // for PMBus/SMBus transactions. WW
+  47          extern BYTE i2c_start(void);
+  48          extern BYTE i2c_restart(void);
+  49          extern BYTE i2c_stop(void);
+  50          extern BYTE i2c_write_bytes(BYTE num_of_bytes, BYTE * source_buf);
+  51          extern BYTE i2c_read_bytes(BYTE num_of_bytes, BYTE * destination_buf, BYTE nack_byte);
+  52          extern void i2c_reset(void);
+  53          extern BYTE calc_pec(BYTE start_crc8, BYTE length, BYTE* start_addr);
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 2   
+
+  54          
+  55          
+  56          extern BYTE eeprom_read(WORD wAddress, BYTE bNumber, PBYTE pbDataArray);
+  57          extern BYTE eeprom_write(WORD wAddress, BYTE bNumber, PBYTE pbDataArray);
+  58          
+  59          
+  60          // GLOBAL VARIABLE DECLARATIONS
+  61          bit deviceReady = FALSE;                // Indicates whether the device has been
+  62                                                                          // properly initialized on the USB bus.
+  63          bit bSuspended = FALSE;             // Indicates whether the device is suspended or not
+  64          BYTE bStatusAction;                             // Indicates the current state of sending
+  65                                                                          // receiving data packets.
+  66          BYTE bUsbDeviceAddress;                 // The device's USB address.
+  67          WORD wBytesRemainingOnIEP0;     // For endpoint zero transmitter only
+  68                                          // Holds count of bytes remaining to be
+  69                                          // transmitted by endpoint 0.  A value
+  70                                          // of 0 means that a 0-length data packet
+  71                                          // A value of 0xFFFF means that transfer
+  72                                          // is complete.
+  73          bit bHostAskMoreDataThanAvailable;
+  74                                          // If host ask more data then TUSB2136 has
+  75                                          // It will send one zero-length packet
+  76                                          // if the asked lenght is a multiple of
+  77                                          // max. size of endpoint 0
+  78          PBYTE pbIEP0Buffer;             // A buffer pointer to input end point 0
+  79                                          // Data sent back to host is copied from
+  80                                          // this pointed memory location
+  81          BYTE bConfigurationNumber = 0;  // Set to 1 when USB device has been
+  82                                          // configured, set to 0 when unconfigured
+  83          BYTE bInterfaceNumber = 0;              // The interface number selected
+  84          WORD wDeviceFeatures = 0;               // The device features
+  85          WORD wBytesRemainingOnOEP0;     // For endpoint zero transmitter only
+  86                                          // Holds count of bytes remaining to be
+  87                                          // received by endpoint 0.  A value
+  88                                          // of 0 means that a 0-length data packet
+  89                                          // A value of 0xFFFF means that transfer
+  90          PBYTE pbOEP0Buffer;             // A buffer pointer to output end point 0
+  91                                          // Data sent from host is copied to
+  92                                          // this pointed memory location
+  93                                          // is complete.
+  94          
+  95          WORD pmb_clk_low_stretch_timer;
+  96          BYTE previous_crc8;
+  97          bit PMBus_Error; // 0 - success; 1 - fail. WW
+  98          bit PMBus_Busy; // 1 - busy; 0 - idle. WW
+  99          bit PMBus_Group_Command_Busy; // 1 - busy; 0 - idle. WW
+ 100          bit With_PEC; 
+ 101          bit Set_400KHz; // 1 for 400KHz; 0 for 100KHz
+ 102          
+ 103          BYTE volatile bdata my_bits; // create a global bit-addressable variable. WW
+ 104          sbit my_bit7 = my_bits ^ 7;
+ 105          sbit my_bit6 = my_bits ^ 6;
+ 106          sbit my_bit5 = my_bits ^ 5;
+ 107          sbit my_bit4 = my_bits ^ 4;
+ 108          sbit my_bit3 = my_bits ^ 3;
+ 109          sbit my_bit2 = my_bits ^ 2;
+ 110          sbit my_bit1 = my_bits ^ 1;
+ 111          sbit my_bit0 = my_bits ^ 0;
+ 112          
+ 113          
+ 114          #define usbClearOEP0ByteCount tEndPoint0DescriptorBlock.bOEPBCNT = 0x00
+ 115          #define usbStallOEP0          tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 3   
+
+ 116          
+ 117          void usbGetConfiguration(void);
+ 118          void usbSetConfiguration(void);
+ 119          void usbSetReport(void);
+ 120          void OEP1InterruptHandler(void);
+ 121          void usbGetDeviceDescriptor(void);
+ 122          void usbGetHIDDescriptor(void);
+ 123          void usbGetConfigurationDescriptor(void);
+ 124          void usbGetStringDescriptor(void);
+ 125          void usbGetReportDescriptor(void);
+ 126          void usbSetIdle(void);
+ 127          void usbGetIdle(void);
+ 128          void usbSetProtocol(void);
+ 129          void usbGetProtocol(void);
+ 130          void usbGetInterface(void);
+ 131          void usbSetInterface(void);
+ 132          void usbGetDeviceStatus(void);
+ 133          void usbSetRemoteWakeup(void);
+ 134          void usbClearRemoteWakeup(void);
+ 135          void usbGetInterfaceStatus(void);
+ 136          void usbSetAddress(void);
+ 137          void usbSetEndpointHalt(void);
+ 138          void usbClearEndpointHalt(void);
+ 139          void usbGetEndpointStatus(void);
+ 140          void usbNonStandardRequest(void);
+ 141          void usbDecodeAndProcessUsbRequest(void);
+ 142          void usbReceiveNextPacketOnOEP0(void);
+ 143          void SetupPacketInterruptHandler(void);
+ 144          void OEP0InterruptHandler(void);
+ 145          void IEP0InterruptHandler(void);
+ 146          
+ 147          void usbReceiveDataPacketOnEP0(PBYTE pbBuffer);
+ 148          void usbStallEndpoint0(void);
+ 149          void usbSendZeroLengthPacketOnIEP0(void);
+ 150          void usbSendNextPacketOnIEP0(void);
+ 151          void usbSendDataPacketOnEP0(PBYTE pbBuffer);
+ 152          
+ 153          
+ 154          
+ 155          
+ 156          /***************************************************************************
+ 157           * Section:    USB REQUEST FUNCTIONS                                       *
+ 158           * Programmer: Craig Steiner (csteiner@vaultbbs.com) based on code by      *
+ 159           *             Lobo Tai (lobotai@ti.com)                                   *
+ 160           * Description: The functions in this section of code are called by the    *
+ 161           *    usbDecodeAndProcessUsbRequest function when a Setup packet is        *
+ 162           *    received.  Each function handles a specific USB/Class/Endpoint       *
+ 163           *    function.                                                            *
+ 164           ***************************************************************************/
+ 165          
+ 166          // The Get/Set configuration functions allow the host to select one of various
+ 167          // configurations that the keyboard may support.  This firmware only supports
+ 168          // one configuration, but the following functions allow the firmware to accept
+ 169          // any given configuration number.  The code, as-is, will function identically
+ 170          // in any given configuration, but additional configurations may be supported
+ 171          // by simply adding support for the configurations, presumably in keyboard.c.
+ 172          
+ 173          void usbGetConfiguration(void)
+ 174          {
+ 175   1              rs232_printstr("GetCFG\r\n");
+ 176   1          wBytesRemainingOnIEP0 = 1;
+ 177   1          usbSendDataPacketOnEP0((PBYTE) &bConfigurationNumber);
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 4   
+
+ 178   1      }
+ 179          
+ 180          void usbSetConfiguration(void)
+ 181          {
+ 182   1              rs232_printstr("SetCFG\r\n");
+ 183   1          usbStallOEP0;
+ 184   1          bConfigurationNumber = tSetupPacket.bValueL;
+ 185   1              tInputEndPointDescriptorBlock[0].bEPCNF |= EPCNF_UBME|EPCNF_USBIE;      
+ 186   1              tInputEndPointDescriptorBlock[0].bEPBCTX = 0x00;
+ 187   1          usbSendZeroLengthPacketOnIEP0();
+ 188   1      }
+ 189          
+ 190          
+ 191          // we don't use this function. WW
+ 192          // The Set_Report request is sent by the host to a typical HID device,
+ 193          // such as this keyboard, to update the LEDs that correspond to the
+ 194          // scroll lock, caps lock, and num lock.  When the Set_Report setup
+ 195          // packet is received, we initiate a "Receive Data Packet" sequence
+ 196          // since the actual 1-byte data value will be in the following
+ 197          // packet on OEP0.  Thus we initicate that we will receive 1 byte
+ 198          // (since the LED data is contained in a single byte) and we
+ 199          // instruct the receive routine to receive the data at the address
+ 200          // at which the bLED variable is located.  Thus bLed will automatically
+ 201          // be updated with the new value after the transfer is completed.
+ 202          void usbSetReport(void)
+ 203          {
+ 204   1              rs232_printstr("SetRp\r\n");
+ 205   1          wBytesRemainingOnOEP0 = 1;
+ 206   1          usbReceiveDataPacketOnEP0((PBYTE) 0xFEA0); // point to output endpoint 2 X buffer since we don't use i
+             -t
+ 207   1      }
+ 208          
+ 209          void OEP1InterruptHandler(void)
+ 210          {
+ 211   1              rs232_printstr("EP1OUT buffer:");
+ 212   1              rs232_printhex(pbOutBufferAddress[0]);
+ 213   1              rs232_printhex(pbOutBufferAddress[1]);
+ 214   1              rs232_printhex(pbOutBufferAddress[2]);
+ 215   1              rs232_printhex(pbOutBufferAddress[3]);
+ 216   1              rs232_printhex(pbOutBufferAddress[4]);
+ 217   1              rs232_printhex(pbOutBufferAddress[5]);
+ 218   1              rs232_printhex(pbOutBufferAddress[6]);
+ 219   1              rs232_printhex(pbOutBufferAddress[7]);
+ 220   1              rs232_printstr("\r\n");
+ 221   1          // clear NAK bit so that more OUT packet can go out of the host
+ 222   1          tOutputEndPointDescriptorBlock[0].bEPBCTX = 0x00;
+ 223   1              
+ 224   1      }
+ 225          
+ 226          
+ 227          // The following functions are called at initial device enumeration, and are used
+ 228          // to obtain the device, configuration, and string descriptors from the
+ 229          // device.
+ 230          void usbGetDeviceDescriptor(void)
+ 231          {
+ 232   1              BYTE bTemp;
+ 233   1              rs232_printstr("GDD\r\n");
+ 234   1              // Copy the DEVICE DESCRIPTOR from program "ROM" to XRAM
+ 235   1          for(bTemp=0;bTemp<SIZEOF_DEVICE_DESCRIPTOR;bTemp++)
+ 236   1              abDescriptor[bTemp] = abromDeviceDescriptor[bTemp];
+ 237   1      
+ 238   1          usbClearOEP0ByteCount;
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 5   
+
+ 239   1          wBytesRemainingOnIEP0 = SIZEOF_DEVICE_DESCRIPTOR;
+ 240   1          usbSendDataPacketOnEP0((PBYTE)&abDescriptor);
+ 241   1          
+ 242   1          // Once the Device Descriptor has been sent, the device can essentially
+ 243   1          // function.  Thus we enable the deviceReady variable so that the main
+ 244   1          // code in keyboard.c knows that it can begin the service loop.
+ 245   1              deviceReady = TRUE;    
+ 246   1      }
+ 247          
+ 248          void usbGetHIDDescriptor(void)
+ 249          {
+ 250   1              BYTE bTemp;
+ 251   1              // Copy the DEVICE DESCRIPTOR from program "ROM" to XRAM
+ 252   1          for(bTemp=0;bTemp<SIZEOF_DEVICE_DESCRIPTOR;bTemp++)
+ 253   1              abDescriptor[bTemp] = abromConfigurationDescriptorGroup[SIZEOF_CONFIG_DESCRIPTOR+SIZEOF_INTERFACE_
+             -DESCRIPTOR + bTemp];
+ 254   1      
+ 255   1          usbClearOEP0ByteCount;
+ 256   1          wBytesRemainingOnIEP0 = SIZEOF_KEYBD_HID_DESCRIPTOR;
+ 257   1          usbSendDataPacketOnEP0((PBYTE)&abDescriptor);
+ 258   1      }
+ 259          
+ 260          void usbGetConfigurationDescriptor(void)
+ 261          {
+ 262   1              BYTE bTemp;
+ 263   1              rs232_printstr("GDC\r\n");
+ 264   1              // Copy the DEVICE DESCRIPTOR from program "ROM" to XRAM
+ 265   1          for(bTemp=0;bTemp<abromConfigurationDescriptorGroup[2];bTemp++)
+ 266   1              abDescriptor[bTemp] = abromConfigurationDescriptorGroup[bTemp];
+ 267   1          usbClearOEP0ByteCount;
+ 268   1          wBytesRemainingOnIEP0 = SIZEOF_BOOTCODE_CONFIG_DESC_GROUP;
+ 269   1          usbSendDataPacketOnEP0((PBYTE)&abDescriptor);
+ 270   1      }
+ 271          
+ 272          void usbGetStringDescriptor(void)
+ 273          {
+ 274   1              BYTE bTemp;
+ 275   1              rs232_printstr("GDS");
+ 276   1              rs232_printhex(tSetupPacket.bValueL);
+ 277   1              rs232_printstr("\r\n");
+ 278   1              // Copy the DEVICE DESCRIPTOR from program "ROM" to XRAM
+ 279   1              switch(tSetupPacket.bValueL)
+ 280   1              {
+ 281   2              case 0://Language ID    
+ 282   2                  for(bTemp=0;bTemp<LanguageId[0];bTemp++)
+ 283   2                      abDescriptor[bTemp] = LanguageId[bTemp];
+ 284   2                  usbClearOEP0ByteCount;
+ 285   2                  wBytesRemainingOnIEP0 = LanguageId[0];
+ 286   2                      break;
+ 287   2              case 1://Manufacturer
+ 288   2                  for(bTemp=0;bTemp<ManufacturerStringDescriptor[0];bTemp++)
+ 289   2                      abDescriptor[bTemp] = ManufacturerStringDescriptor[bTemp];
+ 290   2                  usbClearOEP0ByteCount;
+ 291   2                  wBytesRemainingOnIEP0 = ManufacturerStringDescriptor[0];
+ 292   2                      break;
+ 293   2              case 2://Prod
+ 294   2                  for(bTemp=0;bTemp<ProductStringDescriptor[0];bTemp++)
+ 295   2                      abDescriptor[bTemp] = ProductStringDescriptor[bTemp];
+ 296   2                  usbClearOEP0ByteCount;
+ 297   2                  wBytesRemainingOnIEP0 = ProductStringDescriptor[0];
+ 298   2                      break;
+ 299   2              case 3://serial
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 6   
+
+ 300   2                  for(bTemp=0;bTemp<SerialNumberStringDescriptor[0];bTemp++)
+ 301   2                      abDescriptor[bTemp] = SerialNumberStringDescriptor[bTemp];
+ 302   2                  usbClearOEP0ByteCount;
+ 303   2                  wBytesRemainingOnIEP0 = SerialNumberStringDescriptor[0];
+ 304   2                      break;
+ 305   2              }
+ 306   1          usbSendDataPacketOnEP0((PBYTE)&abDescriptor);
+ 307   1      }
+ 308          
+ 309          void usbGetReportDescriptor(void)
+ 310          {
+ 311   1          usbClearOEP0ByteCount;
+ 312   1              rs232_printstr("GDRp\r\n");
+ 313   1          wBytesRemainingOnIEP0 = SIZEOF_REPORT_DESCRIPTOR;
+ 314   1          usbSendDataPacketOnEP0((PBYTE)&abromReportDescriptor);
+ 315   1      }
+ 316          
+ 317          // Support of the following two functions is optional.  Supporting these
+ 318          // features allows the host to set the Idle rate.  By default, an HID
+ 319          // device should always report the current status of the keys, even
+ 320          // if they haven't changed.  However, to save bandwidth, Windows will
+ 321          // attempt to set the Idle rate to 0 which means the firmware should
+ 322          // only report keypresses when their state changes.
+ 323          
+ 324          BYTE gbIdleRateL;
+ 325          BYTE gbIdleRateH;
+ 326          void usbSetIdle(void)
+ 327          {
+ 328   1      //    usbStallOEP0;
+ 329   1              rs232_printstr("SETIDLE\r\n");
+ 330   1          gbIdleRateL = tSetupPacket.bValueL;
+ 331   1          gbIdleRateH = tSetupPacket.bValueH;
+ 332   1          usbSendZeroLengthPacketOnIEP0();
+ 333   1      }
+ 334          
+ 335          void usbGetIdle(void)
+ 336          {
+ 337   1              rs232_printstr("GETIDLE\r\n");
+ 338   1          wBytesRemainingOnIEP0 = 1;
+ 339   1          usbSendDataPacketOnEP0(&gbIdleRateH);
+ 340   1      }
+ 341          
+ 342          BYTE gbProtocol=1; // default is report protocol
+ 343          void usbSetProtocol(void)
+ 344          {
+ 345   1      //    usbStallOEP0;
+ 346   1              rs232_printstr("SET_Protocol\r\n");
+ 347   1          gbProtocol = tSetupPacket.bValueL;
+ 348   1          usbSendZeroLengthPacketOnIEP0();
+ 349   1      }
+ 350          
+ 351          void usbGetProtocol(void)
+ 352          {
+ 353   1              rs232_printstr("GET_Protocol\r\n");
+ 354   1          wBytesRemainingOnIEP0 = 1;
+ 355   1          usbSendDataPacketOnEP0(&gbProtocol);
+ 356   1      }
+ 357          
+ 358          // The Get/Set Interface, like the Get/Set Configuration, don't really
+ 359          // serve any real purpose in this firmware, but they are handled so
+ 360          // that modifications to the code may be made easily.  As-is, the host
+ 361          // may Set any interface number, and a Get Interface request will simply
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 7   
+
+ 362          // return the value previously Set.
+ 363          
+ 364          void usbGetInterface(void)
+ 365          {
+ 366   1              rs232_printstr("GET_Interface\r\n");
+ 367   1          wBytesRemainingOnIEP0 = 1;
+ 368   1          usbSendDataPacketOnEP0((PBYTE) &bInterfaceNumber);
+ 369   1      }
+ 370          
+ 371          void usbSetInterface(void)
+ 372          {
+ 373   1              rs232_printstr("SET_Interface\r\n");
+ 374   1          usbStallOEP0;                             // control write without data stage
+ 375   1          bInterfaceNumber = tSetupPacket.bIndexL;
+ 376   1          usbSendZeroLengthPacketOnIEP0();
+ 377   1      }
+ 378          
+ 379          // The GetDeviceStatus function is used to obtain the status of the
+ 380          // device.  The status is essentially the Remote Wakeup status as 
+ 381          // well as the "Self-powered" indicator.  The value returned by
+ 382          // GetDeviceStatus is modified by the SetRemoteWakeup and
+ 383          // ClearRemoteWakeup requests.
+ 384          
+ 385          void usbGetDeviceStatus(void)
+ 386          {
+ 387   1              rs232_printstr("GET_DevSta\r\n");
+ 388   1          wBytesRemainingOnIEP0 = 2;
+ 389   1              usbSendDataPacketOnEP0((PBYTE) &wDeviceFeatures);
+ 390   1      }
+ 391          
+ 392          void usbSetRemoteWakeup(void)
+ 393          {
+ 394   1              rs232_printstr("SET_RotWk\r\n");
+ 395   1              bUSBCTL |= USBCTL_RWE;
+ 396   1              wDeviceFeatures |= 0x0200;
+ 397   1          usbStallOEP0;
+ 398   1          usbSendZeroLengthPacketOnIEP0();
+ 399   1      }
+ 400          
+ 401          void usbClearRemoteWakeup(void)
+ 402          {
+ 403   1              rs232_printstr("CLR_RotWk\r\n");
+ 404   1              bUSBCTL &= ~USBCTL_RWE;
+ 405   1              wDeviceFeatures &= ~0x0200;
+ 406   1          usbStallOEP0;
+ 407   1          usbSendZeroLengthPacketOnIEP0();
+ 408   1      }
+ 409          
+ 410          // The GetInterfaceStatus always returns a 0 as a 2-byte value.
+ 411          
+ 412          void usbGetInterfaceStatus(void)
+ 413          {
+ 414   1              WORD wStatusBuffer = 0x00;    
+ 415   1              rs232_printstr("GetInfSta\r\n");        
+ 416   1          usbStallOEP0;
+ 417   1          wBytesRemainingOnIEP0 = 2;
+ 418   1              usbSendDataPacketOnEP0((PBYTE) &wStatusBuffer);
+ 419   1      }
+ 420          
+ 421          // The SetAddress request allows the host to assign an address to this device.
+ 422          // The device starts with an address of 00h, as do all USB devices, until
+ 423          // the host specifically assigns it another address.  This code handles that
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 8   
+
+ 424          // assignment.
+ 425          
+ 426          void usbSetAddress(void)
+ 427          {
+ 428   1              rs232_printstr("SetAddr:");
+ 429   1              rs232_printhex(tSetupPacket.bValueL);
+ 430   1              rs232_printstr("\r\n");
+ 431   1          if(tSetupPacket.bValueL < 128)
+ 432   1              {
+ 433   2              bFUNADR = tSetupPacket.bValueL;
+ 434   2              bUsbDeviceAddress = tSetupPacket.bValueL;
+ 435   2              bStatusAction = STATUS_ACTION_SET_ADDRESS;
+ 436   2              usbSendZeroLengthPacketOnIEP0();
+ 437   2              }
+ 438   1          else 
+ 439   1              usbStallEndpoint0();
+ 440   1      }
+ 441          
+ 442          // The SetEndpointHalt allows the USB host to instruct the device to stop sending
+ 443          // information on IEP1, which is how the firmware delivers keystrokes to the host.
+ 444          // This is used mostly if a device goes crazy and starts sending too much data,
+ 445          // this allows the host to shut the endpoint down.  All we do is set or clear
+ 446          // the endpoint enable bit appropriately.  The GetEndpointStatus request reports
+ 447          // the status of the endpoint which is affected by Set/Clear EndpointHalt requests.
+ 448          
+ 449          void usbSetEndpointHalt(void)
+ 450          {
+ 451   1              rs232_printstr("SetEpHalt\r\n");
+ 452   1              tInputEndPointDescriptorBlock[0].bEPCNF &= ~EPCNF_UBME;
+ 453   1          usbSendZeroLengthPacketOnIEP0();
+ 454   1      }
+ 455          
+ 456          void usbClearEndpointHalt(void)
+ 457          {
+ 458   1              rs232_printstr("ClrEpHalt\r\n");
+ 459   1              tInputEndPointDescriptorBlock[0].bEPCNF |= EPCNF_UBME;  
+ 460   1          usbSendZeroLengthPacketOnIEP0();
+ 461   1      }
+ 462          
+ 463          void usbGetEndpointStatus(void)
+ 464          {
+ 465   1              WORD wEndpointStatus = 0x0100;
+ 466   1              rs232_printstr("GetEpSta\r\n");
+ 467   1              if(tInputEndPointDescriptorBlock[0].bEPCNF & EPCNF_UBME)
+ 468   1                      wEndpointStatus = 0x0000;
+ 469   1      
+ 470   1          wBytesRemainingOnIEP0 = 2;
+ 471   1              usbSendDataPacketOnEP0((PBYTE) &wEndpointStatus);
+ 472   1      }
+ 473          
+ 474          // Any non-standard or unrecognized request will arrive at the following
+ 475          // function by default.  We automatically stall the endpoint to indicate
+ 476          // it's an invalid or unrecognized request.
+ 477          
+ 478          void usbNonStandardRequest(void)
+ 479          {
+ 480   1              rs232_printstr("NonStandardReq\r\n");
+ 481   1              usbStallEndpoint0();
+ 482   1      }
+ 483          
+ 484          /***************************************************************************
+ 485           * Section:    REQUEST STRUCTURE                                           *
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 9   
+
+ 486           * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+ 487           * Description: This section of code defines the structure of the lookup   *
+ 488           *    table which determines which 'C' function should be called for each  *
+ 489           *    supported USB request.                                               * 
+ 490           ***************************************************************************/
+ 491          
+ 492          typedef struct _tDEVICE_REQUEST_COMPARE
+ 493          {
+ 494              BYTE    bmRequestType;              // See bit definitions below
+ 495              BYTE    bRequest;                   // See value definitions below
+ 496              BYTE    bValueL;                    // Meaning varies with request type
+ 497              BYTE    bValueH;                    // Meaning varies with request type
+ 498              BYTE    bIndexL;                    // Meaning varies with request type
+ 499              BYTE    bIndexH;                    // Meaning varies with request type
+ 500              BYTE    bLengthL;                   // Number of bytes of data to transfer (LSByte)
+ 501              BYTE    bLengthH;                   // Number of bytes of data to transfer (MSByte)
+ 502              BYTE    bCompareMask;               // MSB is bRequest, if set 1, bRequest should be matched, LSB is b
+             -LengthH
+ 503              VOID    (*pUsbFunction)(VOID);      // function pointer
+ 504          } tDEVICE_REQUEST_COMPARE, *ptDEVICE_REQUEST_COMPARE;
+ 505          
+ 506          /***************************************************************************
+ 507           * Section:    USB REQUEST TABLE                                           *
+ 508           * Programmer: Craig Steiner (csteiner@vaultbbs.com) based on code by      *
+ 509           *             Lobo Tai (lobotai@ti.com)                                   *
+ 510           * Description: This section of code defines the lookup table, using the   *
+ 511           *    structure defined in the previous section of code.  The values of    *
+ 512           *    the constants used in this structure are defined in usb.h.           * 
+ 513           * Structure of Table:                                                     * 
+ 514           *    bmRequestType: Indicates the type of request.  This is a bit-mapped  * 
+ 515           *          variable defined in the USB spec.  The bits of this variable   * 
+ 516           *          have the following purpose, and are defined in usb.h.          * 
+ 517           *          Bit 7: Data Direction (0=Host to Device, 1=Device to Host)     * 
+ 518           *          Bit 6-5: Type of request (00=Standard, 01=Class, 10=Vendor)    * 
+ 519           *          Bit 4-0: Recipient (00000=Device, 00001=Interface,             *
+ 520           *                              00010=Endpoint, 00011=Other                *
+ 521           *    bRequest: Indicates the request ID (Get descriptor, Get Status, Get  *
+ 522           *              feature, etc.).  These are defined in the USB and HID spec *
+ 523           *              and are declared in usb.h.                                 *
+ 524           *    bValueL/H: Additional values, purpose varies with request.           *
+ 525           *    bIndexL/H: Additional values, purpose varies with request.           *
+ 526           *    bLengthL/H: Number of bytes to transfer to or from host.             *
+ 527           *    bCompareMask: Indicates which of the above bytes should be compared  *
+ 528           *               to determine the function to call.  For example, the mask *
+ 529           *               0x80 means only bmRequestType must match. 0xC0 means      *
+ 530           *               both bmRequestType and bRequest must match.  If this      *
+ 531           *               variable is 0x00, as is the case in the last entry in the *
+ 532           *               table, then no bytes are compared and, thus, ANY packet   *
+ 533           *               will pass the comparsion stage.  This technique is used   *
+ 534           *               in the last entry of the table as an "else" condition     *
+ 535           *               so that any requests that haven't been handled by that    *
+ 536           *               point are handled by the usbNonStandardRequest function.  *
+ 537           ***************************************************************************/
+ 538          
+ 539          code tDEVICE_REQUEST_COMPARE tUsbRequestList[] =
+ 540          {
+ 541              // SET ENDPOINT FEATURE
+ 542              USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_ENDPOINT,
+ 543              USB_REQ_SET_FEATURE,
+ 544              FEATURE_ENDPOINT_STALL,0x00,
+ 545              0xff,0x00,
+ 546              0x00,0x00,
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 10  
+
+ 547              0xf7,&usbSetEndpointHalt,
+ 548          
+ 549              // CLEAR ENDPOINT FEATURE
+ 550              USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_ENDPOINT,
+ 551              USB_REQ_CLEAR_FEATURE,
+ 552              FEATURE_ENDPOINT_STALL,0x00,
+ 553              0xff,0x00,
+ 554              0x00,0x00,
+ 555              0xf7,&usbClearEndpointHalt,
+ 556          
+ 557              // GET CONFIGURATION
+ 558              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+ 559              USB_REQ_GET_CONFIGURATION,
+ 560              0x00,0x00,
+ 561              0x00,0x00,
+ 562              0x01,0x00,
+ 563              0xff,&usbGetConfiguration,
+ 564          
+ 565              // SET CONFIGURATION
+ 566              USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+ 567              USB_REQ_SET_CONFIGURATION,
+ 568              0xff,0x00,
+ 569              0x00,0x00,
+ 570              0x00,0x00,
+ 571              0xdf,&usbSetConfiguration,
+ 572          
+ 573              // GET DEVICE DESCRIPTOR
+ 574              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+ 575              USB_REQ_GET_DESCRIPTOR,
+ 576              0xff,DESC_TYPE_DEVICE,                  // bValueL is index and bValueH is type
+ 577              0xff,0xff,
+ 578              0xff,0xff,
+ 579              0xd0,&usbGetDeviceDescriptor,
+ 580          
+ 581              // GET CONFIGURATION DESCRIPTOR
+ 582              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+ 583              USB_REQ_GET_DESCRIPTOR,
+ 584              0xff,DESC_TYPE_CONFIG,                  // bValueL is index and bValueH is type
+ 585              0xff,0xff,
+ 586              0xff,0xff,
+ 587              0xd0,&usbGetConfigurationDescriptor,
+ 588          
+ 589              // GET HID DESCRIPTOR
+ 590              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_INTERFACE,
+ 591              USB_REQ_GET_DESCRIPTOR,
+ 592              0xff,DESC_TYPE_HID,                  // bValueL is index and bValueH is type
+ 593              0xff,0xff,
+ 594              0xff,0xff,
+ 595              0xd0,&usbGetHIDDescriptor,
+ 596          
+ 597              // GET STRING DESCRIPTOR
+ 598              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+ 599              USB_REQ_GET_DESCRIPTOR,
+ 600              0xff,DESC_TYPE_STRING,                  // bValueL is index and bValueH is type
+ 601              0xff,0xff,
+ 602              0xff,0xff,
+ 603              0xd0,&usbGetStringDescriptor,
+ 604          
+ 605              // GET REPORT DESCRIPTOR
+ 606              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_INTERFACE,
+ 607              USB_REQ_GET_DESCRIPTOR,
+ 608              0xff,DESC_TYPE_REPORT,                 // bValueL is index and bValueH is type
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 11  
+
+ 609              0xff,0xff,
+ 610              0xff,0xff,
+ 611              0xd0,&usbGetReportDescriptor,
+ 612          
+ 613              // SET REPORT
+ 614              USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+ 615              USB_REQ_SET_REPORT,
+ 616              0xff,0xFF,                 // bValueL is index and bValueH is type
+ 617              0xff,0xff,
+ 618              0xff,0xff,
+ 619              0xC0,&usbSetReport,
+ 620          
+ 621              // SET IDLE
+ 622              USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+ 623              USB_REQ_SET_IDLE,
+ 624              0xff,0xFF,                  // bValueL is index and bValueH is type
+ 625              0xff,0xff,
+ 626              0x00,0x00,
+ 627              0xc3,&usbSetIdle,
+ 628          
+ 629              // SET PROTOCOL
+ 630              USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+ 631              USB_REQ_SET_PROTOCOL,
+ 632              0xff,0xFF,                  // bValueL is index and bValueH is type
+ 633              0xff,0xff,
+ 634              0x00,0x00,
+ 635              0xc3,&usbSetProtocol,
+ 636          
+ 637              // GET IDLE
+ 638              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+ 639              USB_REQ_GET_IDLE,
+ 640              0xff,0xFF,                  // bValueL is index and bValueH is type
+ 641              0xff,0xff,
+ 642              0x01,0x00,
+ 643              0xc3,&usbGetIdle,
+ 644          
+ 645              // GET PROTOCOL
+ 646              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+ 647              USB_REQ_GET_PROTOCOL,
+ 648              0xff,0xFF,                  // bValueL is index and bValueH is type
+ 649              0xff,0xff,
+ 650              0x01,0x00,
+ 651              0xc3,&usbGetProtocol,
+ 652          
+ 653              // GET INTERFACE
+ 654              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_INTERFACE,
+ 655              USB_REQ_GET_INTERFACE,
+ 656              0x00,0x00,
+ 657              0xff,0xff,
+ 658              0x01,0x00,
+ 659              0xf3,&usbGetInterface,
+ 660          
+ 661              // GET DEVICE STATUS
+ 662              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+ 663              USB_REQ_GET_STATUS,
+ 664              0x00,0x00,
+ 665              0x00,0x00,
+ 666              0x02,0x00,
+ 667              0xff,&usbGetDeviceStatus,
+ 668          
+ 669              // GET INTERFACE STATUS
+ 670              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_INTERFACE,
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 12  
+
+ 671              USB_REQ_GET_STATUS,
+ 672              0x00,0x00,
+ 673              0xff,0x00,
+ 674              0x02,0x00,
+ 675              0xf7,&usbGetInterfaceStatus,
+ 676          
+ 677              // GET ENDPOINT STATUS
+ 678              USB_REQ_TYPE_INPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_ENDPOINT,
+ 679              USB_REQ_GET_STATUS,
+ 680              0x00,0x00,
+ 681              0xff,0x00,
+ 682              0x02,0x00,
+ 683              0xf7,&usbGetEndpointStatus,
+ 684          
+ 685              // SET ADDRESS
+ 686              USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+ 687              USB_REQ_SET_ADDRESS,
+ 688              0xff,0x00,
+ 689              0x00,0x00,
+ 690              0x00,0x00,
+ 691              0xdf,&usbSetAddress,
+ 692          
+ 693              // SET DEVICE FEATURE
+ 694              USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+ 695              USB_REQ_SET_FEATURE,
+ 696              FEATURE_REMOTE_WAKEUP,0x00,           // feature selector
+ 697              0x00,0x00,
+ 698              0x00,0x00,
+ 699              0xff,&usbSetRemoteWakeup, // df, setDeviceFeature
+ 700              
+ 701                  // CLEAR DEVICE FEATURE
+ 702              USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_DEVICE,
+ 703              USB_REQ_CLEAR_FEATURE,
+ 704              FEATURE_REMOTE_WAKEUP,0x00,
+ 705              0x00,0x00,
+ 706              0x00,0x00,
+ 707              0xff,&usbClearRemoteWakeup,
+ 708          
+ 709              // SET INTERFACE FEATURE
+ 710              USB_REQ_TYPE_OUTPUT | USB_REQ_TYPE_STANDARD | USB_REQ_TYPE_INTERFACE,
+ 711              USB_REQ_SET_INTERFACE,
+ 712              0xff,0x00,                      // alternative setting
+ 713              0xff,0x00,                      // interface number
+ 714              0x00,0x00,
+ 715              0xd7,&usbSetInterface,
+ 716          
+ 717                  // END OF LIST CATCH-ALL REQUEST: 
+ 718                  // This will match any USB request sicne bCompareMask is 0x00.
+ 719              0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,
+ 720              0x00,&usbNonStandardRequest
+ 721          };
+ 722          
+ 723          /***************************************************************************
+ 724           * Function:   UsbDecodeAndProcessUsbRequest()                             *
+ 725           * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+ 726           * Description: This function is called when a USB request has been        *
+ 727           *    received.  It searches the tUsbRequestList[] structure defined in    * 
+ 728           *    the previous section for a request that matches a given entry in     * 
+ 729           *    the table and, when matched, executes the corresponding function.    *  
+ 730           ***************************************************************************/
+ 731          
+ 732          void usbDecodeAndProcessUsbRequest(void)
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 13  
+
+ 733          {
+ 734   1          BYTE bMask,bResult,bTemp;
+ 735   1          BYTE *pbUsbRequestList;                 // save code space
+ 736   1      
+ 737   1              rs232_printhex(*(pbEP0_SETUP_ADDRESS+0));
+ 738   1              rs232_printhex(*(pbEP0_SETUP_ADDRESS+1));
+ 739   1              rs232_printhex(*(pbEP0_SETUP_ADDRESS+2));
+ 740   1              rs232_printhex(*(pbEP0_SETUP_ADDRESS+3));
+ 741   1              rs232_printhex(*(pbEP0_SETUP_ADDRESS+4));
+ 742   1              rs232_printhex(*(pbEP0_SETUP_ADDRESS+5));
+ 743   1              rs232_printhex(*(pbEP0_SETUP_ADDRESS+6));
+ 744   1              rs232_printhex(*(pbEP0_SETUP_ADDRESS+7));
+ 745   1              rs232_printstr("\r\n");
+ 746   1              // We initialize the pbUsbRequestList pointer to the beginning of the
+ 747   1              // tUsbRequestList[] so that we can subsequently traverse the table
+ 748   1              // by incrementing the pbUsbRequestList pointer.
+ 749   1          pbUsbRequestList = (PBYTE) &tUsbRequestList[0];
+ 750   1      
+ 751   1              // Cycle indefinitely until we've found an entry in the tUsbRequestList[]
+ 752   1              // table.  Since the last entry in the table has a 0x00 mask, we'll
+ 753   1              // *always* find a match, so this cycle will always exit.
+ 754   1          while(1)
+ 755   1              {
+ 756   2              bResult = 0x00;
+ 757   2              bMask   = 0x80;
+ 758   2      
+ 759   2              // We cycle through fields 0 through 7, which correspond to the 8 fields
+ 760   2              // in each entry of tUsbRequestList.  If the given byte in the packet
+ 761   2              // we just receive is equal to the corresponding byte in the table, we
+ 762   2              // set that bit in the result, indicating a byte which matched.  Otherwise,
+ 763   2              // we don't set the bit which means that byte didn't match.
+ 764   2              for(bTemp = 0; bTemp < 8; bTemp++)
+ 765   2                      {
+ 766   3                  if(*(pbEP0_SETUP_ADDRESS+bTemp) == *(pbUsbRequestList+bTemp)) 
+ 767   3                      bResult |= bMask;
+ 768   3                              bMask = bMask >> 1;
+ 769   3                      }
+ 770   2      
+ 771   2              // At this point, bResult holds 8 bits which indicate whether each of the
+ 772   2              // bytes in the packet matched the corresponding bytes in the tUsbRequestList[]
+ 773   2              // table.  We then AND the mask value in the table with the result so that
+ 774   2              // we only are comparing the bits required in the mask.  If the resulting
+ 775   2              // value is equal to the mask, that means that all significant bytes match.
+ 776   2              // This is done since any bit that is clear in the mask is a "don't care", so
+ 777   2              // the AND makes sure we don't reject a "valid" comparison beause a don't 
+ 778   2              // care bit actually matched.
+ 779   2              if((*(pbUsbRequestList+bTemp) & bResult) == *(pbUsbRequestList+bTemp)) 
+ 780   2                      break;
+ 781   2      
+ 782   2              // If we haven't found a matching entry yet, we advenced the pointer to point
+ 783   2              // to the next entry in the table, and keep looking.
+ 784   2              pbUsbRequestList += sizeof(tDEVICE_REQUEST_COMPARE);
+ 785   2              }
+ 786   1      
+ 787   1          // We check to see if any more setup packet(s) have been received and, if so, we
+ 788   1          // anbandon this one to hanlde the next one.
+ 789   1          if(bUSBSTA & (USBSTA_SETUP | USBSTA_STPOW) != 0x00) 
+ 790   1              return;
+ 791   1      
+ 792   1              // If we've reached this point of the function, we've found the function that should
+ 793   1              // be called given the current request.  So we call it...
+ 794   1              ((ptDEVICE_REQUEST_COMPARE)pbUsbRequestList)->pUsbFunction();
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 14  
+
+ 795   1      }
+ 796          
+ 797          /***************************************************************************
+ 798           * Function:   usbStallEndpoint0()                                         *
+ 799           * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+ 800           * Description: Sets the STALL flag on both IEP0 and OEP0.  Often called   *
+ 801           *    to reflect an error condition.                                       *
+ 802           ***************************************************************************/
+ 803          
+ 804          void usbStallEndpoint0(void)
+ 805          {
+ 806   1          tEndPoint0DescriptorBlock.bIEPCNFG |= EPCNF_STALL;
+ 807   1          tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL;
+ 808   1      }
+ 809          
+ 810          /***************************************************************************
+ 811           * Function:   usbReceiveDataPacketOnEP0 / ReceiveNextPacket               *
+ 812           * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+ 813           * Description: These two functions, together, are used to receive a data  *
+ 814           *    payload on the OEP0 endpoint.  The reception is first initiated by   *
+ 815           *    calling usbReceiveDataPacketOnEP0 and indicating the address that the*
+ 816           *    received data should be placed in.  As each data packet is received, *
+ 817           *    the usbReceiveNextPacketOnOEP0 will be called to process the packet  *
+ 818           *    and determine if the packet received was the last packet, or if there*
+ 819           *    are more packets coming.                                             * 
+ 820           ***************************************************************************/
+ 821          
+ 822          void usbReceiveDataPacketOnEP0(PBYTE pbBuffer)
+ 823          {
+ 824   1          pbOEP0Buffer = pbBuffer;
+ 825   1          wBytesRemainingOnOEP0 = (WORD)(tSetupPacket.bLengthH << 8) | (WORD)tSetupPacket.bLengthL;
+ 826   1          bStatusAction = STATUS_ACTION_DATA_OUT;
+ 827   1          usbClearOEP0ByteCount;            
+ 828   1      }
+ 829          
+ 830          void usbReceiveNextPacketOnOEP0(void)
+ 831          {
+ 832   1          BYTE bIndex,bByte;
+ 833   1      
+ 834   1              // First we must determine how many bytes were received in this data
+ 835   1              // packet.  We AND it with EPBCT_BYTECNT_MASK so that a NAK condition
+ 836   1              // will return "0 bytes."
+ 837   1          bByte = tEndPoint0DescriptorBlock.bOEPBCNT & EPBCT_BYTECNT_MASK;
+ 838   1      
+ 839   1              // If the number of bytes remaining to be received is greater than
+ 840   1              // or equal to the number of bytes received in this packet then
+ 841   1              // we handle the packet.  However, if we received more bytes than
+ 842   1              // we had expected we simply ignore the packet since it is
+ 843   1              // presumably erroneous.
+ 844   1          if(wBytesRemainingOnOEP0 >= (WORD)bByte)
+ 845   1              {
+ 846   2                      // For each of the bytes received, we copy the value received to the
+ 847   2                      // next position in the buffer we set aside for the OEP0 data.
+ 848   2              for(bIndex=0;bIndex<bByte;bIndex++)
+ 849   2                  *pbOEP0Buffer++ = abOEP0Buffer[bIndex];
+ 850   2      
+ 851   2                      // We now reduce the number of bytes remaining by the number of bytes
+ 852   2                      // received in this packet.                              
+ 853   2              wBytesRemainingOnOEP0 -= (WORD)bByte;
+ 854   2      
+ 855   2              // If there are still more bytes to be received in additional packets (i.e.,
+ 856   2                      // wBytesRemainingOnOEP0 is greater than zero), we clear the byte count and
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 15  
+
+ 857   2                      // reestablish bStatusAction to indicate that we are still in a DATA_OUT
+ 858   2                      // condition.
+ 859   2              if(wBytesRemainingOnOEP0 > 0)
+ 860   2                      {
+ 861   3                  usbClearOEP0ByteCount;        
+ 862   3                  bStatusAction = STATUS_ACTION_DATA_OUT;
+ 863   3                      }
+ 864   2              else
+ 865   2                      {
+ 866   3                      // If we aren't expecting any more data bytes, we terminate the OEP0
+ 867   3                      // transaction by stalling OEP0 and setting the bStatusAction condition
+ 868   3                      // to "Nothing."  Since in this firmware the only USB function that
+ 869   3                      // includes a subsequent data payload is the Set_Report function, we
+ 870   3                      // automatically update the keyboard LEDs with the new value.  If
+ 871   3                      // additional features are added that expect data payloads, calling
+ 872   3                      // the OEP0SetLeds() function when a Set_Report request was not
+ 873   3                      // received will cause no harm.
+ 874   3                  usbStallOEP0;
+ 875   3                  bStatusAction = STATUS_ACTION_NOTHING;        
+ 876   3                              OEP0SetLEDs();
+ 877   3                      }
+ 878   2              }
+ 879   1          else
+ 880   1              {
+ 881   2              // If the packet we received include more data than we expected, we ignore
+ 882   2              // the entire packet and abort the transfer.  This is accomplished by
+ 883   2              // stalling OEP0 and resetting the bStatusAction condition to "Nothing."
+ 884   2              usbStallOEP0;
+ 885   2              bStatusAction = STATUS_ACTION_NOTHING;
+ 886   2              }
+ 887   1      }
+ 888          
+ 889          /***************************************************************************
+ 890           * Function:   usbSendZeroLengthPacketOnIEP0()                             *
+ 891           * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+ 892           * Description: Sends a 0-lengthg packet back to the host on IEP0. Often   *
+ 893           *    called to acknowledge a packet received from the host that requires  *
+ 894           *    no data in the reply, just an acknowledgement of receipt.            *
+ 895           ***************************************************************************/
+ 896          
+ 897          void usbSendZeroLengthPacketOnIEP0(void)
+ 898          {
+ 899   1          wBytesRemainingOnIEP0 = NO_MORE_DATA;
+ 900   1          bStatusAction = STATUS_ACTION_NOTHING;
+ 901   1          tEndPoint0DescriptorBlock.bIEPBCNT = 0x00;
+ 902   1      }
+ 903          
+ 904          /***************************************************************************
+ 905           * Function:   usbSendDataPacketOnEPO / SendNext                           *
+ 906           * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+ 907           * Description: These two functions, together, are responsible for sending *
+ 908           *    data packets back to the host on IEPO.  The transfer is initiated by *
+ 909           *    first calling usbSendDataPacketOnEP0 and indicating the address of   *
+ 910           *    the buffer to send.  This initiates the transfer and sends the first *
+ 911           *    packet of data.  If there is more data than can be sent in the first *
+ 912           *    packet, the usbSendNextPacketOnIEP0 function is called to send       *
+ 913           *    subsequent packets of data when an interrupt indicates the previous  *
+ 914           *    packet has been sent.                                                *
+ 915           ***************************************************************************/
+ 916          
+ 917          void usbSendDataPacketOnEP0(PBYTE pbBuffer)
+ 918          {
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 16  
+
+ 919   1          WORD wTemp;
+ 920   1      
+ 921   1          pbIEP0Buffer = pbBuffer;
+ 922   1      
+ 923   1          wTemp = (WORD)(tSetupPacket.bLengthH << 8) | (WORD)tSetupPacket.bLengthL;
+ 924   1      
+ 925   1          // Limit transfer size to wLength if needed
+ 926   1          // this prevent USB device sending 'more than require' data back to host
+ 927   1          if(wBytesRemainingOnIEP0 >= wTemp)
+ 928   1              {
+ 929   2              wBytesRemainingOnIEP0 = wTemp;
+ 930   2              bHostAskMoreDataThanAvailable = FALSE;
+ 931   2              }
+ 932   1              else
+ 933   1                      { 
+ 934   2                      bHostAskMoreDataThanAvailable = TRUE;
+ 935   2                      }
+ 936   1      
+ 937   1          usbSendNextPacketOnIEP0();
+ 938   1      }
+ 939          
+ 940          void usbSendNextPacketOnIEP0(void)
+ 941          {
+ 942   1          BYTE bPacketSize,bIndex;
+ 943   1      
+ 944   1          // First check if there are bytes remaining to be transferred
+ 945   1          if(wBytesRemainingOnIEP0 != NO_MORE_DATA)
+ 946   1              {
+ 947   2              if(wBytesRemainingOnIEP0 > EP0_MAX_PACKET_SIZE)
+ 948   2                      {
+ 949   3                  // More bytes are remaining than will fit in one packet
+ 950   3                  // there will be More IN Stage
+ 951   3                  bPacketSize = EP0_MAX_PACKET_SIZE;
+ 952   3                  wBytesRemainingOnIEP0 -= EP0_MAX_PACKET_SIZE;
+ 953   3                  bStatusAction = STATUS_ACTION_DATA_IN;
+ 954   3                      }
+ 955   2              else if (wBytesRemainingOnIEP0 < EP0_MAX_PACKET_SIZE)
+ 956   2                      {
+ 957   3                  // The remaining data will fit in one packet.
+ 958   3                  // This case will properly handle wBytesRemainingOnIEP0 == 0
+ 959   3                  bPacketSize = (BYTE)wBytesRemainingOnIEP0;
+ 960   3                  wBytesRemainingOnIEP0 = NO_MORE_DATA;        // No more data need to be Txed
+ 961   3                  bStatusAction = STATUS_ACTION_NOTHING;
+ 962   3                      }
+ 963   2              else
+ 964   2                      {
+ 965   3                  // wBytesRemainingOnIEP0 == EP0_MAX_PACKET_SIZE
+ 966   3                  bPacketSize = EP0_MAX_PACKET_SIZE;
+ 967   3                  if(bHostAskMoreDataThanAvailable == TRUE)
+ 968   3                      {
+ 969   4                      wBytesRemainingOnIEP0 = 0;
+ 970   4                      bStatusAction = STATUS_ACTION_DATA_IN;
+ 971   4                      }
+ 972   3                  else
+ 973   3                      { 
+ 974   4                      wBytesRemainingOnIEP0 = NO_MORE_DATA;
+ 975   4                      bStatusAction = STATUS_ACTION_NOTHING;
+ 976   4                      }
+ 977   3                      }
+ 978   2      
+ 979   2              for(bIndex=0; bIndex<bPacketSize; bIndex++) 
+ 980   2                  abIEP0Buffer[bIndex] = *pbIEP0Buffer++;
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 17  
+
+ 981   2      
+ 982   2              tEndPoint0DescriptorBlock.bIEPBCNT = bPacketSize;   // & EPBCT_BYTECNT_MASK;
+ 983   2                      }
+ 984   1          else
+ 985   1              {
+ 986   2              bStatusAction = STATUS_ACTION_NOTHING;
+ 987   2              }
+ 988   1      }
+ 989          
+ 990          /***************************************************************************
+ 991           * Function:   SetupPacketInterruptHandler()                               *
+ 992           * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+ 993           * Description: This function is called by the UsbInterrupt function when  *
+ 994           *    a setup packet is received.  This function immediately sets both     * 
+ 995           *    OEP0 and IEP0 to a NAK state, sets the bUSBCTL to send/receive based *
+ 996           *    on the direction of the request, then proceeds to call  the          *
+ 997           *    usbDecodeAndProcessUsbRequest() function which determines which      *
+ 998           *    function should be called to handle the given USB request.           *  
+ 999           ***************************************************************************/
+1000          
+1001          void SetupPacketInterruptHandler(void)
+1002          {
+1003   1          // Hardware clears STALL in both data endpoints once valid setup packet is
+1004   1          // received.  NAK both data endpoints.
+1005   1          tEndPoint0DescriptorBlock.bIEPBCNT  = EPBCNT_NAK;
+1006   1          tEndPoint0DescriptorBlock.bOEPBCNT  = EPBCNT_NAK;
+1007   1          
+1008   1          bUSBSTA = USBSTA_SETUP; // from now, hardware will refer NAK bit in I/OEPBCNT
+1009   1      
+1010   1          // Copy the MSB of bmRequestType to DIR bit of USBCTL to indicate the
+1011   1          // direction of the transfer.
+1012   1          if((tSetupPacket.bmRequestType & USB_REQ_TYPE_INPUT) == USB_REQ_TYPE_INPUT)
+1013   1              bUSBCTL |= USBCTL_DIR;
+1014   1          else 
+1015   1              bUSBCTL &= ~USBCTL_DIR;
+1016   1      
+1017   1              // Clear the bStatusAction to indicate that, at this point, nothing is 
+1018   1              // happening (it may be set to DATA_OUT by specific functions that
+1019   1              // expect a DATA packet following the setup packet).
+1020   1          bStatusAction = STATUS_ACTION_NOTHING;
+1021   1      
+1022   1              // Call the function that determines which function should be called to
+1023   1              // handle the specific USB request.
+1024   1          usbDecodeAndProcessUsbRequest();
+1025   1      }
+1026          
+1027          /***************************************************************************
+1028           * Function:   OEP0InterruptHandler()                                      *
+1029           * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+1030           * Description: This function is called by the UsbInterrupt function when  *
+1031           *    a USB interrupt is called by OEP0.  This will happen once a data     *
+1032           *    transfer has been initialized by a USB function handler by calling   *
+1033           *    usbReceiveDataPacketOnEP0.                                           *
+1034           ***************************************************************************/
+1035          
+1036          void OEP0InterruptHandler(void)
+1037          {
+1038   1              // We clear the IEP0 byte count since we have nothing to send out.
+1039   1          tEndPoint0DescriptorBlock.bIEPBCNT = 0x00;
+1040   1              rs232_printstr("\r\nOUT RP:");
+1041   1              rs232_printhex(abOEP0Buffer[0]);
+1042   1              rs232_printstr("\r\n");
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 18  
+
+1043   1              // We now handle the interrupt based on the bStatusAction condition.
+1044   1              // If we are in a DATA_OUT condition, we call the usbReceiveNextPacketOnEP0
+1045   1              // function to copy the data payload to its correct buffer.  If we are
+1046   1              // not expecting any data on OEP0, we set the stall flag to stall the
+1047   1              // endpoint and abort any additional data that may otherwise be
+1048   1              // sent.
+1049   1          if(bStatusAction == STATUS_ACTION_DATA_OUT) 
+1050   1              usbReceiveNextPacketOnOEP0(); // Handle this data packet
+1051   1          else 
+1052   1              tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL; // We weren't expecting data
+1053   1      }
+1054          
+1055          /***************************************************************************
+1056           * Function:   IEP0InterruptHandler()                                      *
+1057           * Programmer: Lobo Tai (lobotai@ti.com)                                   *
+1058           * Description: This function is called by the UsbInterrupt function when  *
+1059           *    a USB interrupt is caused by IEP0.  This will happen once the data   *
+1060           *    sent by calling usbSendNextPacketOnIEP0 and means the previous data  *
+1061           *    packet has been sent.  At that point, there are two conditions:      *
+1062           *    either there is more data to send or there isn't.  If there is, we   *
+1063           *    call usbSendNextPacketOnIEP0 to send the next packet of data.  If    *
+1064           *    there isn't anymore data, we stall.  However, if the bStatusAction   *
+1065           *    condition indicates that we were changing the devices address, we    *
+1066           *    do so at this point.                                                 *
+1067           ***************************************************************************/
+1068          
+1069          void IEP0InterruptHandler(void)
+1070          {
+1071   1              // We clear the OEP0 byte count since we are not expecting any data.
+1072   1          tEndPoint0DescriptorBlock.bOEPBCNT = 0x00;
+1073   1      
+1074   1              // We now handle the interrupt based on the bStatusAction condition.
+1075   1              // If we are in a DATA_IN condition, we call the usbSendNextPacketOnIEP0  
+1076   1              // function to send the next data payload packet.  If we are in a
+1077   1              // Set Address mode, we modify the address.  In any other case, we've
+1078   1              // sent all teh data we had to send, so we stall the endpoint to indicate
+1079   1              // there is no more data to send.
+1080   1          if(bStatusAction == STATUS_ACTION_DATA_IN) 
+1081   1              usbSendNextPacketOnIEP0(); // Send the next data packet
+1082   1          else if(bStatusAction == STATUS_ACTION_SET_ADDRESS) 
+1083   1              bFUNADR = bUsbDeviceAddress; // Set the device's address
+1084   1          else 
+1085   1              tEndPoint0DescriptorBlock.bIEPCNFG |= EPCNF_STALL; // No more data to send
+1086   1      }
+1087          
+1088          /***************************************************************************
+1089           * Function:   USBInterrupt                                                *
+1090           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+1091           * Description: Handles the USB interrupts generated by the USB sectiob of *
+1092           *    the part.  This is actually External 0 interrupt on the 8051 at      *
+1093           *    0x0003 in memory, but is used exclusively for USB interrupts on the  *
+1094           *    TUSB2136.                                                            * 
+1095           *                                                                         * 
+1096           * Note: VECINT is cleared after being handled successfully so that the    * 
+1097           *       next USB-related interrupt is made available to the handler.      *  
+1098           ***************************************************************************/
+1099          
+1100          void USBInterrupt(void) interrupt 0
+1101          {
+1102   1              // Disable all interrupts because this is critical code
+1103   1              EA = DISABLE;
+1104   1              // Select the appropriate interrupt handler depending on the VECINT value
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 19  
+
+1105   1          switch (bVECINT)
+1106   1              {
+1107   2                      case VECINT_OUTPUT_ENDPOINT0:
+1108   2                              bVECINT  = 0x00;
+1109   2                              rs232_printstr("EP0_out  ");
+1110   2                              OEP0InterruptHandler();                 
+1111   2                              break;
+1112   2      
+1113   2              case VECINT_INPUT_ENDPOINT0:
+1114   2                              bVECINT  = 0x00;
+1115   2                              rs232_printstr("EP0_in  ");
+1116   2                              IEP0InterruptHandler();                 
+1117   2                              break;
+1118   2      
+1119   2                      case VECINT_INPUT_ENDPOINT1:
+1120   2                              bVECINT = 0x00;
+1121   2                              rs232_printstr("EP1_in  ");
+1122   2                              IEP1InterruptHandler();
+1123   2                              break;
+1124   2      
+1125   2                      case VECINT_OUTPUT_ENDPOINT1:
+1126   2                              bVECINT = 0x00;
+1127   2                              rs232_printstr("EP1_out  ");
+1128   2                              OEP1InterruptHandler();
+1129   2                              break;
+1130   2      
+1131   2              case VECINT_STPOW_PACKET_RECEIVED:
+1132   2                              bVECINT  = 0x00;
+1133   2                              bUSBSTA = USBSTA_STPOW;
+1134   2                              rs232_printstr("STPOW  ");
+1135   2                              SetupPacketInterruptHandler();
+1136   2                              break;
+1137   2      
+1138   2              case VECINT_SETUP_PACKET_RECEIVED:
+1139   2              // hardware will NAK data stage, no matter NAK bit in I/OEPBCNT
+1140   2                              bVECINT  = 0x00;
+1141   2      //                      bUSBSTA = USBSTA_SETUP; // from now, hardware will refer NAK bit in I/OEPBCNT
+1142   2                              rs232_printstr("\r\nSETUP  ");
+1143   2                              SetupPacketInterruptHandler();
+1144   2                              break;
+1145   2      
+1146   2              case VECINT_RSTR_INTERRUPT:
+1147   2                              bVECINT  = 0x00;
+1148   2                              bUSBSTA = USBSTA_RSTR;
+1149   2                              UsbReset();
+1150   2                              break;
+1151   2                      
+1152   2                      case VECINT_RESR_INTERRUPT:
+1153   2                              bVECINT = 0x00;
+1154   2                              bUSBSTA = USBSTA_RESR;
+1155   2                              bSuspended = FALSE;
+1156   2                              break;
+1157   2                      
+1158   2                      case VECINT_SUSR_INTERRUPT:
+1159   2                              bVECINT = 0x00;
+1160   2                              bUSBSTA = USBSTA_SUSR;
+1161   2                              rs232_printstr("SUSP  ");
+1162   2                              bSuspended = TRUE;
+1163   2                              break;
+1164   2      
+1165   2                      default:
+1166   2                              bVECINT  = 0x00;
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 20  
+
+1167   2                              rs232_printhex(bVECINT);
+1168   2                              break;
+1169   2                      }
+1170   1      
+1171   1              // End of ciritical code section, reenable interrupts
+1172   1          EA = ENABLE;
+1173   1      }
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 21  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION usbGetConfiguration (BEGIN)
+                                           ; SOURCE LINE # 173
+                                           ; SOURCE LINE # 174
+                                           ; SOURCE LINE # 175
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_0
+0004 7900        R     MOV     R1,#LOW ?SC_0
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 176
+0009 750000      R     MOV     wBytesRemainingOnIEP0,#00H
+000C 750001      R     MOV     wBytesRemainingOnIEP0+01H,#01H
+                                           ; SOURCE LINE # 177
+000F 7B00              MOV     R3,#00H
+0011 7A00        R     MOV     R2,#HIGH bConfigurationNumber
+0013 7900        R     MOV     R1,#LOW bConfigurationNumber
+0015 020000      R     LJMP    _usbSendDataPacketOnEP0
+             ; FUNCTION usbGetConfiguration (END)
+
+             ; FUNCTION usbSetConfiguration (BEGIN)
+                                           ; SOURCE LINE # 180
+                                           ; SOURCE LINE # 181
+                                           ; SOURCE LINE # 182
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_9
+0004 7900        R     MOV     R1,#LOW ?SC_9
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 183
+0009 90FF82            MOV     DPTR,#tEndPoint0DescriptorBlock+02H
+000C E0                MOVX    A,@DPTR
+000D 4408              ORL     A,#08H
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 184
+0010 90FF02            MOV     DPTR,#tSetupPacket+02H
+0013 E0                MOVX    A,@DPTR
+0014 F500        R     MOV     bConfigurationNumber,A
+                                           ; SOURCE LINE # 185
+0016 90FF48            MOV     DPTR,#tInputEndPointDescriptorBlock
+0019 E0                MOVX    A,@DPTR
+001A 4484              ORL     A,#084H
+001C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 186
+001D E4                CLR     A
+001E 90FF4A            MOV     DPTR,#tInputEndPointDescriptorBlock+02H
+0021 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 187
+0022 020000      R     LJMP    usbSendZeroLengthPacketOnIEP0
+             ; FUNCTION usbSetConfiguration (END)
+
+             ; FUNCTION usbSetReport (BEGIN)
+                                           ; SOURCE LINE # 202
+                                           ; SOURCE LINE # 203
+                                           ; SOURCE LINE # 204
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_18
+0004 7900        R     MOV     R1,#LOW ?SC_18
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 205
+0009 750000      R     MOV     wBytesRemainingOnOEP0,#00H
+000C 750001      R     MOV     wBytesRemainingOnOEP0+01H,#01H
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 22  
+
+                                           ; SOURCE LINE # 206
+000F 7B00              MOV     R3,#00H
+0011 7AFE              MOV     R2,#0FEH
+0013 79A0              MOV     R1,#0A0H
+0015 020000      R     LJMP    _usbReceiveDataPacketOnEP0
+             ; FUNCTION usbSetReport (END)
+
+             ; FUNCTION OEP1InterruptHandler (BEGIN)
+                                           ; SOURCE LINE # 209
+                                           ; SOURCE LINE # 210
+                                           ; SOURCE LINE # 211
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_26
+0004 7900        R     MOV     R1,#LOW ?SC_26
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 212
+0009 90FD80            MOV     DPTR,#pbOutBufferAddress
+000C E0                MOVX    A,@DPTR
+000D FF                MOV     R7,A
+000E 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 213
+0011 90FD81            MOV     DPTR,#pbOutBufferAddress+01H
+0014 E0                MOVX    A,@DPTR
+0015 FF                MOV     R7,A
+0016 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 214
+0019 90FD82            MOV     DPTR,#pbOutBufferAddress+02H
+001C E0                MOVX    A,@DPTR
+001D FF                MOV     R7,A
+001E 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 215
+0021 90FD83            MOV     DPTR,#pbOutBufferAddress+03H
+0024 E0                MOVX    A,@DPTR
+0025 FF                MOV     R7,A
+0026 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 216
+0029 90FD84            MOV     DPTR,#pbOutBufferAddress+04H
+002C E0                MOVX    A,@DPTR
+002D FF                MOV     R7,A
+002E 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 217
+0031 90FD85            MOV     DPTR,#pbOutBufferAddress+05H
+0034 E0                MOVX    A,@DPTR
+0035 FF                MOV     R7,A
+0036 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 218
+0039 90FD86            MOV     DPTR,#pbOutBufferAddress+06H
+003C E0                MOVX    A,@DPTR
+003D FF                MOV     R7,A
+003E 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 219
+0041 90FD87            MOV     DPTR,#pbOutBufferAddress+07H
+0044 E0                MOVX    A,@DPTR
+0045 FF                MOV     R7,A
+0046 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 220
+0049 7BFF              MOV     R3,#0FFH
+004B 7A00        R     MOV     R2,#HIGH ?SC_41
+004D 7900        R     MOV     R1,#LOW ?SC_41
+004F 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 222
+0052 E4                CLR     A
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 23  
+
+0053 90FF0A            MOV     DPTR,#tOutputEndPointDescriptorBlock+02H
+0056 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 224
+0057 22                RET     
+             ; FUNCTION OEP1InterruptHandler (END)
+
+             ; FUNCTION usbGetDeviceDescriptor (BEGIN)
+                                           ; SOURCE LINE # 230
+                                           ; SOURCE LINE # 231
+                                           ; SOURCE LINE # 233
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_44
+0004 7900        R     MOV     R1,#LOW ?SC_44
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 235
+;---- Variable 'bTemp' assigned to Register 'R7' ----
+0009 E4                CLR     A
+000A FF                MOV     R7,A
+000B         ?C0005:
+                                           ; SOURCE LINE # 236
+000B EF                MOV     A,R7
+000C 900000      E     MOV     DPTR,#abromDeviceDescriptor
+000F 93                MOVC    A,@A+DPTR
+0010 FE                MOV     R6,A
+0011 7480              MOV     A,#LOW abDescriptor
+0013 2F                ADD     A,R7
+0014 F582              MOV     DPL,A
+0016 E4                CLR     A
+0017 34FE              ADDC    A,#HIGH abDescriptor
+0019 F583              MOV     DPH,A
+001B EE                MOV     A,R6
+001C F0                MOVX    @DPTR,A
+001D 0F                INC     R7
+001E BF12EA            CJNE    R7,#012H,?C0005
+0021         ?C0006:
+                                           ; SOURCE LINE # 238
+0021 E4                CLR     A
+0022 90FF83            MOV     DPTR,#tEndPoint0DescriptorBlock+03H
+0025 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 239
+0026 F500        R     MOV     wBytesRemainingOnIEP0,A
+0028 750012      R     MOV     wBytesRemainingOnIEP0+01H,#012H
+                                           ; SOURCE LINE # 240
+002B 7B01              MOV     R3,#01H
+002D 7AFE              MOV     R2,#HIGH abDescriptor
+002F 7980              MOV     R1,#LOW abDescriptor
+0031 120000      R     LCALL   _usbSendDataPacketOnEP0
+                                           ; SOURCE LINE # 245
+0034 D200        R     SETB    deviceReady
+                                           ; SOURCE LINE # 246
+0036 22                RET     
+             ; FUNCTION usbGetDeviceDescriptor (END)
+
+             ; FUNCTION usbGetHIDDescriptor (BEGIN)
+                                           ; SOURCE LINE # 248
+                                           ; SOURCE LINE # 249
+                                           ; SOURCE LINE # 252
+;---- Variable 'bTemp' assigned to Register 'R7' ----
+0000 E4                CLR     A
+0001 FF                MOV     R7,A
+0002         ?C0009:
+                                           ; SOURCE LINE # 253
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 24  
+
+0002 EF                MOV     A,R7
+0003 900000      E     MOV     DPTR,#abromConfigurationDescriptorGroup+012H
+0006 93                MOVC    A,@A+DPTR
+0007 FE                MOV     R6,A
+0008 7480              MOV     A,#LOW abDescriptor
+000A 2F                ADD     A,R7
+000B F582              MOV     DPL,A
+000D E4                CLR     A
+000E 34FE              ADDC    A,#HIGH abDescriptor
+0010 F583              MOV     DPH,A
+0012 EE                MOV     A,R6
+0013 F0                MOVX    @DPTR,A
+0014 0F                INC     R7
+0015 BF12EA            CJNE    R7,#012H,?C0009
+0018         ?C0010:
+                                           ; SOURCE LINE # 255
+0018 E4                CLR     A
+0019 90FF83            MOV     DPTR,#tEndPoint0DescriptorBlock+03H
+001C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 256
+001D F500        R     MOV     wBytesRemainingOnIEP0,A
+001F 750009      R     MOV     wBytesRemainingOnIEP0+01H,#09H
+                                           ; SOURCE LINE # 257
+0022 7B01              MOV     R3,#01H
+0024 7AFE              MOV     R2,#HIGH abDescriptor
+0026 7980              MOV     R1,#LOW abDescriptor
+0028 020000      R     LJMP    _usbSendDataPacketOnEP0
+             ; FUNCTION usbGetHIDDescriptor (END)
+
+             ; FUNCTION usbGetConfigurationDescriptor (BEGIN)
+                                           ; SOURCE LINE # 260
+                                           ; SOURCE LINE # 261
+                                           ; SOURCE LINE # 263
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_50
+0004 7900        R     MOV     R1,#LOW ?SC_50
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 265
+;---- Variable 'bTemp' assigned to Register 'R7' ----
+0009 E4                CLR     A
+000A FF                MOV     R7,A
+000B         ?C0013:
+000B 900000      E     MOV     DPTR,#abromConfigurationDescriptorGroup+02H
+000E E4                CLR     A
+000F 93                MOVC    A,@A+DPTR
+0010 FE                MOV     R6,A
+0011 EF                MOV     A,R7
+0012 C3                CLR     C
+0013 9E                SUBB    A,R6
+0014 5015              JNC     ?C0014
+                                           ; SOURCE LINE # 266
+0016 EF                MOV     A,R7
+0017 900000      E     MOV     DPTR,#abromConfigurationDescriptorGroup
+001A 93                MOVC    A,@A+DPTR
+001B FE                MOV     R6,A
+001C 7480              MOV     A,#LOW abDescriptor
+001E 2F                ADD     A,R7
+001F F582              MOV     DPL,A
+0021 E4                CLR     A
+0022 34FE              ADDC    A,#HIGH abDescriptor
+0024 F583              MOV     DPH,A
+0026 EE                MOV     A,R6
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 25  
+
+0027 F0                MOVX    @DPTR,A
+0028 0F                INC     R7
+0029 80E0              SJMP    ?C0013
+002B         ?C0014:
+                                           ; SOURCE LINE # 267
+002B E4                CLR     A
+002C 90FF83            MOV     DPTR,#tEndPoint0DescriptorBlock+03H
+002F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 268
+0030 F500        R     MOV     wBytesRemainingOnIEP0,A
+0032 750029      R     MOV     wBytesRemainingOnIEP0+01H,#029H
+                                           ; SOURCE LINE # 269
+0035 7B01              MOV     R3,#01H
+0037 7AFE              MOV     R2,#HIGH abDescriptor
+0039 7980              MOV     R1,#LOW abDescriptor
+003B 020000      R     LJMP    _usbSendDataPacketOnEP0
+             ; FUNCTION usbGetConfigurationDescriptor (END)
+
+             ; FUNCTION usbGetStringDescriptor (BEGIN)
+                                           ; SOURCE LINE # 272
+                                           ; SOURCE LINE # 273
+                                           ; SOURCE LINE # 275
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_56
+0004 7900        R     MOV     R1,#LOW ?SC_56
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 276
+0009 90FF02            MOV     DPTR,#tSetupPacket+02H
+000C E0                MOVX    A,@DPTR
+000D FF                MOV     R7,A
+000E 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 277
+0011 7BFF              MOV     R3,#0FFH
+0013 7A00        R     MOV     R2,#HIGH ?SC_41
+0015 7900        R     MOV     R1,#LOW ?SC_41
+0017 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 279
+001A 90FF02            MOV     DPTR,#tSetupPacket+02H
+001D E0                MOVX    A,@DPTR
+001E 14                DEC     A
+001F 6031              JZ      ?C0022
+0021 14                DEC     A
+0022 6054              JZ      ?C0026
+0024 14                DEC     A
+0025 6077              JZ      ?C0030
+0027 2403              ADD     A,#03H
+0029 6003              JZ      $ + 5H
+002B 020000      R     LJMP    ?C0017
+                                           ; SOURCE LINE # 280
+                                           ; SOURCE LINE # 281
+002E         ?C0018:
+                                           ; SOURCE LINE # 282
+002E E4                CLR     A
+002F F500        R     MOV     bTemp,A
+0031         ?C0019:
+0031 900000      E     MOV     DPTR,#LanguageId
+0034 E4                CLR     A
+0035 93                MOVC    A,@A+DPTR
+0036 FF                MOV     R7,A
+0037 E500        R     MOV     A,bTemp
+0039 C3                CLR     C
+003A 9F                SUBB    A,R7
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 26  
+
+003B 5039              JNC     ?C0115
+                                           ; SOURCE LINE # 283
+003D E500        R     MOV     A,bTemp
+003F 93                MOVC    A,@A+DPTR
+0040 FE                MOV     R6,A
+0041 7480              MOV     A,#LOW abDescriptor
+0043 2500        R     ADD     A,bTemp
+0045 F582              MOV     DPL,A
+0047 E4                CLR     A
+0048 34FE              ADDC    A,#HIGH abDescriptor
+004A F583              MOV     DPH,A
+004C EE                MOV     A,R6
+004D F0                MOVX    @DPTR,A
+004E 0500        R     INC     bTemp
+0050 80DF              SJMP    ?C0019
+                                           ; SOURCE LINE # 287
+0052         ?C0022:
+                                           ; SOURCE LINE # 288
+0052 E4                CLR     A
+0053 F500        R     MOV     bTemp,A
+0055         ?C0023:
+0055 900000      E     MOV     DPTR,#ManufacturerStringDescriptor
+0058 E4                CLR     A
+0059 93                MOVC    A,@A+DPTR
+005A FF                MOV     R7,A
+005B E500        R     MOV     A,bTemp
+005D C3                CLR     C
+005E 9F                SUBB    A,R7
+005F 5015              JNC     ?C0024
+                                           ; SOURCE LINE # 289
+0061 E500        R     MOV     A,bTemp
+0063 93                MOVC    A,@A+DPTR
+0064 FE                MOV     R6,A
+0065 7480              MOV     A,#LOW abDescriptor
+0067 2500        R     ADD     A,bTemp
+0069 F582              MOV     DPL,A
+006B E4                CLR     A
+006C 34FE              ADDC    A,#HIGH abDescriptor
+006E F583              MOV     DPH,A
+0070 EE                MOV     A,R6
+0071 F0                MOVX    @DPTR,A
+0072 0500        R     INC     bTemp
+0074 80DF              SJMP    ?C0023
+0076         ?C0024:
+                                           ; SOURCE LINE # 290
+0076         ?C0115:
+                                           ; SOURCE LINE # 291
+                                           ; SOURCE LINE # 292
+0076 804A              SJMP    ?C0117
+                                           ; SOURCE LINE # 293
+0078         ?C0026:
+                                           ; SOURCE LINE # 294
+0078 E4                CLR     A
+0079 F500        R     MOV     bTemp,A
+007B         ?C0027:
+007B 900000      E     MOV     DPTR,#ProductStringDescriptor
+007E E4                CLR     A
+007F 93                MOVC    A,@A+DPTR
+0080 FF                MOV     R7,A
+0081 E500        R     MOV     A,bTemp
+0083 C3                CLR     C
+0084 9F                SUBB    A,R7
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 27  
+
+0085 5015              JNC     ?C0028
+                                           ; SOURCE LINE # 295
+0087 E500        R     MOV     A,bTemp
+0089 93                MOVC    A,@A+DPTR
+008A FE                MOV     R6,A
+008B 7480              MOV     A,#LOW abDescriptor
+008D 2500        R     ADD     A,bTemp
+008F F582              MOV     DPL,A
+0091 E4                CLR     A
+0092 34FE              ADDC    A,#HIGH abDescriptor
+0094 F583              MOV     DPH,A
+0096 EE                MOV     A,R6
+0097 F0                MOVX    @DPTR,A
+0098 0500        R     INC     bTemp
+009A 80DF              SJMP    ?C0027
+009C         ?C0028:
+                                           ; SOURCE LINE # 296
+009C         ?C0116:
+                                           ; SOURCE LINE # 297
+                                           ; SOURCE LINE # 298
+009C 8024              SJMP    ?C0117
+                                           ; SOURCE LINE # 299
+009E         ?C0030:
+                                           ; SOURCE LINE # 300
+009E E4                CLR     A
+009F F500        R     MOV     bTemp,A
+00A1         ?C0031:
+00A1 900000      E     MOV     DPTR,#SerialNumberStringDescriptor
+00A4 E4                CLR     A
+00A5 93                MOVC    A,@A+DPTR
+00A6 FF                MOV     R7,A
+00A7 E500        R     MOV     A,bTemp
+00A9 C3                CLR     C
+00AA 9F                SUBB    A,R7
+00AB 5015              JNC     ?C0032
+                                           ; SOURCE LINE # 301
+00AD E500        R     MOV     A,bTemp
+00AF 93                MOVC    A,@A+DPTR
+00B0 FE                MOV     R6,A
+00B1 7480              MOV     A,#LOW abDescriptor
+00B3 2500        R     ADD     A,bTemp
+00B5 F582              MOV     DPL,A
+00B7 E4                CLR     A
+00B8 34FE              ADDC    A,#HIGH abDescriptor
+00BA F583              MOV     DPH,A
+00BC EE                MOV     A,R6
+00BD F0                MOVX    @DPTR,A
+00BE 0500        R     INC     bTemp
+00C0 80DF              SJMP    ?C0031
+00C2         ?C0032:
+                                           ; SOURCE LINE # 302
+00C2         ?C0117:
+00C2 E4                CLR     A
+00C3 90FF83            MOV     DPTR,#tEndPoint0DescriptorBlock+03H
+00C6 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 303
+00C7 F500        R     MOV     wBytesRemainingOnIEP0,A
+00C9 8F00        R     MOV     wBytesRemainingOnIEP0+01H,R7
+                                           ; SOURCE LINE # 304
+                                           ; SOURCE LINE # 305
+00CB         ?C0017:
+                                           ; SOURCE LINE # 306
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 28  
+
+00CB 7B01              MOV     R3,#01H
+00CD 7AFE              MOV     R2,#HIGH abDescriptor
+00CF 7980              MOV     R1,#LOW abDescriptor
+00D1 020000      R     LJMP    _usbSendDataPacketOnEP0
+             ; FUNCTION usbGetStringDescriptor (END)
+
+             ; FUNCTION usbGetReportDescriptor (BEGIN)
+                                           ; SOURCE LINE # 309
+                                           ; SOURCE LINE # 310
+                                           ; SOURCE LINE # 311
+0000 E4                CLR     A
+0001 90FF83            MOV     DPTR,#tEndPoint0DescriptorBlock+03H
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 312
+0005 7BFF              MOV     R3,#0FFH
+0007 7A00        R     MOV     R2,#HIGH ?SC_60
+0009 7900        R     MOV     R1,#LOW ?SC_60
+000B 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 313
+000E 750000      R     MOV     wBytesRemainingOnIEP0,#00H
+0011 75001B      R     MOV     wBytesRemainingOnIEP0+01H,#01BH
+                                           ; SOURCE LINE # 314
+0014 7BFF              MOV     R3,#0FFH
+0016 7A00        E     MOV     R2,#HIGH abromReportDescriptor
+0018 7900        E     MOV     R1,#LOW abromReportDescriptor
+001A 020000      R     LJMP    _usbSendDataPacketOnEP0
+             ; FUNCTION usbGetReportDescriptor (END)
+
+             ; FUNCTION usbSetIdle (BEGIN)
+                                           ; SOURCE LINE # 326
+                                           ; SOURCE LINE # 327
+                                           ; SOURCE LINE # 329
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_67
+0004 7900        R     MOV     R1,#LOW ?SC_67
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 330
+0009 90FF02            MOV     DPTR,#tSetupPacket+02H
+000C E0                MOVX    A,@DPTR
+000D F500        R     MOV     gbIdleRateL,A
+                                           ; SOURCE LINE # 331
+000F A3                INC     DPTR
+0010 E0                MOVX    A,@DPTR
+0011 F500        R     MOV     gbIdleRateH,A
+                                           ; SOURCE LINE # 332
+0013 020000      R     LJMP    usbSendZeroLengthPacketOnIEP0
+             ; FUNCTION usbSetIdle (END)
+
+             ; FUNCTION usbGetIdle (BEGIN)
+                                           ; SOURCE LINE # 335
+                                           ; SOURCE LINE # 336
+                                           ; SOURCE LINE # 337
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_77
+0004 7900        R     MOV     R1,#LOW ?SC_77
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 338
+0009 750000      R     MOV     wBytesRemainingOnIEP0,#00H
+000C 750001      R     MOV     wBytesRemainingOnIEP0+01H,#01H
+                                           ; SOURCE LINE # 339
+000F 7B00              MOV     R3,#00H
+0011 7A00        R     MOV     R2,#HIGH gbIdleRateH
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 29  
+
+0013 7900        R     MOV     R1,#LOW gbIdleRateH
+0015 020000      R     LJMP    _usbSendDataPacketOnEP0
+             ; FUNCTION usbGetIdle (END)
+
+             ; FUNCTION usbSetProtocol (BEGIN)
+                                           ; SOURCE LINE # 343
+                                           ; SOURCE LINE # 344
+                                           ; SOURCE LINE # 346
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_87
+0004 7900        R     MOV     R1,#LOW ?SC_87
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 347
+0009 90FF02            MOV     DPTR,#tSetupPacket+02H
+000C E0                MOVX    A,@DPTR
+000D F500        R     MOV     gbProtocol,A
+                                           ; SOURCE LINE # 348
+000F 020000      R     LJMP    usbSendZeroLengthPacketOnIEP0
+             ; FUNCTION usbSetProtocol (END)
+
+             ; FUNCTION usbGetProtocol (BEGIN)
+                                           ; SOURCE LINE # 351
+                                           ; SOURCE LINE # 352
+                                           ; SOURCE LINE # 353
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_102
+0004 7900        R     MOV     R1,#LOW ?SC_102
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 354
+0009 750000      R     MOV     wBytesRemainingOnIEP0,#00H
+000C 750001      R     MOV     wBytesRemainingOnIEP0+01H,#01H
+                                           ; SOURCE LINE # 355
+000F 7B00              MOV     R3,#00H
+0011 7A00        R     MOV     R2,#HIGH gbProtocol
+0013 7900        R     MOV     R1,#LOW gbProtocol
+0015 020000      R     LJMP    _usbSendDataPacketOnEP0
+             ; FUNCTION usbGetProtocol (END)
+
+             ; FUNCTION usbGetInterface (BEGIN)
+                                           ; SOURCE LINE # 364
+                                           ; SOURCE LINE # 365
+                                           ; SOURCE LINE # 366
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_117
+0004 7900        R     MOV     R1,#LOW ?SC_117
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 367
+0009 750000      R     MOV     wBytesRemainingOnIEP0,#00H
+000C 750001      R     MOV     wBytesRemainingOnIEP0+01H,#01H
+                                           ; SOURCE LINE # 368
+000F 7B00              MOV     R3,#00H
+0011 7A00        R     MOV     R2,#HIGH bInterfaceNumber
+0013 7900        R     MOV     R1,#LOW bInterfaceNumber
+0015 020000      R     LJMP    _usbSendDataPacketOnEP0
+             ; FUNCTION usbGetInterface (END)
+
+             ; FUNCTION usbSetInterface (BEGIN)
+                                           ; SOURCE LINE # 371
+                                           ; SOURCE LINE # 372
+                                           ; SOURCE LINE # 373
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_133
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 30  
+
+0004 7900        R     MOV     R1,#LOW ?SC_133
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 374
+0009 90FF82            MOV     DPTR,#tEndPoint0DescriptorBlock+02H
+000C E0                MOVX    A,@DPTR
+000D 4408              ORL     A,#08H
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 375
+0010 90FF04            MOV     DPTR,#tSetupPacket+04H
+0013 E0                MOVX    A,@DPTR
+0014 F500        R     MOV     bInterfaceNumber,A
+                                           ; SOURCE LINE # 376
+0016 020000      R     LJMP    usbSendZeroLengthPacketOnIEP0
+             ; FUNCTION usbSetInterface (END)
+
+             ; FUNCTION usbGetDeviceStatus (BEGIN)
+                                           ; SOURCE LINE # 385
+                                           ; SOURCE LINE # 386
+                                           ; SOURCE LINE # 387
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_149
+0004 7900        R     MOV     R1,#LOW ?SC_149
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 388
+0009 750000      R     MOV     wBytesRemainingOnIEP0,#00H
+000C 750002      R     MOV     wBytesRemainingOnIEP0+01H,#02H
+                                           ; SOURCE LINE # 389
+000F 7B00              MOV     R3,#00H
+0011 7A00        R     MOV     R2,#HIGH wDeviceFeatures
+0013 7900        R     MOV     R1,#LOW wDeviceFeatures
+0015 020000      R     LJMP    _usbSendDataPacketOnEP0
+             ; FUNCTION usbGetDeviceStatus (END)
+
+             ; FUNCTION usbSetRemoteWakeup (BEGIN)
+                                           ; SOURCE LINE # 392
+                                           ; SOURCE LINE # 393
+                                           ; SOURCE LINE # 394
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_162
+0004 7900        R     MOV     R1,#LOW ?SC_162
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 395
+0009 90FFFC            MOV     DPTR,#0FFFCH
+000C E0                MOVX    A,@DPTR
+000D 4408              ORL     A,#08H
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 396
+0010 430002      R     ORL     wDeviceFeatures,#02H
+                                           ; SOURCE LINE # 397
+0013 90FF82            MOV     DPTR,#tEndPoint0DescriptorBlock+02H
+0016 E0                MOVX    A,@DPTR
+0017 4408              ORL     A,#08H
+0019 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 398
+001A 020000      R     LJMP    usbSendZeroLengthPacketOnIEP0
+             ; FUNCTION usbSetRemoteWakeup (END)
+
+             ; FUNCTION usbClearRemoteWakeup (BEGIN)
+                                           ; SOURCE LINE # 401
+                                           ; SOURCE LINE # 402
+                                           ; SOURCE LINE # 403
+0000 7BFF              MOV     R3,#0FFH
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 31  
+
+0002 7A00        R     MOV     R2,#HIGH ?SC_174
+0004 7900        R     MOV     R1,#LOW ?SC_174
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 404
+0009 90FFFC            MOV     DPTR,#0FFFCH
+000C E0                MOVX    A,@DPTR
+000D 54F7              ANL     A,#0F7H
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 405
+0010 5300FD      R     ANL     wDeviceFeatures,#0FDH
+                                           ; SOURCE LINE # 406
+0013 90FF82            MOV     DPTR,#tEndPoint0DescriptorBlock+02H
+0016 E0                MOVX    A,@DPTR
+0017 4408              ORL     A,#08H
+0019 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 407
+001A 020000      R     LJMP    usbSendZeroLengthPacketOnIEP0
+             ; FUNCTION usbClearRemoteWakeup (END)
+
+             ; FUNCTION usbGetInterfaceStatus (BEGIN)
+                                           ; SOURCE LINE # 412
+                                           ; SOURCE LINE # 413
+                                           ; SOURCE LINE # 414
+0000 E4                CLR     A
+0001 F500        R     MOV     wStatusBuffer,A
+0003 F500        R     MOV     wStatusBuffer+01H,A
+                                           ; SOURCE LINE # 415
+0005 7BFF              MOV     R3,#0FFH
+0007 7A00        R     MOV     R2,#HIGH ?SC_186
+0009 7900        R     MOV     R1,#LOW ?SC_186
+000B 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 416
+000E 90FF82            MOV     DPTR,#tEndPoint0DescriptorBlock+02H
+0011 E0                MOVX    A,@DPTR
+0012 4408              ORL     A,#08H
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 417
+0015 750000      R     MOV     wBytesRemainingOnIEP0,#00H
+0018 750002      R     MOV     wBytesRemainingOnIEP0+01H,#02H
+                                           ; SOURCE LINE # 418
+001B 7B00              MOV     R3,#00H
+001D 7A00        R     MOV     R2,#HIGH wStatusBuffer
+001F 7900        R     MOV     R1,#LOW wStatusBuffer
+0021 020000      R     LJMP    _usbSendDataPacketOnEP0
+             ; FUNCTION usbGetInterfaceStatus (END)
+
+             ; FUNCTION usbSetAddress (BEGIN)
+                                           ; SOURCE LINE # 426
+                                           ; SOURCE LINE # 427
+                                           ; SOURCE LINE # 428
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_198
+0004 7900        R     MOV     R1,#LOW ?SC_198
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 429
+0009 90FF02            MOV     DPTR,#tSetupPacket+02H
+000C E0                MOVX    A,@DPTR
+000D FF                MOV     R7,A
+000E 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 430
+0011 7BFF              MOV     R3,#0FFH
+0013 7A00        R     MOV     R2,#HIGH ?SC_41
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 32  
+
+0015 7900        R     MOV     R1,#LOW ?SC_41
+0017 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 431
+001A 90FF02            MOV     DPTR,#tSetupPacket+02H
+001D E0                MOVX    A,@DPTR
+001E FF                MOV     R7,A
+001F C3                CLR     C
+0020 9480              SUBB    A,#080H
+0022 500D              JNC     ?C0046
+                                           ; SOURCE LINE # 432
+                                           ; SOURCE LINE # 433
+0024 90FFFF            MOV     DPTR,#0FFFFH
+0027 EF                MOV     A,R7
+0028 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 434
+0029 F500        R     MOV     bUsbDeviceAddress,A
+                                           ; SOURCE LINE # 435
+002B 750003      R     MOV     bStatusAction,#03H
+                                           ; SOURCE LINE # 436
+002E 020000      R     LJMP    usbSendZeroLengthPacketOnIEP0
+                                           ; SOURCE LINE # 437
+0031         ?C0046:
+                                           ; SOURCE LINE # 439
+0031 120000      R     LCALL   usbStallEndpoint0
+                                           ; SOURCE LINE # 440
+0034         ?C0048:
+0034 22                RET     
+             ; FUNCTION usbSetAddress (END)
+
+             ; FUNCTION usbSetEndpointHalt (BEGIN)
+                                           ; SOURCE LINE # 449
+                                           ; SOURCE LINE # 450
+                                           ; SOURCE LINE # 451
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_207
+0004 7900        R     MOV     R1,#LOW ?SC_207
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 452
+0009 90FF48            MOV     DPTR,#tInputEndPointDescriptorBlock
+000C E0                MOVX    A,@DPTR
+000D 547F              ANL     A,#07FH
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 453
+0010 020000      R     LJMP    usbSendZeroLengthPacketOnIEP0
+             ; FUNCTION usbSetEndpointHalt (END)
+
+             ; FUNCTION usbClearEndpointHalt (BEGIN)
+                                           ; SOURCE LINE # 456
+                                           ; SOURCE LINE # 457
+                                           ; SOURCE LINE # 458
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_219
+0004 7900        R     MOV     R1,#LOW ?SC_219
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 459
+0009 90FF48            MOV     DPTR,#tInputEndPointDescriptorBlock
+000C E0                MOVX    A,@DPTR
+000D 4480              ORL     A,#080H
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 460
+0010 020000      R     LJMP    usbSendZeroLengthPacketOnIEP0
+             ; FUNCTION usbClearEndpointHalt (END)
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 33  
+
+
+             ; FUNCTION usbGetEndpointStatus (BEGIN)
+                                           ; SOURCE LINE # 463
+                                           ; SOURCE LINE # 464
+                                           ; SOURCE LINE # 465
+0000 750001      R     MOV     wEndpointStatus,#01H
+0003 750000      R     MOV     wEndpointStatus+01H,#00H
+                                           ; SOURCE LINE # 466
+0006 7BFF              MOV     R3,#0FFH
+0008 7A00        R     MOV     R2,#HIGH ?SC_231
+000A 7900        R     MOV     R1,#LOW ?SC_231
+000C 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 467
+000F 90FF48            MOV     DPTR,#tInputEndPointDescriptorBlock
+0012 E0                MOVX    A,@DPTR
+0013 30E705            JNB     ACC.7,?C0051
+                                           ; SOURCE LINE # 468
+0016 E4                CLR     A
+0017 F500        R     MOV     wEndpointStatus,A
+0019 F500        R     MOV     wEndpointStatus+01H,A
+001B         ?C0051:
+                                           ; SOURCE LINE # 470
+001B 750000      R     MOV     wBytesRemainingOnIEP0,#00H
+001E 750002      R     MOV     wBytesRemainingOnIEP0+01H,#02H
+                                           ; SOURCE LINE # 471
+0021 7B00              MOV     R3,#00H
+0023 7A00        R     MOV     R2,#HIGH wEndpointStatus
+0025 7900        R     MOV     R1,#LOW wEndpointStatus
+0027 020000      R     LJMP    _usbSendDataPacketOnEP0
+             ; FUNCTION usbGetEndpointStatus (END)
+
+             ; FUNCTION usbNonStandardRequest (BEGIN)
+                                           ; SOURCE LINE # 478
+                                           ; SOURCE LINE # 479
+                                           ; SOURCE LINE # 480
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH ?SC_242
+0004 7900        R     MOV     R1,#LOW ?SC_242
+0006 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 481
+0009 020000      R     LJMP    usbStallEndpoint0
+             ; FUNCTION usbNonStandardRequest (END)
+
+             ; FUNCTION usbDecodeAndProcessUsbRequest (BEGIN)
+                                           ; SOURCE LINE # 732
+                                           ; SOURCE LINE # 733
+                                           ; SOURCE LINE # 737
+0000 90FF00            MOV     DPTR,#0FF00H
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 738
+0008 90FF01            MOV     DPTR,#0FF01H
+000B E0                MOVX    A,@DPTR
+000C FF                MOV     R7,A
+000D 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 739
+0010 90FF02            MOV     DPTR,#0FF02H
+0013 E0                MOVX    A,@DPTR
+0014 FF                MOV     R7,A
+0015 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 740
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 34  
+
+0018 90FF03            MOV     DPTR,#0FF03H
+001B E0                MOVX    A,@DPTR
+001C FF                MOV     R7,A
+001D 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 741
+0020 90FF04            MOV     DPTR,#0FF04H
+0023 E0                MOVX    A,@DPTR
+0024 FF                MOV     R7,A
+0025 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 742
+0028 90FF05            MOV     DPTR,#0FF05H
+002B E0                MOVX    A,@DPTR
+002C FF                MOV     R7,A
+002D 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 743
+0030 90FF06            MOV     DPTR,#0FF06H
+0033 E0                MOVX    A,@DPTR
+0034 FF                MOV     R7,A
+0035 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 744
+0038 90FF07            MOV     DPTR,#0FF07H
+003B E0                MOVX    A,@DPTR
+003C FF                MOV     R7,A
+003D 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 745
+0040 7BFF              MOV     R3,#0FFH
+0042 7A00        R     MOV     R2,#HIGH ?SC_41
+0044 7900        R     MOV     R1,#LOW ?SC_41
+0046 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 749
+0049 7500FF      R     MOV     pbUsbRequestList,#0FFH
+004C 750000      R     MOV     pbUsbRequestList+01H,#HIGH tUsbRequestList
+004F 750000      R     MOV     pbUsbRequestList+02H,#LOW tUsbRequestList
+0052         ?C0054:
+                                           ; SOURCE LINE # 754
+                                           ; SOURCE LINE # 755
+                                           ; SOURCE LINE # 756
+0052 E4                CLR     A
+0053 F500        R     MOV     bResult,A
+                                           ; SOURCE LINE # 757
+;---- Variable 'bMask' assigned to Register 'R7' ----
+0055 7F80              MOV     R7,#080H
+                                           ; SOURCE LINE # 764
+;---- Variable 'bTemp' assigned to Register 'R6' ----
+0057 FE                MOV     R6,A
+0058         ?C0056:
+                                           ; SOURCE LINE # 765
+                                           ; SOURCE LINE # 766
+0058 AB00        R     MOV     R3,pbUsbRequestList
+005A AA00        R     MOV     R2,pbUsbRequestList+01H
+005C A900        R     MOV     R1,pbUsbRequestList+02H
+005E 8E82              MOV     DPL,R6
+0060 758300            MOV     DPH,#00H
+0063 120000      E     LCALL   ?C?CLDOPTR
+0066 FD                MOV     R5,A
+0067 E4                CLR     A
+0068 2E                ADD     A,R6
+0069 F582              MOV     DPL,A
+006B E4                CLR     A
+006C 34FF              ADDC    A,#0FFH
+006E F583              MOV     DPH,A
+0070 E0                MOVX    A,@DPTR
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 35  
+
+0071 B50503            CJNE    A,AR5,?C0059
+                                           ; SOURCE LINE # 767
+0074 EF                MOV     A,R7
+0075 4200        R     ORL     bResult,A
+0077         ?C0059:
+                                           ; SOURCE LINE # 768
+0077 EF                MOV     A,R7
+0078 C3                CLR     C
+0079 13                RRC     A
+007A FF                MOV     R7,A
+                                           ; SOURCE LINE # 769
+007B 0E                INC     R6
+007C BE08D9            CJNE    R6,#08H,?C0056
+007F         ?C0057:
+                                           ; SOURCE LINE # 779
+007F AB00        R     MOV     R3,pbUsbRequestList
+0081 AA00        R     MOV     R2,pbUsbRequestList+01H
+0083 A900        R     MOV     R1,pbUsbRequestList+02H
+0085 8E82              MOV     DPL,R6
+0087 758300            MOV     DPH,#00H
+008A 120000      E     LCALL   ?C?CLDOPTR
+008D FF                MOV     R7,A
+008E 5500        R     ANL     A,bResult
+0090 6F                XRL     A,R7
+0091 600D              JZ      ?C0055
+                                           ; SOURCE LINE # 780
+0093         ?C0060:
+                                           ; SOURCE LINE # 784
+0093 740C              MOV     A,#0CH
+0095 2500        R     ADD     A,pbUsbRequestList+02H
+0097 F500        R     MOV     pbUsbRequestList+02H,A
+0099 E4                CLR     A
+009A 3500        R     ADDC    A,pbUsbRequestList+01H
+009C F500        R     MOV     pbUsbRequestList+01H,A
+                                           ; SOURCE LINE # 785
+009E 80B2              SJMP    ?C0054
+00A0         ?C0055:
+                                           ; SOURCE LINE # 789
+00A0 90FFFE            MOV     DPTR,#0FFFEH
+00A3 E0                MOVX    A,@DPTR
+00A4 20E00F            JB      ACC.0,?C0062
+00A7         ?C0061:
+                                           ; SOURCE LINE # 794
+00A7 AB00        R     MOV     R3,pbUsbRequestList
+00A9 AA00        R     MOV     R2,pbUsbRequestList+01H
+00AB A900        R     MOV     R1,pbUsbRequestList+02H
+00AD 900009            MOV     DPTR,#09H
+00B0 120000      E     LCALL   ?C?PLDOPTR
+00B3 120000      E     LCALL   ?C?ICALL
+                                           ; SOURCE LINE # 795
+00B6         ?C0062:
+00B6 22                RET     
+             ; FUNCTION usbDecodeAndProcessUsbRequest (END)
+
+             ; FUNCTION usbStallEndpoint0 (BEGIN)
+                                           ; SOURCE LINE # 804
+                                           ; SOURCE LINE # 805
+                                           ; SOURCE LINE # 806
+0000 90FF80            MOV     DPTR,#tEndPoint0DescriptorBlock
+0003 E0                MOVX    A,@DPTR
+0004 4408              ORL     A,#08H
+0006 F0                MOVX    @DPTR,A
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 36  
+
+                                           ; SOURCE LINE # 807
+0007 90FF82            MOV     DPTR,#tEndPoint0DescriptorBlock+02H
+000A E0                MOVX    A,@DPTR
+000B 4408              ORL     A,#08H
+000D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 808
+000E 22                RET     
+             ; FUNCTION usbStallEndpoint0 (END)
+
+             ; FUNCTION _usbReceiveDataPacketOnEP0 (BEGIN)
+                                           ; SOURCE LINE # 822
+;---- Variable 'pbBuffer' assigned to Register 'R1/R2/R3' ----
+                                           ; SOURCE LINE # 823
+                                           ; SOURCE LINE # 824
+0000 8B00        R     MOV     pbOEP0Buffer,R3
+0002 8A00        R     MOV     pbOEP0Buffer+01H,R2
+0004 8900        R     MOV     pbOEP0Buffer+02H,R1
+                                           ; SOURCE LINE # 825
+0006 90FF07            MOV     DPTR,#tSetupPacket+07H
+0009 E0                MOVX    A,@DPTR
+000A FE                MOV     R6,A
+000B 90FF06            MOV     DPTR,#tSetupPacket+06H
+000E E0                MOVX    A,@DPTR
+000F FD                MOV     R5,A
+0010 EE                MOV     A,R6
+0011 F500        R     MOV     wBytesRemainingOnOEP0,A
+0013 ED                MOV     A,R5
+0014 F500        R     MOV     wBytesRemainingOnOEP0+01H,A
+                                           ; SOURCE LINE # 826
+0016 750002      R     MOV     bStatusAction,#02H
+                                           ; SOURCE LINE # 827
+0019 E4                CLR     A
+001A 90FF83            MOV     DPTR,#tEndPoint0DescriptorBlock+03H
+001D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 828
+001E 22                RET     
+             ; FUNCTION _usbReceiveDataPacketOnEP0 (END)
+
+             ; FUNCTION usbReceiveNextPacketOnOEP0 (BEGIN)
+                                           ; SOURCE LINE # 830
+                                           ; SOURCE LINE # 831
+                                           ; SOURCE LINE # 837
+0000 90FF83            MOV     DPTR,#tEndPoint0DescriptorBlock+03H
+0003 E0                MOVX    A,@DPTR
+0004 547F              ANL     A,#07FH
+0006 FF                MOV     R7,A
+;---- Variable 'bByte' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 844
+0007 FD                MOV     R5,A
+0008 C3                CLR     C
+0009 E500        R     MOV     A,wBytesRemainingOnOEP0+01H
+000B 9D                SUBB    A,R5
+000C E500        R     MOV     A,wBytesRemainingOnOEP0
+000E 9400              SUBB    A,#00H
+0010 4055              JC      ?C0065
+                                           ; SOURCE LINE # 845
+                                           ; SOURCE LINE # 848
+;---- Variable 'bIndex' assigned to Register 'R6' ----
+0012 E4                CLR     A
+0013 FE                MOV     R6,A
+0014         ?C0066:
+0014 EE                MOV     A,R6
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 37  
+
+0015 C3                CLR     C
+0016 9F                SUBB    A,R7
+0017 5021              JNC     ?C0067
+                                           ; SOURCE LINE # 849
+0019 74F0              MOV     A,#LOW abOEP0Buffer
+001B 2E                ADD     A,R6
+001C F582              MOV     DPL,A
+001E E4                CLR     A
+001F 34FE              ADDC    A,#HIGH abOEP0Buffer
+0021 F583              MOV     DPH,A
+0023 E0                MOVX    A,@DPTR
+0024 FD                MOV     R5,A
+0025 AB00        R     MOV     R3,pbOEP0Buffer
+0027 0500        R     INC     pbOEP0Buffer+02H
+0029 E500        R     MOV     A,pbOEP0Buffer+02H
+002B AA00        R     MOV     R2,pbOEP0Buffer+01H
+002D 7002              JNZ     ?C0112
+002F 0500        R     INC     pbOEP0Buffer+01H
+0031         ?C0112:
+0031 14                DEC     A
+0032 F9                MOV     R1,A
+0033 ED                MOV     A,R5
+0034 120000      E     LCALL   ?C?CSTPTR
+0037 0E                INC     R6
+0038 80DA              SJMP    ?C0066
+003A         ?C0067:
+                                           ; SOURCE LINE # 853
+003A C3                CLR     C
+003B E500        R     MOV     A,wBytesRemainingOnOEP0+01H
+003D 9F                SUBB    A,R7
+003E F500        R     MOV     wBytesRemainingOnOEP0+01H,A
+0040 E500        R     MOV     A,wBytesRemainingOnOEP0
+0042 9400              SUBB    A,#00H
+0044 F500        R     MOV     wBytesRemainingOnOEP0,A
+                                           ; SOURCE LINE # 859
+0046 D3                SETB    C
+0047 E500        R     MOV     A,wBytesRemainingOnOEP0+01H
+0049 9400              SUBB    A,#00H
+004B E500        R     MOV     A,wBytesRemainingOnOEP0
+004D 9400              SUBB    A,#00H
+004F 4009              JC      ?C0069
+                                           ; SOURCE LINE # 860
+                                           ; SOURCE LINE # 861
+0051 E4                CLR     A
+0052 90FF83            MOV     DPTR,#tEndPoint0DescriptorBlock+03H
+0055 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 862
+0056 750002      R     MOV     bStatusAction,#02H
+                                           ; SOURCE LINE # 863
+0059 22                RET     
+005A         ?C0069:
+                                           ; SOURCE LINE # 865
+                                           ; SOURCE LINE # 874
+005A 90FF82            MOV     DPTR,#tEndPoint0DescriptorBlock+02H
+005D E0                MOVX    A,@DPTR
+005E 4408              ORL     A,#08H
+0060 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 875
+0061 E4                CLR     A
+0062 F500        R     MOV     bStatusAction,A
+                                           ; SOURCE LINE # 876
+0064 020000      E     LJMP    OEP0SetLEDs
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 38  
+
+                                           ; SOURCE LINE # 877
+                                           ; SOURCE LINE # 878
+0067         ?C0065:
+                                           ; SOURCE LINE # 880
+                                           ; SOURCE LINE # 884
+0067 90FF82            MOV     DPTR,#tEndPoint0DescriptorBlock+02H
+006A E0                MOVX    A,@DPTR
+006B 4408              ORL     A,#08H
+006D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 885
+006E E4                CLR     A
+006F F500        R     MOV     bStatusAction,A
+                                           ; SOURCE LINE # 886
+                                           ; SOURCE LINE # 887
+0071         ?C0072:
+0071 22                RET     
+             ; FUNCTION usbReceiveNextPacketOnOEP0 (END)
+
+             ; FUNCTION usbSendZeroLengthPacketOnIEP0 (BEGIN)
+                                           ; SOURCE LINE # 897
+                                           ; SOURCE LINE # 898
+                                           ; SOURCE LINE # 899
+0000 74FF              MOV     A,#0FFH
+0002 F500        R     MOV     wBytesRemainingOnIEP0,A
+0004 F500        R     MOV     wBytesRemainingOnIEP0+01H,A
+                                           ; SOURCE LINE # 900
+0006 E4                CLR     A
+0007 F500        R     MOV     bStatusAction,A
+                                           ; SOURCE LINE # 901
+0009 90FF81            MOV     DPTR,#tEndPoint0DescriptorBlock+01H
+000C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 902
+000D 22                RET     
+             ; FUNCTION usbSendZeroLengthPacketOnIEP0 (END)
+
+             ; FUNCTION _usbSendDataPacketOnEP0 (BEGIN)
+                                           ; SOURCE LINE # 917
+;---- Variable 'pbBuffer' assigned to Register 'R1/R2/R3' ----
+                                           ; SOURCE LINE # 918
+                                           ; SOURCE LINE # 921
+0000 8B00        R     MOV     pbIEP0Buffer,R3
+0002 8A00        R     MOV     pbIEP0Buffer+01H,R2
+0004 8900        R     MOV     pbIEP0Buffer+02H,R1
+                                           ; SOURCE LINE # 923
+0006 90FF07            MOV     DPTR,#tSetupPacket+07H
+0009 E0                MOVX    A,@DPTR
+000A FE                MOV     R6,A
+000B 90FF06            MOV     DPTR,#tSetupPacket+06H
+000E E0                MOVX    A,@DPTR
+000F FD                MOV     R5,A
+0010 ED                MOV     A,R5
+0011 FF                MOV     R7,A
+;---- Variable 'wTemp' assigned to Register 'R6/R7' ----
+                                           ; SOURCE LINE # 927
+0012 C3                CLR     C
+0013 E500        R     MOV     A,wBytesRemainingOnIEP0+01H
+0015 9F                SUBB    A,R7
+0016 E500        R     MOV     A,wBytesRemainingOnIEP0
+0018 9E                SUBB    A,R6
+0019 4008              JC      ?C0074
+                                           ; SOURCE LINE # 928
+                                           ; SOURCE LINE # 929
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 39  
+
+001B 8E00        R     MOV     wBytesRemainingOnIEP0,R6
+001D 8F00        R     MOV     wBytesRemainingOnIEP0+01H,R7
+                                           ; SOURCE LINE # 930
+001F C200        R     CLR     bHostAskMoreDataThanAvailable
+                                           ; SOURCE LINE # 931
+0021 8002              SJMP    ?C0075
+0023         ?C0074:
+                                           ; SOURCE LINE # 933
+                                           ; SOURCE LINE # 934
+0023 D200        R     SETB    bHostAskMoreDataThanAvailable
+                                           ; SOURCE LINE # 935
+0025         ?C0075:
+                                           ; SOURCE LINE # 937
+0025 020000      R     LJMP    usbSendNextPacketOnIEP0
+             ; FUNCTION _usbSendDataPacketOnEP0 (END)
+
+             ; FUNCTION usbSendNextPacketOnIEP0 (BEGIN)
+                                           ; SOURCE LINE # 940
+;---- Variable 'bPacketSize' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 941
+                                           ; SOURCE LINE # 945
+0000 E500        R     MOV     A,wBytesRemainingOnIEP0+01H
+0002 F4                CPL     A
+0003 7003              JNZ     ?C0113
+0005 E500        R     MOV     A,wBytesRemainingOnIEP0
+0007 F4                CPL     A
+0008         ?C0113:
+0008 6070              JZ      ?C0077
+                                           ; SOURCE LINE # 946
+                                           ; SOURCE LINE # 947
+000A D3                SETB    C
+000B E500        R     MOV     A,wBytesRemainingOnIEP0+01H
+000D 9408              SUBB    A,#08H
+000F E500        R     MOV     A,wBytesRemainingOnIEP0
+0011 9400              SUBB    A,#00H
+0013 4010              JC      ?C0078
+                                           ; SOURCE LINE # 948
+                                           ; SOURCE LINE # 951
+0015 7F08              MOV     R7,#08H
+                                           ; SOURCE LINE # 952
+0017 74F8              MOV     A,#0F8H
+0019 2500        R     ADD     A,wBytesRemainingOnIEP0+01H
+001B F500        R     MOV     wBytesRemainingOnIEP0+01H,A
+001D 74FF              MOV     A,#0FFH
+001F 3500        R     ADDC    A,wBytesRemainingOnIEP0
+0021 F500        R     MOV     wBytesRemainingOnIEP0,A
+                                           ; SOURCE LINE # 953
+                                           ; SOURCE LINE # 954
+0023 8019              SJMP    ?C0118
+0025         ?C0078:
+                                           ; SOURCE LINE # 955
+0025 C3                CLR     C
+0026 E500        R     MOV     A,wBytesRemainingOnIEP0+01H
+0028 9408              SUBB    A,#08H
+002A E500        R     MOV     A,wBytesRemainingOnIEP0
+002C 9400              SUBB    A,#00H
+002E 5004              JNC     ?C0080
+                                           ; SOURCE LINE # 956
+                                           ; SOURCE LINE # 959
+0030 AF00        R     MOV     R7,wBytesRemainingOnIEP0+01H
+                                           ; SOURCE LINE # 960
+                                           ; SOURCE LINE # 961
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 40  
+
+                                           ; SOURCE LINE # 962
+0032 800F              SJMP    ?C0119
+0034         ?C0080:
+                                           ; SOURCE LINE # 964
+                                           ; SOURCE LINE # 966
+0034 7F08              MOV     R7,#08H
+                                           ; SOURCE LINE # 967
+0036 30000A      R     JNB     bHostAskMoreDataThanAvailable,?C0082
+                                           ; SOURCE LINE # 968
+                                           ; SOURCE LINE # 969
+0039 E4                CLR     A
+003A F500        R     MOV     wBytesRemainingOnIEP0,A
+003C F500        R     MOV     wBytesRemainingOnIEP0+01H,A
+                                           ; SOURCE LINE # 970
+003E         ?C0118:
+003E 750001      R     MOV     bStatusAction,#01H
+                                           ; SOURCE LINE # 971
+0041 8009              SJMP    ?C0079
+0043         ?C0082:
+                                           ; SOURCE LINE # 973
+                                           ; SOURCE LINE # 974
+0043         ?C0119:
+0043 74FF              MOV     A,#0FFH
+0045 F500        R     MOV     wBytesRemainingOnIEP0,A
+0047 F500        R     MOV     wBytesRemainingOnIEP0+01H,A
+                                           ; SOURCE LINE # 975
+0049 E4                CLR     A
+004A F500        R     MOV     bStatusAction,A
+                                           ; SOURCE LINE # 976
+                                           ; SOURCE LINE # 977
+004C         ?C0079:
+                                           ; SOURCE LINE # 979
+;---- Variable 'bIndex' assigned to Register 'R6' ----
+004C E4                CLR     A
+004D FE                MOV     R6,A
+004E         ?C0084:
+004E EE                MOV     A,R6
+004F C3                CLR     C
+0050 9F                SUBB    A,R7
+0051 5021              JNC     ?C0085
+                                           ; SOURCE LINE # 980
+0053 AB00        R     MOV     R3,pbIEP0Buffer
+0055 0500        R     INC     pbIEP0Buffer+02H
+0057 E500        R     MOV     A,pbIEP0Buffer+02H
+0059 AA00        R     MOV     R2,pbIEP0Buffer+01H
+005B 7002              JNZ     ?C0114
+005D 0500        R     INC     pbIEP0Buffer+01H
+005F         ?C0114:
+005F 14                DEC     A
+0060 F9                MOV     R1,A
+0061 120000      E     LCALL   ?C?CLDPTR
+0064 FD                MOV     R5,A
+0065 74F8              MOV     A,#LOW abIEP0Buffer
+0067 2E                ADD     A,R6
+0068 F582              MOV     DPL,A
+006A E4                CLR     A
+006B 34FE              ADDC    A,#HIGH abIEP0Buffer
+006D F583              MOV     DPH,A
+006F ED                MOV     A,R5
+0070 F0                MOVX    @DPTR,A
+0071 0E                INC     R6
+0072 80DA              SJMP    ?C0084
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 41  
+
+0074         ?C0085:
+                                           ; SOURCE LINE # 982
+0074 90FF81            MOV     DPTR,#tEndPoint0DescriptorBlock+01H
+0077 EF                MOV     A,R7
+0078 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 983
+0079 22                RET     
+007A         ?C0077:
+                                           ; SOURCE LINE # 985
+                                           ; SOURCE LINE # 986
+007A E4                CLR     A
+007B F500        R     MOV     bStatusAction,A
+                                           ; SOURCE LINE # 987
+                                           ; SOURCE LINE # 988
+007D         ?C0088:
+007D 22                RET     
+             ; FUNCTION usbSendNextPacketOnIEP0 (END)
+
+             ; FUNCTION SetupPacketInterruptHandler (BEGIN)
+                                           ; SOURCE LINE # 1001
+                                           ; SOURCE LINE # 1002
+                                           ; SOURCE LINE # 1005
+0000 90FF81            MOV     DPTR,#tEndPoint0DescriptorBlock+01H
+0003 7480              MOV     A,#080H
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1006
+0006 90FF83            MOV     DPTR,#tEndPoint0DescriptorBlock+03H
+0009 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1008
+000A 90FFFE            MOV     DPTR,#0FFFEH
+000D 7404              MOV     A,#04H
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1012
+0010 90FF00            MOV     DPTR,#tSetupPacket
+0013 E0                MOVX    A,@DPTR
+0014 90FFFC            MOV     DPTR,#0FFFCH
+0017 30E706            JNB     ACC.7,?C0089
+                                           ; SOURCE LINE # 1013
+001A E0                MOVX    A,@DPTR
+001B 4401              ORL     A,#01H
+001D F0                MOVX    @DPTR,A
+001E 8004              SJMP    ?C0090
+0020         ?C0089:
+                                           ; SOURCE LINE # 1015
+0020 E0                MOVX    A,@DPTR
+0021 54FE              ANL     A,#0FEH
+0023 F0                MOVX    @DPTR,A
+0024         ?C0090:
+                                           ; SOURCE LINE # 1020
+0024 E4                CLR     A
+0025 F500        R     MOV     bStatusAction,A
+                                           ; SOURCE LINE # 1024
+0027 020000      R     LJMP    usbDecodeAndProcessUsbRequest
+             ; FUNCTION SetupPacketInterruptHandler (END)
+
+             ; FUNCTION OEP0InterruptHandler (BEGIN)
+                                           ; SOURCE LINE # 1036
+                                           ; SOURCE LINE # 1037
+                                           ; SOURCE LINE # 1039
+0000 E4                CLR     A
+0001 90FF81            MOV     DPTR,#tEndPoint0DescriptorBlock+01H
+0004 F0                MOVX    @DPTR,A
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 42  
+
+                                           ; SOURCE LINE # 1040
+0005 7BFF              MOV     R3,#0FFH
+0007 7A00        R     MOV     R2,#HIGH ?SC_259
+0009 7900        R     MOV     R1,#LOW ?SC_259
+000B 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 1041
+000E 90FEF0            MOV     DPTR,#abOEP0Buffer
+0011 E0                MOVX    A,@DPTR
+0012 FF                MOV     R7,A
+0013 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 1042
+0016 7BFF              MOV     R3,#0FFH
+0018 7A00        R     MOV     R2,#HIGH ?SC_41
+001A 7900        R     MOV     R1,#LOW ?SC_41
+001C 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 1049
+001F E500        R     MOV     A,bStatusAction
+0021 B40203            CJNE    A,#02H,?C0092
+                                           ; SOURCE LINE # 1050
+0024 020000      R     LJMP    usbReceiveNextPacketOnOEP0
+0027         ?C0092:
+                                           ; SOURCE LINE # 1052
+0027 90FF82            MOV     DPTR,#tEndPoint0DescriptorBlock+02H
+002A E0                MOVX    A,@DPTR
+002B 4408              ORL     A,#08H
+002D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1053
+002E         ?C0094:
+002E 22                RET     
+             ; FUNCTION OEP0InterruptHandler (END)
+
+             ; FUNCTION IEP0InterruptHandler (BEGIN)
+                                           ; SOURCE LINE # 1069
+                                           ; SOURCE LINE # 1070
+                                           ; SOURCE LINE # 1072
+0000 E4                CLR     A
+0001 90FF83            MOV     DPTR,#tEndPoint0DescriptorBlock+03H
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1080
+0005 E500        R     MOV     A,bStatusAction
+0007 B40103            CJNE    A,#01H,?C0095
+                                           ; SOURCE LINE # 1081
+000A 020000      R     LJMP    usbSendNextPacketOnIEP0
+000D         ?C0095:
+                                           ; SOURCE LINE # 1082
+000D E500        R     MOV     A,bStatusAction
+000F B40307            CJNE    A,#03H,?C0097
+                                           ; SOURCE LINE # 1083
+0012 90FFFF            MOV     DPTR,#0FFFFH
+0015 E500        R     MOV     A,bUsbDeviceAddress
+0017 F0                MOVX    @DPTR,A
+0018 22                RET     
+0019         ?C0097:
+                                           ; SOURCE LINE # 1085
+0019 90FF80            MOV     DPTR,#tEndPoint0DescriptorBlock
+001C E0                MOVX    A,@DPTR
+001D 4408              ORL     A,#08H
+001F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1086
+0020         ?C0099:
+0020 22                RET     
+             ; FUNCTION IEP0InterruptHandler (END)
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 43  
+
+
+             ; FUNCTION USBInterrupt (BEGIN)
+0000 C0E0              PUSH    ACC
+0002 C0F0              PUSH    B
+0004 C083              PUSH    DPH
+0006 C082              PUSH    DPL
+0008 C0D0              PUSH    PSW
+000A 75D000            MOV     PSW,#00H
+000D C000              PUSH    AR0
+000F C001              PUSH    AR1
+0011 C002              PUSH    AR2
+0013 C003              PUSH    AR3
+0015 C004              PUSH    AR4
+0017 C005              PUSH    AR5
+0019 C006              PUSH    AR6
+001B C007              PUSH    AR7
+                                           ; SOURCE LINE # 1100
+                                           ; SOURCE LINE # 1103
+001D C2AF              CLR     EA
+                                           ; SOURCE LINE # 1105
+001F 90FF92            MOV     DPTR,#0FF92H
+0022 E0                MOVX    A,@DPTR
+0023 120000      E     LCALL   ?C?CCASE
+0026 0000        R     DW      ?C0104
+0028 12                DB      012H
+0029 0000        R     DW      ?C0103
+002B 22                DB      022H
+002C 0000        R     DW      ?C0105
+002E 30                DB      030H
+002F 0000        R     DW      ?C0106
+0031 32                DB      032H
+0032 0000        R     DW      ?C0108
+0034 38                DB      038H
+0035 0000        R     DW      ?C0109
+0037 3A                DB      03AH
+0038 0000        R     DW      ?C0107
+003A 3C                DB      03CH
+003B 0000        R     DW      ?C0102
+003D 44                DB      044H
+003E 0000        R     DW      ?C0101
+0040 46                DB      046H
+0041 0000              DW      00H
+0043 0000        R     DW      ?C0110
+                                           ; SOURCE LINE # 1106
+                                           ; SOURCE LINE # 1107
+0045         ?C0101:
+                                           ; SOURCE LINE # 1108
+0045 90FF92            MOV     DPTR,#0FF92H
+0048 E4                CLR     A
+0049 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1109
+004A 7BFF              MOV     R3,#0FFH
+004C 7A00        R     MOV     R2,#HIGH ?SC_269
+004E 7900        R     MOV     R1,#LOW ?SC_269
+0050 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 1110
+0053 120000      R     LCALL   OEP0InterruptHandler
+                                           ; SOURCE LINE # 1111
+0056 020000      R     LJMP    ?C0100
+                                           ; SOURCE LINE # 1113
+0059         ?C0102:
+                                           ; SOURCE LINE # 1114
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 44  
+
+0059 90FF92            MOV     DPTR,#0FF92H
+005C E4                CLR     A
+005D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1115
+005E 7BFF              MOV     R3,#0FFH
+0060 7A00        R     MOV     R2,#HIGH ?SC_279
+0062 7900        R     MOV     R1,#LOW ?SC_279
+0064 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 1116
+0067 120000      R     LCALL   IEP0InterruptHandler
+                                           ; SOURCE LINE # 1117
+006A 020000      R     LJMP    ?C0100
+                                           ; SOURCE LINE # 1119
+006D         ?C0103:
+                                           ; SOURCE LINE # 1120
+006D 90FF92            MOV     DPTR,#0FF92H
+0070 E4                CLR     A
+0071 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1121
+0072 7BFF              MOV     R3,#0FFH
+0074 7A00        R     MOV     R2,#HIGH ?SC_288
+0076 7900        R     MOV     R1,#LOW ?SC_288
+0078 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 1122
+007B 120000      E     LCALL   IEP1InterruptHandler
+                                           ; SOURCE LINE # 1123
+007E 8079              SJMP    ?C0100
+                                           ; SOURCE LINE # 1125
+0080         ?C0104:
+                                           ; SOURCE LINE # 1126
+0080 90FF92            MOV     DPTR,#0FF92H
+0083 E4                CLR     A
+0084 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1127
+0085 7BFF              MOV     R3,#0FFH
+0087 7A00        R     MOV     R2,#HIGH ?SC_297
+0089 7900        R     MOV     R1,#LOW ?SC_297
+008B 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 1128
+008E 120000      R     LCALL   OEP1InterruptHandler
+                                           ; SOURCE LINE # 1129
+0091 8066              SJMP    ?C0100
+                                           ; SOURCE LINE # 1131
+0093         ?C0105:
+                                           ; SOURCE LINE # 1132
+0093 90FF92            MOV     DPTR,#0FF92H
+0096 E4                CLR     A
+0097 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1133
+0098 90FFFE            MOV     DPTR,#0FFFEH
+009B 04                INC     A
+009C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1134
+009D 7BFF              MOV     R3,#0FFH
+009F 7A00        R     MOV     R2,#HIGH ?SC_307
+00A1 7900        R     MOV     R1,#LOW ?SC_307
+                                           ; SOURCE LINE # 1135
+                                           ; SOURCE LINE # 1136
+00A3 800B              SJMP    ?C0120
+                                           ; SOURCE LINE # 1138
+00A5         ?C0106:
+                                           ; SOURCE LINE # 1140
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 45  
+
+00A5 90FF92            MOV     DPTR,#0FF92H
+00A8 E4                CLR     A
+00A9 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1142
+00AA 7BFF              MOV     R3,#0FFH
+00AC 7A00        R     MOV     R2,#HIGH ?SC_315
+00AE 7900        R     MOV     R1,#LOW ?SC_315
+00B0         ?C0120:
+00B0 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 1143
+00B3 120000      R     LCALL   SetupPacketInterruptHandler
+                                           ; SOURCE LINE # 1144
+00B6 8041              SJMP    ?C0100
+                                           ; SOURCE LINE # 1146
+00B8         ?C0107:
+                                           ; SOURCE LINE # 1147
+00B8 90FF92            MOV     DPTR,#0FF92H
+00BB E4                CLR     A
+00BC F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1148
+00BD 90FFFE            MOV     DPTR,#0FFFEH
+00C0 7480              MOV     A,#080H
+00C2 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1149
+00C3 120000      E     LCALL   UsbReset
+                                           ; SOURCE LINE # 1150
+00C6 8031              SJMP    ?C0100
+                                           ; SOURCE LINE # 1152
+00C8         ?C0108:
+                                           ; SOURCE LINE # 1153
+00C8 90FF92            MOV     DPTR,#0FF92H
+00CB E4                CLR     A
+00CC F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1154
+00CD 90FFFE            MOV     DPTR,#0FFFEH
+00D0 7420              MOV     A,#020H
+00D2 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1155
+00D3 C200        R     CLR     bSuspended
+                                           ; SOURCE LINE # 1156
+00D5 8022              SJMP    ?C0100
+                                           ; SOURCE LINE # 1158
+00D7         ?C0109:
+                                           ; SOURCE LINE # 1159
+00D7 90FF92            MOV     DPTR,#0FF92H
+00DA E4                CLR     A
+00DB F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1160
+00DC 90FFFE            MOV     DPTR,#0FFFEH
+00DF 7440              MOV     A,#040H
+00E1 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1161
+00E2 7BFF              MOV     R3,#0FFH
+00E4 7A00        R     MOV     R2,#HIGH ?SC_325
+00E6 7900        R     MOV     R1,#LOW ?SC_325
+00E8 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 1162
+00EB D200        R     SETB    bSuspended
+                                           ; SOURCE LINE # 1163
+00ED 800A              SJMP    ?C0100
+                                           ; SOURCE LINE # 1165
+00EF         ?C0110:
+C51 COMPILER V8.02   USB                                                                   06/06/2010 14:12:14 PAGE 46  
+
+                                           ; SOURCE LINE # 1166
+00EF 90FF92            MOV     DPTR,#0FF92H
+00F2 E4                CLR     A
+00F3 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 1167
+00F4 E0                MOVX    A,@DPTR
+00F5 FF                MOV     R7,A
+00F6 120000      E     LCALL   _rs232_printhex
+                                           ; SOURCE LINE # 1168
+                                           ; SOURCE LINE # 1169
+00F9         ?C0100:
+                                           ; SOURCE LINE # 1172
+00F9 D2AF              SETB    EA
+                                           ; SOURCE LINE # 1173
+00FB D007              POP     AR7
+00FD D006              POP     AR6
+00FF D005              POP     AR5
+0101 D004              POP     AR4
+0103 D003              POP     AR3
+0105 D002              POP     AR2
+0107 D001              POP     AR1
+0109 D000              POP     AR0
+010B D0D0              POP     PSW
+010D D082              POP     DPL
+010F D083              POP     DPH
+0111 D0F0              POP     B
+0113 D0E0              POP     ACC
+0115 32                RETI    
+             ; FUNCTION USBInterrupt (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1897    ----
+   CONSTANT SIZE    =    608    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     23       9
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      8    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

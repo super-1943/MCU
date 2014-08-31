@@ -1,0 +1,52 @@
+<html>
+<body>
+<pre>
+<h1>礦ision3 Build Log</h1>
+<h2>Project:</h2>
+E:\AllProject\51\我的TUSB3210开发板\standardproject_他人的有USB驱动\USB_PMBUS_BRIDGE.uv2
+Project File Date:  06/06/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+linking...
+*** WARNING L13: RECURSIVE CALL TO SEGMENT
+    SEGMENT: ?CO?USB
+    CALLER:  ?PR?USBGETSTRINGDESCRIPTOR?USB
+*** WARNING L13: RECURSIVE CALL TO SEGMENT
+    SEGMENT: ?CO?USB
+    CALLER:  ?PR?USBGETINTERFACESTATUS?USB
+*** WARNING L13: RECURSIVE CALL TO SEGMENT
+    SEGMENT: ?CO?USB
+    CALLER:  ?PR?USBGETENDPOINTSTATUS?USB
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?RS232_GETCHAR?SERIAL
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_RS232_PUTCHAR?SERIAL
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_RS232_PRINTSTR?SERIAL
+    CALLER1: ?PR?USBINTERRUPT?USB
+    CALLER2: ?C_C51STARTUP
+*** WARNING L6: XDATA SPACE MEMORY OVERLAP
+    FROM:    FE80H
+    TO:      FEDFH
+Program Size: data=49.0 xdata=446 code=3129
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 16 bytes at address 0x00000784.      Status: Writing 16 bytes at address 0x00000794.      Status: Writing 16 bytes at address 0x000007A4.      Status: Writing 16 bytes at address 0x000007B4.      Status: Writing 16 bytes at address 0x000007C4.      Status: Writing 16 bytes at address 0x000007D4.      Status: Writing 2 bytes at address 0x000007E4.      Status: Writing 16 bytes at address 0x00000BC8.      Status: Writing 1 bytes at address 0x00000BD8.      Status: Writing 16 bytes at address 0x00000B67.      Status: Writing 5 bytes at address 0x00000B77.      Status: Writing 16 bytes at address 0x000005A8.      Status: Writing 16 bytes at address 0x000005B8.      Status: Writing 16 bytes at address 0x000005C8.      Status: Writing 16 bytes at address 0x000005D8.      Status: Writing 16 bytes at address 0x000005E8.      Status: Writing 16 bytes at address 0x000005F8.      Status: Writing 16 bytes at address 0x00000608.      Status: Writing 14 bytes at address 0x00000618.      Status: Writing 15 b
+t address 0x00000824.      Status: Writing 16 bytes at address 0x00000834.      Status: Writing 16 bytes at address 0x00000844.      Status: Writing 6 bytes at address 0x00000854.      Status: Writing 1 bytes at address 0x0000085A.      Status: Writing 16 bytes at address 0x000008BF.      Status: Writing 16 bytes at address 0x000008CF.      Status: Writing 11 bytes at address 0x000008DF.      Status: Writing 16 bytes at address 0x000007E6.      Status: Writing 16 bytes at address 0x000007F6.      Status: Writing 16 bytes at address 0x00000806.      Status: Writing 14 bytes at address 0x00000816.      Status: Writing 16 bytes at address 0x00000448.      Status: Writing 16 bytes at address 0x00000458.      Status: Writing 16 bytes at address 0x00000468.      Status: Writing 16 bytes at address 0x00000478.      Status: Writing 16 bytes at address 0x00000488.      Status: Writing 16 bytes at address 0x00000498.      Status: Writing 16 bytes at address 0x000004A8.      Status: Writing 16 bytes at address 0x000004B
+tatus: Writing 16 bytes at address 0x00000704.      Status: Writing 1 bytes at address 0x00000714.      Status: Writing 1 bytes at address 0x00000715.      Status: Writing 14 bytes at address 0x00000BF7.      Status: Writing 16 bytes at address 0x0000093E.      Status: Writing 16 bytes at address 0x0000094E.      Status: Writing 8 bytes at address 0x0000095E.      Status: Writing 16 bytes at address 0x00000626.      Status: Writing 16 bytes at address 0x00000636.      Status: Writing 16 bytes at address 0x00000646.      Status: Writing 16 bytes at address 0x00000656.      Status: Writing 16 bytes at address 0x00000666.      Status: Writing 16 bytes at address 0x00000676.      Status: Writing 16 bytes at address 0x00000686.      Status: Writing 13 bytes at address 0x00000696.      Status: Writing 1 bytes at address 0x000006A3.      Status: Writing 16 bytes at address 0x00000914.      Status: Writing 16 bytes at address 0x00000924.      Status: Writing 10 bytes at address 0x00000934.      Status: Writing 16 byt
+ 0x0000042A.      Status: Writing 9 bytes at address 0x00000433.      Status: Writing 12 bytes at address 0x0000043C.      
+Status: HEX to BIN conversion was successful.
+User command #2: cp -f TUSB2136.bin C:\Windows\System32\drivers\TUSB2136.bin
+"TUSB2136" - 0 Error(s), 8 Warning(s).
+</pre>
+</body>
+</html>

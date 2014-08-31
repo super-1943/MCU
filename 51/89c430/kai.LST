@@ -1,0 +1,31 @@
+C51 COMPILER V8.02   KAI                                                                   01/16/2009 23:41:27 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE KAI
+OBJECT MODULE PLACED IN kai.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE kai.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<at89x51.h>
+*** WARNING C318 IN LINE 1 OF kai.c: can't open file 'at89x51.h'
+   2          
+   3          void main(void)
+   4          {
+   5   1              while(1)
+   6   1              ;
+   7   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =      2    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

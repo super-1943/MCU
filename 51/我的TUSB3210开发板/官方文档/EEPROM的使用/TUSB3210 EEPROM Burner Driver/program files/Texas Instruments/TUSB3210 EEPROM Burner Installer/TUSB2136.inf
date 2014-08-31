@@ -1,0 +1,95 @@
+;
+; TI Application Firmware Loader Driver INF
+;
+
+;
+; The .bin file listed under [SourceDisksFiles] and [DriverCopyFiles]
+; AND referenced under the [DriverHwAddReg] section (These values 
+; MUST match) is the Bin file the driver will read and download to 
+; the device.
+;
+; To change the name of the file that will be downloaded to the
+; device, not only change the value of the string 'FIRMWARE_FILENAME'
+; at the bottom of this file, but also in [DriverCopyFiles] and
+; [DriverHwAddReg] sections.
+;
+
+[Version]
+Signature=$CHICAGO$
+Class=USB
+LayoutFile=layout.inf
+Provider=%MFGNAME%
+
+[Manufacturer]
+%MFGNAME%=DeviceList
+
+;-----------------------------------------------------------------------------
+; Device directory
+;-----------------------------------------------------------------------------
+[DestinationDirs]
+DefaultDestDir=10,System32\Drivers
+DriverCopyFiles = 10,SYSTEM32\DRIVERS   ; WINDOWS\SYSTEM32\DRIVERS
+
+[SourceDisksFiles]
+ApLoader.sys=1
+%FIRMWARE_FILENAME%=1            ; This is the bin file that the driver
+                                 ; will read and download to the device
+[PreCopySection]
+HKR,,NoSetupUI,,1
+
+[SourceDisksNames]
+1=%INSTDISK%,,,
+
+[DeviceList]
+%DESCRIPTION%=DriverInstall,USB\VID_0451&PID_2136
+
+;------------------------------------------------------------------------------
+;  Windows 2000 Sections
+;------------------------------------------------------------------------------
+
+[DriverInstall.NT]
+CopyFiles=DriverCopyFiles
+
+[DriverCopyFiles]
+ApLoader.SYS
+tusb3210ebeb.bin
+
+[DriverInstall.NT.Services]
+AddService=APLOADER,2,DriverService
+
+[DriverService]
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%10%\system32\drivers\ApLoader.sys
+
+[DriverInstall.nt.hw]
+AddReg=DriverHwAddReg
+
+[DriverHwAddReg]
+HKR,,FWFileName,,"tusb3210ebeb.BIN"
+
+;------------------------------------------------------------------------------
+;  Windows 98 Sections
+;------------------------------------------------------------------------------
+
+[DriverInstall]
+AddReg=DriverAddReg
+CopyFiles=DriverCopyFiles
+
+[DriverAddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,ApLoader.sys
+						
+[DriverInstall.hw]
+AddReg=DriverHwAddReg
+
+;------------------------------------------------------------------------------
+;  String Definitions
+;------------------------------------------------------------------------------
+
+[Strings]
+MFGNAME="Texas Instruments"
+INSTDISK="TI TUSB2136/3210 Application Firware Loader Install Disk"
+DESCRIPTION="TI TUSB2136/3210 Application Firmware Loader"
+FIRMWARE_FILENAME="tusb3210ebeb.BIN"

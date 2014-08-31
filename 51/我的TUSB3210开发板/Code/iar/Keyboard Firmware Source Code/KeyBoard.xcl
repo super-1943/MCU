@@ -1,0 +1,176 @@
+//                 -LNK8051.XCL-
+//
+//        XLINK 4.44, or higher, command file to be used with the 8051 
+//        C-compiler V5.xx
+//        using the -mt, -ms, -mc, -mm or -ml memory model
+//        Usage:  xlink  your_file(s)  -f lnk8051l
+//
+//        First: define CPU  
+//
+//   Revision control system
+//       $Id: lnk8051.xcl 1.14 1998/11/12 07:35:27 matsp Exp $
+//
+
+
+-c8051
+
+// If you have register independent code use: -D_R=0  
+// (or 8,16,24) to choose the register bank used at startup 
+-D_R=0
+
+//  Setup "bit" segments (always zero if there is no need to reserve
+//    bit variable space for some other purpose) 
+
+-Z(BIT)C_ARGB,BITVARS=0
+
+//  Setup "data" segments.  Start address may not be less
+//  than start of register bank + 8.  Space must also
+//  be left for interrupt functions with the "using" attribute. 
+
+-Z(DATA)B_UDATA,B_IDATA,C_ARGD,D_UDATA,D_IDATA=20
+
+//  Setup "idata" segments (usually loaded after "data") 
+
+-Z(IDATA)C_ARGI,I_UDATA,I_IDATA,CSTACK
+
+//  Setup "xdata" segments to the start address of external RAM.
+//  Note that it starts from 1 since a pointer to address zero is regarded
+//  as NULL.
+//  Note that this declaration does no harm even if you use a memory
+//  model that does not utilize external data RAM 
+
+-Z(XDATA)P_UDATA,P_IDATA,C_ARGX,X_UDATA,X_IDATA,ECSTR,RF_XDATA,XSTACK=1
+
+//  Setup all read-only segments (PROM). Usually at zero 
+
+-Z(CODE)INTVEC=0
+-Z(CODE)CODE_C=0
+-Z(CODE)CSTART=0
+-Z(CODE)NEAR_CODE=0
+-Z(CODE)RCODE,D_CDATA,B_CDATA,I_CDATA,P_CDATA,X_CDATA,C_ICALL,C_RECFN,CSTR,CCSTR,CODE,CONST
+
+//  See configuration section concerning printf/sprintf 
+-e_small_write=_formatted_write
+
+//  See configuration section concerning scanf/sscanf 
+-e_medium_read=_formatted_read
+
+//  Load the 'C' library adapted for the selected memory model 
+// cl8051t , cl8051s, cl8051c, cl8051m, cl8051l 
+
+//  Code will now reside on file aout.a03 in INTEL-STANDARD format 
+
+// TUSB2136 XDATA Definition
+-Z(XDATA)TUSB2136_SETUPPACKET_SEG=ff00
+-Z(XDATA)TUSB2136_EP0_EDB_SEG=ff80
+-Z(XDATA)TUSB2136_IEP_EDB_SEG=ff48
+-Z(XDATA)TUSB2136_OEP_EDB_SEG=ff08
+-Z(XDATA)TUSB2136_IEP0BUFFER_SEG=fef8
+-Z(XDATA)TUSB2136_OEP0BUFFER_SEG=fef0
+-Z(XDATA)TUSB2136_DESC_SEG=fe80
+-Z(XDATA)TUSB2136_OEP1_X_BUFFER_SEG=fed8
+-Z(XDATA)TUSB2136_OEP1_Y_BUFFER_SEG=fee0
+-Z(XDATA)TUSB2136_IEP1_X_BUFFER_SEG=fee8
+-Z(XDATA)TUSB2136_DEBOUNCE_SEG=fd80
+-Z(XDATA)XDATA_Z
+-Z(XDATA)XDATA_I
+-Z(XDATA)XDATA_ID
+
+// -Z(XDATA)TUSB2136_IEP1_X_BUFFER_SEG=fe00
+
+
+-Z(XDATA)TUSB2136_EXTERNAL_RAM_SEG=0000
+
+-Z(XDATA)TUSB5152_IO_SEG=c000
+-D_IDATA_END=0xFF              // Last address of Idata memory (0xFF for 8052 and 0x7F for 8051)
+//
+//
+//    PDATA
+//
+-D_PDATA_START=0x0F01          // First address for PDATA memory.
+-D_PDATA_END=0x0FFF            // Last address for PDATA memory.
+//
+//
+//    IXDATA
+//
+-D_IXDATA_START=1              // First address of on chip XDATA memory.
+-D_IXDATA_END=FFF              // Last address of on chip XDATA memory.
+//
+//
+//    XDATA
+//
+-D_XDATA_START=0x000001        // First address of xdata memory.
+-D_XDATA_END=0x00FFFF          // Last address of xdata memory.
+//
+//
+//    CODE
+//
+-D_CODE_START=0x000000         // First address for code.
+-D_CODE_END=0xFFFFFF           // Last address for code.
+//
+//
+//
+//    NEAR CODE
+//
+-D_NEAR_CODE_END=0xFFFF        // Last address for near code.
+//
+//
+//    FAR DATA
+//
+-D_FAR_DATA_NR_OF_BANKS=0x0E   // Number of banks in far data memory.
+-D_FAR_DATA_START=0x010001     // First address of far memory.
+-D_FAR_DATA_END=0xFFFFFF       // Last address of far memory.
+//
+//
+//    FAR CODE
+//
+-D_FAR_CODE_START=_CODE_START  // First address for far code.
+-D_FAR_CODE_END=_CODE_END      // Last address for far code.
+//
+//
+//
+// Special SFRs
+// ------------
+//
+//    Register bank setup
+//
+-D?REGISTER_BANK=0             // Default register bank (0,1,2,3).
+-D_REGISTER_BANK_START=0       // Start address for default register bank (00,08,10,18).
+//
+//
+//    PDATA page setup
+//
+-D?PBANK_NUMBER=0F	       // high byte of 16-bit address to the PDATA area
+-D?PBANK=A0                    // Most significant byte in MOVX A,@R0. (0xA0 is sfr P2)
+-D?PBANK_EXT=0xEA              // Most significant byte in MOVX A,@R0. (0xEA is for Dallas DS80C390)
+//
+//
+//    Virtual register setup
+//    ----------------------
+//
+-D_BREG_START=0x00             // The bit address where the BREG segments starts.
+                               // Must be placed on: _BREG_START%8=0 where _BREG_START <= 0x78.
+-D?VB=0x20                     // ?VB is used when referencing BREG as whole byte.
+                               // Must be placed on: ?VB=0x20+_BREG_START/8
+//
+-D_FIRST_BANK_ADDR=0
+//
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//    Segments coping with code banking setup for the extended 2 core.
+//    ================================================================
+//
+//    BANKED CONSTANT SEGMENTS
+//    Note: The most significate byte in the range is the code bank in which all
+//    constants in code will be placed.
+//
+-P(CODE)BANKED_CODE_EXT2_C=[0x0F0000-0x0FFFFF] //  Constant bank segment.
+-P(CODE)BANKED_CODE_EXT2_N=[0x0F0000-0x0FFFFF] //  Constant bank segment.
+// 
+//    SPRINGBOARD SEGMENTS
+//    Jump code duplicated in every bank
+//
+-KBANKED_EXT2=10000,15
+-Z(CODE)BANKED_EXT2#FFF0-FFFF

@@ -1,0 +1,101 @@
+C51 COMPILER V8.02   SERIAL                                                                06/03/2011 08:04:30 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE SERIAL
+OBJECT MODULE PLACED IN serial.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE serial.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "serial.h"
+   3          
+   4          
+   5          
+   6          
+   7          
+   8          /*****************************************************************
+   9          计算波特率注意，Fclk=48MHz
+  10          定时器1采用方式二
+  11          串行口采用方式一,波特率倍增位SMOD置1
+  12          波特率初值计算公式：Baud=Fclk/(12*16*（256-x）)，x为定时器1初值
+  13          *****************************************************************/
+  14          void rs232_init(void)
+  15          {
+  16   1              TMOD&=0x0f;
+  17   1              TMOD|=0x20;                     // 定时器1工作于8位自动重载模式, 用于产生波特率
+  18   1              TH1 = 243;                      // 波特率19200
+  19   1              TL1 = 243;
+  20   1              PCON|=0x80;                     // 波特率倍增
+  21   1              SCON = 0x50;            // 设定串行口工作方式1,REN=1
+  22   1              TR1 = 1;                        // 启动定时器1
+  23   1              ES=1;
+  24   1              EA=1;
+  25   1      }
+  26          unsigned char rs232_getchar(void)
+  27          {
+  28   1              unsigned char b;
+  29   1              while(!RI);
+  30   1              RI=0;
+  31   1              b=SBUF;
+  32   1              return b;
+  33   1      }
+  34          void rs232_putchar(unsigned char txd)
+  35          {
+  36   1              SBUF = txd;
+  37   1              while(!TI);                             // 等特数据传送
+  38   1              TI = 0;                                 // 清除数据传送标志
+  39   1      }
+  40          void rs232_printstr(unsigned char *str)
+  41          {
+  42   1              while(*str!= '\0')
+  43   1              {
+  44   2                      SBUF =*str++;
+  45   2                      while(!TI);                             // 等特数据传送
+  46   2                      TI = 0;                                 // 清除数据传送标志
+  47   2              }
+  48   1      }
+  49          void rs232_printhex(unsigned char b)
+  50          {
+  51   1              unsigned char hexvalue;
+  52   1      #if 1
+  53   1              rs232_printstr("0x");
+  54   1      #endif
+  55   1              hexvalue=(b&0xf0)>>4;
+C51 COMPILER V8.02   SERIAL                                                                06/03/2011 08:04:30 PAGE 2   
+
+  56   1              if(hexvalue<10)
+  57   1              {
+  58   2                      rs232_putchar(hexvalue+'0');
+  59   2              }
+  60   1              else
+  61   1              {
+  62   2                      rs232_putchar(hexvalue+55);
+  63   2              }
+  64   1              hexvalue=(b&0x0f);
+  65   1              if(hexvalue<10)
+  66   1              {
+  67   2                      rs232_putchar(hexvalue+'0');
+  68   2              }
+  69   1              else
+  70   1              {
+  71   2                      rs232_putchar(hexvalue+55);
+  72   2              }
+  73   1      #if 1
+  74   1              rs232_printstr(" ");
+  75   1      #endif
+  76   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    144    ----
+   CONSTANT SIZE    =      5    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

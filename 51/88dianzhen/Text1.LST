@@ -1,0 +1,53 @@
+C51 COMPILER V7.00  TEXT1                                                                  07/25/2008 17:02:14 PAGE 1   
+
+
+C51 COMPILER V7.00, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Elecs\Keilc\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <at89x51.h>
+   2          unsigned char code niu[]={0xff,0x3e,0x48,0x7f,0x08,0x08,0x08,0x00};//ţ
+   3          unsigned char code yi[]={0x00,0x00,0x00,0xff,0x00,0x00,0x00,0x00};//
+   4          unsigned char code er[]={0x00,0x7e,0x7e,0x00,0x00,0xff,0xff,0x00};//
+   5          unsigned char code san[]={0x7e,0x7e,0x00,0x3c,0x3c,0x00,0xff,0xff};//
+   6          unsigned char code si[]={0xff,0xa5,0xa5,0xc3,0x81,0x81,0x81,0xff};
+   7          unsigned char code wu[]={0x7e,0x10,0x10,0x7c,0x14,0x14,0x14,0xff};
+   8          unsigned char code liu[]={0x10,0x00,0xff,0x00,0x28,0x24,0x42,0x81};
+   9          unsigned char code ri[]={0x7c,0x42,0x42,0x7c,0x42,0x42,0x42,0x7c};
+  10          void delay()
+  11          {
+  12   1              unsigned char i,j;
+  13   1              for(i=40;i;i--)for(j=50;j;j--);
+  14   1      }
+  15          void main()
+  16          {
+  17   1              unsigned int x;
+  18   1              while(1)
+  19   1              {
+  20   2                      P3=0xfe;
+  21   2                      for(x=0;x<8;x++)
+  22   2                      {
+  23   3                      P2=wu[x];
+  24   3                      delay();
+  25   3                      P3<<=1;
+  26   3                      P3+=1;
+  27   3                      }
+  28   2                      delay();
+  29   2              }
+  30   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     49    ----
+   CONSTANT SIZE    =     64    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

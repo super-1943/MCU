@@ -1,0 +1,535 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V7.51A/W32 for 8051                28/May/2010  14:43:51 #
+# Copyright 2004-2009 IAR Systems AB.                                         #
+# Time limited license: 20 days left                                          #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  near                                               #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data                                               #
+#    Dptr setup         =  1,16                                               #
+#    Source file        =  E:\AllProject\51\Keyboard Firmware Source          #
+#                          Code\usbinit.c                                     #
+#    Command line       =  "E:\AllProject\51\Keyboard Firmware Source         #
+#                          Code\usbinit.c" -lC "E:\AllProject\51\Keyboard     #
+#                          Firmware Source Code\Debug\List\" -lA              #
+#                          "E:\AllProject\51\Keyboard Firmware Source         #
+#                          Code\Debug\List\" -o "E:\AllProject\51\Keyboard    #
+#                          Firmware Source Code\Debug\Obj\" -e                #
+#                          --char_is_signed --no_cse --no_unroll --no_inline  #
+#                          --no_code_motion --no_tbaa --debug --core=plain    #
+#                          --dptr=16,1 --data_model=large --code_model=near   #
+#                          --calling_convention=xdata_reentrant               #
+#                          --place_constants=data --nr_virtual_regs 8 -I      #
+#                          "C:\Program Files\IAR Systems\Embedded Workbench   #
+#                          5.3 Evaluation version\8051\INC\" -I "C:\Program   #
+#                          Files\IAR Systems\Embedded Workbench 5.3           #
+#                          Evaluation version\8051\INC\CLIB\" -Ol             #
+#    List file          =  E:\AllProject\51\Keyboard Firmware Source          #
+#                          Code\Debug\List\usbinit.lst                        #
+#    Object file        =  E:\AllProject\51\Keyboard Firmware Source          #
+#                          Code\Debug\Obj\usbinit.r51                         #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+E:\AllProject\51\Keyboard Firmware Source Code\usbinit.c
+      1          /******************************************************************************
+      2           *                         VAULT INFORMATION SERVICES                         *
+      3           *                          TEXAS INSTRUMENTS, INC.                           *
+      4           *----------------------------------------------------------------------------*
+      5           *                "USB Initialization for TUSB2136 Demo App"                  *
+      6           *                                                                            * 
+      7           * Programmed by: Craig Steiner, VIS (csteiner@vaultbbs.com)                  * 
+      8           * Develop Date:  30/Sep/2000                                                 *  
+      9           *----------------------------------------------------------------------------*
+     10           * Description: This module is a component of the TUSB2136 Demo App.  It      *
+     11           *   handles the initialization phases of the USB hub and function.           *
+     12           ******************************************************************************/
+     13          
+     14          #include <io51.h>
+
+   \                                 In  segment SFR_AN, at 0x88
+   \   union <unnamed> volatile __sfr _A_TCON
+   \                     _A_TCON:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xa8
+   \   union <unnamed> volatile __sfr _A_IE
+   \                     _A_IE:
+   \   000000                DS 1
+     15          #include "types.h"
+     16          #include "tusb2136.h"
+     17          #include "usb.h"
+     18          #include "delay.h"
+     19          
+     20          extern BYTE deviceReady;
+     21          extern WORD wBytesRemainingOnIEP0;
+     22          // extern BOOL bHostAskMoreDataThanAvailable;
+     23          extern PBYTE pbIEP0Buffer;
+     24          extern BYTE bConfigurationNumber;
+     25          extern BYTE bInterfaceNumber;
+     26          extern WORD wBytesRemainingOnOEP0;
+     27          extern PBYTE pbOEP0Buffer;
+     28          extern BYTE bStatusAction;
+     29          extern struct FUNCDEF_STRUCT code funcDefs[17]; // From vidpid.c
+     30          extern unsigned char fncOffset; // From vidpid.c
+     31          extern BYTE strlen(char *string); // From support.c
+     32          extern char *iep1Buffer; // From keyboard.c
+     33          extern BYTE code abromReportDescriptor[SIZEOF_REPORT_DESCRIPTOR];
+     34          extern BYTE code abromConfigurationDescriptorGroup[SIZEOF_BOOTCODE_CONFIG_DESC_GROUP];
+     35          extern BYTE code abromDeviceDescriptor[SIZEOF_DEVICE_DESCRIPTOR];
+     36          
+     37          void InitializeUsbData(void);
+     38          
+     39          /***************************************************************************
+     40           * Section:    External TUSB2136 Segment Definitions                       *
+     41           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+     42           * Description: This section of code declares as external all the required *
+     43           *    memory mapped segments.  The fact that they must be defined as       *
+     44           *    external within the #pragmas seems illogical, but IAR requires the   * 
+     45           *    #pragmas along with the external declarations in order to link.      *  
+     46           *                                                                         *   
+     47           * Note: The original declarations themselves are contained in "usb.c".    *    
+     48           ***************************************************************************/
+     49          
+     50          #pragma dataseg=TUSB2136_EP0_EDB_SEG
+     51          extern tEDB0 tEndPoint0DescriptorBlock;
+     52          #pragma dataseg=default
+     53          #pragma dataseg=TUSB2136_IEP_EDB_SEG
+     54          extern tEDB tInputEndPointDescriptorBlock[3];
+     55          #pragma dataseg=default
+     56          #pragma dataseg=TUSB2136_OEP_EDB_SEG
+     57          extern tEDB tOutputEndPointDescriptorBlock[3];
+     58          #pragma dataseg=default
+     59          #pragma dataseg=TUSB2136_DESC_SEG
+     60          extern BYTE abDeviceDescriptor[SIZEOF_DEVICE_DESCRIPTOR];
+     61          //extern BYTE abConfigurationDescriptorGroup[SIZEOF_BOOTCODE_CONFIG_DESC_GROUP];
+     62          //extern BYTE abStringDescriptor[SIZEOF_BOOTCODE_STRING_DESC_GROUP];
+     63          #pragma dataseg= default
+     64          #pragma dataseg=TUSB2136_IEP1_X_BUFFER_SEG
+
+   \                                 In  segment TUSB2136_IEP1_X_BUFFER_SEG, align 1
+     65          __no_init BYTE bufIEP1Buffer[8];
+   \                     bufIEP1Buffer:
+   \   000000                DS 8
+     66          #pragma dataseg= default
+     67          
+     68          
+     69          /***************************************************************************
+     70           * Function:   InitializeUsbHub                                            *
+     71           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+     72           * Description: Initializes the HUB by assigning it a VID/PID, and connects*
+     73           *    the Hub to the upstream port.                                        *
+     74           ***************************************************************************/
+     75          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+     76          void InitializeUsbHub(void)
+   \                     InitializeUsbHub:
+     77          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+     78                  
+     79          	// Make sure we're disconnected from the upstream port
+     80          	bUSBCTL = 0x00;
+   \   000004   7400         MOV     A,#0x0
+   \   000006   90FFFC       MOV     DPTR,#-0x4
+   \   000009   F0           MOVX    @DPTR,A
+     81          
+     82          	// Initialize the HUB VID/PID
+     83          	bHUBVIDH = (funcDefs[fncOffset].hubVID & 0xFF00) >> 8;
+   \   00000A   90....       MOV     DPTR,#fncOffset
+   \   00000D   E0           MOVX    A,@DPTR
+   \   00000E   F8           MOV     R0,A
+   \   00000F   7900         MOV     R1,#0x0
+   \   000011   E8           MOV     A,R0
+   \   000012   75F011       MOV     B,#0x11
+   \   000015   A4           MUL     AB
+   \   000016   C8           XCH     A,R0
+   \   000017   AAF0         MOV     R2,B
+   \   000019   75F000       MOV     B,#0x0
+   \   00001C   A4           MUL     AB
+   \   00001D   2A           ADD     A,R2
+   \   00001E   FA           MOV     R2,A
+   \   00001F   75F011       MOV     B,#0x11
+   \   000022   E9           MOV     A,R1
+   \   000023   A4           MUL     AB
+   \   000024   2A           ADD     A,R2
+   \   000025   F9           MOV     R1,A
+   \   000026   E8           MOV     A,R0
+   \   000027   24..         ADD     A,#((funcDefs + 1) & 0xff)
+   \   000029   F582         MOV     DPL,A
+   \   00002B   E9           MOV     A,R1
+   \   00002C   34..         ADDC    A,#(((funcDefs + 1) >> 8) & 0xff)
+   \   00002E   F583         MOV     DPH,A
+   \   000030   7401         MOV     A,#0x1
+   \   000032   93           MOVC    A,@A+DPTR
+   \   000033   F9           MOV     R1,A
+   \   000034   E9           MOV     A,R1
+   \   000035   90FFFB       MOV     DPTR,#-0x5
+   \   000038   F0           MOVX    @DPTR,A
+     84          	bHUBVIDL = (funcDefs[fncOffset].hubVID & 0xFF);
+   \   000039   90....       MOV     DPTR,#fncOffset
+   \   00003C   E0           MOVX    A,@DPTR
+   \   00003D   F8           MOV     R0,A
+   \   00003E   7900         MOV     R1,#0x0
+   \   000040   E8           MOV     A,R0
+   \   000041   75F011       MOV     B,#0x11
+   \   000044   A4           MUL     AB
+   \   000045   C8           XCH     A,R0
+   \   000046   AAF0         MOV     R2,B
+   \   000048   75F000       MOV     B,#0x0
+   \   00004B   A4           MUL     AB
+   \   00004C   2A           ADD     A,R2
+   \   00004D   FA           MOV     R2,A
+   \   00004E   75F011       MOV     B,#0x11
+   \   000051   E9           MOV     A,R1
+   \   000052   A4           MUL     AB
+   \   000053   2A           ADD     A,R2
+   \   000054   F9           MOV     R1,A
+   \   000055   E8           MOV     A,R0
+   \   000056   24..         ADD     A,#((funcDefs + 1) & 0xff)
+   \   000058   F582         MOV     DPL,A
+   \   00005A   E9           MOV     A,R1
+   \   00005B   34..         ADDC    A,#(((funcDefs + 1) >> 8) & 0xff)
+   \   00005D   F583         MOV     DPH,A
+   \   00005F   E4           CLR     A
+   \   000060   93           MOVC    A,@A+DPTR
+   \   000061   90FFFA       MOV     DPTR,#-0x6
+   \   000064   F0           MOVX    @DPTR,A
+     85          	bHUBPIDH = (funcDefs[fncOffset].hubPID & 0xFF00) >> 8;
+   \   000065   90....       MOV     DPTR,#fncOffset
+   \   000068   E0           MOVX    A,@DPTR
+   \   000069   F8           MOV     R0,A
+   \   00006A   7900         MOV     R1,#0x0
+   \   00006C   E8           MOV     A,R0
+   \   00006D   75F011       MOV     B,#0x11
+   \   000070   A4           MUL     AB
+   \   000071   C8           XCH     A,R0
+   \   000072   AAF0         MOV     R2,B
+   \   000074   75F000       MOV     B,#0x0
+   \   000077   A4           MUL     AB
+   \   000078   2A           ADD     A,R2
+   \   000079   FA           MOV     R2,A
+   \   00007A   75F011       MOV     B,#0x11
+   \   00007D   E9           MOV     A,R1
+   \   00007E   A4           MUL     AB
+   \   00007F   2A           ADD     A,R2
+   \   000080   F9           MOV     R1,A
+   \   000081   E8           MOV     A,R0
+   \   000082   24..         ADD     A,#((funcDefs + 3) & 0xff)
+   \   000084   F582         MOV     DPL,A
+   \   000086   E9           MOV     A,R1
+   \   000087   34..         ADDC    A,#(((funcDefs + 3) >> 8) & 0xff)
+   \   000089   F583         MOV     DPH,A
+   \   00008B   7401         MOV     A,#0x1
+   \   00008D   93           MOVC    A,@A+DPTR
+   \   00008E   F9           MOV     R1,A
+   \   00008F   E9           MOV     A,R1
+   \   000090   90FFF9       MOV     DPTR,#-0x7
+   \   000093   F0           MOVX    @DPTR,A
+     86          	bHUBPIDL = (funcDefs[fncOffset].hubPID & 0xFF);
+   \   000094   90....       MOV     DPTR,#fncOffset
+   \   000097   E0           MOVX    A,@DPTR
+   \   000098   F8           MOV     R0,A
+   \   000099   7900         MOV     R1,#0x0
+   \   00009B   E8           MOV     A,R0
+   \   00009C   75F011       MOV     B,#0x11
+   \   00009F   A4           MUL     AB
+   \   0000A0   C8           XCH     A,R0
+   \   0000A1   AAF0         MOV     R2,B
+   \   0000A3   75F000       MOV     B,#0x0
+   \   0000A6   A4           MUL     AB
+   \   0000A7   2A           ADD     A,R2
+   \   0000A8   FA           MOV     R2,A
+   \   0000A9   75F011       MOV     B,#0x11
+   \   0000AC   E9           MOV     A,R1
+   \   0000AD   A4           MUL     AB
+   \   0000AE   2A           ADD     A,R2
+   \   0000AF   F9           MOV     R1,A
+   \   0000B0   E8           MOV     A,R0
+   \   0000B1   24..         ADD     A,#((funcDefs + 3) & 0xff)
+   \   0000B3   F582         MOV     DPL,A
+   \   0000B5   E9           MOV     A,R1
+   \   0000B6   34..         ADDC    A,#(((funcDefs + 3) >> 8) & 0xff)
+   \   0000B8   F583         MOV     DPH,A
+   \   0000BA   E4           CLR     A
+   \   0000BB   93           MOVC    A,@A+DPTR
+   \   0000BC   90FFF8       MOV     DPTR,#-0x8
+   \   0000BF   F0           MOVX    @DPTR,A
+     87          
+     88          	// Connect hub to the upstream port
+     89          //	bUSBCTL |= USBCTL_CONT; // marked by Jim 2001/01/15
+     90          }
+   \   0000C0   D083         POP     DPH
+   \   0000C2   D082         POP     DPL
+   \   0000C4   22           RET
+     91          
+     92          /***************************************************************************
+     93           * Function:   UsbReset                                                    *
+     94           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+     95           * Description: This initializes or resets the USB function.               *
+     96           ***************************************************************************/
+     97          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+     98          void UsbReset(void)
+   \                     UsbReset:
+     99          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+    100              InitializeUsbData(); // ces
+   \   000004                ; Setup parameters for call to function InitializeUsbData
+   \   000004   12....       LCALL   InitializeUsbData
+    101          	
+    102          //    bFUNADR                 = 0x00;         // no device address
+    103          
+    104              wBytesRemainingOnIEP0   = NO_MORE_DATA;
+   \   000007   90....       MOV     DPTR,#wBytesRemainingOnIEP0
+   \   00000A   74FF         MOV     A,#-0x1
+   \   00000C   F0           MOVX    @DPTR,A
+   \   00000D   A3           INC     DPTR
+   \   00000E   74FF         MOV     A,#-0x1
+   \   000010   F0           MOVX    @DPTR,A
+    105              wBytesRemainingOnOEP0   = NO_MORE_DATA;
+   \   000011   90....       MOV     DPTR,#wBytesRemainingOnOEP0
+   \   000014   74FF         MOV     A,#-0x1
+   \   000016   F0           MOVX    @DPTR,A
+   \   000017   A3           INC     DPTR
+   \   000018   74FF         MOV     A,#-0x1
+   \   00001A   F0           MOVX    @DPTR,A
+    106              bStatusAction           = STATUS_ACTION_NOTHING;
+   \   00001B   7400         MOV     A,#0x0
+   \   00001D   90....       MOV     DPTR,#bStatusAction
+   \   000020   F0           MOVX    @DPTR,A
+    107          
+    108              pbIEP0Buffer            = (PBYTE)0x0000;
+   \   000021   90....       MOV     DPTR,#pbIEP0Buffer
+   \   000024   7400         MOV     A,#0x0
+   \   000026   F0           MOVX    @DPTR,A
+   \   000027   A3           INC     DPTR
+   \   000028   7400         MOV     A,#0x0
+   \   00002A   F0           MOVX    @DPTR,A
+    109              pbOEP0Buffer            = (PBYTE)0x0000;
+   \   00002B   90....       MOV     DPTR,#pbOEP0Buffer
+   \   00002E   7400         MOV     A,#0x0
+   \   000030   F0           MOVX    @DPTR,A
+   \   000031   A3           INC     DPTR
+   \   000032   7400         MOV     A,#0x0
+   \   000034   F0           MOVX    @DPTR,A
+    110              bConfigurationNumber    = 0x00;         // device unconfigured
+   \   000035   7400         MOV     A,#0x0
+   \   000037   90....       MOV     DPTR,#bConfigurationNumber
+   \   00003A   F0           MOVX    @DPTR,A
+    111              bInterfaceNumber        = 0x00;         
+   \   00003B   7400         MOV     A,#0x0
+   \   00003D   90....       MOV     DPTR,#bInterfaceNumber
+   \   000040   F0           MOVX    @DPTR,A
+    112          //    bRemoteWakeup           = ENABLE;
+    113          
+    114              // enable endpoint 0 interrupt
+    115              tEndPoint0DescriptorBlock.bIEPCNFG = EPCNF_USBIE | EPCNF_UBME;
+   \   000041   7484         MOV     A,#-0x7c
+   \   000043   90....       MOV     DPTR,#tEndPoint0DescriptorBlock
+   \   000046   F0           MOVX    @DPTR,A
+    116              tEndPoint0DescriptorBlock.bOEPCNFG = EPCNF_USBIE | EPCNF_UBME;
+   \   000047   7484         MOV     A,#-0x7c
+   \   000049   90....       MOV     DPTR,#(tEndPoint0DescriptorBlock + 2)
+   \   00004C   F0           MOVX    @DPTR,A
+    117              // NAK both endpoints
+    118              tEndPoint0DescriptorBlock.bIEPBCNT  = EPBCNT_NAK;
+   \   00004D   7480         MOV     A,#-0x80
+   \   00004F   90....       MOV     DPTR,#(tEndPoint0DescriptorBlock + 1)
+   \   000052   F0           MOVX    @DPTR,A
+    119              tEndPoint0DescriptorBlock.bOEPBCNT  = EPBCNT_NAK;
+   \   000053   7480         MOV     A,#-0x80
+   \   000055   90....       MOV     DPTR,#(tEndPoint0DescriptorBlock + 3)
+   \   000058   F0           MOVX    @DPTR,A
+    120          
+    121          
+    122              // enable endpoint 1 interrupt
+    123              tInputEndPointDescriptorBlock[0].bEPCNF   = EPCNF_USBIE | EPCNF_UBME ;
+   \   000059   7484         MOV     A,#-0x7c
+   \   00005B   90....       MOV     DPTR,#tInputEndPointDescriptorBlock
+   \   00005E   F0           MOVX    @DPTR,A
+    124              tInputEndPointDescriptorBlock[0].bEPBBAX  = (BYTE)(IEP1_X_BUFFER_ADDRESS >> 3 & 0x00ff);
+   \   00005F   74DD         MOV     A,#-0x23
+   \   000061   90....       MOV     DPTR,#(tInputEndPointDescriptorBlock + 1)
+   \   000064   F0           MOVX    @DPTR,A
+    125              tInputEndPointDescriptorBlock[0].bEPBCTX  = EPBCT_NAK; //0x0000;
+   \   000065   7480         MOV     A,#-0x80
+   \   000067   90....       MOV     DPTR,#(tInputEndPointDescriptorBlock + 2)
+   \   00006A   F0           MOVX    @DPTR,A
+    126              tInputEndPointDescriptorBlock[0].bEPSIZXY = EP_MAX_PACKET_SIZE;
+   \   00006B   7440         MOV     A,#0x40
+   \   00006D   90....       MOV     DPTR,#(tInputEndPointDescriptorBlock + 7)
+   \   000070   F0           MOVX    @DPTR,A
+    127              tInputEndPointDescriptorBlock[0].bEPBCTX = EPBCT_NAK;
+   \   000071   7480         MOV     A,#-0x80
+   \   000073   90....       MOV     DPTR,#(tInputEndPointDescriptorBlock + 2)
+   \   000076   F0           MOVX    @DPTR,A
+    128              
+    129              // Enable the USB-specific Interrupts; SETUP, RESET and STPOW
+    130              bUSBMSK = USBMSK_STPOW | USBMSK_SETUP | USBMSK_RSTR | USBMSK_RESR | USBMSK_SUSR;
+   \   000077   74E5         MOV     A,#-0x1b
+   \   000079   90FFFD       MOV     DPTR,#-0x3
+   \   00007C   F0           MOVX    @DPTR,A
+    131              
+    132              // Enable port 3, which is the embedded function which is always connected.
+    133              bHUBCNFG   |= (HUBCNFG_P3_FIXED | HUBCNFG_P1E | HUBCNFG_P2E | HUBCNFG_OCP);
+   \   00007D   90FFF7       MOV     DPTR,#-0x9
+   \   000080   E0           MOVX    A,@DPTR
+   \   000081   4495         ORL     A,#0x95
+   \   000083   F0           MOVX    @DPTR,A
+    134          
+    135          	// Connect the function to the hub.
+    136          	//bUSBCTL |= 0x40;
+    137          }
+   \   000084   D083         POP     DPH
+   \   000086   D082         POP     DPL
+   \   000088   22           RET
+    138          
+    139          /***************************************************************************
+    140           * Function:   InitializeUsbFunction                                       *
+    141           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+    142           * Description: Initializes the interrupts necessary to perform the user   *
+    143           *     function, then initializes the function with UsbReset().            * 
+    144           ***************************************************************************/
+    145          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+    146          void InitializeUsbFunction(void)
+   \                     InitializeUsbFunction:
+    147          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+    148          	TCON_bit.IT0 = 0; // Edge-triggered
+   \   000004   C288         CLR     0x88.0
+    149          	IE_bit.EX0 = ENABLE; // Enable external 0 interrupt (USB interrupt source)
+   \   000006   D2A8         SETB    0xa8.0
+    150          	IE_bit.EA = ENABLE; // Enable global interrupts
+   \   000008   D2AF         SETB    0xa8.7
+    151          
+    152          	UsbReset(); // Reset the USB Function
+   \   00000A                ; Setup parameters for call to function UsbReset
+   \   00000A   12....       LCALL   UsbReset
+    153          	
+    154          	bUSBCTL |= USBCTL_CONT; // added by Jim 2001/01/15
+   \   00000D   90FFFC       MOV     DPTR,#-0x4
+   \   000010   E0           MOVX    A,@DPTR
+   \   000011   D2E7         SETB    0xE0 /* A   */.7
+   \   000013   F0           MOVX    @DPTR,A
+    155          
+    156          }
+   \   000014   D083         POP     DPH
+   \   000016   D082         POP     DPL
+   \   000018   22           RET
+   \   000019                REQUIRE _A_TCON
+   \   000019                REQUIRE _A_IE
+    157          
+    158          /***************************************************************************
+    159           * Function:   InitializeUsbData                                           *
+    160           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+    161           * Description: Initializes the USB-related data structures, copying       *
+    162           *    descriptors, etc. from code memory to their correct address in XRAM. *
+    163           *    It also builds the string descriptors on-the-fly based on the        *
+    164           *    VID/PID option that has been selected with s0123.                    *
+    165           ***************************************************************************/
+    166          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+    167          void InitializeUsbData(void)
+   \                     InitializeUsbData:
+    168          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+    169          //	BYTE bTemp; // Temporary working variable
+    170          	BYTE stringOffset = 4; // Used to construct string descriptors on-the-fly
+    171          
+    172          	deviceReady = FALSE; // Device is not currently ready
+   \   000004   7400         MOV     A,#0x0
+   \   000006   90....       MOV     DPTR,#deviceReady
+   \   000009   F0           MOVX    @DPTR,A
+    173          
+    174              bMCNFG = (MCNFG_24MHZ | MCNFG_OVCE | MCNFG_XINT); // Set to 24Mhz
+   \   00000A   74E0         MOV     A,#-0x20
+   \   00000C   90FF90       MOV     DPTR,#-0x70
+   \   00000F   F0           MOVX    @DPTR,A
+    175              // Set power wait time for the hub
+    176              bHUBPOTG = HUBPOTG_100MS;               // 100 ms from power-on to power-good
+   \   000010   7432         MOV     A,#0x32
+   \   000012   90FFF5       MOV     DPTR,#-0xb
+   \   000015   F0           MOVX    @DPTR,A
+    177          
+    178              // Set power rating for the hub
+    179              bHUBCURT = HUBCURT_100MA;               // 100 ms from power-on to power-good
+   \   000016   7464         MOV     A,#0x64
+   \   000018   90FFF4       MOV     DPTR,#-0xc
+   \   00001B   F0           MOVX    @DPTR,A
+    180              
+    181              iep1Buffer = (PBYTE) bufIEP1Buffer; // &bufIEP1Buffer[0]; // abDeviceDescriptor;
+                                ^
+Warning[Pe513]: a value of type "unsigned char *" cannot be assigned to an
+          entity of type "char *"
+
+  	BYTE stringOffset = 4; // Used to construct string descriptors on-the-fly
+  	     ^
+"E:\AllProject\51\Keyboard Firmware Source Code\usbinit.c",170  Warning[Pe177]: 
+          variable "stringOffset" was declared but never referenced
+   \   00001C   90....       MOV     DPTR,#iep1Buffer
+   \   00001F   74..         MOV     A,#(bufIEP1Buffer & 0xff)
+   \   000021   F0           MOVX    @DPTR,A
+   \   000022   A3           INC     DPTR
+   \   000023   74..         MOV     A,#((bufIEP1Buffer >> 8) & 0xff)
+   \   000025   F0           MOVX    @DPTR,A
+    182          }
+   \   000026   D083         POP     DPH
+   \   000028   D082         POP     DPL
+   \   00002A   22           RET
+
+   Maximum stack usage in bytes:
+
+     Function               ISTACK PSTACK XSTACK
+     --------               ------ ------ ------
+     InitializeUsbData          2      0      0
+     InitializeUsbFunction      2      0      0
+       -> UsbReset              4      0      0
+     InitializeUsbHub           2      0      0
+     UsbReset                   2      0      0
+       -> InitializeUsbData     4      0      0
+
+
+   Segment part sizes:
+
+     Function/Label        Bytes
+     --------------        -----
+     _A_TCON                  1
+     _A_IE                    1
+     bufIEP1Buffer            8
+     InitializeUsbHub       197
+     UsbReset               137
+     InitializeUsbFunction   25
+     InitializeUsbData       43
+
+ 
+ 402 bytes in segment NEAR_CODE
+   2 bytes in segment SFR_AN
+   8 bytes in segment TUSB2136_IEP1_X_BUFFER_SEG
+ 
+ 402 bytes of CODE  memory
+   0 bytes of DATA  memory (+ 2 bytes shared)
+   8 bytes of XDATA memory
+
+Errors: none
+Warnings: 2

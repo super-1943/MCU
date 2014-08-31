@@ -1,0 +1,31 @@
+Added Component: Designator=AS1117-3.3(DSO-G3)
+Added Component: Designator=C1(C0805)
+Added Component: Designator=C2(C0805)
+Added Component: Designator=C3(C0805)
+Added Component: Designator=C4(C0805)
+Added Component: Designator=R23(c0805)
+Added Component: Designator=R24(c0805)
+Added Pin To Net: NetName=GND Pin=AS1117-3.3-1
+Added Pin To Net: NetName=+3.3 Pin=AS1117-3.3-2
+Added Pin To Net: NetName=VBUS Pin=AS1117-3.3-3
+Added Pin To Net: NetName=+3.3 Pin=AS1117-3.3-4
+Added Pin To Net: NetName=GND Pin=C1-1
+Added Pin To Net: NetName=VBUS Pin=C1-2
+Added Pin To Net: NetName=GND Pin=C2-1
+Added Pin To Net: NetName=VBUS Pin=C2-2
+Added Pin To Net: NetName=GND Pin=C3-1
+Added Pin To Net: NetName=+3.3 Pin=C3-2
+Added Pin To Net: NetName=GND Pin=C4-1
+Added Pin To Net: NetName=+3.3 Pin=C4-2
+Added Pin To Net: NetName=+1.8 Pin=R23-1
+Added Pin To Net: NetName=+3.3 Pin=R23-2
+Added Pin To Net: NetName=GND Pin=R24-1
+Added Pin To Net: NetName=+1.8 Pin=R24-2
+Added Member To Class: ClassName=Sheet1 Member=Component AS1117-3.3
+Added Member To Class: ClassName=Sheet1 Member=Component C1 Cap
+Added Member To Class: ClassName=Sheet1 Member=Component C2 Cap
+Added Member To Class: ClassName=Sheet1 Member=Component C3 Cap
+Added Member To Class: ClassName=Sheet1 Member=Component C4 Cap
+Added Member To Class: ClassName=Sheet1 Member=Component R23 Res2
+Added Member To Class: ClassName=Sheet1 Member=Component R24 Res2
+Added Room: Name=Sheet1

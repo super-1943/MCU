@@ -1,0 +1,20 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+E:\Projects\51\090513\chen111.uv2
+Project File Date:  05/13/2009
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(70): warning C209: '_buzzer': too few actual parameters
+linking...
+Program Size: data=54.0 xdata=0 code=475
+"chen111" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=54.0 xdata=0 code=475
+creating hex file from "chen111"...
+"chen111" - 0 Error(s), 0 Warning(s).

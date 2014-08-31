@@ -1,0 +1,1306 @@
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE HARDWARE
+OBJECT MODULE PLACED IN hardware.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE hardware.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "AT89x52.H"
+   2          #include "USB.H"
+   3          #include "PDIUSBD12.H"
+   4          #include "My_type.h"
+   5          #include "UART.H"
+   6          #include "hardware.h"
+   7          #include "keyboard.h"
+   8          
+   9          #define InitUART init_uart
+  10          #define Printc uart_putchar
+  11          #define Prints print_str
+  12          #define PrintLongInt print_longint
+  13          #define PrintHex print_hex
+  14          #define LEDs P2
+  15          #define DispLineInf()      \
+  16          {                          \
+  17           Prints(" in file \"");    \
+  18           Prints(__FILE__);         \
+  19           Prints(", @ line ");      \
+  20           PrintLongInt(__LINE__-1); \
+  21           Prints("\r\n");           \
+  22          }
+  23          
+  24          //#define debug
+  25          
+  26          #define USB_COMMAND_ADD           1
+  27          #define USB_DATA_ADD              0
+  28          
+  29          //USB芯片连接引脚
+  30          #define USB_DATA                  P0
+  31          #define USB_A0                    P3_5
+  32          #define USB_WR                    P3_6
+  33          #define USB_RD                    P3_7
+  34          #define USB_INT                   P3_2
+  35          
+  36          
+  37          #define ENDPOINT_NUMBER           2
+  38          #define MAX_CONTROL_DATA_SIZE     16
+  39          
+  40          
+  41          //控制传输时保存数据
+  42          CONTROL_DATA_BUFF Control_Data;
+  43          
+  44          //缓冲
+  45          uint8 idata buffer[64];
+  46          
+  47          //交换数据时用的指针
+  48          uint8 *pData;
+  49          
+  50          uint8 idle;     //空闲状态
+  51          uint8 protocol; //当前协议
+  52          
+  53          //高低字节交换
+  54          
+  55          #define SWAP16(x)  ((((uint16)(x))<<8)|(((uint16)(x))>>8))
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 2   
+
+  56          
+  57          //取一个整数的低字节 
+  58          #define LSB(x) ((uint8)(x))
+  59          
+  60          //取一个整数的高字节
+  61          #define MSB(x) ((uint8)(((uint16)(x))>>8))                               
+  62          
+  63          //字符串描述符所用的语言种类 
+  64          code uint8 LANGUAGE_ID[4]={0x04,0x03,0x09,0x04};                   
+  65          
+  66          //设备序列号                                                                            
+  67          code uint8 device_serial_number[]=
+  68          {22,STRING_DESCRIPTOR,'2',0,'0',0,'0',0,'7',0,'-',0,'1',0,'1',0,'-',0,'2',0,'9',0};
+  69          
+  70          //厂商字符串　电脑圈圈的USB专区 http://group.ednchina.com/93
+  71          //汉字Unicode编码，使用http://computer00.21ic.org/user1/2198/archives/2007/42769.html转换
+  72          code uint8 ManufacturerString[80]=
+  73          {80,STRING_DESCRIPTOR,0x35,0x75,0x11,0x81,0x08,0x57,0x08,0x57,0x84,0x76,'U',0x00,
+  74           'S',0x00,'B',0x00,0x13,0x4E,0x3A,0x53,0x20,0x00,'H',0,'t',0,'t',0,
+  75           'p',0,':',0,'/',0,'/',0,'g',0,'r',0,'o',0,'u',0,'p',0,'.',0,'e',0,'d',0,'n',0,
+  76           'c',0,'h',0,'i',0,'n',0,'a',0,'.',0,'c',0,'o',0,'m',0,'/',0,'9',0,'3',0};
+  77          
+  78          //产品字符串　电脑圈圈的USB专区活动之USB键盘 http://group.ednchina.com/93
+  79          //汉字Unicode编码，使用http://computer00.21ic.org/user1/2198/archives/2007/42769.html转换
+  80          code uint8 ProducterString[96]=
+  81          {96,STRING_DESCRIPTOR,0x35,0x75,0x11,0x81,0x08,0x57,0x08,0x57,0x84,0x76,'U',0x00,
+  82           'S',0x00,'B',0x00,0x13,0x4E,0x3A,0x53,0x3B,0x6D,0xA8,0x52,0x4B,0x4E,'U',0x00,
+  83           'S',0x00,'B',0x00,0x2E,0x95,0xD8,0x76,0x20,0x00,'H',0,'t',0,'t',0,
+  84           'p',0,':',0,'/',0,'/',0,'g',0,'r',0,'o',0,'u',0,'p',0,'.',0,'e',0,'d',0,'n',0,
+  85           'c',0,'h',0,'i',0,'n',0,'a',0,'.',0,'c',0,'o',0,'m',0,'/',0,'9',0,'3',0};
+  86          
+  87          code DEVICE_DESCRIPTOR_STRUCT device_descriptor=     //设备描述符
+  88          {
+  89           sizeof(DEVICE_DESCRIPTOR_STRUCT),                   //设备描述符的字节数大小
+  90           DEVICE_DESCRIPTOR,                                      //设备描述符类型编号
+  91           SWAP16(0x0110),                                     //USB版本号,USB1.1
+  92           0x00,                                               //USB分配的设备类代码
+  93           0x00,                                               //USB分配的子类代码
+  94           0x00,                                               //USB分配的设备协议代码
+  95           0x10,                                               //端点0的最大包大小
+  96           SWAP16(0x8888),                                     //厂商编号VID，这里只是作为测试用，请使用自己的VID
+  97           SWAP16(0x0001),                                     //产品编号PID，这里只是作为测试用，请使用自己的PID
+  98           SWAP16(0x0001),                                     //设备出厂编号
+  99           0x01,                                               //设备厂商字符串的索引
+ 100           0x02,                                               //描述产品字符串的索引
+ 101           0x03,                                               //描述设备序列号字符串的索引
+ 102           0x01                                                //可能的配置数量
+ 103          };
+ 104          
+ 105          //定义配置，接口，端点等描述符结构体，因为它们是随配置描述符一起返回的
+ 106          typedef struct _CON_INT_ENDP_DESCRIPTOR_STRUCT
+ 107          {
+ 108           CONFIGURATION_DESCRIPTOR_STRUCT configuration_descriptor;
+ 109           INTERFACE_DESCRIPTOR_STRUCT  interface_descriptor;
+ 110           HID_DESCRIPTOR_STRUCT hid_descriptor;
+ 111           ENDPOINT_DESCRIPTOR_STRUCT  endpoint_descriptor[ENDPOINT_NUMBER];
+ 112          }CON_INT_ENDP_DESCRIPTOR_STRUCT;
+ 113          
+ 114          code CON_INT_ENDP_DESCRIPTOR_STRUCT con_int_endp_descriptor=
+ 115          {
+ 116          //configuration_descriptor                                          //配置描述符
+ 117          {
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 3   
+
+ 118           sizeof(CONFIGURATION_DESCRIPTOR_STRUCT),                           //配置描述符的字节数大小
+ 119           CONFIGURATION_DESCRIPTOR,                                          //配置描述符类型编号
+ 120           SWAP16(sizeof(CON_INT_ENDP_DESCRIPTOR_STRUCT)),
+ 121           0x01,                                                            //只包含一个接口
+ 122           0x01,                                                            //该配置的编号
+ 123           0x00,                                                            //iConfiguration字段
+ 124           0xA0,                                                            //采用总线供电，支持远程唤醒
+ 125           0xC8                                                            //从总线获取最大电流400mA
+ 126          },
+ 127          //interface_descritor                                             //接口描述符
+ 128          {
+ 129           sizeof(INTERFACE_DESCRIPTOR_STRUCT),                             //接口描述符的字节数大小
+ 130           INTERFACE_DESCRIPTOR,                                            //接口描述符类型编号
+ 131           0x00,                                                            //接口编号为0
+ 132           0x00,                                                            //该接口描述符的编号
+ 133           ENDPOINT_NUMBER,                                                 //非0端点数量为2，只使用端点主端点输入和
+             -输出
+ 134           0x03,                                                            //人机接口设备（HID）类
+ 135           0x01,                                                            //使用的子类：支持BIOS根启动Boot的子类
+ 136           0x01,                                                            //使用的协议：键盘
+ 137           0x00                                                             //接口描述符字符串索引
+ 138          },
+ 139          //hid_descriptor
+ 140          {
+ 141           sizeof(HID_DESCRIPTOR_STRUCT),                                   //HID描述符的字节数大小
+ 142           HID_DESCRIPTOR,                                                  //HID描述符类型编号
+ 143           SWAP16(0x0110),                                                  //HID类协议版本号，为1.1
+ 144           0x21,                                                            //固件的国家地区代号，0x21为美国
+ 145           NUM_SUB_DESCRIPTORS,                                             //下级描述符的数量
+ 146           {
+ 147            {
+ 148             REPORT_DESCRIPTOR,                                             //下级描述符为报告描述符
+ 149             SWAP16(sizeof(KeyBoardReportDescriptor))                       //下级描述符的长度
+ 150            }
+ 151           },
+ 152          },
+ 153          //endpoint_descriptor[]
+ 154          {
+ 155           {                                                                //主端点输入描述
+ 156            sizeof(ENDPOINT_DESCRIPTOR_STRUCT),                             //端点描述符的字节数大小
+ 157            ENDPOINT_DESCRIPTOR,                                            //端点描述符类型编号
+ 158            MAIN_POINT_IN,                                                  //端点号，主输入端点
+ 159            ENDPOINT_TYPE_INTERRUPT,                                        //使用的传输类型：中断传输
+ 160            SWAP16(0x0040),                                                 //该端点支持的最大包尺寸，64字节
+ 161            0x0A                                                            //中断扫描时间：设置为10ms
+ 162           },
+ 163            
+ 164           {                                                                //主端点输出描述
+ 165            sizeof(ENDPOINT_DESCRIPTOR_STRUCT),                             //端点描述符的字节数大小
+ 166            ENDPOINT_DESCRIPTOR,                                            //端点描述符类型编号
+ 167            MAIN_POINT_OUT,                                                 //端点号，主输出端点
+ 168            ENDPOINT_TYPE_INTERRUPT,                                        //使用的传输类型：中断传输
+ 169            SWAP16(0x0040),                                                 //该端点支持的最大包尺寸，64字节
+ 170            0x0A                                                            //中断扫描时间：设置为10ms
+ 171           }
+ 172          }
+ 173          };
+ 174          
+ 175          union                                          //程序标志位
+ 176          {
+ 177          uint16 Register;
+ 178          struct 
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 4   
+
+ 179          {
+ 180           uint8 bus_reset        :1;
+ 181           uint8 suspend          :1;
+ 182           uint8 remote_wakeup    :1;
+ 183           uint8 int_isr          :1;
+ 184           uint8 not_end          :1;
+ 185           uint8 usb_idle         :1;
+ 186           uint8 usb_busy         :1;
+ 187           uint8 setup_packet_in  :1;
+ 188           uint8 setup_packet_out :1;
+ 189           uint8 set_addr         :1;
+ 190           uint8 usb_endp0_in     :1;
+ 191           uint8 usb_endp2_in     :1;
+ 192           uint8 usb_endp2_out    :1;
+ 193          }flags;
+ 194          }usb_flags;
+ 195          
+ 196          union                                         //中断寄存器
+ 197          {
+ 198           uint8 Register[2];
+ 199           struct 
+ 200            {
+ 201             uint8 control_out_port  :1;
+ 202             uint8 control_in_port   :1;
+ 203             uint8 port_out_1        :1;
+ 204             uint8 port_in_1         :1;
+ 205             uint8 main_out_port     :1;
+ 206             uint8 main_in_port      :1;
+ 207             uint8 bus_reset         :1;
+ 208             uint8 suspend_change    :1;
+ 209             uint8 DMA_EOT           :1;
+ 210             uint8 not_use           :7;
+ 211            }Interrupt;
+ 212          }Interrupt_Register;
+ 213          
+ 214          
+ 215          union                                    //端点最后处理状态
+ 216          {
+ 217           uint8 Register;
+ 218           struct
+ 219           {
+ 220            uint8 successful          :1;
+ 221            uint8 error_code          :4;
+ 222            uint8 setup_packet        :1;
+ 223            uint8 data_1              :1;
+ 224            uint8 prestatus_not_read  :1;
+ 225           }Status;
+ 226          }Last_Status;
+ 227          
+ 228          
+ 229          /*****************   延时x毫秒函数 ***********/
+ 230          void delay(uint16 x)                
+ 231          {
+ 232   1       uint16 i;
+ 233   1       uint16 j;
+ 234   1       for(i=0;i<x;i++)
+ 235   1       for(j=0;j<230;j++);
+ 236   1      }
+ 237          /********************************************/
+ 238          
+ 239          /*******************************写USB命令******************************************/
+ 240          void write_usb_command(uint8 usb_command)
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 5   
+
+ 241          {
+ 242   1       USB_A0=USB_COMMAND_ADD;
+ 243   1       USB_DATA=usb_command;
+ 244   1       USB_WR=0;
+ 245   1       USB_WR=1;
+ 246   1       USB_DATA=0xFF;
+ 247   1      }
+ 248          /******************************************************************************/
+ 249          
+ 250          /*********************写一字节USB数据*******************************************/
+ 251          void write_a_usb_data(uint8 usb_data)       
+ 252          {
+ 253   1       USB_A0=USB_DATA_ADD;
+ 254   1       USB_DATA=usb_data;
+ 255   1       USB_WR=0;
+ 256   1       USB_WR=1;
+ 257   1       USB_DATA=0XFF;
+ 258   1      }
+ 259          /******************************************************************************/
+ 260          
+ 261          /****************************读一字节USB数据************************************/
+ 262          uint8 read_a_usb_data(void)
+ 263          {
+ 264   1       uint8 temp;
+ 265   1       USB_A0=USB_DATA_ADD;
+ 266   1       USB_RD=0;
+ 267   1       temp=USB_DATA;
+ 268   1       USB_RD=1;
+ 269   1       return temp;
+ 270   1      }
+ 271          /******************************************************************************/
+ 272          
+ 273          /************************读USB中断寄存器**************************************/
+ 274          void read_interrupt_register(void)
+ 275          {
+ 276   1       write_usb_command(Read_Interrupt_Register);
+ 277   1       Interrupt_Register.Register[0]=read_a_usb_data();
+ 278   1       Interrupt_Register.Register[1]=read_a_usb_data();
+ 279   1      }
+ 280          /******************************************************************************/
+ 281          
+ 282          /************************设置USB地址*******************************************/
+ 283          void set_usb_addr(uint8 addr)
+ 284          {
+ 285   1       write_usb_command(Set_Address);
+ 286   1       write_a_usb_data(0x80|addr);
+ 287   1       Prints("   设置地址.\r\n");
+ 288   1       Prints("       地址为：  ");
+ 289   1       PrintLongInt(addr);
+ 290   1       Prints("\r\n");
+ 291   1      }
+ 292          /******************************************************************************/
+ 293          
+ 294          /*************************端点使能******************************************/
+ 295          void set_endpoint_enable(void)
+ 296          {
+ 297   1       write_usb_command(Set_Endpoint_Enable);
+ 298   1       write_a_usb_data(0x01);
+ 299   1      }
+ 300          /******************************************************************************/
+ 301          
+ 302          /****************************选择终端点*************************************/
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 6   
+
+ 303          uint8 select_endpoint(uint8 endp)
+ 304          {
+ 305   1       write_usb_command(Select_EndPoint+endp);
+ 306   1       return read_a_usb_data();
+ 307   1      }
+ 308          /******************************************************************************/
+ 309          
+ 310          /****************************读端点最后状态**********************************/
+ 311          uint8  read_last_status(uint8 endp)
+ 312          {
+ 313   1       write_usb_command(Read_Last_Status+endp);
+ 314   1       return read_a_usb_data();
+ 315   1      }
+ 316          /******************************************************************************/
+ 317          
+ 318          /****************************设置端点状态**************************************/
+ 319          void set_endpoint_status(uint8 endp,uint8 status)  
+ 320          {
+ 321   1       write_usb_command(0x40+endp);
+ 322   1       write_a_usb_data(!status);
+ 323   1      }
+ 324          /******************************************************************************/
+ 325          
+ 326          /*****************************读端点状态**************************************/
+ 327          uint8 read_endpoint_status(uint8 endp)
+ 328          {
+ 329   1       write_usb_command(0x80+endp);
+ 330   1       return read_a_usb_data();
+ 331   1      }
+ 332          /******************************************************************************/
+ 333          
+ 334          /************************清缓冲，在读取缓冲数据后调用**************************/
+ 335          void clear_buffer(void)
+ 336          {
+ 337   1       write_usb_command(Clear_Buffer);
+ 338   1      #ifdef debug
+               Prints("Clear buffer.\r\n");
+              #endif
+ 341   1      }
+ 342          /******************************************************************************/
+ 343          
+ 344          /***********************缓冲区数据有效，在写缓冲后调用**************************/
+ 345          void validate_buffer(void)
+ 346          {
+ 347   1       write_usb_command(Validate_Buffer);
+ 348   1      #ifdef debug
+               Prints("Validate buffer.\r\n");
+              #endif
+ 351   1      }
+ 352          /******************************************************************************/
+ 353          
+ 354          /***************************应答建立包************************************/
+ 355          void ack_setup(uint8 endp)
+ 356          {
+ 357   1       select_endpoint(endp);
+ 358   1       write_usb_command(Ack_Setup);
+ 359   1      #ifdef debug
+               Prints("Ack setup ");
+               PrintLongInt(endp);
+               Prints(".\r\n");
+              #endif
+ 364   1      }
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 7   
+
+ 365          /******************************************************************************/
+ 366          
+ 367          /***********************出错处理******************************************/
+ 368          void error(uint8 number)
+ 369          {
+ 370   1       Prints("有错误发生！！！\r\n");
+ 371   1       number=0;
+ 372   1      }
+ 373          /******************************************************************************/
+ 374          
+ 375          /*************************读终端点缓冲****************************************/
+ 376          uint8 read_endpoint_buff(uint8 endp,uint8 len,uint8 * buff)
+ 377          {
+ 378   1       uint8 i,j;
+ 379   1       read_last_status(endp);
+ 380   1       if(!(select_endpoint(endp)&0x01)){error(0); return 0;}
+ 381   1       if((read_endpoint_status(endp)&0x60)!=0x60)  //两个缓冲没有都满，才能清中断
+ 382   1       {
+ 383   2        read_last_status(endp);  //清中断
+ 384   2       }
+ 385   1       write_usb_command(Read_Buffer);
+ 386   1       read_a_usb_data();
+ 387   1       j=read_a_usb_data();
+ 388   1       if(j>len)
+ 389   1        j=len;  
+ 390   1      #ifdef debug
+               Prints("Read endpoint");
+               PrintLongInt(endp);
+               Prints("\'s buffer ");
+               PrintLongInt(j);
+               Prints(" bytes.\r\n");
+              #endif  
+ 397   1       for(i=0;i<j;i++)
+ 398   1        {
+ 399   2         USB_RD=0;
+ 400   2         *(buff+i)=USB_DATA;
+ 401   2         USB_RD=1;
+ 402   2      #ifdef debug
+                 PrintHex(*(buff+i));
+              #endif
+ 405   2        }
+ 406   1      #ifdef debug
+               Prints("\r\n");
+              #endif
+ 409   1       clear_buffer();
+ 410   1       return j;
+ 411   1      }
+ 412          /******************************************************************************/
+ 413          
+ 414          /*************************写终端点缓冲*****************************************/
+ 415          uint8 write_endpoint_buff(uint8 endp,uint8 len,uint8 * buff)
+ 416          {
+ 417   1       uint8 i;
+ 418   1       read_last_status(endp);
+ 419   1       select_endpoint(endp);
+ 420   1       write_usb_command(Write_Buffer);
+ 421   1       write_a_usb_data(0);
+ 422   1       write_a_usb_data(len);
+ 423   1      #ifdef debug
+               Prints("Write endpoint");
+               PrintLongInt(endp);
+               Prints("\'s buffer ");
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 8   
+
+               PrintLongInt(len);
+               Prints(" bytes.\r\n");
+              #endif
+ 430   1       for(i=0;i<len;i++)
+ 431   1        {
+ 432   2         USB_DATA=*(buff+i);
+ 433   2         USB_WR=0;
+ 434   2         USB_WR=1;
+ 435   2      #ifdef debug
+                 PrintHex(*(buff+i));
+              #endif
+ 438   2        }
+ 439   1      #ifdef debug
+               Prints("\r\n");
+              #endif  
+ 442   1       USB_DATA=0xFF;
+ 443   1       validate_buffer();
+ 444   1       return len;
+ 445   1      }
+ 446          /******************************************************************************/
+ 447          
+ 448          /***************************断开USB连接****************************************/
+ 449          void disconnect_usb(void)
+ 450          {
+ 451   1       Prints("断开USB连接.\r\n");
+ 452   1       write_usb_command(0xf3);
+ 453   1       write_a_usb_data(0x0e);
+ 454   1       write_a_usb_data(0x47);
+ 455   1       delay(100);
+ 456   1      }
+ 457          /******************************************************************************/
+ 458          
+ 459          /*******************************连接USB**************************************/
+ 460          void connect_usb(void)
+ 461          {
+ 462   1       Prints("连接USB.\r\n");
+ 463   1       write_usb_command(0xf3);                         //初始化USBD12
+ 464   1       write_a_usb_data(0x1e);                          //连接USB
+ 465   1       write_a_usb_data(0x47);                          //设置频率
+ 466   1      }
+ 467          /******************************************************************************/
+ 468          
+ 469          /***************************初始化USB***************************************************/
+ 470          void init_usb(void)               
+ 471          {
+ 472   1       Prints("USBD12芯片初始化\r\n");
+ 473   1       set_usb_addr(0);
+ 474   1       set_endpoint_enable();
+ 475   1      }
+ 476          /******************************************************************************/
+ 477          
+ 478          /****************************USB总线复位处理***********************************/
+ 479          void usb_bus_reset(void)
+ 480          {
+ 481   1       Prints("USB总线复位.\r\n");
+ 482   1       usb_flags.Register=0;
+ 483   1       set_endpoint_enable();
+ 484   1      }
+ 485          /******************************************************************************/
+ 486          
+ 487          /*****************************USB总线挂起处理**********************************/
+ 488          void usb_bus_suspend(void)
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 9   
+
+ 489          {
+ 490   1       Prints("USB总线挂起.\r\n");
+ 491   1      }
+ 492          /******************************************************************************/
+ 493          
+ 494          /***************************设置地址***************************************/
+ 495          void set_usb_address(void)
+ 496          {
+ 497   1       usb_flags.flags.set_addr=1;
+ 498   1       set_usb_addr(Control_Data.DeviceRequest.wValue);
+ 499   1       while(select_endpoint(1)&0x01);
+ 500   1       write_endpoint_buff(1,0,0);
+ 501   1       while(select_endpoint(1)&0x01);
+ 502   1       usb_flags.flags.usb_endp0_in=0;
+ 503   1       usb_flags.flags.setup_packet_out=0;
+ 504   1      }
+ 505          /******************************************************************************/
+ 506          
+ 507          /**************************获取状态响应*****************************************/
+ 508          void get_status(uint8 receiver)
+ 509          {
+ 510   1       uint8 status[2];
+ 511   1       switch (receiver)
+ 512   1        {
+ 513   2         case 0:                        //获取设备状态
+ 514   2          status[0]=0x00;
+ 515   2          status[1]=0x00;
+ 516   2          break;
+ 517   2         case 1:                        //获取接口状态
+ 518   2          status[0]=0x00;
+ 519   2          status[0]=0x00;
+ 520   2          break;
+ 521   2         case 2:                        //获取端点状态
+ 522   2          status[0]=0x00;
+ 523   2          status[1]=0x00;
+ 524   2          break;
+ 525   2         }
+ 526   1        write_endpoint_buff(1,2,status);
+ 527   1        usb_flags.flags.usb_endp0_in=0;
+ 528   1      }
+ 529          /******************************************************************************/
+ 530          
+ 531          /*********************清除特性*******************************************/
+ 532          void clear_feature(uint8 receiver)    
+ 533          {
+ 534   1       Prints("    清除特性.\r\n");
+ 535   1       receiver=0;
+ 536   1       write_endpoint_buff(1,0,0);
+ 537   1       usb_flags.flags.usb_endp0_in=0;
+ 538   1       usb_flags.flags.setup_packet_out=0;
+ 539   1      }
+ 540          /******************************************************************************/
+ 541          
+ 542          /*******************设置特性**************************************************/
+ 543          void set_feature(uint8 receiver)
+ 544          {
+ 545   1       Prints("    设置特性.\r\n");
+ 546   1       receiver=0;
+ 547   1       write_endpoint_buff(1,0,0);
+ 548   1       usb_flags.flags.usb_endp0_in=0;
+ 549   1       usb_flags.flags.setup_packet_out=0;
+ 550   1      }
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 10  
+
+ 551          /******************************************************************************/
+ 552          
+ 553          /*****************************设置描述*****************************************/
+ 554          void set_descriptor(void)
+ 555          {
+ 556   1       Prints("    设置描述符.\r\n");
+ 557   1       usb_flags.flags.usb_endp0_in=0;
+ 558   1       usb_flags.flags.setup_packet_out=0;
+ 559   1      }
+ 560          /******************************************************************************/
+ 561          
+ 562          /***************************设置配置*******************************************/
+ 563          void set_configuration(void)
+ 564          {
+ 565   1       Prints("    设置配置.\r\n");
+ 566   1       write_endpoint_buff(1,0,0);
+ 567   1       usb_flags.flags.usb_endp0_in=0;
+ 568   1       usb_flags.flags.setup_packet_out=0;
+ 569   1      }
+ 570          /******************************************************************************/
+ 571          
+ 572          /************************获取配置状态******************************************/
+ 573          void get_configuration(void)
+ 574          { 
+ 575   1       uint8 value=0x01;
+ 576   1       Prints("    获取配置.\r\n");
+ 577   1       write_endpoint_buff(1,1,&value);
+ 578   1       usb_flags.flags.usb_endp0_in=0;
+ 579   1      }
+ 580          /******************************************************************************/
+ 581          
+ 582          /****************************设置接口************************************/
+ 583          void set_interface(void)
+ 584          {
+ 585   1       Prints("    设置接口.\r\n");
+ 586   1       write_endpoint_buff(1,0,0);
+ 587   1       usb_flags.flags.usb_endp0_in=0;
+ 588   1       usb_flags.flags.setup_packet_out=0;
+ 589   1      }
+ 590          /******************************************************************************/
+ 591          
+ 592          /***************************获取接口状态***************************************/
+ 593          void get_interface(void)
+ 594          {
+ 595   1       uint8 value=0x01;
+ 596   1       Prints("    获取接口.\r\n");
+ 597   1       write_endpoint_buff(1,1,&value);
+ 598   1       usb_flags.flags.usb_endp0_in=0;
+ 599   1      }
+ 600          /******************************************************************************/
+ 601          
+ 602          /***********************获取描述符*********************************************/
+ 603          void get_descriptor(void)
+ 604          {
+ 605   1       Prints("    获取描述符.\r\n");
+ 606   1        if(!usb_flags.flags.not_end)
+ 607   1           {
+ 608   2            switch(MSB(Control_Data.DeviceRequest.wValue))
+ 609   2                 {
+ 610   3              case DEVICE_DESCRIPTOR:
+ 611   3                           Prints("        获取设备描述符.\r\n");
+ 612   3                       Control_Data.wCount=sizeof(DEVICE_DESCRIPTOR_STRUCT);
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 11  
+
+ 613   3                       Control_Data.pData=(uint8 *)(&device_descriptor);
+ 614   3                   break;
+ 615   3              case CONFIGURATION_DESCRIPTOR:
+ 616   3                               Prints("        获取配置描述符.\r\n");
+ 617   3                   Control_Data.wCount=SWAP16(con_int_endp_descriptor.configuration_descriptor.wTotalLength);
+ 618   3                               Control_Data.pData=(uint8 *)(&con_int_endp_descriptor);
+ 619   3                   if(Control_Data.wLength<Control_Data.wCount)Control_Data.wCount=Control_Data.wLength;
+ 620   3                   break;
+ 621   3                      case STRING_DESCRIPTOR:
+ 622   3                           Prints("        获取字符串描述符.\r\n");
+ 623   3                               switch(LSB(Control_Data.DeviceRequest.wValue))
+ 624   3                                {
+ 625   4                                 case 0:
+ 626   4                                  Prints("            获取语言ID.\r\n");
+ 627   4                                  Control_Data.wCount=LANGUAGE_ID[0];
+ 628   4                      Control_Data.pData=LANGUAGE_ID;
+ 629   4                                  break;
+ 630   4      
+ 631   4                                 case 1:
+ 632   4                                  Prints("            获取厂商字符串.\r\n");
+ 633   4                                  Control_Data.wCount=ManufacturerString[0];
+ 634   4                      Control_Data.pData=ManufacturerString;
+ 635   4                                  break;
+ 636   4      
+ 637   4                                 case 2:
+ 638   4                                  Prints("            获取产品字符串.\r\n");
+ 639   4                                  Control_Data.wCount=ProducterString[0];
+ 640   4                      Control_Data.pData=ProducterString;
+ 641   4                                  break;
+ 642   4      
+ 643   4                                 case 3:
+ 644   4                       Prints("            获取设备序列号.\r\n");
+ 645   4                                   Control_Data.wCount=device_serial_number[0];
+ 646   4                                   Control_Data.pData=device_serial_number;
+ 647   4                                 break;
+ 648   4      
+ 649   4                                 default:
+ 650   4                       Prints("            其它描述符(未知).\r\n");
+ 651   4                       Prints("文件");
+ 652   4                                       Prints(__FILE__);
+ 653   4                                       Prints("\r\n");
+ 654   4                                       Prints("行:");
+ 655   4                                       Prints(__LINE__);
+ 656   4                                       Prints("\r\n");
+ 657   4                     break;
+ 658   4                                }
+ 659   3                               break;
+ 660   3                       default:
+ 661   3                           Prints("       获取其它描述符..................描述符索引为：");
+ 662   3                               PrintLongInt(MSB(Control_Data.DeviceRequest.wValue));
+ 663   3                               Prints("\r\n"); 
+ 664   3                        break;
+ 665   3                      }
+ 666   2            if(Control_Data.wLength<Control_Data.wCount)Control_Data.wCount=Control_Data.wLength;
+ 667   2               }
+ 668   1              //写数据到D12输入端点
+ 669   1          if(Control_Data.wCount>=MAX_CONTROL_DATA_SIZE)
+ 670   1           {
+ 671   2                write_endpoint_buff(1,MAX_CONTROL_DATA_SIZE,Control_Data.pData);
+ 672   2                Control_Data.pData+=MAX_CONTROL_DATA_SIZE;
+ 673   2            Control_Data.wCount-=MAX_CONTROL_DATA_SIZE;
+ 674   2                if(usb_flags.flags.set_addr)usb_flags.flags.not_end=1;
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 12  
+
+ 675   2                 else usb_flags.flags.usb_endp0_in=0;
+ 676   2                return;
+ 677   2               }
+ 678   1          else
+ 679   1           {
+ 680   2                write_endpoint_buff(1,Control_Data.wCount,Control_Data.pData);
+ 681   2            usb_flags.flags.setup_packet_in=0;
+ 682   2                usb_flags.flags.usb_endp0_in=0;
+ 683   2                return;
+ 684   2               }      
+ 685   1      }
+ 686          /******************************************************************************/
+ 687          
+ 688          /*********************发到接口的获取描述符**************************************/
+ 689          void get_descriptor_interface(void)
+ 690          {
+ 691   1       Prints("    获取描述符（从接口）.\r\n");
+ 692   1        if(!usb_flags.flags.not_end)
+ 693   1           {
+ 694   2            switch(MSB(Control_Data.DeviceRequest.wValue))
+ 695   2                 {
+ 696   3              case HID_DESCRIPTOR:
+ 697   3                           Prints("        获取HID描述符.\r\n");
+ 698   3                       Control_Data.wCount=sizeof(HID_DESCRIPTOR_STRUCT);
+ 699   3                       //Control_Data.pData=(uint8 *)(&hid_descriptor);
+ 700   3                   break;
+ 701   3              case REPORT_DESCRIPTOR:
+ 702   3                               Prints("        获取报告描述符.\r\n");
+ 703   3                   Control_Data.wCount=sizeof(KeyBoardReportDescriptor);
+ 704   3                               Control_Data.pData=(uint8 *)(KeyBoardReportDescriptor);
+ 705   3                   if(Control_Data.wLength<Control_Data.wCount)Control_Data.wCount=Control_Data.wLength;
+ 706   3                   break;
+ 707   3                      case PHYSICAL_DESCRIPTOR:
+ 708   3                           Prints("        获取物理描述符.\r\n");
+ 709   3                               break;
+ 710   3                       default:
+ 711   3                           Prints("       获取其它描述符..................描述符索引为：");
+ 712   3                               PrintLongInt(MSB(Control_Data.DeviceRequest.wValue));
+ 713   3                               Prints("\r\n"); 
+ 714   3                        break;
+ 715   3                      }
+ 716   2            if(Control_Data.wLength<Control_Data.wCount)Control_Data.wCount=Control_Data.wLength;
+ 717   2               }
+ 718   1              //写数据到D12输入端点
+ 719   1          if(Control_Data.wCount>=MAX_CONTROL_DATA_SIZE)
+ 720   1           {
+ 721   2                write_endpoint_buff(1,MAX_CONTROL_DATA_SIZE,Control_Data.pData);
+ 722   2                Control_Data.pData+=MAX_CONTROL_DATA_SIZE;
+ 723   2            Control_Data.wCount-=MAX_CONTROL_DATA_SIZE;
+ 724   2                if(usb_flags.flags.set_addr)usb_flags.flags.not_end=1;
+ 725   2                 else usb_flags.flags.usb_endp0_in=0;
+ 726   2                return;
+ 727   2               }
+ 728   1          else
+ 729   1           {
+ 730   2                write_endpoint_buff(1,Control_Data.wCount,Control_Data.pData);
+ 731   2            usb_flags.flags.setup_packet_in=0;
+ 732   2                usb_flags.flags.usb_endp0_in=0;
+ 733   2                return;
+ 734   2               }      
+ 735   1      }
+ 736          /******************************************************************************/
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 13  
+
+ 737          
+ 738          /************************终端点0输出中断处理************************************/
+ 739          void endp0_out(void)
+ 740          {
+ 741   1       Last_Status.Register=read_last_status(0);
+ 742   1       if(Last_Status.Status.setup_packet)
+ 743   1        {
+ 744   2         Control_Data.wLength=0;
+ 745   2         Control_Data.wCount=0;
+ 746   2         if(read_endpoint_buff(0,sizeof(Control_Data.DeviceRequest),(uint8 *)(&(Control_Data.DeviceRequest)))!=s
+             -izeof(REQUESTCMD))
+ 747   2          {
+ 748   3               set_endpoint_status(0,0);
+ 749   3               set_endpoint_status(1,0);
+ 750   3               return;
+ 751   3              }
+ 752   2        Control_Data.DeviceRequest.wValue=SWAP16(Control_Data.DeviceRequest.wValue);
+ 753   2        Control_Data.DeviceRequest.wIndex=SWAP16(Control_Data.DeviceRequest.wIndex);
+ 754   2        Control_Data.DeviceRequest.wLength=SWAP16(Control_Data.DeviceRequest.wLength);
+ 755   2      
+ 756   2        ack_setup(0);
+ 757   2        ack_setup(1);
+ 758   2        select_endpoint(0);
+ 759   2        clear_buffer();  
+ 760   2        
+ 761   2        Control_Data.wLength=Control_Data.DeviceRequest.wLength;
+ 762   2        usb_flags.flags.not_end=0;
+ 763   2        usb_flags.flags.usb_endp0_in=1;
+ 764   2        if(Control_Data.DeviceRequest.bmRequestType&0x80)
+ 765   2        {
+ 766   3         usb_flags.flags.setup_packet_in=1;
+ 767   3         usb_flags.flags.setup_packet_out=0;
+ 768   3         return;
+ 769   3        }
+ 770   2        else 
+ 771   2        {
+ 772   3         usb_flags.flags.setup_packet_in=0;
+ 773   3         usb_flags.flags.setup_packet_out=1;
+ 774   3         if(Control_Data.wLength!=0)
+ 775   3         {
+ 776   4          usb_flags.flags.usb_endp0_in=0;
+ 777   4         }
+ 778   3         return;
+ 779   3        }
+ 780   2       }
+ 781   1       else
+ 782   1       {
+ 783   2        if(usb_flags.flags.setup_packet_out) 
+ 784   2        {
+ 785   3         usb_flags.flags.usb_endp0_in=1;
+ 786   3        }
+ 787   2        else
+ 788   2        {
+ 789   3         select_endpoint(0);
+ 790   3         clear_buffer();
+ 791   3        }
+ 792   2       }
+ 793   1      }
+ 794          /******************************************************************************/
+ 795          
+ 796          /***********************获取报告*********************************************/
+ 797          void get_report(void)
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 14  
+
+ 798          {
+ 799   1       Prints("        获取报告.\r\n");
+ 800   1      }
+ 801          /******************************************************************************/
+ 802          
+ 803          /**********************获取空闲状态*********************************************/
+ 804          void get_idle(void)
+ 805          {
+ 806   1       Prints("    获取空闲.\r\n");
+ 807   1       write_endpoint_buff(1,1,&idle);
+ 808   1       usb_flags.flags.usb_endp0_in=0;
+ 809   1      }
+ 810          /******************************************************************************/
+ 811          
+ 812          /*************************获取协议**********************************************/
+ 813          void get_protocol(void)
+ 814          {
+ 815   1       Prints("    获取协议.\r\n");
+ 816   1       write_endpoint_buff(1,1,&protocol);
+ 817   1       usb_flags.flags.usb_endp0_in=0;
+ 818   1      }
+ 819          /******************************************************************************/
+ 820          
+ 821          /***********************设置报告***********************************************/
+ 822          void set_report(void)
+ 823          {
+ 824   1       Prints("    设置报告.\r\n");
+ 825   1      }
+ 826          /******************************************************************************/
+ 827          
+ 828          /***********************设置空闲***********************************************/
+ 829          void set_idle(void)
+ 830          {
+ 831   1       Prints("    设置空闲.\r\n");
+ 832   1       while(select_endpoint(1)&0x01);
+ 833   1       write_endpoint_buff(1,0,0);
+ 834   1       idle=Control_Data.DeviceRequest.wValue;
+ 835   1       usb_flags.flags.usb_endp0_in=0;
+ 836   1       usb_flags.flags.setup_packet_out=0;
+ 837   1      }
+ 838          /******************************************************************************/
+ 839          
+ 840          /**********************设置协议**************************************************/
+ 841          void set_protocol(void)
+ 842          {
+ 843   1       Prints("    设置协议.\r\n");
+ 844   1       while(select_endpoint(1)&0x01);
+ 845   1       write_endpoint_buff(1,0,0);
+ 846   1       protocol=Control_Data.DeviceRequest.wValue;
+ 847   1       usb_flags.flags.usb_endp0_in=0;
+ 848   1       usb_flags.flags.setup_packet_out=0;
+ 849   1      }
+ 850          /******************************************************************************/
+ 851          
+ 852          /****************************终端点0输入处理**************************************/
+ 853          void endp0_in(void)
+ 854          {
+ 855   1       read_last_status(1);
+ 856   1       //如果是输入请求包
+ 857   1       if(usb_flags.flags.setup_packet_in||usb_flags.flags.not_end)
+ 858   1        {
+ 859   2          switch(Control_Data.DeviceRequest.bmRequestType&0x60)
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 15  
+
+ 860   2               {
+ 861   3                 case 0x00:  //标准请求
+ 862   3                 Prints("USB标准请求.\r\n");
+ 863   3                 switch(Control_Data.DeviceRequest.bmRequestType&0x1F)
+ 864   3                  {
+ 865   4                       case 0: //到设备
+ 866   4                         switch (Control_Data.DeviceRequest.bRequest)
+ 867   4                          {
+ 868   5                           case 0: get_status(0);break;
+ 869   5                           case 6: get_descriptor();break;
+ 870   5                           case 8: get_configuration();break;
+ 871   5                               default:break;
+ 872   5                          }
+ 873   4                       break;
+ 874   4      
+ 875   4                       case 1:  //到接口
+ 876   4                         switch (Control_Data.DeviceRequest.bRequest)
+ 877   4                          {
+ 878   5                       case  0: get_status(1);break;
+ 879   5                                case 6: get_descriptor_interface();break;
+ 880   5                           case 10: get_interface();break;
+ 881   5                       default: break;
+ 882   5                              }
+ 883   4                       break;
+ 884   4      
+ 885   4                       case 2:  //到端点
+ 886   4                        {
+ 887   5                     if(Control_Data.DeviceRequest.bRequest==0)get_status(2);  
+ 888   5                        }
+ 889   4                       default: break;
+ 890   4                  }
+ 891   3                 break;
+ 892   3      
+ 893   3                 case 0x20:  //类请求
+ 894   3             Prints("USB类请求.\r\n");
+ 895   3                 switch(Control_Data.DeviceRequest.bmRequestType&0x1F)
+ 896   3                  {
+ 897   4                       case 0:  //到设备
+ 898   4                         switch (Control_Data.DeviceRequest.bRequest)
+ 899   4                          {
+ 900   5                               default:break;
+ 901   5                          }
+ 902   4                       break;
+ 903   4      
+ 904   4                       case 1:  //到接口
+ 905   4                         switch (Control_Data.DeviceRequest.bRequest)
+ 906   4                          {
+ 907   5      
+ 908   5                               case   GET_REPORT: get_report();   break; //获取报告
+ 909   5                   case     GET_IDLE: get_idle();     break; //获取空闲状态
+ 910   5                   case GET_PROTOCOL: get_protocol(); break; //获取协议
+ 911   5                       default: break;
+ 912   5                              }
+ 913   4                       break;
+ 914   4      
+ 915   4                       case 2:  //到端点
+ 916   4                        {
+ 917   5                         switch (Control_Data.DeviceRequest.bRequest)
+ 918   5                          {
+ 919   6                       default: break;
+ 920   6                              }  
+ 921   5                        }
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 16  
+
+ 922   4                       default: break;
+ 923   4                  }
+ 924   3                 break;
+ 925   3      
+ 926   3                 case 0x40:  //用户请求
+ 927   3             Prints("USB用户请求.\r\n");
+ 928   3                 switch(Control_Data.DeviceRequest.bmRequestType&0x1F)
+ 929   3                  {
+ 930   4                       case 0:  //到设备
+ 931   4                         switch (Control_Data.DeviceRequest.bRequest)
+ 932   4                          {
+ 933   5                               default: break;
+ 934   5                          }
+ 935   4                   break;
+ 936   4      
+ 937   4                       case 1:   //到接口
+ 938   4                         switch (Control_Data.DeviceRequest.bRequest)
+ 939   4                          {
+ 940   5                       default: break;
+ 941   5                              }
+ 942   4               break;
+ 943   4      
+ 944   4                       case 2:  //到端点
+ 945   4                        {
+ 946   5                         switch (Control_Data.DeviceRequest.bRequest)
+ 947   5                          {
+ 948   6                       default: break;
+ 949   6                              }  
+ 950   5                        }
+ 951   4                       default: break;
+ 952   4                  }
+ 953   3              }
+ 954   2          return;
+ 955   2        }
+ 956   1      
+ 957   1        //如果是输出请求包
+ 958   1       if(usb_flags.flags.setup_packet_out) 
+ 959   1        {
+ 960   2          switch(Control_Data.DeviceRequest.bmRequestType&0x60)
+ 961   2               {
+ 962   3                 case 0x00:  //标准请求
+ 963   3                 Prints("USB标准请求.\r\n");
+ 964   3                 switch(Control_Data.DeviceRequest.bmRequestType&0x1F)
+ 965   3                  {
+ 966   4                       case 0:   //到设备
+ 967   4                   switch (Control_Data.DeviceRequest.bRequest)
+ 968   4                    {
+ 969   5                         case     CLEAR_FEATURE: clear_feature(0);break;
+ 970   5                         case       SET_FEATURE: set_feature(0);break;
+ 971   5                         case       SET_ADDRESS: set_usb_address();break;          //set_address                 
+ 972   5                         case    SET_DESCRIPTOR: set_descriptor();break;           //set_descriptor
+ 973   5                         case SET_CONFIGURATION: set_configuration(); break;       //set_configurat                             
+ 974   5                         default: break;
+ 975   5                        }
+ 976   4                       break;
+ 977   4                       
+ 978   4                       case 1:   //到接口
+ 979   4                    switch (Control_Data.DeviceRequest.bRequest)
+ 980   4                         {
+ 981   5                          case CLEAR_FEATURE:  clear_feature(1);break;
+ 982   5                          case   SET_FEATURE:  set_feature(1); break;
+ 983   5                      case SET_INTERFACE: set_interface();break;
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 17  
+
+ 984   5                          default: break;
+ 985   5                      }
+ 986   4                       break;
+ 987   4                       
+ 988   4                       case 2:   //到端点
+ 989   4                        switch (Control_Data.DeviceRequest.bRequest)
+ 990   4                         {
+ 991   5                          case CLEAR_FEATURE: clear_feature(2);break;
+ 992   5                          case   SET_FEATURE: set_feature(2);break;
+ 993   5                      default: break;      
+ 994   5                         }
+ 995   4                       break;
+ 996   4      
+ 997   4                       default: break;
+ 998   4                  }
+ 999   3            break;
+1000   3      
+1001   3                case 0x20:  //类请求
+1002   3            Prints("USB类请求.\r\n");
+1003   3                 switch(Control_Data.DeviceRequest.bmRequestType&0x1F)
+1004   3                  {
+1005   4                       case 0:    //接收者为设备
+1006   4                   switch (Control_Data.DeviceRequest.bRequest)
+1007   4                    {                           
+1008   5                         default: break;
+1009   5                        }
+1010   4                       break;
+1011   4      
+1012   4                       case 1:   //接收者为接口
+1013   4                    switch (Control_Data.DeviceRequest.bRequest)
+1014   4                         {
+1015   5                  case   SET_REPORT: set_report();   break; //设置报告
+1016   5                  case     SET_IDLE: set_idle();     break; //设置空闲
+1017   5                  case SET_PROTOCOL: set_protocol(); break; //设置协议
+1018   5                          default: break;
+1019   5                      }
+1020   4                       
+1021   4                       break;
+1022   4      
+1023   4                       case 2:   //接收者为端点
+1024   4                        switch (Control_Data.DeviceRequest.bRequest)
+1025   4                         {
+1026   5                      default: break;      
+1027   5                         }
+1028   4                       break;
+1029   4                       
+1030   4                       case 3: //其它接收者
+1031   4                        switch (Control_Data.DeviceRequest.bRequest)
+1032   4                         {
+1033   5                      default: break;      
+1034   5                         }break;
+1035   4                                        
+1036   4                       default: break;
+1037   4                  }      
+1038   3                 break;
+1039   3      
+1040   3             case 0x40:  //用户请求
+1041   3                 Prints("USB用户请求.\r\n");
+1042   3                 switch(Control_Data.DeviceRequest.bmRequestType&0x1F)
+1043   3                  {
+1044   4                       case 0:    //接收者为设备
+1045   4                   switch (Control_Data.DeviceRequest.bRequest)
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 18  
+
+1046   4                    {                           
+1047   5                         default: break;
+1048   5                        }
+1049   4                       break;
+1050   4                       
+1051   4                       case 1:   //接收者为接口
+1052   4                    switch (Control_Data.DeviceRequest.bRequest)
+1053   4                         {
+1054   5                          default: break;
+1055   5                      }
+1056   4                   break;
+1057   4                       
+1058   4                       case 2:   //接收者为端点
+1059   4                        switch (Control_Data.DeviceRequest.bRequest)
+1060   4                         {
+1061   5                      default: break;      
+1062   5                         }
+1063   4                       break;
+1064   4                       
+1065   4                       case 3: //其它接收者
+1066   4                        switch (Control_Data.DeviceRequest.bRequest)
+1067   4                         {
+1068   5                      default: break;      
+1069   5                         }               
+1070   4                       break;
+1071   4                                        
+1072   4                       default: break;
+1073   4                  }
+1074   3              }
+1075   2        }
+1076   1      }
+1077          /******************************************************************************/
+1078          
+1079          /**********************端点1输出***********************************************/
+1080          /*void endp1_out(void)
+1081          {
+1082           Prints("端点1输出.\r\n");
+1083          }*/
+1084          /******************************************************************************/
+1085          
+1086          /*************************端点1输入*****************************************/
+1087          /*void endp1_in(void)
+1088          {
+1089           Prints("端点1输入.\r\n");
+1090          }*/
+1091          /******************************************************************************/
+1092          
+1093          /***************************端点2输出****************************************/
+1094          void endp2_out(void)
+1095          {
+1096   1       uint8 i,j;
+1097   1      
+1098   1       j=read_endpoint_buff(4,64,buffer);
+1099   1       LEDs=~buffer[0];
+1100   1       Prints("端点2输出.\r\n");
+1101   1       Prints("    端点2的数据是  ");
+1102   1       for(i=0;i<j;i++)
+1103   1        {
+1104   2         PrintHex(buffer[i]);
+1105   2         if(i==16)Prints("\r\n");
+1106   2        }
+1107   1       Prints("\r\n");
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 19  
+
+1108   1      }
+1109          /******************************************************************************/
+1110          
+1111          
+1112          //用来返回数据的缓冲
+1113          uint8 idata InBuffer[64];
+1114          
+1115          /****************************主端点输入处理************************************/
+1116          void endp2_in(void)                                      
+1117          {
+1118   1       uint8 i;
+1119   1      // Prints("端点2输入.\r\n");
+1120   1              i=keyscan();
+1121   1       if(i) //如果有按键按下
+1122   1        {
+1123   2         if(i==1) //左Ctrl键
+1124   2          {
+1125   3           InBuffer[0] |=1;
+1126   3          }
+1127   2         else
+1128   2          {
+1129   3           InBuffer[0]&=~1;
+1130   3          }   
+1131   2         if(i==2) //左shift键
+1132   2          {
+1133   3           InBuffer[0]|=1<<1;
+1134   3          }
+1135   2         else
+1136   2          {
+1137   3           InBuffer[0]&=~(1<<1);
+1138   3          }
+1139   2              
+1140   2         if(i==3) //左ALT键
+1141   2          {
+1142   3           InBuffer[0]|=1<<2;
+1143   3          }
+1144   2         else
+1145   2          {
+1146   3               InBuffer[0]&=~(1<<2);
+1147   3              }
+1148   2      
+1149   2         i=2;
+1150   2         if(i==4)
+1151   2          {
+1152   3           InBuffer[i++]=0x62;            //0键
+1153   3          }
+1154   2         if(i==5)
+1155   2          {
+1156   3               InBuffer[i++]=0x59;        //1键
+1157   3              }
+1158   2         if(i==6)
+1159   2          {
+1160   3           InBuffer[i++]=0x5A;            //2键
+1161   3          }
+1162   2         if(i==7)
+1163   2          {
+1164   3           InBuffer[i++]=0x39;            //Caps Lock键
+1165   3          }
+1166   2         if(i==8)
+1167   2          {
+1168   3           InBuffer[i++]=0x53;            //Num Lock键
+1169   3          }
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 20  
+
+1170   2         for(;i<8;i++)
+1171   2         {
+1172   3          InBuffer[i]=0;  //多余的清0
+1173   3         }
+1174   2        }
+1175   1       else //如果无按键按下，则返回0
+1176   1        {
+1177   2         for(i=0;i<8;i++)
+1178   2          {
+1179   3               InBuffer[i]=0;
+1180   3              }
+1181   2        }
+1182   1      
+1183   1        write_endpoint_buff(5,8,InBuffer);
+1184   1      
+1185   1      
+1186   1      }
+1187          /******************************************************************************/
+1188          
+1189          code uint8 HeadTable[][74]={
+1190          "********************************************************************\r\n",
+1191          "******                 EDN USB学习板键盘程序                  ******\r\n",
+1192          "******                      AT89S52 CPU                       ******\r\n",
+1193          "******                  建立日期：",__DATE__,"                 ******\r\n",
+1194          "******                   建立时间：",__TIME__,"                   ******\r\n",
+1195          "******                    作者：电脑圈圈                      ******\r\n",
+1196          "******                    欢迎访问作者的                      ******\r\n",
+1197          "******           USB专区：http://group.ednchina.com/93/       ******\r\n",
+1198          "******      BLOG1：http://www.ednchina.com/blog/computer00    ******\r\n",
+1199          "******                BLOG2：http://computer00.21ic.org       ******\r\n",
+1200          "******                  请按K1-K8分别进行测试                 ******\r\n",
+1201          "******       K1:左Ctrl键  K2:左Shift键  K3:左Alt键  K4:0键    ******\r\n",
+1202          "******       K5:1键  K6:2键  K7:Caps Lock键 K8:Num Lock键     ******\r\n",
+1203          "********************************************************************\r\n",
+1204          };
+1205          
+1206          
+1207          
+1208          /***************************主函数**********************************************/
+1209          void main(void)
+1210          {
+1211   1       uint8 i;
+1212   1       InitUART();  //串口初始化
+1213   1       Printc(0x0c);  //清屏
+1214   1       Printc(0x0c);
+1215   1       Prints("系统启动.\r\n");
+1216   1       for(i=0;i<18;i++)        //显示信息
+1217   1       {
+1218   2        Prints(HeadTable[i]);
+1219   2       } 
+1220   1       disconnect_usb();         //断开USB连接
+1221   1       delay(1000);          //延迟
+1222   1       init_usb();               //初始化USB芯片
+1223   1       connect_usb();            //连接USB
+1224   1      
+1225   1      
+1226   1       while(1)
+1227   1        { 
+1228   2         if(!USB_INT)         //中断产生
+1229   2          {
+1230   3               read_interrupt_register();
+1231   3               if(Interrupt_Register.Interrupt.bus_reset){usb_bus_reset();continue;}
+C51 COMPILER V8.02   HARDWARE                                                              12/08/2009 08:26:08 PAGE 21  
+
+1232   3               if(Interrupt_Register.Interrupt.suspend_change){usb_bus_suspend();continue;}
+1233   3           if(Interrupt_Register.Interrupt.control_out_port){endp0_out();continue;}
+1234   3               if(Interrupt_Register.Interrupt.control_in_port&&usb_flags.flags.usb_endp0_in){endp0_in();continue;}
+1235   3      //       if(Interrupt_Register.Interrupt.port_out_1)endp1_out();
+1236   3      //       if(Interrupt_Register.Interrupt.port_in_1)endp1_in();
+1237   3               if(Interrupt_Register.Interrupt.main_out_port){endp2_out();}
+1238   3               if(Interrupt_Register.Interrupt.main_in_port){endp2_in();}
+1239   3          }
+1240   2        }
+1241   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2777    ----
+   CONSTANT SIZE    =   2510    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     41      16
+   IDATA SIZE       =    128    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

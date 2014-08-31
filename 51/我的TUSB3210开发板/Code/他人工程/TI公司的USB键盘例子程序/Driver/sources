@@ -1,0 +1,29 @@
+TARGETNAME=UsbCrypt
+TARGETTYPE=DRIVER
+
+C_DEFINES= $(C_DEFINES) -DWMI_SUPPORT -DUSB2
+
+TARGETPATH=obj
+
+INCLUDES=$(DDK_INC_PATH);$(USBCRYPT_INC);
+		   
+USER_C_FLAGS=/Fr /Zi  
+LINKER_FLAGS=-map
+
+# Define needed for the resource compiler for version.rc to indicate WDM driver.
+# C_DEFINES=/DWDM_DRIVER /DLME_SUPPORT
+
+NTTARGETFILE0=mofcomp
+USE_MAPSYM=1
+
+TARGETLIBS=$(DDK_LIB_PATH)\usbd.lib
+
+MSC_WARNING_LEVEL=/W3 /WX
+
+SOURCES=CrMain.c \
+	CrPnp.c      \
+	CrIO.c       \
+	CrConfig.c   \
+	CrWmi.c		 \
+	USBCryptDriver.rc 
+

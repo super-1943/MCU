@@ -1,0 +1,3053 @@
+/*  TI literature number SLLC148      */
+/*  TUSB3210 Bootcode Source Listing  */
+
+/************************************************************
+*THIS PROGRAM IS PROVIDED "AS IS". TI MAKES NO WARRANTIES OR
+* REPRESENTATIONS, EITHER EXPRESS, IMPLIED OR STATUTORY, 
+* INCLUDING ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS 
+* FOR A PARTICULAR PURPOSE, LACK OF VIRUSES, ACCURACY OR 
+* COMPLETENESS OF RESPONSES, RESULTS AND LACK OF NEGLIGENCE. 
+* TI DISCLAIMS ANY WARRANTY OF TITLE, QUIET ENJOYMENT, QUIET 
+* POSSESSION, AND NON-INFRINGEMENT OF ANY THIRD PARTY 
+* INTELLECTUAL PROPERTY RIGHTS WITH REGARD TO THE PROGRAM OR 
+* YOUR USE OF THE PROGRAM.
+*
+* IN NO EVENT SHALL TI BE LIABLE FOR ANY SPECIAL, INCIDENTAL, 
+* CONSEQUENTIAL OR INDIRECT DAMAGES, HOWEVER CAUSED, ON ANY 
+* THEORY OF LIABILITY AND WHETHER OR NOT TI HAS BEEN ADVISED 
+* OF THE POSSIBILITY OF SUCH DAMAGES, ARISING IN ANY WAY OUT 
+* OF THIS AGREEMENT, THE PROGRAM, OR YOUR USE OF THE PROGRAM. 
+* EXCLUDED DAMAGES INCLUDE, BUT ARE NOT LIMITED TO, COST OF 
+* REMOVAL OR REINSTALLATION, COMPUTER TIME, LABOR COSTS, LOSS 
+* OF GOODWILL, LOSS OF PROFITS, LOSS OF SAVINGS, OR LOSS OF 
+* USE OR INTERRUPTION OF BUSINESS. IN NO EVENT WILL TI'S 
+* AGGREGATE LIABILITY UNDER THIS AGREEMENT OR ARISING OUT OF 
+* YOUR USE OF THE PROGRAM EXCEED FIVE HUNDRED DOLLARS 
+* (U.S.$500).
+
+*
+* Unless otherwise stated, the Program written and copyrighted 
+* by Texas Instruments is distributed as "freeware".  You may, 
+* only under TI's copyright in the Program, use and modify the 
+* Program without any charge or restriction.  You may 
+* distribute to third parties, provided that you transfer a 
+* copy of this license to the third party and the third party 
+* agrees to these terms by its first use of the Program. You 
+* must reproduce the copyright notice and any other legend of 
+* ownership on each copy or partial copy, of the Program.
+*
+* You acknowledge and agree that the Program contains 
+* copyrighted material, trade secrets and other TI proprietary 
+* information and is protected by copyright laws, 
+* international copyright treaties, and trade secret laws, as 
+* well as other intellectual property laws.  To protect TI's 
+* rights in the Program, you agree not to decompile, reverse 
+* engineer, disassemble or otherwise translate any object code 
+* versions of the Program to a human-readable form.  You agree 
+* that in no event will you alter, remove or destroy any 
+* copyright notice included in the Program.  TI reserves all 
+* rights not specifically granted under this license. Except 
+* as specifically provided herein, nothing in this agreement 
+* shall be construed as conferring by implication, estoppel, 
+* or otherwise, upon you, any license or other right under any 
+* TI patents, copyrights or trade secrets.
+*
+* You may not use the Program in non-TI devices. 
+
+*
+* ********************************************************* */
+
+
+
+
+
+The following is a series of code files comprising
+the bootcode for TUSB3210.  It is already resident in
+on-chip ROM and therefore was not intended for our
+customers to compile “as is” and execute on the 
+evaluation board.  Rather, it is provided 
+to serve as an example of how to program the device, 
+and excerpts of the code can be used in real 
+applications (for example, the I2C subroutines).  
+
+
+
+File #1: types.h
+
+
+
+/*----------------------------------------------------------------------------+
+|                                                                             |
+|                             Texas Instruments                               |
+|                                                                             |
+|                               Type definition                               |
+|                                                                             |
++-----------------------------------------------------------------------------+
+|  Source: types.h v00.01 1999/01/26 14:34:34                                 |
+|  Author: Texas Instuments                                                   |
+|                                                                             |
+|  For more information, please contact usb@ti.com                            |
+|                                                                             |
+|                                                                             |
+|  Release Notes: (none)                                                      |
+|                                                                             |
+|  Logs:                                                                      |
+|                                                                             |
+|  WHEN     WHO   WHAT                                                        |
+|  -------- ----- -----------------------------------------------------       |
+|  19990126 HMT   born                                                        |
+|                                                                             |
++----------------------------------------------------------------------------*/
+#ifndef _TYPES_H_
+#define _TYPES_H_
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+/*----------------------------------------------------------------------------+
+| Include files                                                               |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Function Prototype                                                          |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Type Definition & Macro                                                     |
++----------------------------------------------------------------------------*/
+typedef char            CHAR;
+typedef unsigned char   UCHAR;
+typedef int             INT;
+typedef unsigned int    UINT;
+typedef short           SHORT;
+typedef unsigned short  USHORT;
+typedef long            LONG;
+typedef unsigned long   ULONG;
+typedef void            VOID;
+typedef unsigned long   HANDLE;
+typedef char *          PSTR;
+typedef int             BOOL;
+typedef double          DOUBLE;
+typedef unsigned char   BYTE;
+typedef unsigned char * PBYTE;
+typedef unsigned int    WORD;
+typedef unsigned long   DWORD;
+
+/*----------------------------------------------------------------------------+
+| Constant Definition                                                         |
++----------------------------------------------------------------------------*/
+#define YES 1
+#define NO  0
+
+#define TRUE    1
+#define FALSE   0
+
+#define NOERR   0
+#define ERR 1
+
+#define NO_ERROR    0
+#define ERROR       1
+
+#define DISABLE     0
+#define ENABLE      1
+
+/*----------------------------------------------------------------------------+
+| End of header file                                                          |
++----------------------------------------------------------------------------*/
+#ifdef __cplusplus
+}
+#endif
+#endif /* _TYPES_H_ */
+
+
+
+
+File #2: Usb.h
+
+/*----------------------------------------------------------------------------+
+|                                                                             |
+|                             Texas Instruments                               |
+|                                                                             |
+|                              USB Header File                                |
+|                                                                             |
++-----------------------------------------------------------------------------+
+|  Source: usb.h, v 1.0 99/02/01 10:05:58                                     |
+|  Author: Texas Instuments                                                   |
+|  Header: (none)                                                             |
+|                                                                             |
+|  For more information, please contact usb@ti.com                            |
+|                                                                             |
+|                                                                             |
+|       Notes:                                                                |
+|               1. 990202    born                                             |
+|               2. 990422    add device status definition                     |
+|                                                                             |
++----------------------------------------------------------------------------*/
+
+#ifndef _USB_H_
+#define _USB_H_
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+/*----------------------------------------------------------------------------+
+| Include files (none)                                                        |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Function Prototype (none)                                                   |
++----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------+
+| Type Definition & Macro                                                     |
++----------------------------------------------------------------------------*/
+
+// DEVICE_REQUEST Structure
+typedef struct _tDEVICE_REQUEST
+{
+    BYTE    bmRequestType;              // See bit definitions below
+    BYTE    bRequest;                   // See value definitions below
+    BYTE    bValueL;                    // Meaning varies with request type
+    BYTE    bValueH;                    // Meaning varies with request type
+    BYTE    bIndexL;                    // Meaning varies with request type
+    BYTE    bIndexH;                    // Meaning varies with request type
+    BYTE    bLengthL;                   // Number of bytes of data to transfer (LSByte)
+    BYTE    bLengthH;                   // Number of bytes of data to transfer (MSByte)
+} tDEVICE_REQUEST, *ptDEVICE_REQUEST;
+
+// device descriptor structure
+typedef struct _tDEVICE_DESCRIPTOR
+{
+    BYTE    bLength;                // Length of this descriptor (12h bytes)
+    BYTE    bDescriptorType;        // Type code of this descriptor (01h)
+    WORD    bcdUsb;                 // Release of USB spec (0210h = rev 2.10)
+    BYTE    bDeviceClass;           // Device's base class code
+    BYTE    bDeviceSubClass;        // Device's sub class code
+    BYTE    bDeviceProtocol;        // Device's protocol type code
+    BYTE    bMaxPacketSize0;        // End point 0's max packet size (8/16/32/64)
+    WORD    wIdVendor;              // Vendor ID for device
+    WORD    wIdProduct;             // Product ID for device
+    WORD    wBcdDevice;             // Revision level of device
+    BYTE    wManufacturer;          // Index of manufacturer name string desc
+    BYTE    wProduct;               // Index of product name string desc
+    BYTE    wSerialNumber;          // Index of serial number string desc
+    BYTE    bNumConfigurations;     // Number of configurations supported
+} tDEVICE_DESCRIPTOR, *ptDEVICE_DESCRIPTOR;
+
+// configuration descriptor structure
+typedef struct _tCONFIG_DESCRIPTOR
+{
+    BYTE    bLength;                // Length of this descriptor (9h bytes)
+    BYTE    bDescriptorType;        // Type code of this descriptor (02h)
+    WORD    wTotalLength;           // Size of this config desc plus all interface,
+                                    // endpoint, class, and vendor descriptors
+    BYTE    bNumInterfaces;         // Number of interfaces in this config
+    BYTE    bConfigurationValue;    // Value to use in SetConfiguration command
+    BYTE    bConfiguration;         // Index of string desc describing this config
+    BYTE    bAttributes;            // See CFG_DESC_ATTR_xxx values below
+    BYTE    bMaxPower;              // Power used by this config in 2mA units
+} tCONFIG_DESCRIPTOR, *ptCONFIG_DESCRIPTOR;
+
+// interface descriptor structure
+typedef struct _tINTERFACE_DESCRIPTOR
+{
+    BYTE    bLength;                // Length of this descriptor (9h bytes)
+    BYTE    bDescriptorType;        // Type code of this descriptor (04h)
+    BYTE    bInterfaceNumber;       // Zero based index of interface in the configuration
+    BYTE    bAlternateSetting;      // Alternate setting number of this interface
+    BYTE    bNumEndpoints;          // Number of endpoints in this interface
+    BYTE    bInterfaceClass;        // Interface's base class code
+    BYTE    bInterfaceSubClass;     // Interface's sub class code
+    BYTE    bInterfaceProtocol;     // Interface's protocol type code
+    BYTE    bInterface;             // Index of string desc describing this interface
+} tINTERFACE_DESCRIPTOR, *ptINTERFACE_DESCRIPTOR;
+
+// endpoint descriptor structure
+typedef struct _tENDPOINT_DESCRIPTOR
+{
+    BYTE    bLength;                // Length of this descriptor (7h bytes)
+    BYTE    bDescriptorType;        // Type code of this descriptor (05h)
+    BYTE    bEndpointAddress;       // See EP_DESC_ADDR_xxx values below
+    BYTE    bAttributes;            // See EP_DESC_ATTR_xxx value below
+    WORD    wMaxPacketSize;         // Max packet size of endpoint
+    BYTE    bInterval;              // Polling interval of endpoint in milliseconds
+} tENDPOINT_DESCRIPTOR, *tpENDPOINT_DESCRIPTOR;
+
+/*----------------------------------------------------------------------------+
+| Constant Definition                                                         |
++----------------------------------------------------------------------------*/
+#define USB_SPEC_REV_BCD        0x0101  /*BCD coded rev level of USB spec*/
+#define SIZEOF_DEVICE_REQUEST   0x08
+
+//  Bit definitions for DEVICE_REQUEST.bmRequestType
+//  Bit 7:   Data direction
+#define USB_REQ_TYPE_OUTPUT     0x00    // 0 = Host sending data to device
+#define USB_REQ_TYPE_INPUT      0x80    // 1 = Device sending data to host
+
+//  Bit 6-5: Type
+#define USB_REQ_TYPE_MASK       0x60    // Mask value for bits 6-5
+#define USB_REQ_TYPE_STANDARD   0x00    // 00 = Standard USB request
+#define USB_REQ_TYPE_CLASS      0x20    // 01 = Class specific
+#define USB_REQ_TYPE_VENDOR     0x40    // 10 = Vendor specific
+
+//  Bit 4-0: Recipient
+#define USB_REQ_TYPE_RECIP_MASK 0x1F    // Mask value for bits 4-0
+#define USB_REQ_TYPE_DEVICE     0x00    // 00000 = Device
+#define USB_REQ_TYPE_INTERFACE  0x01    // 00001 = Interface
+#define USB_REQ_TYPE_ENDPOINT   0x02    // 00010 = Endpoint
+#define USB_REQ_TYPE_OTHER      0x03    // 00011 = Other
+
+//  Values for DEVICE_REQUEST.bRequest
+// Standard Device Requests
+#define USB_REQ_GET_STATUS              0
+#define USB_REQ_CLEAR_FEATURE           1
+#define USB_REQ_SET_FEATURE             3
+#define USB_REQ_SET_ADDRESS             5
+#define USB_REQ_GET_DESCRIPTOR          6
+#define USB_REQ_SET_DESCRIPTOR          7
+#define USB_REQ_GET_CONFIGURATION       8
+#define USB_REQ_SET_CONFIGURATION       9
+#define USB_REQ_GET_INTERFACE           10
+#define USB_REQ_SET_INTERFACE           11
+#define USB_REQ_SYNCH_FRAME             12
+
+//  Descriptor Type Values
+#define DESC_TYPE_DEVICE                1       // Device Descriptor (Type 1)
+#define DESC_TYPE_CONFIG                2       // Configuration Descriptor (Type 2)
+#define DESC_TYPE_STRING                3       // String Descriptor (Type 3)
+#define DESC_TYPE_INTERFACE             4       // Interface Descriptor (Type 4)
+#define DESC_TYPE_ENDPOINT              5       // Endpoint Descriptor (Type 5)
+#define DESC_TYPE_HUB                   0x29    // Hub Descriptor (Type 6)
+
+//  Feature Selector Values
+#define FEATURE_REMOTE_WAKEUP           1       // Remote wakeup (Type 1)
+#define FEATURE_ENDPOINT_STALL          0       // Endpoint stall (Type 0)
+
+// Device Status Values
+#define DEVICE_STATUS_REMOTE_WAKEUP     0x02
+#define DEVICE_STATUS_SELF_POWER        0x01
+
+//  DEVICE_DESCRIPTOR structure
+#define SIZEOF_DEVICE_DESCRIPTOR        0x12
+#define OFFSET_DEVICE_DESCRIPTOR_VID_L  0x08
+#define OFFSET_DEVICE_DESCRIPTOR_VID_H  0x09
+#define OFFSET_DEVICE_DESCRIPTOR_PID_L  0x0A
+#define OFFSET_DEVICE_DESCRIPTOR_PID_H  0x0B
+#define OFFSET_CONFIG_DESCRIPTOR_POWER  0x07
+#define OFFSET_CONFIG_DESCRIPTOR_CURT   0x08
+
+//  CONFIG_DESCRIPTOR structure
+#define SIZEOF_CONFIG_DESCRIPTOR 0x09
+
+//  Bit definitions for CONFIG_DESCRIPTOR.bmAttributes
+#define CFG_DESC_ATTR_SELF_POWERED  0x40    // Bit 6: If set, device is self powered
+#define CFG_DESC_ATTR_BUS_POWERED   0x80    // Bit 7: If set, device is bus powered
+#define CFG_DESC_ATTR_REMOTE_WAKE   0x20    // Bit 5: If set, device supports remote wakeup
+
+//  INTERFACE_DESCRIPTOR structure
+#define SIZEOF_INTERFACE_DESCRIPTOR 0x09
+
+//  ENDPOINT_DESCRIPTOR structure
+#define SIZEOF_ENDPOINT_DESCRIPTOR 0x07
+
+//  Bit definitions for EndpointDescriptor.EndpointAddr
+#define EP_DESC_ADDR_EP_NUM     0x0F    // Bit 3-0: Endpoint number
+#define EP_DESC_ADDR_DIR_IN     0x80    // Bit 7: Direction of endpoint, 1/0 = In/Out
+
+//  Bit definitions for EndpointDescriptor.EndpointFlags
+#define EP_DESC_ATTR_TYPE_MASK  0x03    // Mask value for bits 1-0
+#define EP_DESC_ATTR_TYPE_CONT  0x00    // Bit 1-0: 00 = Endpoint does control transfers
+#define EP_DESC_ATTR_TYPE_ISOC  0x01    // Bit 1-0: 01 = Endpoint does isochronous transfers
+#define EP_DESC_ATTR_TYPE_BULK  0x02    // Bit 1-0: 10 = Endpoint does bulk transfers
+#define EP_DESC_ATTR_TYPE_INT   0x03    // Bit 1-0: 11 = Endpoint does interrupt transfers
+
+/*----------------------------------------------------------------------------+
+| End of header file                                                          |
++----------------------------------------------------------------------------*/
+#ifdef __cplusplus
+}
+#endif
+#endif /* _USB_H */
+
+
+
+File #3:  Tusb3210.h
+
+/*----------------------------------------------------------------------------+
+|                                                                             |
+|                             Texas Instruments                               |
+|                        Keyboard Hub Micro-Controller                        |
+|                                                                             |
+|                             TUSB3210 Header File                            |
+|                                                                             |
++-----------------------------------------------------------------------------+
+|  Source: tusb3210.h, v 1.0 1999/11/19 11:10:02                              |
+|  Author: Texas Instuments                                                   |
+|  Header: (none)                                                             |
+|                                                                             |
+|  For more information, please contact usb@ti.com                            |
+|                                                                             |
+|                                                                             |
+|  Logs:                                                                      |
+|                                                                             |
+|  WHO     WHEN         WHAT                                                  |
+|  ---     --------     ----------------------------------------------------- |
+|  HMT     19991119     born                                                  |
+|  HMT     20010615     change char to BYTE                                   |
+|                                                                             |
++----------------------------------------------------------------------------*/
+
+#ifndef _TUSB3210_H_
+#define _TUSB3210_H_
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+/*----------------------------------------------------------------------------+
+| Release Notes:                                                              |
+|                                                                             |
+|                                                                             |
++----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------+
+| Include files                                                               |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Function Prototype                                                          |
++----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------+
+| Type Definition & Macro                                                     |
++----------------------------------------------------------------------------*/
+// EDB Data Structure
+typedef struct _tEDB
+{
+    BYTE    bEPCNF;             // Endpoint Configuration
+    BYTE    bEPBBAX;            // Endpoint X Buffer Base Address
+    BYTE    bEPBCTX;            // Endpoint X Buffer byte Count
+    BYTE    bSPARE0;            // no used
+    BYTE    bSPARE1;            // no used
+    BYTE    bEPBBAY;            // Endpoint Y Buffer Base Address
+    BYTE    bEPBCTY;            // Endpoint Y Buffer byte Count
+    BYTE    bEPSIZXY;           // Endpoint XY Buffer Size
+} tEDB, *tpEDB;
+
+typedef struct _tEDB0
+{
+    BYTE    bIEPCNFG;           // Input Endpoint 0 Configuration Register
+    BYTE    bIEPBCNT;           // Input Endpoint 0 Buffer Byte Count
+    BYTE    bOEPCNFG;           // Output Endpoint 0 Configuration Register
+    BYTE    bOEPBCNT;           // Output Endpoint 0 Buffer Byte Count
+} tEDB0, *tpEDB0;
+
+/*----------------------------------------------------------------------------+
+| Constant Definition                                                         |
++----------------------------------------------------------------------------*/
+#define SIZEOF_BOOTCODE_CONFIG_DESC_GROUP SIZEOF_CONFIG_DESCRIPTOR+SIZEOF_INTERFACE_DESCRIPTOR+SIZEOF_ENDPOINT_DESCRIPTOR
+#define SIZEOF_BOOTCODE_STRING_DESC_GROUP 0x50
+
+#define pbExternalRAM  ((char xdata *)0x0000)       // use this for the future design
+#define pbInternalROM  ((char code *)0x0000)
+
+// TUSB2136 VID and PID Definition
+#define HUB_VID_L       0x51        // TI = 0x0451
+#define HUB_VID_H       0x04
+#define HUB_PID_L       0x45        // 1 external interface
+#define HUB_PID_H       0x31
+#define FUNCTION_PID_L  0x36
+#define FUNCTION_PID_H  0x21
+
+// USB related Constant
+#define MAX_ENDPOINT_NUMBER     0x03
+#define EP0_MAX_PACKET_SIZE     0x08
+#define EP_MAX_PACKET_SIZE      0x40
+
+#define OEP1_X_BUFFER_ADDRESS   0xFD80  // Input  Endpoint 1 X Buffer Base-address
+#define OEP1_Y_BUFFER_ADDRESS   0xFDC0  // Input  Endpoint 1 Y Buffer Base-address
+#define IEP1_X_BUFFER_ADDRESS   0xFE00  // Output Endpoint 1 X Buffer Base-address
+#define IEP1_Y_BUFFER_ADDRESS   0xFE40  // Output Endpoint 1 Y Buffer Base-address
+
+#define IEP2_X_BUFFER_ADDRESS   0xFE80  // Input  Endpoint 2 X Buffer Base-address
+#define IEP2_Y_BUFFER_ADDRESS   0xFE90  // Input  Endpoint 2 Y Buffer Base-address
+#define OEP2_X_BUFFER_ADDRESS   0xFEA0  // Output Endpoint 2 X Buffer Base-address
+#define OEP2_Y_BUFFER_ADDRESS   0xFEB0  // Output Endpoint 2 Y Buffer Base-address
+#define IEP3_X_BUFFER_ADDRESS   0xFEC0  // Input  Endpoint 3 X Buffer Base-address
+#define IEP3_Y_BUFFER_ADDRESS   0xFECC  // Input  Endpoint 3 Y Buffer Base-address
+#define OEP3_X_BUFFER_ADDRESS   0xFED8  // Output Endpoint 3 X Buffer Base-address
+#define OEP3_Y_BUFFER_ADDRESS   0xFEE4  // Output Endpoint 3 Y Buffer Base-address
+
+// Miscellaneous Registers
+#define MCNFG_SDW       0x01
+#define MCNFG_R0        0x02    // Revision Number R[3:0]
+#define MCNFG_R1        0x04
+#define MCNFG_R2        0x08
+#define MCNFG_R3        0x10
+#define MCNFG_OVCE      0x20    // Overcurrent detection enable bit
+                                // 0:disable, 1:enable
+#define MCNFG_XINT      0x40    // INT1 source control bit
+                                // 0:p3.3 1:P2[7:0]
+#define MCNFG_48MHZ     0x80    // 12Mhz or 48Mhz MCU clock source
+                                // 0:12Mhz 1:48Mhz
+#define WDCSR_WDT       0x01    // Watchdog timer reset bit
+                                // write a 1 to reset timer
+#define WDCSR_WDR       0x40    // Watchdog reset indication bit
+                                // 0:a power-up or USB reset
+                                // 1:watchdog timeout reset occurred.
+#define WDCSR_WDE       0x80    // Watchdog timer enable bit
+                                // 0:disable(only cleared on power-up, USB or WDT reset)
+                                // 1:enable
+
+// Power Control Register (@ SFR 87h)
+// PCON            0x87    // sfr 0x87
+#define PCON_IDL        0x01    // MCU idle bit
+                                // 0: MCU NOT in idle, 1:MCU idle
+#define PCON_GF0        0x04    // General purpose bit
+#define PCON_GF1        0x08    // General purpose bit
+#define PCON_SMOD       0x80    // Double baud rate control bit
+
+// EndPoint Desciptor Block
+#define EPCNF_USBIE     0x04    // USB Interrupt on Transaction Completion. Set By MCU
+                                // 0:No Interrupt, 1:Interrupt on completion
+#define EPCNF_STALL     0x08    // USB Stall Condition Indication. Set by UBM
+                                // 0: No Stall, 1:USB Install Condition
+#define EPCNF_DBUF      0x10    // Double Buffer Enable. Set by MCU
+                                // 0: Primary Buffer Only(x-buffer only), 1:Toggle Bit Selects Buffer
+#define EPCNF_TOGLE     0x20    // USB Toggle bit. This bit reflects the toggle sequence bit of DATA0 and DATA1.
+#define EPCNF_ISO       0x40    // ISO=0, Non Isochronous transfer. This bit must be cleared by MCU since only non isochronous transfer is supported.
+#define EPCNF_UBME      0x80    // UBM Enable or Disable bit. Set or Clear by MCU.
+                                // 0:UBM can't use this endpoint
+                                // 1:UBM can use this endpoint
+#define EPBCT_BYTECNT_MASK 0x7F // MASK for Buffer Byte Count
+#define EPBCT_NAK       0x80    // NAK, 0:No Valid in buffer, 1:Valid packet in buffer
+
+// Endpoint 0 Descriptor Registers
+#define EPBCNT_NAK      0x80    // NAK bit
+                                // 0:buffer contains valid data
+                                // 1:buffer is empty
+
+// USB Registers
+#define USBSTA_STPOW    0x01    // Setup Overwrite Bit. Set by hardware when setup packet is received
+                                // while there is already a packet in the setup buffer.
+                                // 0:Nothing, 1:Setup Overwrite
+#define USBSTA_SETUP    0x04    // Setup Transaction Received Bit. As long as SETUP is '1',
+                                // IN and OUT on endpoint-0 will be NAKed regardless of their real NAK bits values.
+#define USBSTA_PWON     0x08    // Power Request for port3
+#define USBSTA_PWOFF    0x10    // Power Off Request for port3
+#define USBSTA_RESR     0x20    // Function Resume Request Bit. 0:clear by MCU, 1:Function Resume is detected.
+#define USBSTA_SUSR     0x40    // Function Suspended Request Bit. 0:clear by MCU, 1:Function Suspend is detected.
+#define USBSTA_RSTR     0x80    // Function Reset Request Bit. This bit is set in response to a global or selective suspend condition.
+                                // 0:clear by MCU, 1:Function reset is detected.
+
+#define USBMSK_STPOW    0x01    // Setup Overwrite Interrupt Enable Bit
+                                // 0: disable, 1:enable
+#define USBMSK_SETUP    0x04    // Setup Interrupt Enable Bit
+                                // 0: disable, 1:enable
+#define USBMSK_PWON     0x08    // Power On Interrupt Enable Bit
+                                // 0: disable, 1:enable
+#define USBMSK_PWOFF    0x10    // Power Off Interrupt Enable Bit
+                                // 0: disable, 1:enable
+#define USBMSK_RESR     0x20    // Function Resume Interrupt Enable Bit
+                                // 0: disable, 1:enable
+#define USBMSK_SUSR     0x40    // Function Suspend Interrupt Enable Bit
+                                // 0: disable, 1:enable
+#define USBMSK_RSTR     0x80    // Function Reset Interrupt Enable Bit
+                                // 0: disable, 1:enable
+
+#define USBCTL_DIR      0x01    // USB traffic direction 0: USB out packet, 1:in packet (from TUSB5152 to Host)
+#define USBCTL_SIR      0x02    // Setup interrupt status bit
+                                // 0: SETUP interrupt is not served.
+                                // 1: SETUP interrupt in progess
+#define USBCTL_SELF     0x04    // Bus/self powered bit
+                                // 0: bus, 1:self
+#define USBCTL_RWE      0x08    // remote wakeup enable bit
+                                // 0: disable, 1:enable                                
+#define USBCTL_FRSTE    0x10    // Function Reset Condition Bit.
+                                // This bit connects or disconnects the USB Function Reset from the MCU reset
+                                // 0:not connect, 1:connect
+#define USBCTL_RWUP     0x20    // Device Remote Wakeup Request
+                                // 0:nothing, 1:remote wakeup request to USB Host
+#define USBCTL_U12      0x40    // USB Hub version
+                                // 0:1.x, 1:2.x
+#define USBCTL_CONT     0x80    // Connect or Disconnect Bit
+                                // 0:Upstream port is disconnected. Pull-up disabled
+                                // 1:Upstream port is connected. Pull-up enabled
+
+#define HUBCNFG_P1E         0x01    // Hub Port 1 enable/disable control bit
+                                    // 0: disable, 1:enable
+#define HUBCNFG_P1A         0x02    // Hub Port 1 connection bit
+                                    // 0: removable, 1:fixed
+#define HUBCNFG_P2E         0x04    // Hub Port 1 enable/disable control bit
+                                    // 0: disable, 1:enable
+#define HUBCNFG_P2A         0x08    // Hub Port 1 connection bit
+                                    // 0: removable, 1:fixed
+#define HUBCNFG_P3_MASK     0x30    // Hub Port 3 setting bits
+                                    // 00b: Port 3 disable
+                                    // 01b: Port 3 enable and fixed
+                                    // 10b: Port 3 enable but removable and not-attached
+                                    // 11b: Port 3 enable but removable and attached
+#define HUBCNFG_P3_FIXED    0x10    // 01b
+#define HUBCNFG_P3_MOV_DIS  0x20    // 10b
+#define HUBCNFG_P3_MOV_ENA  0x30    // 11b
+
+#define HUBCNFG_IG          0x40    // Hub Power control bit
+                                    // 0: individual, 1:ganged
+#define HUBCNFG_PWRSW       0x80    // Power Switching Control Bit
+                                    // 0: not available, 1:available
+
+
+#define HUBPOTG_100MS   0x32        // power-on to power-good time is 100ms ( in 2ms increment)
+#define HUBCURT_100MA   0x64        // hub requires 100mA
+
+#define VECINT_NO_INTERRUPT             0x00
+#define VECINT_OUTPUT_ENDPOINT1         0x12
+#define VECINT_OUTPUT_ENDPOINT2         0x14
+#define VECINT_OUTPUT_ENDPOINT3         0x16
+
+#define VECINT_INPUT_ENDPOINT1          0x22
+#define VECINT_INPUT_ENDPOINT2          0x24
+#define VECINT_INPUT_ENDPOINT3          0x26
+
+#define VECINT_STPOW_PACKET_RECEIVED    0x30            // USBSTA
+#define VECINT_SETUP_PACKET_RECEIVED    0x32            // USBSTA
+#define VECINT_POWER_ON                 0x34
+#define VECINT_POWER_OFF                0x36
+#define VECINT_RESR_INTERRUPT           0x38            // USBSTA
+#define VECINT_SUSR_INTERRUPT           0x3A            // USBSTA
+#define VECINT_RSTR_INTERRUPT           0x3C            // USBSTA
+#define VECINT_I2C_RXF_INTERRUPT        0x40            // I2CSTA
+#define VECINT_I2C_TXE_INTERRUPT        0x42            // I2CSTA
+#define VECINT_INPUT_ENDPOINT0          0x44
+#define VECINT_OUTPUT_ENDPOINT0         0x46
+
+//I2C Registers
+#define I2CSTA_SWR          0x01        // Stop Write Enable
+                                        // 0:disable, 1:enable
+#define I2CSTA_SRD          0x02        // Stop Read Enable
+                                        // 0:disable, 1:enable
+#define I2CSTA_TIE          0x04        // I2C Transmitter Empty Interrupt Enable
+                                        // 0:disable, 1:enable
+#define I2CSTA_TXE          0x08        // I2C Transmitter Empty
+                                        // 0:full, 1:empty
+#define I2CSTA_400K         0x10        // I2C Speed Select
+                                        // 0:100kHz, 1:400kHz
+#define I2CSTA_ERR          0x20        // Bus Error Condition
+                                        // 0:no bus error, 1:bus error
+#define I2CSTA_RIE          0x40        // I2C Receiver Ready Interrupt Enable
+                                        // 0:disable, 1:enable
+#define I2CSTA_RXF          0x80        // I2C Receiver Full
+                                        // 0:empty, 1:full
+#define I2CADR_READ         0x01        // Read Write Command Bit
+                                        // 0:write, 1:read
+
+//-----------------------------------------------------------------------------------------------
+// register address definition
+//-----------------------------------------------------------------------------------------------
+
+// EndPoint Desciptor Block
+// USB Data Buffer
+#define bOEP0_BUFFER_ADDRESS    (* (BYTE xdata *)0xFEF0)    // Output Endpoint 0 Buffer Base-address
+#define bIEP0_BUFFER_ADDRESS    (* (BYTE xdata *)0xFEF8)    // Input  Endpoint 0 Buffer Base-address
+#define bEP0_SETUP_ADDRESS      (* (BYTE xdata *)0xFF00)    // setup packet
+
+#define pbOEP0_BUFFER_ADDRESS   ( (BYTE xdata *)0xFEF0)    // Output Endpoint 0 Buffer Base-address
+#define pbIEP0_BUFFER_ADDRESS   ( (BYTE xdata *)0xFEF8)    // Input  Endpoint 0 Buffer Base-address
+#define pbEP0_SETUP_ADDRESS     ( (BYTE xdata *)0xFF00)    // setup packet
+
+// Endpoint descriptor block
+#define bOEPCNF_1               (* (BYTE xdata *)0xFF08)    // Output Endpoint 1 Configuration
+#define bOEPCNF_2               (* (BYTE xdata *)0xFF10)    // Output Endpoint 2 Configuration
+#define bOEPCNF_3               (* (BYTE xdata *)0xFF18)    // Output Endpoint 3 Configuration
+
+#define bOEPBBAX_1              (* (BYTE xdata *)0xFF09)    // Output Endpoint 1 X-Buffer Base-address
+#define bOEPBBAX_2              (* (BYTE xdata *)0xFF11)    // Output Endpoint 2 X-Buffer Base-address
+#define bOEPBBAX_3              (* (BYTE xdata *)0xFF19)    // Output Endpoint 3 X-Buffer Base-address
+
+#define bOEPDCTX_1              (* (BYTE xdata *)0xFF0A)    // Output Endpoint 1 X Byte Count
+#define bOEPDCTX_2              (* (BYTE xdata *)0xFF12)    // Output Endpoint 2 X Byte Count
+#define bOEPDCTX_3              (* (BYTE xdata *)0xFF1A)    // Output Endpoint 3 X Byte Count
+
+#define bOEPBBAY_1              (* (BYTE xdata *)0xFF0D)    // Output Endpoint 1 Y-Buffer Base-address
+#define bOEPBBAY_2              (* (BYTE xdata *)0xFF15)    // Output Endpoint 2 Y-Buffer Base-address
+#define bOEPBBAY_3              (* (BYTE xdata *)0xFF1D)    // Output Endpoint 3 Y-Buffer Base-address
+
+#define bOEPDCTY_1              (* (BYTE xdata *)0xFF0E)    // Output Endpoint 1 Y Byte Count
+#define bOEPDCTY_2              (* (BYTE xdata *)0xFF16)    // Output Endpoint 2 Y Byte Count
+#define bOEPDCTY_3              (* (BYTE xdata *)0xFF1E)    // Output Endpoint 3 Y Byte Count
+
+#define bOEPSIZXY_1             (* (BYTE xdata *)0xFF0F)    // Output Endpoint 1 XY-Buffer Size
+#define bOEPSIZXY_2             (* (BYTE xdata *)0xFF17)    // Output Endpoint 2 XY-Buffer Size
+#define bOEPSIZXY_3             (* (BYTE xdata *)0xFF1F)    // Output Endpoint 3 XY-Buffer Size
+
+#define bIEPCNF_1               (* (BYTE xdata *)0xFF48)    // Input Endpoint 1 Configuration
+#define bIEPCNF_2               (* (BYTE xdata *)0xFF50)    // Input Endpoint 2 Configuration
+#define bIEPCNF_3               (* (BYTE xdata *)0xFF58)    // Input Endpoint 3 Configuration
+
+#define bIEPBBAX_1              (* (BYTE xdata *)0xFF49)    // Input Endpoint 1 X-Buffer Base-address
+#define bIEPBBAX_2              (* (BYTE xdata *)0xFF51)    // Input Endpoint 2 X-Buffer Base-address
+#define bIEPBBAX_3              (* (BYTE xdata *)0xFF59)    // Input Endpoint 3 X-Buffer Base-address
+
+#define bIEPDCTX_1              (* (BYTE xdata *)0xFF4A)    // Input Endpoint 1 X Byte Count
+#define bIEPDCTX_2              (* (BYTE xdata *)0xFF52)    // Input Endpoint 2 X Byte Count
+#define bIEPDCTX_3              (* (BYTE xdata *)0xFF5A)    // Input Endpoint 3 X Byte Count
+
+#define bIEPBBAY_1              (* (BYTE xdata *)0xFF4D)    // Input Endpoint 1 Y-Buffer Base-address
+#define bIEPBBAY_2              (* (BYTE xdata *)0xFF55)    // Input Endpoint 2 Y-Buffer Base-address
+#define bIEPBBAY_3              (* (BYTE xdata *)0xFF5D)    // Input Endpoint 3 Y-Buffer Base-address
+
+#define bIEPDCTY_1              (* (BYTE xdata *)0xFF4E)    // Input Endpoint 1 Y Byte Count
+#define bIEPDCTY_2              (* (BYTE xdata *)0xFF56)    // Input Endpoint 2 Y Byte Count
+#define bIEPDCTY_3              (* (BYTE xdata *)0xFF5E)    // Input Endpoint 3 Y Byte Count
+
+#define bIEPSIZXY_1             (* (BYTE xdata *)0xFF4F)    // Input Endpoint 1 XY-Buffer Size
+#define bIEPSIZXY_2             (* (BYTE xdata *)0xFF57)    // Input Endpoint 2 XY-Buffer Size
+#define bIEPSIZXY_3             (* (BYTE xdata *)0xFF5F)    // Input Endpoint 3 XY-Buffer Size
+
+// Endpoint 0 Descriptor Registers
+#define bIEPCNFG_0              (* (BYTE xdata *)0xFF80)    // Input Endpoint Configuration Register
+#define bIEPBCNT_0              (* (BYTE xdata *)0xFF81)    // Input Endpoint 0 Byte Count
+#define bOEPCNFG_0              (* (BYTE xdata *)0xFF82)    // Output Endpoint Configuration Register
+#define bOEPBCNT_0              (* (BYTE xdata *)0xFF83)    // Output Endpoint 0 Byte Count
+
+// Miscellaneous Registers
+#define bMCNFG                  (* (BYTE xdata *)0xFF90)    // MCU Configuration Register
+#define bVECINT                 (* (BYTE xdata *)0xFF92)    // Vector Interrupt Register
+#define bWDCSR                  (* (BYTE xdata *)0xFF93)    // Watchdog Timer, Control & Status Register
+
+//I2C Registers
+#define bI2CSTA                 (* (BYTE xdata *)0xFFF0)    // I2C Status and Control Register
+#define bI2CDAO                 (* (BYTE xdata *)0xFFF1)    // I2C Data Out Register
+#define bI2CDAI                 (* (BYTE xdata *)0xFFF2)    // I2C Data In Register
+#define bI2CADR                 (* (BYTE xdata *)0xFFF3)    // I2C Address Register
+
+// USB Registers
+#define bHUBCURT                (* (BYTE xdata *)0xFFF4)    // HUB Current Descriptor Register
+#define bHUBPOTG                (* (BYTE xdata *)0xFFF5)    // HUB Power-on to Power-Good Descriptor Register
+#define bVIDSTA                 (* (BYTE xdata *)0xFFF6)    // VID/PID status register
+#define bHUBCNFG                (* (BYTE xdata *)0xFFF7)    // HUB Configuration Register
+#define bHUBPIDL                (* (BYTE xdata *)0xFFF8)    // HUB PID Low-byte Register
+#define bHUBPIDH                (* (BYTE xdata *)0xFFF9)    // HUB PID High-byte Register
+#define bHUBVIDL                (* (BYTE xdata *)0xFFFA)    // HUB VID Low-byte Register
+#define bHUBVIDH                (* (BYTE xdata *)0xFFFB)    // HUB VID High-byte Register
+#define bUSBCTL                 (* (BYTE xdata *)0xFFFC)    // USB Control Register
+#define bUSBMSK                 (* (BYTE xdata *)0xFFFD)    // USB Interrupt Mask Register
+#define bUSBSTA                 (* (BYTE xdata *)0xFFFE)    // USB Status Register
+#define bFUNADR                 (* (BYTE xdata *)0xFFFF)    // This register contains the device function address.
+
+#ifdef __cplusplus
+}
+#endif
+#endif /* _TUSB3210_H_ */
+
+
+
+
+File #4: Bootcode.h
+
+/*----------------------------------------------------------------------------+
+|                                                                             |
+|                             Texas Instruments                               |
+|                                                                             |
+|                            Bootcode Header File                             |
+|                                                                             |
++-----------------------------------------------------------------------------+
+|  Source: bootcode.h v00.01 2000/06/13 16:02:35                              |
+|  Author: Texas Instuments                                                   |
+|  Header: (none)                                                             |
+|                                                                             |
+|  For more information, please contact usb@ti.com                            |
+|                                                                             |
+|                                                                             |
+|  Logs:                                                                      |
+|                                                                             |
+|  WHO     WHEN         WHAT                                                  |
+|  ---     --------     ----------------------------------------------------- |
+|  HMT     20000613     born                                                  |
+|                                                                             |
++----------------------------------------------------------------------------*/
+
+#ifndef _BOOTCODE_H_
+#define _BOOTCODE_H_
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+/*----------------------------------------------------------------------------+
+| Include files                                                               |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Function Prototype                                                          |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Type Definition & Macro                                                     |
++----------------------------------------------------------------------------*/
+typedef enum
+{
+    // firmware
+    USB_VENDOR_REQ_FIRST      = 0x80,    
+    USB_VENDOR_REQ_GET_STATUS = 0x80,
+    USB_VENDOR_REQ_EXECUTE_FIRMARE,
+    USB_VENDOR_REQ_GET_FIRMWARE_VERSION,
+    USB_VENDOR_REQ_PREPARE_FOR_UPDATE_HEADER,
+    USB_VENDOR_REQ_UPDATE_HEADER,
+    USB_VENDOR_REQ_REBOOT,
+    USB_VENDOR_REQ_FORCE_EXECUTE_FIRMWARE = 0x8f,
+
+    // memory features
+    USB_VENDOR_REQ_EXTERNAL_MEMORY_READ = 0x90,
+    USB_VENDOR_REQ_EXTERNAL_MEMORY_WRITE,
+    USB_VENDOR_REQ_I2C_MEMORY_READ,
+    USB_VENDOR_REQ_I2C_MEMORY_WRITE,
+    USB_VENDOR_REQ_INTERNAL_ROM_MEMORY_READ,
+    USB_VENDOR_REQ_EXTERNAL_MEMORY_PAGE_READ,    // 0x95
+    USB_VENDOR_REQ_EXTERNAL_MEMORY_PAGE_WRITE,
+    USB_VENDOR_REQ_I2C_MEMORY_PAGE_READ,
+    USB_VENDOR_REQ_I2C_MEMORY_PAGE_WRITE,
+    USB_VENDOR_REQ_INTERNAL_ROM_MEMORY_PAGE_READ,// 0x99
+    USB_VENDOR_REQ_LAST,
+
+    // for debuggin only firmware
+    USB_VENDOR_REQ_GET_CURRENT_CHECKSUM = 0xe0,
+    USB_VENDOR_REQ_GET_DOWNLOAD_SIZE,
+    USB_VENDOR_REQ_SET_DOWNLOAD_SIZE_AND_CHECKSUM,
+
+    // for debuggin only lcd display
+    USB_VENDOR_REQ_ROM_ADDRESS_DUMP = 0xf0,
+    USB_VENDOR_REQ_EXTERNAL_DUMP,
+    USB_VENDOR_REQ_I2C_DUMP
+
+} tUSB_VENDOR_REQ_LIST;
+
+/*----------------------------------------------------------------------------+
+| Constant Definition                                                         |
++----------------------------------------------------------------------------*/
+#define BIT_BOOTCODE_STATUS_BUSY            0x01
+
+/*----------------------------------------------------------------------------+
+| End of header file                                                          |
++----------------------------------------------------------------------------*/
+#ifdef __cplusplus
+}
+#endif
+#endif /* _BOOTCODE_H_ */
+
+
+
+
+
+
+File #6: Bootcode.c
+
+/*----------------------------------------------------------------------------+
+|                                                                             |
+|                              Texas Instruments                              |
+|                                USB Controler                                |
+|                                                                             |
+|                                  Bootcode                                   |
+|                                                                             |
++-----------------------------------------------------------------------------+
+|  Source: bootcode.c, v 1.0 1999/12/04 16:10:10                              |
+|  Author: Texas Instuments                                                   |
+|                                                                             |
+|  For more information, please contact usb@ti.com                            |
+|                                                                             |
+|                                                                             |
+|        External EEPROM Format                                               |
+|        ----------------------                                               |
+|                                                                             |
+|        Offset   Type          Size    Value & Remark                        |
+|        ------   ----          ----    --------------                        |
+|        0        Signature0    1       0x36, FUNCTION_PID_L                  |
+|        1        Signature1    1       0x21, FUNCTION_PID_H                  |
+|        2        Data Type     1       0x00 = End                            |
+|                                       0x01 = USB Info Basic                 |
+|                                       0x02 = Application Code               |
+|                                       0x03..0xEF Reserved                   |
+|                                       0xff = Reserved for Extended Data     |
+|        3        Data Size     2       Size of Data                          |
+|                                       9 for TUSB5152 and TUSB2136 Usb Info  |
+|        5        Check Sum     1       Check Sum of Data Section             |
+|        6        Bit Setting   1       Bit 7: PWRSW                          |
+|        7        VID           2       Vendor ID                             |
+|        9        PID hub       2       Product ID for hub                    |
+|        11       PID device    2       Product ID for bootrom                |
+|        13       HUBPOTG       1       Time from power-on to power-good      |
+|        14       HUBCURT       1       HUB Current descriptor register       |
+|                                                                             |
+|        The following examples is for application code                       |
+|                                                                             |
+|        15       Data Type     1       0x00 = End                            |
+|                                       0x02 = Application Code               |
+|        16       Data Size     2       Size of Data Section                  |
+|        18       Check Sum     1       Check Sum of Data Section             |
+|        19       App. Rev.     2       Application Code Revision             |
+|                                                                             |
+|        21       Application Code Starts here...                             |
+|                                                                             |
+|  Logs:                                                                      |
+|                                                                             |
+|  WHO       WHEN         WHAT                                                |
+|  ---       --------     ----------------------------------------------------|
+|  HMT       19991204     born                                                |
+|  HMT       19991207     change compiler setting to start at 0x8006 in link. |
+|                         add bit setting in eeprom for bus/self power        |
+|  HMT       20000301     re-arrange EEPROM format                            |
+|                         add five more USB customer request                  |
+|  HMT       20000412     add modified header format                          |
+|  HMT       20000712     clear interrupt source and then cleast VECTINT in   |
+|                         ISR                                                 |
+|  HMT       20000718     set 24Mhz and 400Khz for i2c                        |
+|  HMT       20000905     change to 48Mhz to reflect hardware change          |
+|                                                                             |
++----------------------------------------------------------------------------*/
+#include <io51.h>       // 8051 sfr definition
+
+#include "types.h"      // Basic Type declarations
+#include "usb.h"        // USB-specific Data Structures
+#include "i2c.h"
+#include "tusb2136.h"
+#include "delay.h"
+#include "header.h"
+#include "bootcode.h"
+
+#ifdef SIMULATION
+#include "gpio.h"
+#endif
+
+
+/*---------------------------------------------------------------------------+
+|  Constant Definition                                                       |
++---------------------------------------------------------------------------*/
+#define X_BUFFER 0
+#define Y_BUFFER 1
+
+BYTE code abromDeviceDescriptor[SIZEOF_DEVICE_DESCRIPTOR] = {
+    SIZEOF_DEVICE_DESCRIPTOR,       // Length of this descriptor (12h bytes)
+    DESC_TYPE_DEVICE,               // Type code of this descriptor (01h)
+    0x10,0x01,                      // Release of USB spec (Rev 1.1)
+    0xff,                           // Device's base class code - vendor specific
+    0,                              // Device's sub class code
+    0,                              // Device's protocol type code
+    EP0_MAX_PACKET_SIZE,            // End point 0's max packet size = 8
+    HUB_VID_L,HUB_VID_H,            // Vendor ID for device, TI=0x0451
+    FUNCTION_PID_L,FUNCTION_PID_H,  // Product ID for device, 0x2136
+    0x00,0x01,                      // Revision level of device, Rev=1.0
+    0,                              // Index of manufacturer name string desc
+    0,                              // Index of product name string desc
+    0,                              // Index of serial number string desc
+    1                               // Number of configurations supported
+    };
+
+#define SIZEOF_BOOTCODE_CONFIG_DESC_GROUP    SIZEOF_CONFIG_DESCRIPTOR+SIZEOF_INTERFACE_DESCRIPTOR+SIZEOF_ENDPOINT_DESCRIPTOR
+BYTE code abromConfigurationDescriptorGroup[SIZEOF_BOOTCODE_CONFIG_DESC_GROUP] =
+{
+    // Configuration  Descriptor, size=0x09
+    SIZEOF_CONFIG_DESCRIPTOR,        // bLength
+    DESC_TYPE_CONFIG,                // bDescriptorType
+    SIZEOF_BOOTCODE_CONFIG_DESC_GROUP, 0x00, // wTotalLength
+    0x01,                            // bNumInterfaces
+    0x01,                            // bConfigurationValue
+    0x00,                            // iConfiguration
+    0x80,                            // bmAttributes, bus bootcode
+    0x32,                            // Max. Power Consumption at 2mA unit
+
+    // Interface Descriptor, size = 0x09
+    SIZEOF_INTERFACE_DESCRIPTOR,    // bLength
+    DESC_TYPE_INTERFACE,            // bDescriptorType
+    0x00,                           // bInterfaceNumber
+    0x00,                           // bAlternateSetting
+    1,                              // bNumEndpoints
+    0xFF,                           // bInterfaceClass - vendor-specific
+    0,                              // bInterfaceSubClass, zero for hub
+    0,                              // bInterfaceProtocol
+    0x00,                           // iInterface
+
+    // Endpoint Descriptor, size = 0x07 for OEP1
+    SIZEOF_ENDPOINT_DESCRIPTOR,     // bLength
+    DESC_TYPE_ENDPOINT,             // bDescriptorType
+    0x01 ,                          // bEndpointAddress; bit7=1 for IN, bits 3-0=1 for ep1
+    EP_DESC_ATTR_TYPE_BULK,         // bmAttributes, bulk transfer
+    0x40, 0x00,                     // wMaxPacketSize, 64 bytes
+    0x00                            // bInterval
+    };
+
+// Global Memory Map
+#pragma memory = idata
+BYTE bEp0TxBytesRemaining;      // For endpoint zero transmitter only
+                                // Holds count of bytes remaining to be
+                                // transmitted by endpoint 0.  A value
+                                // of 0 means that a 0-length data packet
+                                // A value of 0xFF    means that transfer
+                                // is complete.
+BYTE bHostAskMoreDataThanAvailable;
+                                // If host ask more data then TUSB2136 has
+                                // It will send one zero-length packet
+                                // if the asked lenght is a multiple of
+                                // max. size of endpoint 0
+BYTE bConfiguredFlag;           // Set to 1 when USB device has been
+                                // configured, set to 0 when unconfigured
+PBYTE pbEp0Buffer;              // A pointer to end point 0
+
+WORD wCurrentFirmwareAddress;   // for firmware downloading
+WORD wFirmwareLength;
+BYTE bFirmwareChecksum;
+BYTE bRAMChecksum;
+BOOL bExecuteFirmware;          // flag set by USB request to run the firmware
+BOOL bCurrentBuffer;
+BOOL bRAMChecksumCorrect;
+BYTE abBootCodeStatus[4];
+extern WORD wCurrentUploadPointer;      // in header.c
+extern BYTE    bi2cDeviceAddress;           // in header.c
+#pragma memory = default
+
+/*---------------------------------------------------------------------------+
+|  TUSB2136 Register Structure Definition                                    |
++---------------------------------------------------------------------------*/
+#pragma memory = dataseg(TUSB2136_SETUPPACKET_SEG)
+tDEVICE_REQUEST tSetupPacket;
+#pragma memory = default
+
+#pragma memory = dataseg(TUSB2136_EP0_EDB_SEG)
+tEDB0 tEndPoint0DescriptorBlock;
+#pragma memory = default
+
+#pragma memory = dataseg(TUSB2136_IEP_EDB_SEG)
+tEDB tInputEndPointDescriptorBlock[3];
+#pragma memory = default
+
+#pragma memory = dataseg(TUSB2136_OEP_EDB_SEG)
+tEDB tOutputEndPointDescriptorBlock[3];
+#pragma memory = default
+
+#pragma memory = dataseg(TUSB2136_IEP0BUFFER_SEG)
+BYTE abIEP0Buffer[EP0_MAX_PACKET_SIZE];
+#pragma memory = default
+
+#pragma memory = dataseg(TUSB2136_OEP0BUFFER_SEG)
+BYTE abOEP0Buffer[EP0_MAX_PACKET_SIZE];
+#pragma memory = default
+
+
+#pragma memory = dataseg(TUSB2136_DESC_SEG)             // 0xfe00
+BYTE abDeviceDescriptor[SIZEOF_DEVICE_DESCRIPTOR];
+BYTE abConfigurationDescriptorGroup[SIZEOF_BOOTCODE_CONFIG_DESC_GROUP];
+#pragma memory = default
+
+#pragma memory = dataseg(TUSB2136_OEP1_X_BUFFER_SEG)    // 0xfd80
+BYTE pbXBufferAddress[EP_MAX_PACKET_SIZE];
+#pragma memory = default
+
+#pragma memory = dataseg(TUSB2136_OEP1_Y_BUFFER_SEG)    // 0xfdc0
+BYTE pbYBufferAddress[EP_MAX_PACKET_SIZE];
+#pragma memory = default
+
+#pragma memory = dataseg(TUSB2136_EXTERNAL_RAM_SEG)    // 0x0000
+BYTE abDownloadFirmware[1024*16];
+#pragma memory = default
+
+/*---------------------------------------------------------------------------+
+|  Sub-routines go here...                                                   |
++---------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
+VOID FillEp0TxWithNextDataPacket(VOID)
+{
+    BYTE bPacketSize,bIndex;
+
+    // First check if there are bytes remaining to be transferred
+    if (bEp0TxBytesRemaining != 0xFF)
+    {
+        if (bEp0TxBytesRemaining > EP0_MAX_PACKET_SIZE)
+        {
+            // More bytes are remaining than will fit in one packet
+            bPacketSize = EP0_MAX_PACKET_SIZE;
+            bEp0TxBytesRemaining -= EP0_MAX_PACKET_SIZE;
+            // there will be More IN Stage
+        }
+        else if (bEp0TxBytesRemaining < EP0_MAX_PACKET_SIZE)
+        {
+            // The remaining data will fit in one packet.
+            // This case will properly handle bEp0TxBytesRemaining == 0
+            bPacketSize = bEp0TxBytesRemaining;
+            bEp0TxBytesRemaining = 0xFF;        // No more data need to be Txed
+        }
+        else //bEp0TxBytesRemaining == EP0_MAX_PACKET_SIZE
+        {
+            bPacketSize = EP0_MAX_PACKET_SIZE;
+            if(bHostAskMoreDataThanAvailable == TRUE) bEp0TxBytesRemaining = 0;
+            else bEp0TxBytesRemaining = 0xFF;
+        }
+
+        for (bIndex=0; bIndex<bPacketSize; bIndex++)
+            abIEP0Buffer[bIndex] = *pbEp0Buffer++;
+
+        tEndPoint0DescriptorBlock.bIEPBCNT = bPacketSize & EPBCT_BYTECNT_MASK;
+    }
+}
+
+//----------------------------------------------------------------------------
+VOID TransmitBufferOnEp0(PBYTE pbBuffer)
+{
+    pbEp0Buffer = pbBuffer;
+
+    // Limit wLength to FEh
+    if (tSetupPacket.bLengthH != 0){
+        tSetupPacket.bLengthH  = 0;
+        tSetupPacket.bLengthL  = 0xFE;
+    }
+
+    // Limit transfer size to wLength if needed
+    // this prevent USB device sending 'more than require' data back to host
+    if (bEp0TxBytesRemaining > tSetupPacket.bLengthL)
+        bEp0TxBytesRemaining = tSetupPacket.bLengthL;
+
+    if(bEp0TxBytesRemaining < tSetupPacket.bLengthL)
+        bHostAskMoreDataThanAvailable = TRUE;
+    else bHostAskMoreDataThanAvailable = FALSE;
+
+    FillEp0TxWithNextDataPacket();
+}
+
+//----------------------------------------------------------------------------
+VOID TransmitNullResponseOnEp0 (VOID)
+{
+    pbEp0Buffer             = (PBYTE)0x00;  // to indicate a partial packet
+    bEp0TxBytesRemaining    = 0;            // or ACK druing standard USB request
+
+    FillEp0TxWithNextDataPacket();
+}
+
+//----------------------------------------------------------------------------
+VOID StallEndPoint0(VOID)
+{
+    tEndPoint0DescriptorBlock.bIEPCNFG |= EPCNF_STALL;
+    tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL;
+}
+
+//----------------------------------------------------------------------------
+VOID Endpoint0Control(VOID)
+{
+    BYTE bTemp;
+    WORD wIndex;
+    BYTE baReturnBuffer[3];
+    BOOL InTransaction;
+
+    // copy the MSB of bmRequestType to DIR bit of USBCTL
+    if((tSetupPacket.bmRequestType & USB_REQ_TYPE_INPUT) != 0x00){
+        InTransaction = TRUE;
+        bUSBCTL |= USBCTL_DIR;
+    }else{
+        InTransaction = FALSE;
+        bUSBCTL &= ~USBCTL_DIR;
+    }
+
+    // Set setup bit in USB control register
+    bUSBCTL |= USBCTL_SIR;               // on bit 1
+
+    // clear endpoint stall here
+    // If hardware in setup stage(hardware clears stall) but firmware still
+    // in data stage(stall at the last packet), sometimes hardware clears stall
+    // but firmware later on stall again. This causes problem in the new transfer
+    // while firmware still in the previous transfer.
+    tEndPoint0DescriptorBlock.bIEPCNFG &= ~EPCNF_STALL;
+    tEndPoint0DescriptorBlock.bOEPCNFG &= ~EPCNF_STALL;
+
+    baReturnBuffer[0] = 0;
+    baReturnBuffer[1] = 0;
+    baReturnBuffer[2] = 0;
+
+    switch(tSetupPacket.bmRequestType & USB_REQ_TYPE_MASK)
+    {
+        case USB_REQ_TYPE_STANDARD:
+            // check if high byte of wIndex is p184 of spec 1.1
+            if((tSetupPacket.bIndexH != 0x00)){
+                StallEndPoint0();
+                return;
+            }
+            switch (tSetupPacket.bRequest)
+            {
+                case USB_REQ_GET_STATUS:
+                    // check if it is a read command
+                    if(InTransaction == FALSE){
+                        // control read but direction is OUT
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if wValue is zero
+                    if((tSetupPacket.bValueH != 0x00) || (tSetupPacket.bValueL != 0x00)){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if bLengthL = 0x02, wLength = 0x00
+                    if((tSetupPacket.bLengthL != 0x02) || (tSetupPacket.bLengthH != 0x00)){
+                        StallEndPoint0();
+                        return;
+                    }else tEndPoint0DescriptorBlock.bOEPBCNT = 0x00; // for status stage
+
+                    switch (tSetupPacket.bmRequestType & USB_REQ_TYPE_RECIP_MASK)
+                    {
+                        case USB_REQ_TYPE_DEVICE:
+                            // check if wIndex is zero
+                            if(tSetupPacket.bIndexL != 0x00){
+                                StallEndPoint0();
+                                return;
+                            }
+
+                            // Return self power status, no remote wakeup
+                            bEp0TxBytesRemaining = 2;
+                            if((bUSBCTL & USBCTL_SELF) == USBCTL_SELF)
+                                baReturnBuffer[0] = DEVICE_STATUS_SELF_POWER;
+                            TransmitBufferOnEp0((PBYTE)baReturnBuffer);
+                            break;
+
+                        case USB_REQ_TYPE_INTERFACE:  // return all zeros
+                            if(tSetupPacket.bIndexL != 0x00){
+                                StallEndPoint0();
+                                return;
+                            }
+                            bEp0TxBytesRemaining = 2;
+                            TransmitBufferOnEp0 ((PBYTE)baReturnBuffer);
+                            break;
+
+                        case USB_REQ_TYPE_ENDPOINT:
+                            // Endpoint number is in low byte of wIndex
+                            bTemp = tSetupPacket.bIndexL & EP_DESC_ADDR_EP_NUM;
+                            if(bTemp==0){    // EndPoint 0
+                                if(tSetupPacket.bIndexL & EP_DESC_ADDR_DIR_IN)
+                                    // input endpoint
+                                    baReturnBuffer[0] = (BYTE)(tEndPoint0DescriptorBlock.bIEPCNFG & EPCNF_STALL);
+                                else
+                                    // output endpoint
+                                    baReturnBuffer[0] = (BYTE)(tEndPoint0DescriptorBlock.bOEPCNFG & EPCNF_STALL);
+                            }else{
+                                if(bTemp > MAX_ENDPOINT_NUMBER){
+                                    StallEndPoint0();
+                                    return;
+                                }
+                                bTemp--;
+                                if(tSetupPacket.bIndexL & EP_DESC_ADDR_DIR_IN)
+                                    // input endpoint
+                                    baReturnBuffer[0] = (BYTE)(tInputEndPointDescriptorBlock[bTemp].bEPCNF & EPCNF_STALL);
+                                else
+                                    // output endpoint
+                                    baReturnBuffer[0] = (BYTE)(tOutputEndPointDescriptorBlock[bTemp].bEPCNF & EPCNF_STALL);
+                            }
+                            baReturnBuffer[0] >>= 3; // STALL is on bit 3
+                            bEp0TxBytesRemaining = 2;
+                            TransmitBufferOnEp0 ((PBYTE)baReturnBuffer);
+                            break;
+
+                        case USB_REQ_TYPE_OTHER:
+                        default:
+                            StallEndPoint0();
+                            break;
+                    }
+                    break;
+
+                case USB_REQ_CLEAR_FEATURE:
+                    // check if it is a write command
+                    if(InTransaction == TRUE){
+                        // control write but direction is IN
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if bLengthL = 0x00, wLength = 0x00
+                    if((tSetupPacket.bLengthL != 0x00) || (tSetupPacket.bLengthH != 0x00)){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // control write, stall output endpoint 0
+                    // wLength should be 0 in all cases
+                    tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL;
+
+                    switch (tSetupPacket.bmRequestType & USB_REQ_TYPE_RECIP_MASK)
+                    {
+                        case USB_REQ_TYPE_ENDPOINT:
+                            // Endpoint number is in low byte of wIndex
+                            if(tSetupPacket.bValueL == FEATURE_ENDPOINT_STALL){
+                                bTemp = tSetupPacket.bIndexL & EP_DESC_ADDR_EP_NUM;
+                                if(bTemp){
+                                    if(bTemp > MAX_ENDPOINT_NUMBER){
+                                        StallEndPoint0();
+                                        return;
+                                    }
+                                    bTemp--;        // EP is from EP1 to EP7 while C language start from 0
+                                    if(tSetupPacket.bIndexL & EP_DESC_ADDR_DIR_IN)
+                                        // input endpoint
+                                        tInputEndPointDescriptorBlock[bTemp].bEPCNF &= ~EPCNF_STALL;
+                                    else
+                                        // output endpoint
+                                        tOutputEndPointDescriptorBlock[bTemp].bEPCNF &= ~EPCNF_STALL;
+                                }else{    // EP0
+                                        // clear both in and out stall
+                                        // no reason to have one stall while the other is not for EP0
+                                        tEndPoint0DescriptorBlock.bIEPCNFG &= ~EPCNF_STALL;
+                                        tEndPoint0DescriptorBlock.bOEPCNFG &= ~EPCNF_STALL;
+                                }
+                            }else{
+                                StallEndPoint0();
+                                return;
+                            }
+                            TransmitNullResponseOnEp0();
+                            break;
+
+                        case USB_REQ_TYPE_DEVICE:
+                        case USB_REQ_TYPE_INTERFACE:
+                        case USB_REQ_TYPE_OTHER:
+                        default:
+                            StallEndPoint0();
+                            break;
+                    }
+                    break;
+
+                case USB_REQ_SET_FEATURE:
+                    // check if bLengthL = 0x00, wLength = 0x00
+                    if((tSetupPacket.bLengthL != 0x00) || (tSetupPacket.bLengthH != 0x00)){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if it is a write command
+                    if(InTransaction == TRUE){
+                        // control write but direction is IN
+                        StallEndPoint0();
+                        return;
+                    }
+                    // control write, stall output endpoint 0
+                    // wLength should be 0 in all cases
+                    tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL;
+
+                    switch (tSetupPacket.bmRequestType & USB_REQ_TYPE_RECIP_MASK)
+                    {
+                        // Feature selector is in wValue
+                        case USB_REQ_TYPE_ENDPOINT:
+                            // Endpoint number is in low byte of wIndex
+                            if (tSetupPacket.bValueL == FEATURE_ENDPOINT_STALL){
+                                bTemp = tSetupPacket.bIndexL & EP_DESC_ADDR_EP_NUM;
+
+                                // Ignore EP0 STALL, no reaon to have EP0 STALL
+                                if(bTemp){        // other endpoints
+                                    if(bTemp > MAX_ENDPOINT_NUMBER){
+                                        StallEndPoint0();
+                                        return;
+                                    }
+                                    bTemp--;        // EP is from EP1 to EP3 while C language start from 0
+                                    if(tSetupPacket.bIndexL & EP_DESC_ADDR_DIR_IN)
+                                        // input endpoint
+                                        tInputEndPointDescriptorBlock[bTemp].bEPCNF |= EPCNF_STALL;
+                                    else
+                                        // output endpoint
+                                        tOutputEndPointDescriptorBlock[bTemp].bEPCNF |= EPCNF_STALL;
+                                }
+                            }else {
+                                StallEndPoint0();
+                                return;
+                            }
+                            TransmitNullResponseOnEp0();
+                            break;
+
+                        case USB_REQ_TYPE_DEVICE:
+                        case USB_REQ_TYPE_INTERFACE:
+                        case USB_REQ_TYPE_OTHER:
+                        default:
+                            StallEndPoint0();
+                            break;
+                    }
+                    break;
+
+                case USB_REQ_SET_ADDRESS:
+                    // check if recipient is device
+                    if((tSetupPacket.bmRequestType & USB_REQ_TYPE_RECIP_MASK) != USB_REQ_TYPE_DEVICE){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if bLengthL = 0x00, wLength = 0x00
+                    if((tSetupPacket.bLengthL != 0x00) || (tSetupPacket.bLengthH != 0x00)){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if wIndex is zero
+                    if(tSetupPacket.bIndexL != 0x00){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if it is a write command
+                    if(InTransaction == TRUE){
+                        // control write but direction is IN
+                        StallEndPoint0();
+                        return;
+                    }
+
+                    // control write, stall output endpoint 0
+                    // wLength should be 0 in all cases
+                    tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL;
+                    
+                    if(tSetupPacket.bValueL < 128){
+                        bFUNADR = tSetupPacket.bValueL ;
+                        TransmitNullResponseOnEp0();
+                    }else StallEndPoint0();
+                    break;
+
+                case USB_REQ_GET_DESCRIPTOR:
+                    // check if recipient is device
+                    if((tSetupPacket.bmRequestType & USB_REQ_TYPE_RECIP_MASK) != USB_REQ_TYPE_DEVICE){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if it is a read command
+                    if(InTransaction == FALSE){
+                        // control read but direction is OUT
+                        StallEndPoint0();
+                        return;
+                    }
+
+                    // check if wLength = 0
+                    if((tSetupPacket.bLengthL | tSetupPacket.bLengthH)==0x00){
+                        // control read but wLength = 0
+                        StallEndPoint0();
+                        return;
+                    }else tEndPoint0DescriptorBlock.bOEPBCNT = 0x00;
+
+                    switch (tSetupPacket.bValueH)
+                    {
+                        case DESC_TYPE_DEVICE:
+                            bEp0TxBytesRemaining = SIZEOF_DEVICE_DESCRIPTOR;
+                            TransmitBufferOnEp0((PBYTE)&abDeviceDescriptor);
+                            break;
+
+                        case DESC_TYPE_CONFIG:
+                            bEp0TxBytesRemaining = SIZEOF_BOOTCODE_CONFIG_DESC_GROUP;
+                            TransmitBufferOnEp0((PBYTE)&abConfigurationDescriptorGroup);
+                            break;
+
+                        case DESC_TYPE_STRING:
+                        case DESC_TYPE_INTERFACE:
+                        case DESC_TYPE_ENDPOINT:
+                        default:
+                            StallEndPoint0();
+                            return;
+                    }
+                    break;
+
+                case USB_REQ_GET_CONFIGURATION:
+                    // check if recipient is device
+                    if((tSetupPacket.bmRequestType & USB_REQ_TYPE_RECIP_MASK) != USB_REQ_TYPE_DEVICE){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if it is a read command
+                    if(InTransaction == FALSE){
+                        // control read but direction is OUT
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if wIndex = 0x00
+                    if(tSetupPacket.bIndexL != 0x00){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if wValue = 0x00
+                    if((tSetupPacket.bValueL != 0x00) || (tSetupPacket.bValueH != 0x00)){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if wLength = 1
+                    if((tSetupPacket.bLengthL != 0x01) || (tSetupPacket.bLengthH!=0x00)){
+                        StallEndPoint0();
+                        return;
+                    }else tEndPoint0DescriptorBlock.bOEPBCNT = 0x00;
+
+                    bEp0TxBytesRemaining = 1;
+                    TransmitBufferOnEp0 ((PBYTE)&bConfiguredFlag);
+                    break;
+
+                case USB_REQ_SET_CONFIGURATION:
+                    // check if recipient is device
+                    if((tSetupPacket.bmRequestType & USB_REQ_TYPE_RECIP_MASK) != USB_REQ_TYPE_DEVICE){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if it is a write command
+                    if(InTransaction == TRUE){
+                        // control write but direction is IN
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if wIndex = 0x00
+                    if(tSetupPacket.bIndexL != 0x00){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if wLength = 0x00
+                    if((tSetupPacket.bLengthH != 0x00) || (tSetupPacket.bLengthL != 0x00)){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // control write, stall output endpoint 0
+                    // wLength should be 0 in all cases
+                    tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL;
+
+                    // check if bValueL is greater than 1
+                    if(tSetupPacket.bValueL > 0x01){
+                        StallEndPoint0();
+                        return;
+                    }
+                    bConfiguredFlag = tSetupPacket.bValueL;
+                    TransmitNullResponseOnEp0();
+                    return;
+
+                case USB_REQ_GET_INTERFACE:
+                    // check if recipient is interface
+                    if((tSetupPacket.bmRequestType & USB_REQ_TYPE_RECIP_MASK) != USB_REQ_TYPE_INTERFACE){
+                        StallEndPoint0();
+                        return;
+                    }
+                    if(tSetupPacket.bIndexL != 0x00){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if it is a read command
+                    if(InTransaction == FALSE){
+                        // control read but direction is OUT
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if wValue = 0x00
+                    if((tSetupPacket.bValueL != 0x00) || (tSetupPacket.bValueH != 0x00)){
+                        StallEndPoint0();
+                        return;
+                    }
+
+                    // check if wLength = 1
+                    if((tSetupPacket.bLengthL != 0x01) || (tSetupPacket.bLengthH != 0x00)){
+                        StallEndPoint0();
+                        return;
+                    }else tEndPoint0DescriptorBlock.bOEPBCNT = 0x00;
+
+                    bEp0TxBytesRemaining = 1;
+                    TransmitBufferOnEp0 ((PBYTE)baReturnBuffer);
+                    break;
+
+                case USB_REQ_SET_INTERFACE:
+                    // check if recipient is interface
+                    if((tSetupPacket.bmRequestType & USB_REQ_TYPE_RECIP_MASK) != USB_REQ_TYPE_INTERFACE){
+                        StallEndPoint0();
+                        return;
+                    }
+                    if(tSetupPacket.bIndexL != 0x00){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if it is a write command
+                    if(InTransaction == TRUE){
+                        // control write but direction is IN
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if wLength = 0x00
+                    if((tSetupPacket.bLengthL != 0x00) || (tSetupPacket.bLengthH != 0x00)){
+                        StallEndPoint0();
+                        return;
+                    }
+                    // check if wValue = 0x00
+                    if((tSetupPacket.bValueL != 0x00) || (tSetupPacket.bValueH != 0x00)){
+                        StallEndPoint0();
+                        return;
+                    }
+
+                    // control write, stall output endpoint 0
+                    // wLength should be 0 in all cases
+                    tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL;
+                    TransmitNullResponseOnEp0();
+                    return;
+
+                case USB_REQ_SET_DESCRIPTOR:
+                case USB_REQ_SYNCH_FRAME:
+                default:
+                    // stall input and output endpoint 0
+                    StallEndPoint0();
+                    return;
+            }
+            break;
+
+        case USB_REQ_TYPE_VENDOR:
+            // check if recipient is device
+            if((tSetupPacket.bmRequestType & USB_REQ_TYPE_RECIP_MASK) != USB_REQ_TYPE_DEVICE){
+                StallEndPoint0();
+                return;
+            }
+
+            // general requests related to fiemware
+            switch(tSetupPacket.bRequest){
+
+                case 0x80:                          // get bootcode status
+                    bEp0TxBytesRemaining = 4;
+                    TransmitBufferOnEp0 ((PBYTE)abBootCodeStatus);
+                    break;
+
+                case 0x81:                          // run firmware
+                    if(bFirmwareChecksum == bRAMChecksum){
+                        bExecuteFirmware = TRUE;
+                        bRAMChecksumCorrect = TRUE;
+                        TransmitNullResponseOnEp0();
+                    }else StallEndPoint0();
+                    break;
+
+                case 0x82:                          // Get firmware version
+                    wIndex = headerReturnFirmwareRevision();
+                    baReturnBuffer[0] = (BYTE)(wIndex & 0x00ff);
+                    baReturnBuffer[1] = (BYTE)(wIndex >> 8);
+                    bEp0TxBytesRemaining = 2;
+                    TransmitBufferOnEp0 ((PBYTE)baReturnBuffer);
+                    break;
+
+                case 0x83:                          // prepare for update header
+                    wCurrentUploadPointer   = 0x0000;
+                    wCurrentFirmwareAddress = 0x0000;
+                    bRAMChecksum            = 0x00;
+                    wFirmwareLength         = 0xffff; // skip firmware length/checksum
+                    TransmitNullResponseOnEp0();
+                    break;
+
+                case 0x84:                          // Update Header
+                    // bIndexH(BlockSize)
+                    // bIndexL(wait time)
+                    // wValueH(device type)
+                    // wValueL(device id)
+                    i2cSetMemoryType(tSetupPacket.bValueH);
+                    bi2cDeviceAddress = tSetupPacket.bValueL;
+                    if(UpdateHeader(wCurrentFirmwareAddress,
+                        tSetupPacket.bIndexH,tSetupPacket.bIndexL)==ERROR)
+                        StallEndPoint0();
+                    else TransmitNullResponseOnEp0();
+                    break;
+
+                case 0x85:                          // reboot
+                    bExecuteFirmware = TRUE;
+                    bRAMChecksumCorrect = FALSE;
+                    TransmitNullResponseOnEp0();
+                    break;
+
+                case 0x8f:                          // run firmware (forced run)
+                    bExecuteFirmware = TRUE;
+                    bRAMChecksumCorrect = TRUE;
+                    TransmitNullResponseOnEp0();
+                    break;
+
+                // for memory access for advanced feature
+                case 0x90:                          // external memory read
+                    wIndex = (WORD)(tSetupPacket.bIndexH << 0x08) + (WORD)tSetupPacket.bIndexL;
+                    baReturnBuffer[0] = *(pbExternalRAM+wIndex);
+
+                    bEp0TxBytesRemaining = 1;
+                    TransmitBufferOnEp0 ((PBYTE)baReturnBuffer);
+                    break;
+
+                case 0x91:                          // external memory write
+                    wIndex = (WORD)(tSetupPacket.bIndexH << 0x08) + (WORD)tSetupPacket.bIndexL;
+                    // address write, bValueL(data)
+                    *(pbExternalRAM+wIndex) = tSetupPacket.bValueL;
+                    TransmitNullResponseOnEp0();
+                    break;
+
+                case 0x92:                          // i2c memory read
+                    wIndex = (WORD)(tSetupPacket.bIndexH << 0x08) + (WORD)tSetupPacket.bIndexL;
+                    // bValueL : memory type (cat 1, cat 2, or cat 3), bit7:speed
+                    // bValueH : device number (A2-A0) 
+                    // wIndex : Address
+                    i2cSetMemoryType((tSetupPacket.bValueL & MASK_I2C_DEVICE_ADDRESS));
+                    if((tSetupPacket.bValueL & 0x80) != 0x00) i2cSetBusSpeed(I2C_400KHZ);
+                    else i2cSetBusSpeed(I2C_100KHZ);
+                    
+                    if(i2cRead(tSetupPacket.bValueH & MASK_I2C_DEVICE_ADDRESS,wIndex,1,&baReturnBuffer[0])==NO_ERROR){
+                        bEp0TxBytesRemaining = 1;
+                        TransmitBufferOnEp0 ((PBYTE)baReturnBuffer);
+                    }else StallEndPoint0();
+                    break;
+
+                case 0x93:                          // i2c memory write
+                    wIndex = (WORD)(tSetupPacket.bIndexH << 0x08) + (WORD)tSetupPacket.bIndexL;
+                    // address write, bValueL(data), bValueH(device number)
+                    baReturnBuffer[0] = tSetupPacket.bValueL;
+                    if(i2cWrite(tSetupPacket.bValueH & MASK_I2C_DEVICE_ADDRESS,wIndex,1,&baReturnBuffer[0])== NO_ERROR){
+                        DelaymSecond(0x05);
+                        TransmitNullResponseOnEp0();
+                    }else StallEndPoint0();
+                    break;
+
+                case 0x94:                          // internal ROM memory read
+                    wIndex = (WORD)(tSetupPacket.bIndexH << 0x08) + (WORD)tSetupPacket.bIndexL;
+                    baReturnBuffer[0] = *(pbInternalROM+wIndex);
+                    bEp0TxBytesRemaining = 1;
+                    TransmitBufferOnEp0 ((PBYTE)baReturnBuffer);
+                    break;
+
+#ifdef SIMULATION
+                // for internal testing only! Host driver should NOT make these requests
+                case 0xe0:                          // get current checksum
+                    baReturnBuffer[0] = bRAMChecksum;
+                    bEp0TxBytesRemaining = 1;
+                    TransmitBufferOnEp0 ((PBYTE)baReturnBuffer);
+                    break;
+
+                case 0xe1:                          // get downloaded size
+                    baReturnBuffer[0] = (BYTE)(wCurrentFirmwareAddress & 0x00ff);
+                    baReturnBuffer[1] = (BYTE)((wCurrentFirmwareAddress & 0xff00) >> 8);
+                    bEp0TxBytesRemaining = 2;
+                    TransmitBufferOnEp0 ((PBYTE)baReturnBuffer);
+                    break;
+
+                case 0xe2:                          // set download size and checksum
+                    // wValue(firmware size)
+                    // bIndexL(checksum)
+                    wCurrentFirmwareAddress = (WORD)(tSetupPacket.bValueH << 0x08) + (WORD)tSetupPacket.bValueL;
+                    bRAMChecksum            = tSetupPacket.bIndexL;
+                    TransmitNullResponseOnEp0();
+                    break;
+
+                case 0xF0:                          // ROM Address Dump
+                    wIndex = (WORD)(tSetupPacket.bIndexH << 0x08) + (WORD)tSetupPacket.bIndexL;
+                    lcdRomDump(wIndex,4);
+                    TransmitNullResponseOnEp0();
+                    break;
+
+                case 0xF1:                          // External Memory Dump
+                    wIndex = (WORD)(tSetupPacket.bIndexH << 0x08) + (WORD)tSetupPacket.bIndexL;
+                    lcdExternalMemoryDump(wIndex,4);
+                    TransmitNullResponseOnEp0();
+                    break;
+
+                case 0xF2:                          // I2C Dump
+                    wIndex = (WORD)(tSetupPacket.bIndexH << 0x08) + (WORD)tSetupPacket.bIndexL;
+                    lcdI2cDump(wIndex,4);
+                    TransmitNullResponseOnEp0();
+                    break;
+#endif
+
+                default:
+                    // stall input and output endpoint 0
+                    StallEndPoint0();
+                    return;
+            }
+            break;
+
+        case USB_REQ_TYPE_CLASS:
+        default:
+            StallEndPoint0();
+            return;
+    }
+}
+
+//----------------------------------------------------------------------------
+VOID UsbDataInitialization(VOID)
+{
+    bFUNADR                     = 0x00;         // no device address
+
+    bEp0TxBytesRemaining        = 0xff;         // no data remaining
+    pbEp0Buffer                 = (PBYTE)0x0000;
+    bConfiguredFlag             = 0x00;         // device unconfigured
+    bExecuteFirmware            = FALSE;        // a flag set by USB request
+                                                // before bootocode hands over
+                                                // control to firmware
+    bCurrentBuffer              = X_BUFFER;     // for firmware download
+
+    bRAMChecksumCorrect         = FALSE;
+    wCurrentFirmwareAddress     = 0x0000;
+    bRAMChecksum                = 0x00;
+    wFirmwareLength             = 0x0000;
+
+    // enable endpoint 0 interrupt
+    tEndPoint0DescriptorBlock.bIEPCNFG = EPCNF_USBIE | EPCNF_UBME;
+    tEndPoint0DescriptorBlock.bOEPCNFG = EPCNF_USBIE | EPCNF_UBME;
+
+    // enable endpoint 1 interrupt
+    tOutputEndPointDescriptorBlock[0].bEPCNF   = EPCNF_USBIE | EPCNF_UBME | EPCNF_DBUF;
+    tOutputEndPointDescriptorBlock[0].bEPBBAX  = (BYTE)(OEP1_X_BUFFER_ADDRESS >> 3 & 0x00ff);
+    tOutputEndPointDescriptorBlock[0].bEPBCTX  = 0x0000;
+    tOutputEndPointDescriptorBlock[0].bEPBBAY  = (BYTE)(OEP1_Y_BUFFER_ADDRESS >> 3 & 0x00ff);
+    tOutputEndPointDescriptorBlock[0].bEPBCTY  = 0x0000;
+    tOutputEndPointDescriptorBlock[0].bEPSIZXY = EP_MAX_PACKET_SIZE;
+
+    // Enable the USB-specific Interrupts; SETUP, RESET and STPOW
+    bUSBMSK = USBMSK_STPOW | USBMSK_SETUP | USBMSK_RSTR;
+
+    // enable port 3
+    bHUBCNFG   |= HUBCNFG_P3_FIXED;
+}
+
+//----------------------------------------------------------------------------
+VOID CopyDefaultSettings(VOID)
+{
+    BYTE bTemp;
+
+    // zeros out Bootcode status
+    abBootCodeStatus[0] = 0x00;
+    abBootCodeStatus[1] = 0x00;
+    abBootCodeStatus[2] = 0x00;
+    abBootCodeStatus[3] = 0x00;
+
+    // disconnect from USB
+    bUSBCTL = 0x00;             
+
+    // set default values for hub
+    bHUBPIDL = HUB_PID_L;
+    bHUBPIDH = HUB_PID_H;
+    bHUBVIDL = HUB_VID_L;
+    bHUBVIDH = HUB_VID_H;
+
+    // copy descriptor to allocated address
+    // copy device and configuration descriptor to external memory
+    for(bTemp=0;bTemp<SIZEOF_DEVICE_DESCRIPTOR;bTemp++)
+             abDeviceDescriptor[bTemp] = abromDeviceDescriptor[bTemp];
+
+    for(bTemp=0;bTemp<SIZEOF_BOOTCODE_CONFIG_DESC_GROUP;bTemp++)
+             abConfigurationDescriptorGroup[bTemp] = abromConfigurationDescriptorGroup[bTemp];
+
+    // Disable endpoints EP1
+    tOutputEndPointDescriptorBlock[0].bEPCNF = 0x00;
+
+    // set power wait time for the hub
+    bHUBPOTG = HUBPOTG_100MS;               // 100 ms from power-on to power-good
+
+    // set power rating for the hub
+    bHUBCURT = HUBCURT_100MA;               // 100 ms from power-on to power-good
+
+    // set i2c speed
+    i2cSetBusSpeed(I2C_400KHZ);
+
+    // set to 48Mhz
+    bMCNFG |= MCNFG_48MHZ;
+}
+
+/*---------------------------------------------------------------------------+
+|  Interrupt Sub-routines                                                     |
++---------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
+VOID SetupPacketInterruptHandler(VOID)
+{
+    bEp0TxBytesRemaining = 0xFF;        // setup packet received successfully
+    pbEp0Buffer = (PBYTE)0x0000;        // clear remaining to be transmitted on endpoint 0
+
+    Endpoint0Control();
+}
+
+//----------------------------------------------------------------------------
+VOID Ep0InputInterruptHandler(VOID)
+{
+    // check if the last packet sent
+
+    tEndPoint0DescriptorBlock.bOEPBCNT = 0x00;     // will be set by the hardware
+    if(bEp0TxBytesRemaining == 0xff){
+        // last packet just sent, stall input endpoint 0
+        // so error conditions would occurs when host asks more data
+        tEndPoint0DescriptorBlock.bIEPCNFG |= EPCNF_STALL;
+    }else FillEp0TxWithNextDataPacket();
+}
+
+//----------------------------------------------------------------------------
+VOID Ep0OutputInterruptHandler(VOID)
+{
+    // happened only in status stage
+    // Bootrom doesn't handle data stage of control write.
+    // stall for any OUT, this will be cleared in the setup stage.
+    tEndPoint0DescriptorBlock.bOEPCNFG |= EPCNF_STALL;
+}
+
+//----------------------------------------------------------------------------
+VOID Ep1OutputInterruptHandler(VOID)
+{
+    BYTE bTemp,bSize,bCode;
+
+    // check if it is the first packet
+    if(wFirmwareLength == 0x0000){
+        wFirmwareLength   = (WORD)pbXBufferAddress[0];
+        wFirmwareLength  += (WORD)(pbXBufferAddress[1] << 8);
+        bFirmwareChecksum = pbXBufferAddress[2];
+
+        bSize = tOutputEndPointDescriptorBlock[0].bEPBCTX & EPBCT_BYTECNT_MASK;
+
+        for(bTemp=3;bTemp<bSize;bTemp++){
+            bCode = pbXBufferAddress[bTemp];
+            abDownloadFirmware[wCurrentFirmwareAddress] = bCode;
+            bRAMChecksum += bCode;
+            wCurrentFirmwareAddress++;
+        }
+        bCurrentBuffer = Y_BUFFER;
+
+        // clear NAK bit
+        tOutputEndPointDescriptorBlock[0].bEPBCTX = 0x00;
+
+    }else{
+        if(bCurrentBuffer == X_BUFFER){
+            // firgure out the size of packet
+            bSize = tOutputEndPointDescriptorBlock[0].bEPBCTX & EPBCT_BYTECNT_MASK;
+
+            for(bTemp=0;bTemp<bSize;bTemp++){
+                bCode = pbXBufferAddress[bTemp];
+                abDownloadFirmware[wCurrentFirmwareAddress] = bCode;
+                bRAMChecksum += bCode;
+                wCurrentFirmwareAddress++;
+            }
+            bCurrentBuffer = Y_BUFFER;
+
+            // clear NAK bit
+            tOutputEndPointDescriptorBlock[0].bEPBCTX = 0x00;
+
+        }else{ // data in y buffer
+            // firgure out the size of packet
+            bSize = tOutputEndPointDescriptorBlock[0].bEPBCTY & EPBCT_BYTECNT_MASK;
+
+            for(bTemp=0;bTemp<bSize;bTemp++){
+                bCode = pbYBufferAddress[bTemp];
+                abDownloadFirmware[wCurrentFirmwareAddress] = bCode;
+                bRAMChecksum += bCode;
+                wCurrentFirmwareAddress++;
+            }
+            bCurrentBuffer = X_BUFFER;
+
+            // clear NAK bit
+            tOutputEndPointDescriptorBlock[0].bEPBCTY = 0x00;
+        }
+    }
+
+    // check if firmware is ready
+    if((WORD)wCurrentFirmwareAddress >= wFirmwareLength){
+
+        // check is checksum is correct
+        if(bRAMChecksum == bFirmwareChecksum){
+            #ifdef SIMULATION
+            lcdPutString("USB Checksum Correct!");
+            DelaymSecond(2000);
+            #endif
+            bExecuteFirmware = TRUE;
+            bRAMChecksumCorrect = TRUE;
+        }else{
+            #ifdef SIMULATION
+            lcdPutString("USB Checksum Incorrect!");
+            DelaymSecond(2000);
+            #endif
+            bRAMChecksumCorrect = FALSE;
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------+
+|  Interrupt Service Routines                                                 |
++---------------------------------------------------------------------------*/
+interrupt [0x03] VOID EX0_int(VOID)         // External Interrupt 0
+{
+    EA = DISABLE;                           // Disable any further interrupts
+    
+    switch (bVECINT){                       // Identify Interrupt ID
+
+        case VECINT_OUTPUT_ENDPOINT0:
+                bVECINT  = 0x00;
+                Ep0OutputInterruptHandler();
+                break;
+
+        case VECINT_INPUT_ENDPOINT0:
+                bVECINT  = 0x00;
+                Ep0InputInterruptHandler();
+                break;
+
+        case VECINT_OUTPUT_ENDPOINT1:
+                bVECINT  = 0x00;
+                Ep1OutputInterruptHandler();
+                break;
+
+        case VECINT_STPOW_PACKET_RECEIVED:
+                SetupPacketInterruptHandler();
+                // clear setup packet flag
+                bUSBSTA = USBSTA_STPOW;
+                bVECINT  = 0x00;
+                break;
+
+        case VECINT_SETUP_PACKET_RECEIVED:
+                SetupPacketInterruptHandler();
+                // clear setup packet flag
+                bUSBSTA = USBSTA_SETUP;
+                bVECINT  = 0x00;
+                break;
+
+        case VECINT_RSTR_INTERRUPT:
+                UsbDataInitialization();
+                // clear reset flag
+                bUSBSTA = USBSTA_RSTR;
+                bVECINT  = 0x00;
+
+                #ifdef SIMULATION
+                lcdPutString("USB RESET!");
+                #endif
+                break;
+
+        default:break;               // unknown interrupt ID
+    }
+
+    EA      = ENABLE;               // Enable the interrupts again
+}
+
+//----------------------------------------------------------------------------
+VOID main(VOID)
+{
+    #ifdef SIMULATION
+    WORD wAddress;
+    BYTE abTest[10];
+    for(wAddress = 0; wAddress < 0x8000; wAddress++) 
+        abDownloadFirmware[wAddress] = 0x00;
+    gpioInitialization();
+    lcdPutString("TUSB2136 BootSim");
+    DelaymSecond(300);
+
+// clear i2c
+//    for(wAddress=0x0100; wAddress < 0x200;wAddress+=8){
+//        i2cWrite(0x00,wAddress,8,abNullHeader);
+//        DelaymSecond(20);
+//   }
+    #endif
+
+    CopyDefaultSettings();
+    UsbDataInitialization();
+
+    // partial support due to memory size
+    if(headerSearchForValidHeader() == DATA_MEDIUM_HEADER_I2C){
+
+        #ifdef SIMULATION
+        lcdPutString("i2cfound!");
+        #endif
+
+        if(headerGetDataType(1) == DATA_TYPE_HEADER_HUB_INFO_BASIC){
+                if(headerProcessCurrentDataType()==MSG_HEADER_NO_ERROR){
+                #ifdef SIMULATION
+                lcdPutString("usbinfo");
+                #endif
+                bRAMChecksumCorrect = TRUE;
+            }
+        }
+
+        if(headerGetDataType(2) == DATA_TYPE_HEADER_FIRMWARE_BASIC){
+            if(headerProcessCurrentDataType()==MSG_HEADER_NO_ERROR){
+                #ifdef SIMULATION
+                lcdPutString("firmware");
+                #endif
+                bRAMChecksumCorrect = TRUE;
+                bExecuteFirmware = TRUE;
+            }
+        }
+    }
+
+    if(bExecuteFirmware == FALSE){
+
+        // use default value
+        EA          = ENABLE;           // Enable global interrupt
+        EX0         = ENABLE;           // Enable interrupt 0
+        bUSBCTL    |= USBCTL_CONT;      // connect to upstream port
+
+        #ifdef SIMULATION
+        lcdPutString("Connecting");
+        bUSBCTL    |= 0xc0;
+        #endif
+
+        while(bExecuteFirmware == FALSE);
+    }
+
+    // Disable all interrupts
+    EA = DISABLE;                       // disable global interrupt
+
+    // disconnection
+    bUSBCTL = USBCTL_FRSTE;
+
+    // map xdata to code space if checksum correct
+    // now application code is in code space
+    if(bRAMChecksumCorrect == TRUE){
+        #ifdef SIMULATION
+        lcdPutStringXY(0,2,"Set Shadow Bit");
+        DelaymSecond(4000);
+        #endif
+        bMCNFG |= MCNFG_SDW;
+    }else{
+        #ifdef SIMULATION
+        lcdPutStringXY(0,2,"Shadow Bit Not Set!");
+        DelaymSecond(4000);
+        #endif
+    }
+    (*(void(*)(void))0x0000)();     // run firmware now
+}
+
+
+
+
+
+
+File #7:  Header.h
+
+/*----------------------------------------------------------------------------+
+|                                                                             |
+|                             Texas Instruments                               |
+|                                                                             |
+|                                 Header                                      |
+|                                                                             |
++-----------------------------------------------------------------------------+
+|  Source: header.h, v 1.0 2000/05/28 12:59:29                                |
+|  Author: Texas Instuments                                                   |
+|  Header: (none)                                                             |
+|                                                                             |
+|  For more information, please contact usb@ti.com                            |
+|                                                                             |
+|                                                                             |
+|  Logs:                                                                      |
+|                                                                             |
+|  WHO     WHEN         WHAT                                                  |
+|  ---     --------     ----------------------------------------------------- |
+|  HMT     20000528     born                                                  |
+|                                                                             |
++----------------------------------------------------------------------------*/
+
+#ifndef _HEADER_H_
+#define _HEADER_H_
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+/*----------------------------------------------------------------------------+
+| Include files (none)                                                        |
++----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------+
+| Function Prototype                                                          |
++----------------------------------------------------------------------------*/
+BYTE headerSearchForValidHeader(VOID);
+BYTE headerGetDataType(WORD wNumber);
+BYTE headerProcessCurrentDataType(VOID);
+WORD headerReturnFirmwareRevision(VOID);
+BOOL UpdateHeader(WORD wHeaderSize, BYTE bBlockSize, BYTE bWaitTime);
+
+/*----------------------------------------------------------------------------+
+| Type Definition & Macro                                                     |
++----------------------------------------------------------------------------*/
+typedef struct _tHeaderPrefix
+{
+    BYTE    bDataType;
+    BYTE    bDataSize_L;
+    BYTE    bDataSize_H;
+    BYTE    bDataChecksum;
+} tHeaderPrefix, *ptHeaderPrefix;
+
+typedef struct _tFirmwareRevision
+{
+    BYTE bMinor;
+    BYTE bMajor;
+} tFirmwareRevision, *ptFirmwareRevision;
+
+typedef struct _tHeaderUsbInfoBasic
+{
+    BYTE    bBitSetting;            // Bit 0: Bus/self power in bUSBCRL
+                                    // Bit 6: Individual/Gang Power Control
+                                    // Bit 7: PWRSW
+    BYTE    bVID_L;                 // Vendor ID 
+    BYTE    bVID_H;            
+    BYTE    bPID_HUB_L;             // Hub Product ID
+    BYTE    bPID_HUB_H;
+    BYTE    bPID_FUNC_L;            // Function Product ID
+    BYTE    bPID_FUNC_H;
+    BYTE    bHubPotg;               // Time from power-on to power-good
+    BYTE    bHubCurt;               // HUB Current descriptor register
+} tHeaderUsbInfoBasic, *ptHeaderUsbInfoBasic;
+
+typedef struct _tHeaderFirmwareBasic
+{
+    BYTE    bFirmwareRev_L;         // Application Revision
+    BYTE    bFirmwareRev_H;
+    PBYTE   pbFirmwareCode;
+} tHeaderFirmwareBasic, *ptHeaderFirmwareBasic;
+
+
+/*----------------------------------------------------------------------------+
+| Constant Definition                                                         |
++----------------------------------------------------------------------------*/
+#define OFFSET_HEADER_SIGNATURE0            0x00
+#define OFFSET_HEADER_SIGNATURE1            0x01
+#define OFFSET_HEADER_FIRST_DATA_SECTION    0x02
+
+#define DATA_TYPE_HEADER_END                        0x00
+#define DATA_TYPE_HEADER_HUB_INFO_BASIC             0x01
+#define DATA_TYPE_HEADER_FIRMWARE_BASIC             0x02
+#define DATA_TYPE_HEADER_USB_DEV_CONFG_DESCRIPTOR   0x03
+#define DATA_TYPE_HEADER_USB_STRING_DESCRIPTOR      0x04        
+#define DATA_TYPE_HEADER_RESERVED                   0xFF
+
+#define BIT_HEADER_PWRSW                    0x80        // Hub Power Switching
+#define BIT_HEADER_IG                       0x40        // Hub Power Ind or Group
+#define BIT_HEADER_BSPWR                    0x01        // Bus or Self Powered
+
+#define DATA_MEDIUM_HEADER_NO               0x00
+#define DATA_MEDIUM_HEADER_I2C              0x01
+#define DATA_MEDIUM_HEADER_FLASH            0x02
+#define DATA_MEDIUM_HEADER_ROM              0x03
+#define DATA_MEDIUM_HEADER_RAM              0x04
+
+#define MSG_HEADER_NO_ERROR                 0x00
+#define MSG_HEADER_CHECKSUM_ERROR           0x01
+#define MSG_HEADER_DATA_TYPE_ERROR          0x02
+#define MSG_HEADER_DATA_MEDIUM_ERROR        0x03
+
+/*----------------------------------------------------------------------------+
+| End of header file                                                          |
++----------------------------------------------------------------------------*/
+
+
+#ifdef __cplusplus
+}
+#endif
+#endif /* _HEADER_H_ */
+
+
+
+
+
+File #8:  Header.c
+
+/*----------------------------------------------------------------------------+
+|                                                                             |
+|                             Texas Instruments                               |
+|                                                                             |
+|                                 Header                                      |
+|                                                                             |
++-----------------------------------------------------------------------------+
+|  Source: header.c, v 1.0 2000/05/28 12:59:29                                |
+|  Author: Texas Instuments                                                   |
+|  Header: (none)                                                             |
+|                                                                             |
+|  For more information, please contact usb@ti.com                            |
+|                                                                             |
+|                                                                             |
+|  Release Notes:                                                             |
+|                                                                             |
+|        External EEPROM Format                                               |
+|        ----------------------                                               |
+|                                                                             |
+|        Offset   Type          Size    Value & Remark                        |
+|        ------   ----          ----    --------------                        |
+|        0        Signature0    1       0x36, FUNCTION_PID_L                  |
+|        1        Signature1    1       0x21, FUNCTION_PID_H                  |
+|        2        Data Type     1       0x00 = End                            |
+|                                       0x01 = USB Info Basic                 |
+|                                       0x02 = Application Code               |
+|                                       0x03..0xEF Reserved                   |
+|                                       0xff = Reserved for Extended Data     |
+|        3        Data Size     2       Size of Data                          |
+|                                       9 for TUSB5152 and TUSB2136 Usb Info  |
+|        5        Check Sum     1       Check Sum of Data Section             |
+|        6        Bit Setting   1       Bit 0: Bus/self power in bUSBCRL      |
+|        7        VID           2       Vendor ID                             |
+|        9        PID hub       2       Product ID for hub                    |
+|        11       PID device    2       Product ID for bootrom                |
+|        13       HUBPOTG       1       Time from power-on to power-good      |
+|        14       HUBCURT       1       HUB Current descriptor register       |
+|                                                                             |
+|        The following examples is for application code                       |
+|                                                                             |
+|        15       Data Type     1       0x00 = End                            |
+|                                       0x02 = Application Code               |
+|        16       Data Size     2       Size of Data Section                  |
+|        18       Check Sum     1       Check Sum of Data Section             |
+|        19       App. Rev.     2       Application Code Revision             |
+|                                                                             |
+|        21       Application Code Starts here...                             |
+|                                                                             |
+|  Logs:                                                                      |
+|                                                                             |
+|  WHO     WHEN         WHAT                                                  |
+|  ---     --------     ----------------------------------------------------- |
+|  HMT     20000528     born                                                  |
+|  HMT     20000724     headerSearchForValidHeader()                          |
+|                       check type III first to fix the could-be problem      |
+|                       when type II protocol is used while type III is on bus|
+|  HMT     20000726     switch back to type ii first, but add the dummy read  |
+|  HMT     20000731     re-format the file                                    |
+|                                                                             |
++----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------+
+| Include files                                                               |
++----------------------------------------------------------------------------*/
+#include <io51.h>       // 8051 sfr definition
+#include "types.h"
+#include "tusb2136.h"
+#include "header.h"
+#include "i2c.h"
+#include "usb.h"
+#include "delay.h"
+
+#ifdef SIMULATION
+#include "gpio.h"
+#endif
+
+/*----------------------------------------------------------------------------+
+| External Function Prototype (none)                                          |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| External Variables                                                          |
++----------------------------------------------------------------------------*/
+#pragma memory = dataseg(TUSB2136_DESC_SEG)             // 0xfe00
+extern BYTE abDeviceDescriptor[SIZEOF_DEVICE_DESCRIPTOR];
+extern BYTE abConfigurationDescriptorGroup[SIZEOF_BOOTCODE_CONFIG_DESC_GROUP];
+extern BYTE abStringDescriptor[SIZEOF_BOOTCODE_STRING_DESC_GROUP];
+#pragma memory = default
+
+#pragma memory = dataseg(TUSB2136_OEP1_X_BUFFER_SEG)    // 0xfd80
+extern BYTE pbXBufferAddress[EP_MAX_PACKET_SIZE];
+#pragma memory = default
+#define abEepromHeader pbXBufferAddress
+
+#pragma memory = dataseg(TUSB2136_EXTERNAL_RAM_SEG)    // 0x0000
+extern BYTE abDownloadFirmware[1024*16];
+#pragma memory = default
+
+/*----------------------------------------------------------------------------+
+| Internal Type Definition & Macro (none)                                     |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Internal Constant Definition (none)                                         |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Internal Variables                                                          |
++----------------------------------------------------------------------------*/
+// Local Variables
+#pragma memory = idata
+BYTE    bCurrentHeaderMediumType;
+ULONG   ulCurrentHeaderPointer;
+BYTE    bCurrentDataType;
+WORD    wCurrentDataSize;
+BYTE    bCurrentDataChecksum;
+tFirmwareRevision    tCurrentFirmwareRevision;
+WORD    wCurrentUploadPointer;
+BYTE    bi2cDeviceAddress;
+#pragma memory = default
+
+/*----------------------------------------------------------------------------+
+| Global Variables (none)                                                     |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Hardware Related Structure Definition (none)                                |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| System Initialization Routines (none)                                       |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| General Subroutines                                                         |
++----------------------------------------------------------------------------*/
+BYTE headerCheckProductIDonI2c(VOID)
+{
+    // in simulation, if error, abEepromHeader could be xx.
+    abEepromHeader[0] = 0x00;
+    abEepromHeader[1] = 0x00;
+    abEepromHeader[2] = 0x00;
+    abEepromHeader[3] = 0x00;
+    
+    if(i2cRead(bi2cDeviceAddress, 0x0000, 0x02, &abEepromHeader[0]) == NO_ERROR){
+        if((abEepromHeader[0] == FUNCTION_PID_L) && (abEepromHeader[1] == FUNCTION_PID_H)){
+            bCurrentHeaderMediumType = DATA_MEDIUM_HEADER_I2C;
+            return DATA_MEDIUM_HEADER_I2C;
+        }
+    }
+    return DATA_MEDIUM_HEADER_NO;
+}
+//----------------------------------------------------------------------------
+// only support i2c due to memory size
+BYTE headerSearchForValidHeader(VOID)
+{
+    // check CAT II
+    #ifdef SIMULATION
+    lcdPutString("CAT II ");
+    #endif
+    i2cSetMemoryType(I2C_CATEGORY_2);
+    // dummy read to prevent false read if type III is on the bus
+    for(bi2cDeviceAddress=0;bi2cDeviceAddress<8;bi2cDeviceAddress++)
+        i2cRead(bi2cDeviceAddress, 0x0002, 0x02, &abEepromHeader[0]);
+
+    // read real value
+    for(bi2cDeviceAddress=0;bi2cDeviceAddress<8;bi2cDeviceAddress++)
+        if(headerCheckProductIDonI2c()==DATA_MEDIUM_HEADER_I2C) return DATA_MEDIUM_HEADER_I2C;
+
+    // check CAT III
+    #ifdef SIMULATION
+    lcdPutString("CAT III ");
+    #endif
+    i2cSetMemoryType(I2C_CATEGORY_3);
+    for(bi2cDeviceAddress=0;bi2cDeviceAddress<8;bi2cDeviceAddress++)
+        if(headerCheckProductIDonI2c()==DATA_MEDIUM_HEADER_I2C)return DATA_MEDIUM_HEADER_I2C; 
+
+    return DATA_MEDIUM_HEADER_NO;
+}
+
+//----------------------------------------------------------------------------
+// only support i2c due to memory size
+BYTE headerGetDataType(WORD wNumber)
+{
+    WORD wAddress;
+    tHeaderPrefix tData;
+
+    bCurrentDataType        = DATA_TYPE_HEADER_END;
+    wAddress                = OFFSET_HEADER_FIRST_DATA_SECTION;
+
+    if(bCurrentHeaderMediumType == DATA_MEDIUM_HEADER_I2C){
+        while(wNumber != 0x0000){
+            i2cRead(bi2cDeviceAddress, wAddress, sizeof(tHeaderPrefix),(PBYTE)&tData);
+            bCurrentDataType     = tData.bDataType;
+            wCurrentDataSize     = (WORD)tData.bDataSize_L;
+            wCurrentDataSize    += (WORD)(tData.bDataSize_H << 8);
+            bCurrentDataChecksum = tData.bDataChecksum;
+            wAddress            += (wCurrentDataSize+sizeof(tHeaderPrefix));
+            wNumber--;
+        }
+
+        if(wAddress != OFFSET_HEADER_FIRST_DATA_SECTION)
+            ulCurrentHeaderPointer = (ULONG)(wAddress-wCurrentDataSize);
+        else ulCurrentHeaderPointer = OFFSET_HEADER_FIRST_DATA_SECTION;
+    }
+    return bCurrentDataType;
+}
+
+//----------------------------------------------------------------------------
+BYTE LoadFirmwareBasicFromI2c(VOID)
+{
+    BYTE bChecksum;
+    WORD wAddressI2c;
+    WORD wProgramSize,wAddress;
+
+    wAddressI2c = (WORD)ulCurrentHeaderPointer;
+    
+    if(i2cRead(bi2cDeviceAddress, wAddressI2c, sizeof(tCurrentFirmwareRevision), 
+               (PBYTE)&tCurrentFirmwareRevision) == ERROR) return ERROR;
+
+    wProgramSize         = wCurrentDataSize - sizeof(tFirmwareRevision);
+    wAddressI2c          = wAddressI2c + sizeof(tFirmwareRevision);
+         
+    if(i2cRead(bi2cDeviceAddress,wAddressI2c,
+        wProgramSize, &abDownloadFirmware[0x0000]) != NO_ERROR) return ERROR;
+       
+    // get Checksum from RAM
+    bChecksum  = tCurrentFirmwareRevision.bMinor;
+    bChecksum += tCurrentFirmwareRevision.bMajor;
+    
+    for(wAddress=0x0000;wAddress<wProgramSize;wAddress++)
+        bChecksum += abDownloadFirmware[wAddress];
+           
+    if(bCurrentDataChecksum != bChecksum) return ERROR;
+    else return NO_ERROR;
+}
+//----------------------------------------------------------------------------
+// only support i2c due to memory size
+BYTE LoadUsbInfoBasicFromI2c(VOID)
+{
+    BYTE bTemp,bChecksum;
+    WORD wTemp,wAddress;
+    tHeaderUsbInfoBasic *ptUsbInfoBasic;
+
+
+    wAddress = ulCurrentHeaderPointer;
+
+    ptUsbInfoBasic = (tHeaderUsbInfoBasic *)abEepromHeader;
+    if(i2cRead(bi2cDeviceAddress,wAddress,
+       wCurrentDataSize, &abEepromHeader[0x0000]) != NO_ERROR) return ERROR;
+       
+    // get check sum
+    bChecksum = 0x00;   
+    for(wTemp=0x0000;wTemp<wCurrentDataSize;wTemp++)
+        bChecksum += abEepromHeader[wTemp];
+ 
+    // check if the data is for hub info
+    if(bChecksum == bCurrentDataChecksum){
+
+        // download VID and VIP Information from EEPROM
+        bHUBVIDL = ptUsbInfoBasic->bVID_L;
+        bHUBVIDH = ptUsbInfoBasic->bVID_H;
+        bHUBPIDL = ptUsbInfoBasic->bPID_HUB_L;
+        bHUBPIDH = ptUsbInfoBasic->bPID_HUB_H;
+
+        // update device descriptor
+        abDeviceDescriptor[OFFSET_DEVICE_DESCRIPTOR_PID_L]
+                  = ptUsbInfoBasic->bPID_FUNC_L;
+        abDeviceDescriptor[OFFSET_DEVICE_DESCRIPTOR_PID_H]
+                  = ptUsbInfoBasic->bPID_FUNC_H;
+        abDeviceDescriptor[OFFSET_DEVICE_DESCRIPTOR_VID_L] = bHUBVIDL;
+        abDeviceDescriptor[OFFSET_DEVICE_DESCRIPTOR_VID_H] = bHUBVIDH;
+
+        // Time for power-on to power-good
+        bHUBPOTG = ptUsbInfoBasic->bHubPotg;
+        #ifdef SIMULATION
+        lcdPutString("POTG=");
+        lcdPutByte(ptUsbInfoBasic->bHubPotg);
+        #endif
+
+        // set power rating for the hub
+        bHUBCURT = ptUsbInfoBasic->bHubCurt;
+        #ifdef SIMULATION
+        lcdPutString("CURT=");
+        lcdPutByte(ptUsbInfoBasic->bHubCurt);
+        #endif
+
+        // set PWRSW
+        bTemp = ptUsbInfoBasic->bBitSetting & BIT_HEADER_PWRSW;
+        if(bTemp == BIT_HEADER_PWRSW){
+            bHUBCNFG |= HUBCNFG_PWRSW;
+            #ifdef SIMULATION
+            lcdPutString("PWRSW!");
+            #endif
+        }
+        
+       // bus-powered or self-powered
+        if((bUSBCTL & USBCTL_SELF) == USBCTL_SELF){ // self-powered
+            abConfigurationDescriptorGroup[OFFSET_CONFIG_DESCRIPTOR_POWER]= (BYTE)(0x80 | CFG_DESC_ATTR_SELF_POWERED);
+            #ifdef SIMULATION
+            lcdPutString("Self!");
+            #endif
+
+        }else{
+            #ifdef SIMULATION
+            lcdPutString("Bus!");
+            #endif
+        }
+ 
+    }else{
+            #ifdef SIMULATION
+            lcdPutString("IDCSERR!");
+            #endif
+            return ERROR;
+    }
+    return NO_ERROR;
+}
+
+//----------------------------------------------------------------------------
+// only support i2c due to memory size
+BYTE headerProcessCurrentDataType(VOID)
+{
+    if(bCurrentHeaderMediumType == DATA_MEDIUM_HEADER_I2C){
+        if(bCurrentDataType == DATA_TYPE_HEADER_HUB_INFO_BASIC){
+            if(LoadUsbInfoBasicFromI2c() == ERROR) return MSG_HEADER_CHECKSUM_ERROR;
+        }else if(bCurrentDataType == DATA_TYPE_HEADER_FIRMWARE_BASIC){
+            if(LoadFirmwareBasicFromI2c() == ERROR) return MSG_HEADER_CHECKSUM_ERROR;
+        }else return MSG_HEADER_DATA_TYPE_ERROR;
+    }else return MSG_HEADER_DATA_MEDIUM_ERROR;
+    
+    return MSG_HEADER_NO_ERROR;
+}
+
+//----------------------------------------------------------------------------
+WORD headerReturnFirmwareRevision(VOID)
+{
+    WORD wCurrentFirmwareRevision;
+    
+    wCurrentFirmwareRevision  = (WORD)tCurrentFirmwareRevision.bMajor << 8;
+    wCurrentFirmwareRevision |= tCurrentFirmwareRevision.bMinor;
+    
+    return wCurrentFirmwareRevision;
+}
+//----------------------------------------------------------------------------
+// only support i2c due to memory size
+BOOL UpdateHeader(WORD wHeaderSize, BYTE bBlockSize, BYTE bWaitTime)
+{
+    WORD wAddress;
+
+#ifdef SIMULATION
+    lcdPutString("upload");
+    lcdPutByte(bBlockSize);
+    lcdPutByte(bWaitTime);
+    lcdPutWord(wHeaderSize);
+    lcdPutWord(wCurrentUploadPointer);
+#endif
+
+    wAddress        = 0x0000;
+    if(wHeaderSize >= (WORD)bBlockSize){
+        // writer each block
+        do{
+            if(i2cWrite(bi2cDeviceAddress,wCurrentUploadPointer, 
+                (WORD)bBlockSize,(PBYTE)&abDownloadFirmware[wAddress]) 
+                != NO_ERROR) return ERROR;
+
+            wCurrentUploadPointer = wCurrentUploadPointer + (WORD)bBlockSize;
+            wAddress    = wAddress + (WORD)bBlockSize;
+
+            DelaymSecond((WORD)bWaitTime);
+        }while((wAddress + (WORD)bBlockSize) <= wHeaderSize);
+    }
+    
+    // writer partial block
+    while(wAddress < wHeaderSize){           
+        if(i2cWrite(bi2cDeviceAddress,wCurrentUploadPointer,0x0001,
+            (PBYTE)&abDownloadFirmware[wAddress]) != NO_ERROR) return ERROR;
+        DelaymSecond((WORD)bWaitTime);
+        wAddress++;
+        wCurrentUploadPointer++;
+    }
+    return NO_ERROR;
+}
+
+/*----------------------------------------------------------------------------+
+| Interrupt Sub-routines (none)                                               |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Interrupt Service Routines (none)                                           |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| End of source file                                                          |
++----------------------------------------------------------------------------*/
+
+
+
+
+
+File #9:  I2c.h
+
+/*----------------------------------------------------------------------------+
+|                                                                             |
+|                             Texas Instruments                               |
+|                                                                             |
+|                               I2C Header File                               |
+|                                                                             |
++-----------------------------------------------------------------------------+
+|  Source: i2c.h, v 1.0 1999/11/24 16:01:49                                   |
+|  Author: Texas Instuments                                                   |
+|  Header: (none)                                                             |
+|                                                                             |
+|  For more information, please contact usb@ti.com                            |
+|                                                                             |
+|                                                                             |
+|  Release Notes:                                                             |
+|                                                                             |
+|      If no error occurs, return NO_ERROR(=0).                               |
+|                                                                             |
+|  Logs:                                                                      |
+|                                                                             |
+|  WHO     WHEN         WHAT                                                  |
+|  ---     --------     ----------------------------------------------------- |
+|  HMT     19991124     born                                                  |
+|  HMT     20000614     revised function calls and cat i,ii and iii.          |
+|                                                                             |
++----------------------------------------------------------------------------*/
+#ifndef _I2C_H_
+#define _I2C_H_
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+/*----------------------------------------------------------------------------+
+| Include files                                                               |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Function Prototype                                                          |
++----------------------------------------------------------------------------*/
+VOID i2cSetBusSpeed(BYTE bBusSpeed);
+VOID i2cSetMemoryType(BYTE bType);
+BYTE i2cRead(BYTE bDeviceAddress, WORD wAddress, WORD wNumber, PBYTE pbDataArray);
+BYTE i2cWrite(BYTE bDeviceAddress, WORD wAddress, WORD wNumber, PBYTE pbDataArray);
+
+/*----------------------------------------------------------------------------+
+| Type Definition & Macro                                                     |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Constant Definition                                                         |
++----------------------------------------------------------------------------*/
+#define I2C_DEVICE_ADDRESS_DEFAULT 0
+#define I2C_100KHZ          0
+#define I2C_400KHZ          1
+
+#define I2C_CATEGORY_1      1
+#define I2C_CATEGORY_2      2
+#define I2C_CATEGORY_3      3
+#define I2C_CATEGORY_LAST   3
+
+#define BIT_I2C_READ        1
+
+#define BIT_I2C_DEVICE_TYPE_MEMORY  0xA0
+
+#define MASK_I2C_DEVICE_ADDRESS     0x07
+
+/*----------------------------------------------------------------------------+
+| End of header file                                                          |
++----------------------------------------------------------------------------*/
+#ifdef __cplusplus
+}
+#endif
+#endif /* _I2C_H_ */
+
+
+
+
+
+
+
+
+File #10:  I2c.c
+
+/*----------------------------------------------------------------------------+
+|                                                                             |
+|                             Texas Instruments                               |
+|                                                                             |
+|                                   I2C                                       |
+|                                                                             |
++-----------------------------------------------------------------------------+
+|  Source: i2c.c, v 1.0 99/01/28 11:00:36                                     |
+|  Author: Texas Instuments                                                   |
+|  Header: (none)                                                             |
+|                                                                             |
+|  For more information, please contact usb@ti.com                            |
+|                                                                             |
+|                                                                             |
+|       Notes:                                                                |
+|                                                                             |
+|  WHO     WHEN         WHAT                                                  |
+|  ---     --------     ----------------------------------------------------- |
+|  HMT     19990128     born                                                  |
+|  HMT     19990414     add the following functions (SiCore's format)         |
+|  HMT     19990423     modified i2cWaitForRead & i2cWaitForWrite             |
+|                       to write '1' clear and removed eUMP functions         |
+|  HMT     19990611     fixed bug in i2cRead when bNumber is 1                |
+|  HMT     19991124     port to usb keyboard                                  |
+|  HMT     20000122     add control code 0xa0                                 |
+|  HMT     20000614     add to support cat i,ii, and iii devices              |
+|  HMT     20000615     i2c on cat 2 device:                                  |
+|                       some cat 2 uses A0,A1 and A2(or partially) but some   |
+|                       donesn't. Therefore, in the i2c routine, if the       |
+|                       address is more than 0xff, it will overwirte the      |
+|                       device address by higher data address. In this way,   |
+|                       routine can cover most of devices with minor issues.  |
+|                                                                             |
+|                                                                             |
++----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------+
+| Include files                                                               |
++----------------------------------------------------------------------------*/
+#include "types.h"
+#include "i2c.h"
+#include "tusb2136.h"
+
+#ifdef I2C_TEST
+#include "delay.h"
+#include "gpio.h"
+#endif
+
+/*----------------------------------------------------------------------------+
+| External Function Prototype (none)                                          |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| External Variables (none)                                                   |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Internal Type Definition & Macro (none)                                     |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Internal Constant Definition (none)                                         |
++----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------+
+| Internal Variables                                                          |
++----------------------------------------------------------------------------*/
+static BYTE bDeviceCategory;
+
+/*----------------------------------------------------------------------------+
+| Global Variables (none)                                                     |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Hardware Related Structure Definition (none)                                |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| System Initialization Routines (none)                                       |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| General Subroutines                                                         |
++----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
+VOID i2cSetBusSpeed(BYTE bBusSpeed)
+{
+    if(bBusSpeed == I2C_400KHZ) bI2CSTA |= I2CSTA_400K;     // set bus speed at 400Khz
+    else bI2CSTA &= ~I2CSTA_400K;                           // set bus speed at 100Khz
+}
+
+//----------------------------------------------------------------------------
+VOID i2cSetMemoryType(BYTE bType)
+{
+    if( bType > I2C_CATEGORY_LAST) return;                          // invalid memory type
+    else bDeviceCategory = bType;
+}
+
+//----------------------------------------------------------------------------
+BYTE i2cWaitForRead(VOID)
+{
+    // wait until data is ready or ERR=1
+    while((bI2CSTA & I2CSTA_RXF) != I2CSTA_RXF)
+        if(bI2CSTA & I2CSTA_ERR){
+            bI2CSTA |= I2CSTA_ERR;          // clear error flag
+            return ERROR;
+        }
+    return NO_ERROR;
+}
+
+//----------------------------------------------------------------------------
+BYTE i2cWaitForWrite(VOID)
+{
+    // wait until TXE bit is cleared or ERR=1
+    while((bI2CSTA & I2CSTA_TXE) != I2CSTA_TXE)
+        if(bI2CSTA & I2CSTA_ERR){
+            bI2CSTA |= I2CSTA_ERR;          // clear error flag
+            return ERROR;
+        }
+    return NO_ERROR;
+}
+
+//----------------------------------------------------------------------------
+BYTE i2cRead(BYTE bDeviceAddress, WORD wAddress, WORD wNumber, PBYTE pbDataArray)
+{
+    BYTE bTemp,bHiAddress;
+    
+    bI2CSTA &= ~(I2CSTA_SRD | I2CSTA_SWR);  // clear SRD abnd SWR bit
+
+    // If error, return a value other than zero.
+    if(wNumber == 0x00) return NO_ERROR;
+
+    if(bDeviceCategory == I2C_CATEGORY_1){
+        // cat 1
+        bI2CADR = (BYTE)((wAddress << 1) | BIT_I2C_READ);
+    }else{
+        // cat 2 or 3
+        bTemp    = bDeviceAddress & MASK_I2C_DEVICE_ADDRESS;    // write device address and RW=0
+        bTemp    = bTemp << 1;                           
+        bTemp   |= BIT_I2C_DEVICE_TYPE_MEMORY;                  // add control code
+
+        // check if data address is higher than 0xff in cat 2 device
+        if((bDeviceCategory == I2C_CATEGORY_2) && (wAddress > 0x00ff)){
+            bHiAddress = (wAddress >> 8) & MASK_I2C_DEVICE_ADDRESS;
+            bHiAddress  = bHiAddress << 1;
+            bTemp      |= bHiAddress;
+        }
+        bI2CADR = bTemp;                            // write out device address
+
+        if(bDeviceCategory == I2C_CATEGORY_3){
+            bI2CDAO  =  (BYTE)(wAddress >> 8);      // write out high byte of address
+            if(i2cWaitForWrite() != NO_ERROR) return ERROR;     // bus error
+        }
+
+        bI2CDAO  =  (BYTE)(wAddress & 0xff);        // write out low byte of address
+        if(i2cWaitForWrite() != NO_ERROR) return ERROR;         // bus error
+
+        bI2CADR = (bTemp | BIT_I2C_READ);           // setup read
+    }
+
+    bI2CDAO = 0x00;                                 // start read
+
+    // SRD should be cleared
+    if(wNumber > 1){
+        while(wNumber > 1){
+            if(i2cWaitForRead() != NO_ERROR) return ERROR;  // bus error
+            if(wNumber == 2) bI2CSTA |= I2CSTA_SRD;
+            *pbDataArray++ = bI2CDAI;
+            wNumber--;
+        }
+    }else bI2CSTA |= I2CSTA_SRD;
+
+    // read the last byte
+    if(i2cWaitForRead() != NO_ERROR) return ERROR;              // bus error
+    *pbDataArray = bI2CDAI;
+    return NO_ERROR;
+}
+
+//----------------------------------------------------------------------------
+BYTE i2cWrite(BYTE bDeviceAddress, WORD wAddress, WORD wNumber, PBYTE pbDataArray)
+{
+    BYTE bTemp,bHiAddress;
+    
+    bI2CSTA &= ~(I2CSTA_SRD | I2CSTA_SWR);  // clear SRD abnd SWR bit
+
+    // If error, return a value other than zero.
+    if(wNumber == 0x00) return NO_ERROR;
+
+    if(bDeviceCategory == I2C_CATEGORY_1){
+        // cat 1
+        bI2CADR = (BYTE)(wAddress << 1);
+    }else{
+        // cat 2 or 3
+        bTemp    = bDeviceAddress & MASK_I2C_DEVICE_ADDRESS;    // write device address and RW=0
+        bTemp    = bTemp << 1;                           
+        bTemp   |= BIT_I2C_DEVICE_TYPE_MEMORY;                  // add control code
+
+        // check if data address is higher than 0xff in cat 2 device
+        if((bDeviceCategory == I2C_CATEGORY_2) && (wAddress > 0x00ff)){
+            bHiAddress  = (BYTE)(wAddress >> 8) & MASK_I2C_DEVICE_ADDRESS;
+            bHiAddress  = bHiAddress << 1;
+            bTemp      |= bHiAddress;
+        }
+        bI2CADR = bTemp;                            // write out device address
+
+        if(bDeviceCategory == I2C_CATEGORY_3){
+            bI2CDAO  =  (BYTE)(wAddress >> 8);      // write out high byte of address
+            if(i2cWaitForWrite() != NO_ERROR) return ERROR;     // bus error
+        }
+
+        bI2CDAO  =  (BYTE)(wAddress & 0xff);        // write out low byte of address
+        if(i2cWaitForWrite() != NO_ERROR) return ERROR;         // bus error
+    }
+
+    // SRD should be cleared.
+    while(wNumber > 1){
+        bI2CDAO = *pbDataArray++;
+        if(i2cWaitForWrite() != NO_ERROR) return ERROR;          // bus error
+        wNumber--;
+    }
+
+    // write the last byte
+    bI2CSTA |= I2CSTA_SWR;                          // set SWR bit
+    bI2CDAO  = *pbDataArray;                        // write out the data
+
+    if(i2cWaitForWrite() != NO_ERROR) return ERROR;             // bus error
+    return NO_ERROR;
+}
+
+/*----------------------------------------------------------------------------+
+| Interrupt Sub-routines (none)                                               |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Interrupt Service Routines (none)                                           |
++----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------+
+| Main Routine                                                                |
++----------------------------------------------------------------------------*/
+#ifdef I2C_TEST
+
+#define TEST_PATTERN_SIZE   8
+#define TEST_PAGE_SIZE      8
+
+#define TEST_SIZE_CAT3      0x4000
+#define TEST_SIZE_CAT2      0X0100
+
+BYTE code abTestPattern[8]      = {0x51,0xa2,0x93,0xf0,0x0f,0xff,0x81,0x00};
+BYTE code abTestPatternClear[8] = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
+BYTE code abTestPattern1[8]     = {0x12,0x34,0x56,0x78,0x9a,0xbd,0xde,0xef};
+
+//----------------------------------------------------------------------------
+VOID TestRandom(BYTE bCat,WORD wSize)
+{
+    WORD wAddress;
+    BYTE bTemp,bRC;
+
+    i2cSetBusSpeed(I2C_400KHZ);
+    i2cSetMemoryType(bCat);
+
+    for(wAddress=0;wAddress < wSize;wAddress++){
+        for(bTemp=0;bTemp<TEST_PATTERN_SIZE;bTemp++){
+            lcdPutStringXY(0,1,"Address : ");
+            lcdPutWord(wAddress);
+            lcdPutStringXY(0,2,"Data : ");
+            lcdPutByte(abTestPattern[bTemp]);
+            i2cWrite(0x00,wAddress,1,&abTestPattern[bTemp]);
+            DelaymSecond(5);
+            i2cWrite(0x00,wAddress+1,1,&abTestPattern[bTemp+1]);
+            DelaymSecond(5);
+
+            i2cRead(0x00,0X0000,1,&bRC);
+            i2cRead(0x00,wAddress,1,&bRC);
+
+            if(bRC != abTestPattern[bTemp]){
+                lcdPutStringXY(0,3,"ERROR!!");
+                lcdPutString("read(");
+                lcdPutByte(bRC);
+                lcdPutString(")");
+                lcdPutString("write(");                
+                lcdPutByte(abTestPattern[bTemp]);
+                lcdPutString(")");
+                while(1);
+            }
+        }
+    }
+}
+//----------------------------------------------------------------------------
+VOID TestPage(BYTE bCat,WORD wSize,BYTE bTestPassternSize)
+{
+    WORD wAddress;
+    BYTE bTemp,abRc[0x50];
+
+    i2cSetBusSpeed(I2C_400KHZ);
+    i2cSetMemoryType(bCat);
+
+    for(wAddress = 0;wAddress < wSize;wAddress+=bTestPassternSize){
+        lcdPutStringXY(0,1,"Address : ");
+        lcdPutWord(wAddress);
+        i2cWrite(0x00,wAddress,bTestPassternSize,&abTestPatternClear[0]);
+        DelaymSecond(5);
+        i2cWrite(0x00,wAddress,bTestPassternSize,&abTestPattern[0]);
+        DelaymSecond(5);
+        i2cRead(0x00,wAddress,bTestPassternSize,&abRc[0]);
+        for(bTemp=0;bTemp<bTestPassternSize;bTemp++){
+            if(abRc[bTemp] != abTestPattern[bTemp]){
+                lcdPutStringXY(0,3,"ERROR!!");
+                lcdPutString("read(");
+                lcdPutByte(abRc[bTemp]);
+                lcdPutString(")");
+                lcdPutString("write(");                
+                lcdPutByte(abTestPattern[bTemp]);
+                lcdPutString(")");
+                while(1);
+            }
+        }
+    }
+}
+
+//----------------------------------------------------------------------------
+VOID TestCat3Random(VOID)
+{
+    gpioInitialization();
+    lcdPutString("Test i2c memory");
+
+    lcdPutString(":Random R/W Test on CAT3");
+    TestRandom(I2C_CATEGORY_3,TEST_SIZE_CAT3);
+}
+
+//----------------------------------------------------------------------------
+VOID TestCat3Page(VOID)
+{
+    gpioInitialization();
+    lcdPutString("Test i2c memory");
+    lcdPutString(":Page R/W Test on CAT3");
+
+    TestPage(I2C_CATEGORY_3,TEST_SIZE_CAT3,TEST_PATTERN_SIZE);
+}
+//----------------------------------------------------------------------------
+VOID TestCat2Random(VOID)
+{
+    gpioInitialization();
+    lcdPutString("Test i2c memory");
+
+    lcdPutString(":Random R/W Test on CAT2");
+    TestRandom(I2C_CATEGORY_2,TEST_SIZE_CAT2);
+}
+
+//----------------------------------------------------------------------------
+VOID TestCat2Page(VOID)
+{
+    gpioInitialization();
+    lcdPutString("Test i2c memory");
+    lcdPutString(":Page R/W Test on CAT2");
+    TestPage(I2C_CATEGORY_2,TEST_SIZE_CAT2,TEST_PATTERN_SIZE);
+}
+//----------------------------------------------------------------------------
+VOID main(VOID)
+{
+//    TestCat3Random();
+//    TestCat3Page();
+//  TestCat2Random();
+    TestCat2Page();
+    lcdPutStringXY(0,3,"Done!");
+    lcdI2cDump(0x07f0,4);
+    while(1);
+}
+#endif
+
+/*----------------------------------------------------------------------------+
+| End of source file                                                          |
++----------------------------------------------------------------------------*/

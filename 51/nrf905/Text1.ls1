@@ -1,0 +1,302 @@
+A51 MACRO ASSEMBLER  TEXT1                                                                12/15/2009 15:29:07 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN Text1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE Text1.src PR(.\Text1.ls1) EP DEBUG
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ; .\Text1.SRC generated from: Text1.c
+                       2     ; COMPILER INVOKED BY:
+                       3     ;        C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND SRC(.\Text1.SRC)
+                       4     
+                       5     $nomod51 
+                       6     
+                       7     NAME    TEXT1
+                       8     
+  0080                 9     P0      DATA    080H
+  0090                10     P1      DATA    090H
+  00A0                11     P2      DATA    0A0H
+  00B0                12     P3      DATA    0B0H
+  00B4                13     T0      BIT     0B0H.4
+  00D6                14     AC      BIT     0D0H.6
+  00B5                15     T1      BIT     0B0H.5
+  00AF                16     EA      BIT     0A8H.7
+  00A8                17     IE      DATA    0A8H
+  00B7                18     RD      BIT     0B0H.7
+  00AC                19     ES      BIT     0A8H.4
+  00B8                20     IP      DATA    0B8H
+  0098                21     RI      BIT     098H.0
+  00B2                22     INT0    BIT     0B0H.2
+  00D7                23     CY      BIT     0D0H.7
+  0099                24     TI      BIT     098H.1
+  00B3                25     INT1    BIT     0B0H.3
+  00BC                26     PS      BIT     0B8H.4
+  0081                27     SP      DATA    081H
+  00D2                28     OV      BIT     0D0H.2
+  00B6                29     WR      BIT     0B0H.6
+  0099                30     SBUF    DATA    099H
+  0087                31     PCON    DATA    087H
+  0098                32     SCON    DATA    098H
+  0089                33     TMOD    DATA    089H
+  0088                34     TCON    DATA    088H
+  0089                35     IE0     BIT     088H.1
+  008B                36     IE1     BIT     088H.3
+  00F0                37     B       DATA    0F0H
+  00E0                38     ACC     DATA    0E0H
+  00A9                39     ET0     BIT     0A8H.1
+  00AB                40     ET1     BIT     0A8H.3
+  008D                41     TF0     BIT     088H.5
+  008F                42     TF1     BIT     088H.7
+  009A                43     RB8     BIT     098H.2
+  008C                44     TH0     DATA    08CH
+  00A8                45     EX0     BIT     0A8H.0
+  0088                46     IT0     BIT     088H.0
+  008D                47     TH1     DATA    08DH
+  009B                48     TB8     BIT     098H.3
+  00AA                49     EX1     BIT     0A8H.2
+  008A                50     IT1     BIT     088H.2
+  00D0                51     P       BIT     0D0H.0
+  009F                52     SM0     BIT     098H.7
+  008A                53     TL0     DATA    08AH
+  009E                54     SM1     BIT     098H.6
+  008B                55     TL1     DATA    08BH
+  009D                56     SM2     BIT     098H.5
+  00B9                57     PT0     BIT     0B8H.1
+  00BB                58     PT1     BIT     0B8H.3
+A51 MACRO ASSEMBLER  TEXT1                                                                12/15/2009 15:29:07 PAGE     2
+
+  00D3                59     RS0     BIT     0D0H.3
+  008C                60     TR0     BIT     088H.4
+  00D4                61     RS1     BIT     0D0H.4
+  008E                62     TR1     BIT     088H.6
+  00B8                63     PX0     BIT     0B8H.0
+  00BA                64     PX1     BIT     0B8H.2
+  0083                65     DPH     DATA    083H
+  0082                66     DPL     DATA    082H
+  009C                67     REN     BIT     098H.4
+  00B0                68     RXD     BIT     0B0H.0
+  00B1                69     TXD     BIT     0B0H.1
+  00D5                70     F0      BIT     0D0H.5
+  00D0                71     PSW     DATA    0D0H
+                      72     ?PR?main?TEXT1       SEGMENT CODE 
+                      73     ?DT?TEXT1            SEGMENT DATA 
+                      74             EXTRN   CODE (_check_config_nrf905)
+                      75             EXTRN   DATA (?_check_config_nrf905?BYTE)
+                      76             EXTRN   CODE (_init_port_nrf905)
+                      77             EXTRN   CODE (_transmit_nrf905)
+                      78             EXTRN   CODE (_config_nrf905)
+                      79             EXTRN   CODE (_delay_nrf905)
+                      80             EXTRN   CODE (_listen_nrf905)
+                      81             EXTRN   CODE (?C_STARTUP)
+                      82             PUBLIC  j
+                      83             PUBLIC  i
+                      84             PUBLIC  a?
+                      85             PUBLIC  txbuf
+                      86             PUBLIC  rxbuf
+                      87             PUBLIC  state
+                      88             PUBLIC  txaddr
+                      89             PUBLIC  rxaddr
+                      90             PUBLIC  main
+                      91     
+----                  92             RSEG  ?DT?TEXT1
+0000                  93              rxaddr:   DS   4
+0004                  94              txaddr:   DS   4
+0008                  95               state:   DS   1
+0009                  96               rxbuf:   DS   32
+0029                  97               txbuf:   DS   32
+0049                  98                  a?:   DS   10
+0053                  99                   i:   DS   1
+0054                 100                   j:   DS   1
+                     101     ; #include <reg51.h>
+                     102     ; 
+                     103     ; #include "nrf905.h"
+                     104     ; /********************
+                     105     ; /OE---PG4
+                     106     ; DIR---PE4
+                     107     ; 
+                     108     ; CSN--------PB0         o
+                     109     ; SCK--------PB1         o
+                     110     ; MOSI-------PB2         o
+                     111     ; MISO-------PB3         i
+                     112     ; TXE--------PB4         o
+                     113     ; CE---------PB5         o
+                     114     ; PWR--------PB6         o
+                     115     ; AM---------PE7         i
+                     116     ; DR---------PE6         i
+                     117     ; CD---------PE5         i
+                     118     ; ********************/
+                     119     ; unsigned char i,j;
+                     120     ; unsigned char txbuf[32];//发送缓存
+                     121     ; unsigned char rxbuf[32];//接收缓存
+                     122     ; unsigned char txaddr[4];//发送地址
+                     123     ; unsigned char rxaddr[4];//接收地址
+                     124     ; unsigned char state;//当前状态：0空闲；1接收；2发射
+A51 MACRO ASSEMBLER  TEXT1                                                                12/15/2009 15:29:07 PAGE     3
+
+                     125     ; RF_CONFIG a;//全局变量，便于观察配置寄存器
+                     126     ; void main(void)
+                     127     
+----                 128             RSEG  ?PR?main?TEXT1
+0000                 129     main:
+                     130             USING   0
+                     131                             ; SOURCE LINE # 26
+                     132     ; {
+                     133                             ; SOURCE LINE # 27
+                     134     ; 
+                     135     ;       init_port_nrf905(&a);
+                     136                             ; SOURCE LINE # 29
+0000 7B00            137             MOV     R3,#00H
+0002 7A00     F      138             MOV     R2,#HIGH (a?)
+0004 7900     F      139             MOV     R1,#LOW (a?)
+0006 120000   F      140             LCALL   _init_port_nrf905
+                     141     ;       STAND_BY_MODE;
+                     142     ;       delay_nrf905(100);
+                     143                             ; SOURCE LINE # 31
+0009 7F64            144             MOV     R7,#064H
+000B 7E00            145             MOV     R6,#00H
+000D 120000   F      146             LCALL   _delay_nrf905
+                     147     ;       config_nrf905(&a);
+                     148                             ; SOURCE LINE # 32
+0010 7B00            149             MOV     R3,#00H
+0012 7A00     F      150             MOV     R2,#HIGH (a?)
+0014 7900     F      151             MOV     R1,#LOW (a?)
+0016 120000   F      152             LCALL   _config_nrf905
+                     153     ;       check_config_nrf905(&a,txaddr);
+                     154                             ; SOURCE LINE # 33
+0019 750000   F      155             MOV     ?_check_config_nrf905?BYTE+03H,#00H
+001C 750000   F      156             MOV     ?_check_config_nrf905?BYTE+04H,#HIGH (txaddr)
+001F 750000   F      157             MOV     ?_check_config_nrf905?BYTE+05H,#LOW (txaddr)
+0022 7B00            158             MOV     R3,#00H
+0024 7A00     F      159             MOV     R2,#HIGH (a?)
+0026 7900     F      160             MOV     R1,#LOW (a?)
+0028 120000   F      161             LCALL   _check_config_nrf905
+002B                 162     ?C0001:
+                     163     ;       while(1)
+                     164                             ; SOURCE LINE # 34
+                     165     ;       {
+                     166                             ; SOURCE LINE # 35
+                     167     ;               transmit_nrf905(txbuf);
+                     168                             ; SOURCE LINE # 36
+002B 7B00            169             MOV     R3,#00H
+002D 7A00     F      170             MOV     R2,#HIGH (txbuf)
+002F 7900     F      171             MOV     R1,#LOW (txbuf)
+0031 120000   F      172             LCALL   _transmit_nrf905
+                     173     ;               delay_nrf905(1000);
+                     174                             ; SOURCE LINE # 37
+0034 7FE8            175             MOV     R7,#0E8H
+0036 7E03            176             MOV     R6,#03H
+0038 120000   F      177             LCALL   _delay_nrf905
+                     178     ;               listen_nrf905(rxbuf);
+                     179                             ; SOURCE LINE # 38
+003B 7B00            180             MOV     R3,#00H
+003D 7A00     F      181             MOV     R2,#HIGH (rxbuf)
+003F 7900     F      182             MOV     R1,#LOW (rxbuf)
+0041 120000   F      183             LCALL   _listen_nrf905
+                     184     ;       }
+                     185                             ; SOURCE LINE # 39
+0044 80E5            186             SJMP    ?C0001
+                     187     ; END OF main
+                     188     
+                     189             END
+A51 MACRO ASSEMBLER  TEXT1                                                                12/15/2009 15:29:07 PAGE     4
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                     T Y P E  V A L U E   ATTRIBUTES
+
+?C0001 . . . . . . . . . .  C ADDR   002BH   R   SEG=?PR?MAIN?TEXT1
+?C_STARTUP . . . . . . . .  C ADDR   -----       EXT
+?DT?TEXT1. . . . . . . . .  D SEG    0055H       REL=UNIT
+?PR?MAIN?TEXT1 . . . . . .  C SEG    0046H       REL=UNIT
+?_CHECK_CONFIG_NRF905?BYTE  D ADDR   -----       EXT
+A? . . . . . . . . . . . .  D ADDR   0049H   R   SEG=?DT?TEXT1
+AC . . . . . . . . . . . .  B ADDR   00D0H.6 A   
+ACC. . . . . . . . . . . .  D ADDR   00E0H   A   
+B. . . . . . . . . . . . .  D ADDR   00F0H   A   
+CY . . . . . . . . . . . .  B ADDR   00D0H.7 A   
+DPH. . . . . . . . . . . .  D ADDR   0083H   A   
+DPL. . . . . . . . . . . .  D ADDR   0082H   A   
+EA . . . . . . . . . . . .  B ADDR   00A8H.7 A   
+ES . . . . . . . . . . . .  B ADDR   00A8H.4 A   
+ET0. . . . . . . . . . . .  B ADDR   00A8H.1 A   
+ET1. . . . . . . . . . . .  B ADDR   00A8H.3 A   
+EX0. . . . . . . . . . . .  B ADDR   00A8H.0 A   
+EX1. . . . . . . . . . . .  B ADDR   00A8H.2 A   
+F0 . . . . . . . . . . . .  B ADDR   00D0H.5 A   
+I. . . . . . . . . . . . .  D ADDR   0053H   R   SEG=?DT?TEXT1
+IE . . . . . . . . . . . .  D ADDR   00A8H   A   
+IE0. . . . . . . . . . . .  B ADDR   0088H.1 A   
+IE1. . . . . . . . . . . .  B ADDR   0088H.3 A   
+INT0 . . . . . . . . . . .  B ADDR   00B0H.2 A   
+INT1 . . . . . . . . . . .  B ADDR   00B0H.3 A   
+IP . . . . . . . . . . . .  D ADDR   00B8H   A   
+IT0. . . . . . . . . . . .  B ADDR   0088H.0 A   
+IT1. . . . . . . . . . . .  B ADDR   0088H.2 A   
+J. . . . . . . . . . . . .  D ADDR   0054H   R   SEG=?DT?TEXT1
+MAIN . . . . . . . . . . .  C ADDR   0000H   R   SEG=?PR?MAIN?TEXT1
+OV . . . . . . . . . . . .  B ADDR   00D0H.2 A   
+P. . . . . . . . . . . . .  B ADDR   00D0H.0 A   
+P0 . . . . . . . . . . . .  D ADDR   0080H   A   
+P1 . . . . . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . . . . . .  D ADDR   00A0H   A   
+P3 . . . . . . . . . . . .  D ADDR   00B0H   A   
+PCON . . . . . . . . . . .  D ADDR   0087H   A   
+PS . . . . . . . . . . . .  B ADDR   00B8H.4 A   
+PSW. . . . . . . . . . . .  D ADDR   00D0H   A   
+PT0. . . . . . . . . . . .  B ADDR   00B8H.1 A   
+PT1. . . . . . . . . . . .  B ADDR   00B8H.3 A   
+PX0. . . . . . . . . . . .  B ADDR   00B8H.0 A   
+PX1. . . . . . . . . . . .  B ADDR   00B8H.2 A   
+RB8. . . . . . . . . . . .  B ADDR   0098H.2 A   
+RD . . . . . . . . . . . .  B ADDR   00B0H.7 A   
+REN. . . . . . . . . . . .  B ADDR   0098H.4 A   
+RI . . . . . . . . . . . .  B ADDR   0098H.0 A   
+RS0. . . . . . . . . . . .  B ADDR   00D0H.3 A   
+RS1. . . . . . . . . . . .  B ADDR   00D0H.4 A   
+RXADDR . . . . . . . . . .  D ADDR   0000H   R   SEG=?DT?TEXT1
+RXBUF. . . . . . . . . . .  D ADDR   0009H   R   SEG=?DT?TEXT1
+RXD. . . . . . . . . . . .  B ADDR   00B0H.0 A   
+SBUF . . . . . . . . . . .  D ADDR   0099H   A   
+SCON . . . . . . . . . . .  D ADDR   0098H   A   
+SM0. . . . . . . . . . . .  B ADDR   0098H.7 A   
+SM1. . . . . . . . . . . .  B ADDR   0098H.6 A   
+SM2. . . . . . . . . . . .  B ADDR   0098H.5 A   
+SP . . . . . . . . . . . .  D ADDR   0081H   A   
+STATE. . . . . . . . . . .  D ADDR   0008H   R   SEG=?DT?TEXT1
+T0 . . . . . . . . . . . .  B ADDR   00B0H.4 A   
+A51 MACRO ASSEMBLER  TEXT1                                                                12/15/2009 15:29:07 PAGE     5
+
+T1 . . . . . . . . . . . .  B ADDR   00B0H.5 A   
+TB8. . . . . . . . . . . .  B ADDR   0098H.3 A   
+TCON . . . . . . . . . . .  D ADDR   0088H   A   
+TEXT1. . . . . . . . . . .  N NUMB   -----       
+TF0. . . . . . . . . . . .  B ADDR   0088H.5 A   
+TF1. . . . . . . . . . . .  B ADDR   0088H.7 A   
+TH0. . . . . . . . . . . .  D ADDR   008CH   A   
+TH1. . . . . . . . . . . .  D ADDR   008DH   A   
+TI . . . . . . . . . . . .  B ADDR   0098H.1 A   
+TL0. . . . . . . . . . . .  D ADDR   008AH   A   
+TL1. . . . . . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . . . . . .  B ADDR   0088H.4 A   
+TR1. . . . . . . . . . . .  B ADDR   0088H.6 A   
+TXADDR . . . . . . . . . .  D ADDR   0004H   R   SEG=?DT?TEXT1
+TXBUF. . . . . . . . . . .  D ADDR   0029H   R   SEG=?DT?TEXT1
+TXD. . . . . . . . . . . .  B ADDR   00B0H.1 A   
+WR . . . . . . . . . . . .  B ADDR   00B0H.6 A   
+_CHECK_CONFIG_NRF905 . . .  C ADDR   -----       EXT
+_CONFIG_NRF905 . . . . . .  C ADDR   -----       EXT
+_DELAY_NRF905. . . . . . .  C ADDR   -----       EXT
+_INIT_PORT_NRF905. . . . .  C ADDR   -----       EXT
+_LISTEN_NRF905 . . . . . .  C ADDR   -----       EXT
+_TRANSMIT_NRF905 . . . . .  C ADDR   -----       EXT
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

@@ -1,0 +1,17 @@
+<html>
+<body>
+<pre>
+<h1>礦ision2 Build Log</h1>
+<h2>Project:</h2>
+C:\Documents and Settings\a\My Documents\新建文件夹\吴金杭让做的点阵\jinhang.uv2
+Project File Date:  10/19/2008
+
+<h2>Output:</h2>
+Build target '目标 1'
+compiling jinhang.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LONGDELAY?JINHANG
+Program Size: data=12.0 xdata=0 code=333
+creating hex file from "jinhang"...
+"jinhang" - 0 Error(s), 1 Warning(s).

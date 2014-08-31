@@ -1,0 +1,4 @@
+Change Component Footprint: Designator=C1 Old Footprint=RAD-0.3 New Footprint=C_0.2
+Change Component Footprint: Designator=C2 Old Footprint=RAD-0.3 New Footprint=C_0.2
+Change Component Footprint: Designator=C3 Old Footprint=RAD-0.3 New Footprint=C_0.2
+Added Room: Name=Sheet1

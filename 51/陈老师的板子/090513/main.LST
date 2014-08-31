@@ -1,0 +1,139 @@
+C51 COMPILER V8.02   MAIN                                                                  05/13/2009 22:00:17 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /*******************************************************
+   2          说明：数码管显示
+   3          一，二数码管显示AD输出（必须按下S4触发int0中断之后）
+   4          3位显示是否有AD输出
+   5          4，5位空闲
+   6          6位显示555的触发频率（0-F）
+   7          7，8位空闲
+   8          *******************************************************/
+   9          #include <absacc.h>
+  10          #include <reg52.h>
+  11          #include <stdarg.h>
+  12          #include <stdio.h>
+  13          sbit key1=P1^0;
+  14          sbit key2=P1^1;
+  15          sbit buz=P1^3;
+  16          unsigned char tcount=0;
+  17          #define PORTA XBYTE[0x8fff]
+  18          #define PORTB XBYTE[0x9fff]
+  19          #define PORTC XBYTE[0xafff]
+  20          #define CADDR XBYTE[0xbfff]
+  21          #define ADREAD XBYTE[0x00ff]
+  22          unsigned char table[]={
+  23          0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00
+  24          };
+  25          unsigned char buffer[8]={0,0,0,0,0,0,0,0};
+  26          void delay(unsigned char j)
+  27          {
+  28   1              unsigned char i,k;
+  29   1              for(i=123;i;i--)
+  30   1              for(k=5;k;k--)
+  31   1              for(;j;j--);
+  32   1      }
+  33          void shortdelay(void)
+  34          {
+  35   1              unsigned char i;
+  36   1              for(i=200;i;i--);
+  37   1      }
+  38          void buzzer(unsigned char i)
+  39          {
+  40   1              buz=0;
+  41   1              delay(i);
+  42   1              buz=1;
+  43   1              shortdelay();
+  44   1      }
+  45          void show(unsigned char *buf)
+  46          {
+  47   1              unsigned char i;
+  48   1              CADDR=0x80;
+  49   1              PORTC=0xff;
+  50   1              PORTB=0xfe;
+  51   1              PORTA=0x00;
+  52   1              for(i=0;i<8;i++)
+  53   1              {
+  54   2                      PORTA=table[buf[i]];
+  55   2                      delay(7);
+C51 COMPILER V8.02   MAIN                                                                  05/13/2009 22:00:17 PAGE 2   
+
+  56   2                      PORTB<<=1;
+  57   2                      PORTB+=1;
+  58   2              }
+  59   1      }
+  60          void int0(void)interrupt 0 using 1
+  61          {
+  62   1              unsigned char i;
+  63   1              IT1=1;
+  64   1              EX1=1;
+  65   1              ADREAD=0;
+  66   1              for(i=0;i<8;i++)
+  67   1              {
+  68   2                      buffer[i]=0;
+  69   2              }
+  70   1              buzzer();
+*** WARNING C209 IN LINE 70 OF MAIN.C: '_buzzer': too few actual parameters
+  71   1      }
+  72          
+  73          void int1(void)interrupt 2 using 2
+  74          {
+  75   1      //      EX1=0;
+  76   1              buffer[2]=1;
+  77   1              buffer[0]=ADREAD/16;
+  78   1              buffer[1]=ADREAD%16;
+  79   1      }
+  80          void t1(void)interrupt 3 using 2
+  81          {
+  82   1              if(tcount==0)
+  83   1              {
+  84   2                      TR0=1;
+  85   2              }
+  86   1              TH1=(65536-50000)/256;
+  87   1              TL1=(65536-50000)%256;
+  88   1              tcount++;
+  89   1              if(tcount==20)
+  90   1              {
+  91   2                      TR0=0;
+  92   2                      buffer[5]=TL0;
+  93   2                      TL0=0;
+  94   2                      tcount=0;
+  95   2              }
+  96   1      }
+  97          
+  98          void main(void)
+  99          {
+ 100   1              EX0=1;
+ 101   1              ET1=1;
+ 102   1              TMOD=0x16;
+ 103   1              TH1=(65536-50000)/256;
+ 104   1              TL1=(65536-50000)%256;
+ 105   1              TR1=1;
+ 106   1              while(1)
+ 107   1              {
+ 108   2                      show(buffer);
+ 109   2              }
+ 110   1              
+ 111   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    245    ----
+   CONSTANT SIZE    =   ----    ----
+C51 COMPILER V8.02   MAIN                                                                  05/13/2009 22:00:17 PAGE 3   
+
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     26       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

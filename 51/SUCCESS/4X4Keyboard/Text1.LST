@@ -1,0 +1,76 @@
+C51 COMPILER V7.00  TEXT1                                                                  07/28/2008 10:26:26 PAGE 1   
+
+
+C51 COMPILER V7.00, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Elecs\Keilc\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <at89x51.h>
+   2          #include <intrins.h>
+   3          unsigned char x;
+   4          unsigned char code Tab[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,
+             -0x00,0x40};
+   5          unsigned char code KeyTab[]={0x81,0x41,0x21,0x11,0x82,0x42,0x22,0x12,0x84,0x44,0x24,0x14,0x88,0x48,0x28,0x
+             -18};
+   6          void delay(void)
+   7          {
+   8   1              unsigned char i,j;
+   9   1              for(i=1;i;i--)for(j=0x88;j;j--)_nop_();
+  10   1      }
+  11          
+  12          
+  13          
+  14          
+  15          
+  16          unsigned char Key(void)
+  17          {
+  18   1              unsigned char d,i;
+  19   1              P1=0xf0;
+  20   1              if(P1!=0xf0)
+  21   1              {
+  22   2                      delay();
+  23   2                      P1=0xf0;
+  24   2                      if(P1!=0xf0)
+  25   2                      {
+  26   3                              d=P1;
+  27   3                              P1=0x0f;
+  28   3                              d&=P1;
+  29   3                      }
+  30   2              }
+  31   1              for(i=0;i<16;i++)
+  32   1              {
+  33   2                      if(KeyTab[i]==d)
+  34   2                      break;
+  35   2              }
+  36   1              
+  37   1              return i;
+  38   1      }
+  39          void main(void)
+  40          {
+  41   1              
+  42   1              while(1)
+  43   1              {
+  44   2                      P3=Tab[Key()];
+  45   2                      delay();
+  46   2      
+  47   2              }
+  48   1      }
+  49          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     70    ----
+C51 COMPILER V7.00  TEXT1                                                                  07/28/2008 10:26:26 PAGE 2   
+
+   CONSTANT SIZE    =     34    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

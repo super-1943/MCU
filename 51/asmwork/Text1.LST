@@ -1,0 +1,337 @@
+A51 MACRO ASSEMBLER  TEXT1                                                                06/04/2009 02:27:46 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN Text1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE Text1.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H
+                       2     
+0000 02001A            3     LJMP MAIN
+                       4     
+0003                   5     ORG 0003H
+                       6     
+0003 020016            7     LJMP INTR0
+                       8     
+0013                   9     ORG 0013H
+                      10     
+0013 020018           11     LJMP INTR1
+                      12     
+                      13     
+0016                  14     INTR0:
+                      15     
+0016 1F               16     DEC R7
+                      17     
+0017 32               18     RETI
+                      19     
+0018                  20     INTR1:
+                      21     
+0018 0F               22          INC R7
+                      23     
+0019 32               24          RETI
+                      25     
+001A                  26     MAIN:
+                      27     
+001A 7F01             28     MOV R7,#01H
+                      29     
+                      30     
+001C D2AF             31     SETB EA
+                      32     
+001E D2AA             33     SETB EX1
+                      34     
+0020 D2A8             35     SETB EX0
+                      36     
+                      37     
+0022 74FF             38           MOV A,#0FFH
+                      39     
+0024 F590             40           MOV P1,A
+                      41     
+0026 E590             42           MOV A,P1
+                      43     
+0028 30E052           44           JNB ACC.0,SIN
+                      45     
+002B 3199             46           CALL DELAY
+                      47     
+002D 30E109           48           JNB ACC.1,TRI
+                      49     
+0030 3199             50           CALL DELAY
+                      51     
+0032 30E22D           52           JNB ACC.2,SQU
+                      53     
+0035 3199             54           CALL DELAY
+                      55     
+0037 011A             56           AJMP MAIN
+                      57     
+                      58     
+A51 MACRO ASSEMBLER  TEXT1                                                                06/04/2009 02:27:46 PAGE     2
+
+0039 908000           59     TRI:MOV DPTR,#8000H
+                      60     
+003C E4               61           CLR A
+                      62     
+003D 7800             63           MOV R0,#00H
+                      64     
+003F 79FE             65           MOV R1,#0FEH
+                      66     
+0041                  67        L0:
+                      68     
+0041 E8               69           MOV A,R0
+                      70     
+0042 F0               71           MOVX @DPTR,A
+                      72     
+0043 3199             73           ACALL DELAY
+                      74     
+0045 08               75           INC R0
+                      76     
+0046 D9F9             77           DJNZ R1,L0
+                      78     
+0048 79FE             79           MOV R1,#0FEH
+                      80     
+                      81     
+004A                  82        L1:
+                      83     
+004A E8               84           MOV A,R0
+                      85     
+004B F0               86           MOVX @DPTR,A
+                      87     
+004C 3199             88           ACALL DELAY
+                      89     
+004E 18               90           DEC R0
+                      91     
+004F D9F9             92           DJNZ R1,L1
+                      93     
+0051 79FE             94           MOV R1,#0FEH
+                      95     
+0053 74FF             96           MOV A,#0FFH
+                      97     
+0055 F590             98           MOV P1,A
+                      99     
+0057 E590            100           MOV A,P1
+                     101     
+0059 30E021          102           JNB ACC.0,SIN
+                     103     
+005C 30E203          104           JNB ACC.2,SQU
+                     105     
+005F E4              106           CLR A
+                     107     
+0060 0141            108           AJMP L0
+                     109     
+                     110     
+                     111     
+0062 908000          112     SQU:MOV DPTR,#8000H
+                     113     
+0065 7400            114        L2:MOV A,#00H
+                     115     
+0067 F0              116           MOVX @DPTR,A
+                     117     
+0068 3199            118           CALL DELAY
+                     119     
+006A 74FF            120           MOV A,#0FFH
+                     121     
+006C F0              122           MOVX @DPTR,A
+                     123     
+006D 3199            124           CALL DELAY
+A51 MACRO ASSEMBLER  TEXT1                                                                06/04/2009 02:27:46 PAGE     3
+
+                     125     
+006F 74FF            126           MOV A,#0FFH
+                     127     
+0071 F590            128           MOV P1,A
+                     129     
+0073 E590            130           MOV A,P1
+                     131     
+0075 30E005          132           JNB ACC.0,SIN
+                     133     
+0078 30E1BE          134          JNB ACC.1,TRI
+                     135     
+                     136     
+007B 0165            137           AJMP L2
+                     138     
+                     139     
+                     140     
+                     141     
+007D 7900            142     SIN: MOV R1,#00H
+                     143     
+007F E9              144     LLL: MOV A,R1
+                     145     
+0080 900099          146           MOV DPTR,#TABLE
+                     147     
+0083 93              148           MOVC A,@A+DPTR
+                     149     
+0084 908000          150           MOV DPTR,#8000H
+                     151     
+0087 F0              152           MOVX @DPTR,A
+                     153     
+0088 3199            154           CALL DELAY
+                     155     
+008A 09              156           INC R1
+                     157     
+                     158     
+008B 74FF            159           MOV A,#0FFH
+                     160     
+008D F590            161           MOV P1,A
+                     162     
+008F E590            163           MOV A,P1
+                     164     
+0091 30E1A5          165           JNB ACC.1,TRI
+                     166     
+0094 30E2CB          167           JNB ACC.2,SQU
+                     168     
+0097 017F            169           AJMP LLL
+                     170     
+                     171     
+0099                 172     TABLE:
+                     173     
+0099 80838689        174     DB 80H, 83H, 86H, 89H, 8DH, 90H, 93H, 96H
+009D 8D909396                
+                     175     
+00A1 999C9FA2        176     DB 99H, 9CH, 9FH, 0A2H,0A5H,0A8H,0ABH,0AEH
+00A5 A5A8ABAE                
+                     177     
+00A9 B1B4B7BA        178     DB 0B1H,0B4H,0B7H,0BAH,0BCH, 0BFH,0C2H,0C5H
+00AD BCBFC2C5                
+                     179     
+00B1 C7CACCCF        180     DB 0C7H,0CAH,0CCH,0CFH,0D1H, 0D4H,0D6H,0D8H
+00B5 D1D4D6D8                
+                     181     
+00B9 DADDDFE1        182     DB 0DAH,0DDH,0DFH,0E1H,0E3H, 0E5H,0E7H,0E9H
+00BD E3E5E7E9                
+                     183     
+00C1 EAECEEEF        184     DB 0EAH,0ECH,0EEH,0EFH,0F1H, 0F2H,0F4H,0F5H
+00C5 F1F2F4F5                
+A51 MACRO ASSEMBLER  TEXT1                                                                06/04/2009 02:27:46 PAGE     4
+
+                     185     
+00C9 F6F7F8F9        186     DB 0F6H,0F7H,0F8H,0F9H,0FAH, 0FBH,0FCH,0FDH
+00CD FAFBFCFD                
+                     187     
+00D1 FDFEFFFF        188     DB 0FDH,0FEH,0FFH,0FFH,0FFH, 0FFH,0FFH,0FFH
+00D5 FFFFFFFF                
+                     189     
+00D9 FFFFFFFF        190     DB 0FFH,0FFH,0FFH,0FFH,0FFH, 0FFH,0FEH,0FDH
+00DD FFFFFEFD                
+                     191     
+00E1 FDFCFBFA        192     DB 0FDH,0FCH,0FBH,0FAH,0F9H, 0F8H,0F7H,0F6H
+00E5 F9F8F7F6                
+                     193     
+00E9 F5F4F2F1        194     DB 0F5H,0F4H,0F2H,0F1H,0EFH, 0EEH,0ECH,0EAH
+00ED EFEEECEA                
+                     195     
+00F1 E9E7E5E3        196     DB 0E9H,0E7H,0E5H,0E3H,0E1H, 0DEH,0DDH,0DAH
+00F5 E1DEDDDA                
+                     197     
+00F9 D8D6D4D1        198     DB 0D8H,0D6H,0D4H,0D1H,0CFH, 0CCH,0CAH,0C7H
+00FD CFCCCAC7                
+                     199     
+0101 C5C2BFBC        200     DB 0C5H,0C2H,0BFH,0BCH,0BAH, 0B7H,0B4H,0B1H
+0105 BAB7B4B1                
+                     201     
+0109 AEABA8A5        202     DB 0AEH,0ABH,0A8H,0A5H,0A2H, 9FH, 9CH, 99H
+010D A29F9C99                
+                     203     
+0111 9693908D        204     DB 96H, 93H, 90H, 8DH, 89H, 86H, 83H, 80H
+0115 89868380                
+                     205     
+0119 807C7978        206     DB 80H, 7CH, 79H, 78H, 72H, 6FH, 6CH, 69H
+011D 726F6C69                
+                     207     
+0121 6663605D        208     DB 66H, 63H, 60H, 5DH, 5AH, 57H, 55H, 51H
+0125 5A575551                
+                     209     
+0129 4E4C4845        210     DB 4EH, 4CH, 48H, 45H, 43H, 40H, 3DH, 3AH
+012D 43403D3A                
+                     211     
+0131 38353330        212     DB 38H, 35H, 33H, 30H, 2EH, 2BH, 29H, 27H
+0135 2E2B2927                
+                     213     
+0139 2522201E        214     DB 25H, 22H, 20H, 1EH, 1CH, 1AH, 18H, 16H
+013D 1C1A1816                
+                     215     
+0141 15131110        216     DB 15H, 13H, 11H, 10H, 0EH, 0DH, 0BH, 0AH
+0145 0E0D0B0A                
+                     217     
+0149 09080706        218     DB 09H, 08H, 07H, 06H, 05H, 04H, 03H, 02H
+014D 05040302                
+                     219     
+0151 02010000        220     DB 02H, 01H, 00H, 00H, 00H, 00H, 00H, 00H
+0155 00000000                
+                     221     
+0159 00000000        222     DB 00H, 00H, 00H, 00H, 00H, 00H, 01H, 02H
+015D 00000102                
+                     223     
+0161 02030405        224     DB 02H, 03H, 04H, 05H, 06H, 07H, 08H, 09H
+0165 06070809                
+                     225     
+0169 0A0B0D0E        226     DB 0AH, 0BH, 0DH, 0EH, 10H, 11H, 13H, 15H
+016D 10111315                
+                     227     
+0171 16181A1C        228     DB 16H, 18H, 1AH, 1CH, 1EH, 20H, 22H, 25H
+0175 1E202225                
+A51 MACRO ASSEMBLER  TEXT1                                                                06/04/2009 02:27:46 PAGE     5
+
+                     229     
+0179 27292B2E        230     DB 27H, 29H, 2BH, 2EH, 30H, 33H, 35H, 38H
+017D 30333538                
+                     231     
+0181 3A3D4043        232     DB 3AH, 3DH, 40H, 43H, 45H, 48H, 4CH, 4EH
+0185 45484C4E                
+                     233     
+0189 5155575A        234     DB 51H, 55H, 57H, 5AH, 5DH, 60H, 63H, 66H
+018D 5D606366                
+                     235     
+0191 696C6F72        236     DB 69H, 6CH, 6FH, 72H, 76H, 79H, 7CH, 80H
+0195 76797C80                
+                     237     
+0199                 238     DELAY:
+                     239     
+                     240     
+                     241     
+0199 EF              242     MOV A,R7
+                     243     
+019A 7E01            244        MOV R6,#1H
+                     245     
+019C DFFE            246     LL:DJNZ R7,LL
+                     247     
+019E FF              248     LL0:MOV R7,A
+                     249     
+019F DEFD            250         DJNZ R6,LL0
+                     251     
+                     252     
+                     253     
+01A1 22              254          RET
+                     255     end
+A51 MACRO ASSEMBLER  TEXT1                                                                06/04/2009 02:27:46 PAGE     6
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ACC. . . . . . . .  D ADDR   00E0H   A   
+DELAY. . . . . . .  C ADDR   0199H   A   
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+EX0. . . . . . . .  B ADDR   00A8H.0 A   
+EX1. . . . . . . .  B ADDR   00A8H.2 A   
+INTR0. . . . . . .  C ADDR   0016H   A   
+INTR1. . . . . . .  C ADDR   0018H   A   
+L0 . . . . . . . .  C ADDR   0041H   A   
+L1 . . . . . . . .  C ADDR   004AH   A   
+L2 . . . . . . . .  C ADDR   0065H   A   
+LL . . . . . . . .  C ADDR   019CH   A   
+LL0. . . . . . . .  C ADDR   019EH   A   
+LLL. . . . . . . .  C ADDR   007FH   A   
+MAIN . . . . . . .  C ADDR   001AH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+SIN. . . . . . . .  C ADDR   007DH   A   
+SQU. . . . . . . .  C ADDR   0062H   A   
+TABLE. . . . . . .  C ADDR   0099H   A   
+TRI. . . . . . . .  C ADDR   0039H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

@@ -1,0 +1,60 @@
+C51 COMPILER V8.02   MAIN                                                                  06/02/2011 20:24:49 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          
+   4          
+   5          unsigned char i,j;
+   6          code unsigned char table[]=
+   7          {
+   8          /*--囧  调入了一幅图像：这是您新建的图像  --*/
+   9          /*--  宽度x高度=16x8  --*/
+  10          0xFF,0xA1,0xA1,0xAF,0xEF,0xC9,0xC9,0x89,0x89,0xC9,0xCF,0xEF,0xA1,0xA1,0xA1,0xFF,
+  11          
+  12          };
+  13          void delay_ms(unsigned int k)
+  14          {
+  15   1              unsigned char i,j;
+  16   1              for(;k;k--)
+  17   1              for(i=20;i;i--)
+  18   1              for(j=100;j;j--);
+  19   1      }
+  20          void main(void)
+  21          {
+  22   1              P3=0xff;
+  23   1              
+  24   1              EA=0;
+  25   1              P0=0x00;
+  26   1              delay_ms(1000);
+  27   1              i=0;
+  28   1              while(1)
+  29   1              {
+  30   2                              for(i=0;i<16;i++)
+  31   2                              {
+  32   3                                      P0=~table[i];
+  33   3                                      delay_ms(10);
+  34   3                              }
+  35   2              }
+  36   1      
+  37   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     68    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

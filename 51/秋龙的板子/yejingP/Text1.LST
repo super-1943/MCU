@@ -1,0 +1,276 @@
+C51 COMPILER V8.02   TEXT1                                                                 06/08/2009 08:52:34 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /*
+   2          P0----a/d
+   3          P2.0----rs
+   4          P2.1----rw
+   5          P2.2----e
+   6          P2.3
+   7          P2.4
+   8          P2.5----backlight
+   9          */
+  10          #include <reg51.h>
+  11          #include <stdio.h>
+  12          sbit buzzer=P3^6;
+  13          sbit backlight=P2^5;
+  14          sbit key1=P3^2;
+  15          sbit key2=P3^4;
+  16          
+  17          sbit rs=P2^0;
+  18          sbit rw=P2^1;
+  19          sbit e=P2^2;
+  20          #define dataport P0
+  21          unsigned char code table[]={0x09,0x06,0x04,0x05,0x04,0x04,0x04,0x05};
+  22          
+  23          
+  24          void delay(unsigned int ms)
+  25          {
+  26   1              unsigned char i,j;
+  27   1              while(ms--)
+  28   1              for(i=100;i;i--)
+  29   1              for(j=7;j;j--);
+  30   1      }
+  31          void changebacklight(void)
+  32          {
+  33   1              backlight=~backlight;
+  34   1              delay(1);
+  35   1      }
+  36          void writecmd(unsigned char cmd)
+  37          {
+  38   1              rs=0;
+  39   1              rw=0;
+  40   1              dataport=cmd;
+  41   1              e=1;
+  42   1              delay(0);
+  43   1              e=0;
+  44   1      }
+  45          void writedata(unsigned char dat)
+  46          {
+  47   1              rs=1;
+  48   1              rw=0;
+  49   1              dataport=dat;
+  50   1              e=1;
+  51   1              delay(0);
+  52   1              e=0;
+  53   1      }       
+  54          void print_str(unsigned char *dat)
+  55          {
+C51 COMPILER V8.02   TEXT1                                                                 06/08/2009 08:52:34 PAGE 2   
+
+  56   1              while(*dat)
+  57   1              {
+  58   2                      if(*dat=='\n')
+  59   2                      {
+  60   3                              writecmd(0xc0);
+  61   3                              dat++;
+  62   3                              
+  63   3                      }
+  64   2                      writedata(*dat);
+  65   2                      dat++;
+  66   2              }
+  67   1      }
+  68          void setpos(unsigned char x,unsigned char y)
+  69          {
+  70   1              unsigned char temp;
+  71   1              temp=0x80;
+  72   1              if(y==1)
+  73   1              {
+  74   2                      temp+=x-1;
+  75   2              }
+  76   1              if(y==2)
+  77   1              {
+  78   2                      temp+=(0x40+x-1);
+  79   2              }
+  80   1              writecmd(temp);
+  81   1      }
+  82          void initlcd(void)
+  83          {
+  84   1              delay(300);
+  85   1              writecmd(0x38);
+  86   1              delay(15);
+  87   1              writecmd(0x38);
+  88   1              delay(1);
+  89   1              writecmd(0x0e);
+  90   1              delay(1);
+  91   1              writecmd(0x06);
+  92   1              delay(1);
+  93   1              writecmd(0x01);
+  94   1              delay(1);
+  95   1      }
+  96          void initserial(void)
+  97          {
+  98   1              TMOD = 0x20;                    // 定时器1工作于8位自动重载模式, 用于产生波特率
+  99   1              TH1 = 0xFD;                             // 波特率9600
+ 100   1              TL1 = 0xFD;
+ 101   1              
+ 102   1              SCON = 0x50;                    // 设定串行口工作方式
+ 103   1              PCON &= 0xef;                   // 波特率不倍增
+ 104   1                      
+ 105   1              TR1 = 1;                                // 启动定时器1
+ 106   1              IE = 0x0;                               // 禁止任何中断
+ 107   1      }
+ 108          void send_char(unsigned char txd)// 传送一个字符
+ 109          {
+ 110   1              SBUF = txd;
+ 111   1              while(!TI);                             // 等特数据传送
+ 112   1              TI = 0;                                 // 清除数据传送标志
+ 113   1      }
+ 114          
+ 115          void send_str(unsigned char *str)// 传送字串
+ 116          {
+ 117   1              unsigned char i = 0;
+C51 COMPILER V8.02   TEXT1                                                                 06/08/2009 08:52:34 PAGE 3   
+
+ 118   1              while(str[i] != '\0')
+ 119   1              {
+ 120   2                      SBUF = str[i];
+ 121   2                      while(!TI);                             // 等特数据传送
+ 122   2                      TI = 0;                                 // 清除数据传送标志
+ 123   2                      i++;                                    // 下一个字符
+ 124   2              }       
+ 125   1      }
+ 126          void showdate(void)
+ 127          {
+ 128   1              writecmd(0x02);
+ 129   1              print_str("   2009-06-04  ");
+ 130   1      }
+ 131          void showtime(void)
+ 132          {
+ 133   1              writecmd(0xc0);
+ 134   1              print_str("  17:25:29  ");
+ 135   1      }
+ 136          void left(void)
+ 137          {
+ 138   1              unsigned char i;
+ 139   1              writecmd(0x05);
+ 140   1              for(i=39;i>0;i--)
+ 141   1              {
+ 142   2                      writecmd(0x80+i);
+ 143   2                      delay(100);
+ 144   2              }
+ 145   1              writecmd(0x06);
+ 146   1      }
+ 147          void right(void)
+ 148          {
+ 149   1              unsigned char i;
+ 150   1              writecmd(0x07);
+ 151   1              for(i=0;i<40;i++)
+ 152   1              {
+ 153   2                      writecmd(0x80+i);
+ 154   2                      delay(100);
+ 155   2              }
+ 156   1              writecmd(0x06);
+ 157   1      }
+ 158          void generate(void)
+ 159          {
+ 160   1              unsigned char i;
+ 161   1              writecmd(0x80);
+ 162   1              writecmd(0x40);
+ 163   1              for(i=0;i<8;i++)
+ 164   1              {
+ 165   2                      writedata(table[i]);
+ 166   2              }
+ 167   1              writecmd(0x80);
+ 168   1      }
+ 169          void main(void)
+ 170          {
+ 171   1              unsigned char tmp;
+ 172   1              initlcd();
+ 173   1              initserial();
+ 174   1              print_str("Hello");
+ 175   1              generate();
+ 176   1              initlcd();
+ 177   1              print_str("Ready");
+ 178   1              while(1)
+ 179   1              {
+C51 COMPILER V8.02   TEXT1                                                                 06/08/2009 08:52:34 PAGE 4   
+
+ 180   2                      P3=0xff;
+ 181   2                      if(key1==0)
+ 182   2                      {
+ 183   3                              for(tmp=0;tmp<16;tmp++)
+ 184   3                              left();
+ 185   3                              for(tmp=0;tmp<16;tmp++)
+ 186   3                              right();
+ 187   3                              delay(100);
+ 188   3                      }
+ 189   2                      if(key2==0)
+ 190   2                      {
+ 191   3                              writecmd(0x01);
+ 192   3                              writedata(0x00);
+ 193   3                              delay(100);
+ 194   3                      }
+ 195   2      /*              if(RI)                                          // 是否有数据到来
+ 196   2                      {
+ 197   2                              RI = 0;
+ 198   2                              tmp = SBUF;                             // 暂存接收到的数据
+ 199   2                              switch(tmp)
+ 200   2                              {
+ 201   2                                      case 0x00:
+ 202   2                                              writecmd(0x1c);
+ 203   2                                              break;
+ 204   2                                      case 0x01:
+ 205   2                                              writecmd(0x18);
+ 206   2                                              break;
+ 207   2                                      case  '\n':
+ 208   2                                              writecmd(0xc0);
+ 209   2                                              break;
+ 210   2                                      case '\\':
+ 211   2                                              backlight=~backlight;
+ 212   2                                              break;
+ 213   2                                      case '<':
+ 214   2                                              left();
+ 215   2                                              break;
+ 216   2                                      case '>':
+ 217   2                                              right();
+ 218   2                                              break;
+ 219   2                                      case 0x02:
+ 220   2                                              writecmd(0x01);
+ 221   2                                              break;
+ 222   2                                      case '$':
+ 223   2                                              writecmd(0x02);
+ 224   2                                              break;
+ 225   2                                      case '{':
+ 226   2                                              writecmd(0x0f);
+ 227   2                                              break;
+ 228   2                                      case '}':
+ 229   2                                              writecmd(0x08);
+ 230   2                                              break;
+ 231   2                                      case '[':
+ 232   2                                              showdate();
+ 233   2                                              
+ 234   2                                              break;
+ 235   2                                      case ']':
+ 236   2                                              showtime();
+ 237   2                                              break;
+ 238   2                                      default:
+ 239   2                                              writedata(tmp);
+ 240   2                              }
+ 241   2                      }*/
+C51 COMPILER V8.02   TEXT1                                                                 06/08/2009 08:52:34 PAGE 5   
+
+ 242   2              
+ 243   2              }
+ 244   1      
+ 245   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    462    ----
+   CONSTANT SIZE    =     49    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

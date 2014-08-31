@@ -1,0 +1,181 @@
+C51 COMPILER V8.02   MYTEST                                                                02/27/2009 13:40:11 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MYTEST
+OBJECT MODULE PLACED IN MyTest.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE MyTest.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          //******************************************************************
+   2          //* mytest fuction
+   3          #include <includes.h>
+   4          
+   5          //******************************************************************
+   6          //* mytest system timer initial
+   7          #define   TIME_10mS     (OS_TICKS_PER_SEC /100)
+   8          #define   TIME_50mS     (OS_TICKS_PER_SEC /20 )
+   9          #define   TIME_100mS    (OS_TICKS_PER_SEC /10 )
+  10          #define   TIME_200mS    (OS_TICKS_PER_SEC /5  )
+  11          #define   TIME_500mS    (OS_TICKS_PER_SEC /2  )
+  12          #define   TIME_1S       (OS_TICKS_PER_SEC)
+  13          #define   TIME_2S       (OS_TICKS_PER_SEC * 2)
+  14          #define   TIME_3S       (OS_TICKS_PER_SEC * 3)
+  15          #define   TIME_4S       (OS_TICKS_PER_SEC * 4)
+  16          #define   TIME_5S       (OS_TICKS_PER_SEC * 5)
+  17          
+  18          //******************************************************************
+  19          //* mytest system crystalloid
+  20          #define   XA_CRYSTAL_FREQ   (INT32U)(22118400L)
+  21          
+  22          //******************************************************************
+  23          //* SCR crystalloid
+  24          #define   CFG_SCR_4     SCR&0x03 
+  25          #define   CFG_SCR_16    SCR&0x07
+  26          #define   CFG_SCR_64    SCR&0x0B
+  27          
+  28          #define   OS_CFG_SCR    CFG_SCR_4
+  29          
+  30          //******************************************************************
+  31          //* mytest system 
+  32          #define   TASK_STK_SIZE   128 //* 128 word
+  33          #define   NUMBER_TASKS    20   
+  34          
+  35          //******************************************************************
+  36          //* mytest task stack define
+  37          OS_STK  xdata   AnPrintfStk[TASK_STK_SIZE];
+  38          OS_STK  xdata   BnPrintfStk[TASK_STK_SIZE];
+  39          
+  40          //******************************************************************
+  41          //* OS_EVENT
+  42          OS_EVENT xdata * AnPrintfWait;
+  43          OS_EVENT xdata * BnPrintfWait;
+  44          
+  45          
+  46          
+  47          //******************************************************************
+  48          
+  49          INT8U  xdata   OSCtxSwCtrMax; 
+  50          INT8U  xdata   AnPrintfData[]   = {0xC4,0xE3,0xBA,0xC3,0xA3,0xAC,0xCE,0xD2,
+  51                                     0xCA,0xC7,0xC8,0xCE,0xCE,0xF1,0x41,0x6E,
+  52                                     0x5C,0x6E};
+  53          INT8U xdata BnPrintfData[]   = {0xC4,0xE3,0xBA,0xC3,0xA3,0xAC,0xCE,0xD2,
+  54                                     0xCA,0xC7,0xC8,0xCE,0xCE,0xF1,0x42,0x6E,
+  55                                     0x5C,0x6E};
+C51 COMPILER V8.02   MYTEST                                                                02/27/2009 13:40:11 PAGE 2   
+
+  56          
+  57          //-------------------------------------------------------------------
+  58          void  TimeTickInitial(void);
+  59          void  AnPrintf(void *dataptr);   //* Startup Task          
+  60          void  BnPrintf(void *dataptr);   //* 8 Identical Tasks 
+  61          void  Serial_initialize(void);
+  62          //static void XAInit (void);
+  63          //static void TimerInit (INT8U tmr, INT16U freq, INT8U prio);
+  64          //static void SeryComm0Init (INT16U baud);
+  65          //******************************************************************
+  66          
+  67          //******************************************************************
+  68          void main (void)
+  69          {
+  70   1          //XAInit(); //* XA Configuration                           
+  71   1          OSInit(); //* Initialize uC/OS-II, The Real-Time Kernel 
+  72   1          
+  73   1          BnPrintfWait = OSSemCreate(0);
+  74   1          
+  75   1          
+  76   1          
+  77   1          OSTaskCreate( AnPrintf, 
+  78   1                        (void *)0, 
+  79   1                        (void *)&AnPrintfStk[TASK_STK_SIZE-1], 
+  80   1                        0x01);
+  81   1      
+  82   1          OSTaskCreate( BnPrintf, 
+  83   1                        (void *)0, 
+  84   1                        (void *)&BnPrintfStk[TASK_STK_SIZE-1], 
+  85   1                        0x02);
+  86   1       
+  87   1          TimeTickConfig();
+  88   1          Serial_initialize();
+  89   1          OSStart();           
+  90   1      } 
+  91          
+  92          void  AnPrintf(void *dataptr)
+  93          {   
+  94   1          
+  95   1          INT8U i;
+  96   1          INT8U err;
+  97   1          dataptr = dataptr;
+  98   1          while(1)
+  99   1          {
+ 100   2      
+ 101   2              for(i=0;i<18;)
+ 102   2              {   
+ 103   3                  if(TI)
+ 104   3                  {
+ 105   4                      TI= 0;
+ 106   4                      SBUF = AnPrintfData[i];
+ 107   4                      i++;    
+ 108   4                  }
+ 109   3                
+ 110   3              }
+ 111   2              OSSemPend(BnPrintfWait,10,&err);
+ 112   2              
+ 113   2          }
+ 114   1          
+ 115   1      }
+ 116          
+ 117          //******************************************************************
+C51 COMPILER V8.02   MYTEST                                                                02/27/2009 13:40:11 PAGE 3   
+
+ 118          void  BnPrintf(void *dataptr)
+ 119          {
+ 120   1          
+ 121   1          INT8U i;
+ 122   1          dataptr = dataptr;
+ 123   1          EA =1;
+ 124   1          while(1)
+ 125   1          {
+ 126   2      
+ 127   2              TI = 1;
+ 128   2              for(i=0;i<18;)
+ 129   2              {   if(TI)
+ 130   3                  {
+ 131   4                      TI = 0;
+ 132   4                      SBUF = BnPrintfData[i];
+ 133   4                      i++;
+ 134   4                   }
+ 135   3              
+ 136   3              }
+ 137   2              
+ 138   2              OSSemPost(BnPrintfWait);
+ 139   2              
+ 140   2          }
+ 141   1         
+ 142   1      }
+ 143          void SeryInt(void)
+ 144          {
+ 145   1              
+ 146   1      }
+ 147          void Serial_initialize()
+ 148          {
+ 149   1          SCON  = 0x50;  //* SCON: mode 1, 8-bit UART, enable rcvr */
+ 150   1          TMOD |= 0x20;  //* TMOD: timer 1, mode 2, 8-bit reload */
+ 151   1          TH1   = 0xfd;  //* TH1:  reload value for 1200 baud @ 16MHz */
+ 152   1          TR1   = 1;     //* TR1:  timer 1 run */
+ 153   1          TI    = 1;     //* TI:   set TI to send first char of UART */
+ 154   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    240    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    293    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

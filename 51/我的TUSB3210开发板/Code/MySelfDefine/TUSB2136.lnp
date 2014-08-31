@@ -1,0 +1,8 @@
+"usbinit.obj",
+"descrip.obj",
+"main.obj",
+"usb.obj",
+"STARTUP.obj",
+"serial.obj" 
+TO "TUSB2136" 
+RAMSIZE(256) 

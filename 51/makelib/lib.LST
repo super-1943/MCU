@@ -1,0 +1,27 @@
+C51 COMPILER V8.02   LIB                                                                   04/02/2011 21:38:24 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE LIB
+OBJECT MODULE PLACED IN lib.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE lib.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          int kkk_add(int a,int b)
+   2          {
+   3   1              return a+b;
+   4   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =      7    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,513 @@
+C51 COMPILER V8.02   TEXT1                                                                 11/08/2009 23:38:50 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          //---------------------------------------------------------------------------
+   2          /*
+   3          KGM701A9: 16bit interface
+   4          VDD : 2.8~3.3V
+   5          DB7-DB0 : P1
+   6          DB15-DB8 : P2
+   7          RS : P3.0
+   8          WR: P3.1
+   9          RD  : P3.2
+  10          RESET : P3.3
+  11          CS : Connect to GND
+  12          FMARK : Not Connect
+  13          */
+  14          
+  15          #include "reg52.h"
+  16          #include "font.h"
+  17          #include "string.h"
+  18          typedef bit uint1;
+  19          typedef unsigned char uint8, uchar, UCHAR;
+  20          typedef unsigned int uint16, uint, UINT;
+  21          typedef unsigned long uint32, ulong, ULONG;
+  22          
+  23          unsigned char code sintable[]={
+  24          0,2,4,6,7,9,11,13,15,17,19,21,22,24,26,28,30,31,33,35,37,39,40,42,44,46,47,49,51,52,54,56,57,59,61,62,64,6
+             -5,67,69,70,72,73,75,76,77,79,80,82,83,84,86,87,88,89,91,92,93,94,95,96,98,99,100,101,102,103,104,104,105,106,107,108,109
+             -,109,110,111,111,112,113,113,114,114,115,115,116,116,117,117,117,118,118,118,118,119,119,119,119,119,119,119,119,119,119
+             -,119,119,118,118,118,118,117,117,117,116,116,116,115,115,114,114,113,112,112,111,110,110,109,108,107,107,106,105,104,103
+             -,102,101,100,99,98,97,96,95,94,92,91,90,89,88,86,85,84,82,81,80,78,77,75,74,72,71,69,68,66,65,63,62,60,58,57,55,53,52,50
+             -,48,47,45,43,41,40,38,36,34,32,31,29,27,25,23,21,20,18,16,14,12,10,8,7,5,3,1,-1,-3,-5,-7,-8,-10,-12,-14,-16,-18,-20,-21,
+             --23,-25,-27,-29,-31,-32,-34,-36,-38,-40,-41,-43,-45,-47,-48,-50,-52,-53,-55,-57,-58,-60,-62,-63,-65,-66,-68,-69,-71,-72,
+             --74,-75,-77,-78,-80,-81,-82,-84,-85,-86,-88,-89,-90,-91,-92,-94,-95,-96,-97,-98,-99,-100,-101,-102,-103,-104,-105,-106,-
+             -107,-107,-108,-109,-110,-110,-111,-112,-112,-113,-114,-114,-115,-115,-116,-116,-116,-117,-117,-117,-118,-118,-118,-118,-
+             -119,-119,-119,-119,-119,-119,-119,-119,-119,-119,-119,-119,-118,-118,-118,-118,-117,-117,-117,-116,-116,-115,-115,-114,-
+             -114,-113,-113,-112,-111,-111,-110,-109,-109,-108,-107,-106,-105,-104,-104,-103,-102,-101,-100,-99,-98,-96,-95,-94,-93,-9
+             -2,-91,-89,-88,-87,-86,-84,-83,-82,-80,-79,-77,-76,-75,-73,-72,-70,-69,-67,-65,-64,-62,-61,-59,-57,-56,-54,-52,-51,-49,-4
+             -7,-46,-44,-42,-40,-39,-37,-35,-33,-31,-30,-28,-26,-24,-22,-21,-19,-17,-15,-13,-11,-9,-7,-6,-4,-2,0,
+  25          };
+  26          
+  27          //---------------------------------------------------------------------------
+  28          sbit A0=P3^0;//RS, DC
+  29          sbit _WR=P3^1;
+  30          sbit _RD=P3^2;
+  31          sbit _RES=P3^3;
+  32          
+  33          //---------------------------------------------------------------------------
+  34          
+  35          void Delay(UINT t);
+  36          void W_COM(UINT dat);
+  37          void W_DATA(UINT dat);
+  38          void SPFD5420A_CPT30W_Initial(void);
+  39          void Clear(void);
+  40          void Full(void);
+  41          void Red(UINT sx, UINT ex, UINT sy, UINT ey);
+  42          void Green(UINT sx, UINT ex, UINT sy, UINT ey);
+  43          void Blue(UINT sx, UINT ex, UINT sy, UINT ey);
+C51 COMPILER V8.02   TEXT1                                                                 11/08/2009 23:38:50 PAGE 2   
+
+  44          void Show(UINT sx, UINT ex, UINT sy, UINT ey, UINT dat);
+  45          void BlockWrite(UINT sx, UINT ex, UINT sy, UINT ey);
+  46          void ShowGradualColor(void);
+  47          
+  48          void Sleep_In(void);
+  49          void Sleep_Out(void);
+  50          
+  51          //Text Function
+  52          void ShowCharWithColor(UCHAR sx, UINT sy, UCHAR index, UINT CharColor, UINT BkColor);
+  53          void ShowString(UCHAR sx, UINT sy, char* string);
+  54          
+  55          void Show040BMP_240_400(UCHAR index);
+  56          void Show040_240400_18BIT(void);
+  57          void LE_Control(UCHAR var, bit HL);
+  58          
+  59          
+  60          /*******************kkk*****************/
+  61          void sin(void)
+  62          {
+  63   1              unsigned int x,y;
+  64   1              for(y=0;y<4;y++)
+  65   1              {
+  66   2                      for(x=0;x<400;x++)
+  67   2                      {       
+  68   3                              BlockWrite(sintable[x]+119,sintable[x]+119,x+y,x+y);
+  69   3                              W_DATA(0xf800);
+  70   3                      }
+  71   2                      Delay(100);
+  72   2              }
+  73   1      }
+  74          
+  75          void blue_dark_zong(void)
+  76          {
+  77   1              unsigned int t;
+  78   1              for(t=0;t<=0x00ef;t+=1)
+  79   1              {
+  80   2                      Show(t, t, 0x0000, 0x018F, t);  
+  81   2              }
+  82   1      }
+  83          void red_dark_zong(void)
+  84          {
+  85   1              unsigned int t;
+  86   1              for(t=0;t<=0x00ef;t+=1)
+  87   1              {
+  88   2                      Show(t, t, 0x0000, 0x018F, t<<11);      
+  89   2              }
+  90   1      }
+  91          void green_dark_zong(void)
+  92          {
+  93   1              unsigned int t;
+  94   1              for(t=0;t<=0x00ef;t+=1)
+  95   1              {
+  96   2                      Show(t, t, 0x0000, 0x018F, t<<6);       
+  97   2              }
+  98   1      }
+  99          void blue_dark_heng(void)
+ 100          {
+ 101   1              unsigned int t;
+ 102   1              for(t=0;t<=0x018f;t+=1)
+ 103   1              {
+ 104   2                      Show(0,0x00ef,t,t, t);  
+ 105   2              }
+C51 COMPILER V8.02   TEXT1                                                                 11/08/2009 23:38:50 PAGE 3   
+
+ 106   1      }       
+ 107          void red_dark_heng(void)
+ 108          {
+ 109   1              unsigned int t;
+ 110   1              for(t=0;t<=0x018f;t+=1)
+ 111   1              {
+ 112   2                      Show(0,0x00ef,t,t, t<<11);      
+ 113   2              }
+ 114   1      }       
+ 115          void green_dark_heng(void)
+ 116          {
+ 117   1              unsigned int t;
+ 118   1              for(t=0;t<=0x018f;t+=1)
+ 119   1              {
+ 120   2                      Show(0,0x00ef,t,t, t<<6);       
+ 121   2              }
+ 122   1      }       
+ 123          void drawline(UINT sx, UINT ex, UINT sy, UINT ey,UINT linecolor)
+ 124          {
+ 125   1              unsigned long int a,b;
+ 126   1              UINT diffx,diffy;
+ 127   1              diffx=ex-sx;
+ 128   1              diffy=ey-sy;
+ 129   1              if(diffx==0)
+ 130   1              {
+ 131   2                      for(b=sy;b<=ey;b++)
+ 132   2                      {
+ 133   3                              BlockWrite(sx,sx,b,b);
+ 134   3                              W_DATA(linecolor);
+ 135   3                      }               
+ 136   2              }
+ 137   1              else if(diffy==0)
+ 138   1              {
+ 139   2                      for(a=sx;a<ex;a++)
+ 140   2                      {
+ 141   3                              BlockWrite(a,a,sy,sy);
+ 142   3                              W_DATA(linecolor);              
+ 143   3                      }
+ 144   2              }
+ 145   1              else
+ 146   1              {
+ 147   2                      for(a=sx;a<=ex;a++)
+ 148   2                      {
+ 149   3                              b=(a-sx)*diffy/diffx;
+ 150   3                              BlockWrite(a,a,b,b);
+ 151   3                              W_DATA(linecolor);
+ 152   3                      }
+ 153   2              }
+ 154   1      }
+ 155          void juxing(UINT x0,UINT y0,UINT x1,UINT y1,UINT color)
+ 156          {
+ 157   1              drawline(x0,x1,y1,y1,color);
+ 158   1              drawline(x0,x1,y0,y0,color);
+ 159   1              drawline(x1,x1,y0,y1,color);
+ 160   1              drawline(x0,x0,y0,y1,color);
+ 161   1              
+ 162   1      }
+ 163          
+ 164          void show_pic(unsigned char * table,UINT x0,UINT y0,UINT width,UINT height)
+ 165          {
+ 166   1              UINT x;
+ 167   1              UINT temp;
+C51 COMPILER V8.02   TEXT1                                                                 11/08/2009 23:38:50 PAGE 4   
+
+ 168   1              BlockWrite(x0,x0+width-1,y0,y0+height-1);
+ 169   1              for(x=0;x<width*height*2;x+=2)
+ 170   1              {
+ 171   2                      temp=table[x]<<8;
+ 172   2                      temp+=table[x+1];
+ 173   2                      W_DATA(temp);
+ 174   2              }
+ 175   1      }
+ 176          void main(void)
+ 177          {
+ 178   1              _RD = 1;
+ 179   1              P0=0xf0;
+ 180   1              _RES = 1;
+ 181   1              Delay(10);
+ 182   1              _RES = 0;
+ 183   1              Delay(50);
+ 184   1              _RES = 1;
+ 185   1              Delay(10);
+ 186   1              SPFD5420A_CPT30W_Initial();
+ 187   1              Clear();
+ 188   1              juxing(0,0,239,40,0x07e0);
+ 189   1              Blue(1,238,1,39);
+ 190   1              ShowString(1,1,"Hello ,world!!!");
+ 191   1              ShowString(1,17,"My name is KKK!!!");
+ 192   1              Delay(10000);
+ 193   1              Clear();
+ 194   1              juxing(0,0,239,20,0x07e0);
+ 195   1              Blue(1,238,1,19);
+ 196   1              ShowString(1,1,"Now let's have a look!");
+ 197   1              Delay(10000);
+ 198   1              while(1)
+ 199   1              {
+ 200   2                      blue_dark_zong();
+ 201   2                      Delay(1000);
+ 202   2                      red_dark_heng();
+ 203   2                      Delay(1000);
+ 204   2                      green_dark_zong();
+ 205   2                      Delay(1000);
+ 206   2                      blue_dark_heng();
+ 207   2                      Delay(1000);
+ 208   2                      red_dark_zong();
+ 209   2                      Delay(1000);
+ 210   2                      green_dark_heng();
+ 211   2                      Delay(10000);           
+ 212   2                      Clear();
+ 213   2                      drawline(0,0x00ef,0,0x018f,0xffff);
+ 214   2                      Delay(1000);
+ 215   2                      drawline(0,0x00ef,0,0x018f,0xffff);
+ 216   2                      Delay(1000);
+ 217   2                      drawline(0,0,0,399,0xffff);
+ 218   2                      drawline(239,239,0,399,0xffff);
+ 219   2                      drawline(0,239,0,0,0xffff);
+ 220   2                      drawline(0,239,399,399,0xffff);
+ 221   2                      Delay(10000);
+ 222   2                      Clear();
+ 223   2                      sin();
+ 224   2                      Delay(1000);
+ 225   2                      Clear();
+ 226   2      //              show_pic(gImage_1,0,0,49,49);
+ 227   2      
+ 228   2      //              show_pic(gImage_1,40,40,60,40);
+ 229   2              }
+C51 COMPILER V8.02   TEXT1                                                                 11/08/2009 23:38:50 PAGE 5   
+
+ 230   1      }
+ 231          //---------------------------------------------------------------------------
+ 232          void Delay(UINT t)
+ 233          {
+ 234   1              UCHAR i;
+ 235   1              while( t > 0 )
+ 236   1              {
+ 237   2                      t--;
+ 238   2                      for ( i = 0; i < 255; i++ )
+ 239   2                              ;
+ 240   2              }
+ 241   1      }
+ 242          //---------------------------------------------------------------------------
+ 243          void W_COM(UINT dat)
+ 244          {
+ 245   1              A0 = 0;
+ 246   1              P2 = dat >> 8;
+ 247   1              P1 = dat & 0xFF;
+ 248   1              _WR = 0;
+ 249   1              _WR = 1;
+ 250   1      }
+ 251          //---------------------------------------------------------------------------
+ 252          void W_DATA(UINT dat)
+ 253          {
+ 254   1              A0 = 1;
+ 255   1              P2 = dat >> 8;
+ 256   1              P1 = dat & 0xFF;
+ 257   1              _WR = 0;
+ 258   1              _WR = 1;
+ 259   1      }
+ 260          //---------------------------------------------------------------------------
+ 261          void BlockWrite(UINT sx, UINT ex, UINT sy, UINT ey)
+ 262          {
+ 263   1              W_COM(0x0210);
+ 264   1              W_DATA(sx);
+ 265   1              W_COM(0x0211);
+ 266   1              W_DATA(ex);
+ 267   1              W_COM(0x0212);
+ 268   1              W_DATA(sy);
+ 269   1              W_COM(0x0213);
+ 270   1              W_DATA(ey);
+ 271   1      
+ 272   1              W_COM(0x0200);
+ 273   1              W_DATA(0);
+ 274   1              W_COM(0x0201);
+ 275   1              W_DATA(0);
+ 276   1      
+ 277   1              W_COM(0x0202);
+ 278   1      }
+ 279          //---------------------------------------------------------------------------
+ 280          void Clear(void)
+ 281          {       Show(0x0000, 0x00EF, 0x0000, 0x018F, 0x0000);   }
+ 282          void Full(void)
+ 283          {       Show(0x0000, 0x00EF, 0x0000, 0x018F, 0xFFFF);   }
+ 284          void Red(UINT sx, UINT ex, UINT sy, UINT ey)
+ 285          {       Show(sx, ex,sy,ey, 0xF800);     }
+ 286          void Green(UINT sx, UINT ex, UINT sy, UINT ey)
+ 287          {       Show(sx, ex,sy,ey, 0x07E0);     }
+ 288          void Blue(UINT sx, UINT ex, UINT sy, UINT ey)
+ 289          {       Show(sx, ex,sy,ey, 0x001F);     }
+ 290          
+ 291          
+C51 COMPILER V8.02   TEXT1                                                                 11/08/2009 23:38:50 PAGE 6   
+
+ 292          void Show(UINT sx, UINT ex, UINT sy, UINT ey, UINT dat)
+ 293          {
+ 294   1              UINT x, y, i, j;
+ 295   1              BlockWrite(sx, ex, sy, ey);
+ 296   1              
+ 297   1              x = ex - sx;
+ 298   1              y = ey - sy;
+ 299   1              
+ 300   1              for ( i = 0; i <= y; i++ )
+ 301   1                      for ( j = 0; j <= x; j++ )
+ 302   1                              W_DATA(dat);
+ 303   1      }
+ 304          //---------------------------------------------------------------------------
+ 305          void SPFD5420A_CPT30W_Initial(void)
+ 306          {
+ 307   1              W_COM(0x0606); W_DATA(0x0000);
+ 308   1              Delay(100);
+ 309   1              W_COM(0x0606); W_DATA(0x0000);
+ 310   1              Delay(5);
+ 311   1              W_COM(0x0007); W_DATA(0x0001);
+ 312   1              Delay(5);
+ 313   1              W_COM(0x0110); W_DATA(0x0001);
+ 314   1              Delay(5);
+ 315   1              
+ 316   1              W_COM(0x0100); W_DATA(0x17B0);
+ 317   1              W_COM(0x0101); W_DATA(0x0147);
+ 318   1              W_COM(0x0102); W_DATA(0x019D);
+ 319   1              W_COM(0x0103); W_DATA(0x2F00);
+ 320   1              W_COM(0x0281); W_DATA(0x0001);
+ 321   1              Delay(5);
+ 322   1              
+ 323   1              W_COM(0x0102); W_DATA(0x01BD);
+ 324   1              Delay(5);
+ 325   1              
+ 326   1              W_COM(0x0000); W_DATA(0x0000);
+ 327   1              W_COM(0x0001); W_DATA(0x0100);
+ 328   1              W_COM(0x0002); W_DATA(0x0100);
+ 329   1              W_COM(0x0003); W_DATA(0x10B0);
+ 330   1              W_COM(0x0008); W_DATA(0x0808);
+ 331   1              W_COM(0x0009); W_DATA(0x0001);
+ 332   1              W_COM(0x000B); W_DATA(0x0010);
+ 333   1              W_COM(0x000C); W_DATA(0x0000);
+ 334   1              W_COM(0x000F); W_DATA(0x0000);
+ 335   1              W_COM(0x0010); W_DATA(0x0014);
+ 336   1              W_COM(0x0011); W_DATA(0x0202);
+ 337   1              W_COM(0x0012); W_DATA(0x0300);
+ 338   1              W_COM(0x0020); W_DATA(0x021E);
+ 339   1              W_COM(0x0021); W_DATA(0x0202);
+ 340   1              W_COM(0x0022); W_DATA(0x0100);
+ 341   1      
+ 342   1              W_COM(0x0090); W_DATA(0x8000);
+ 343   1              W_COM(0x0092); W_DATA(0x0000);
+ 344   1              W_COM(0x0100); W_DATA(0x17B0);
+ 345   1              W_COM(0x0101); W_DATA(0x0147);
+ 346   1              W_COM(0x0102); W_DATA(0x01B8);
+ 347   1              W_COM(0x0103); W_DATA(0x2C00);
+ 348   1              W_COM(0x0107); W_DATA(0x0000);
+ 349   1              W_COM(0x0110); W_DATA(0x0001);
+ 350   1              W_COM(0x0210); W_DATA(0x0000);
+ 351   1              W_COM(0x0211); W_DATA(0x00EF);
+ 352   1              W_COM(0x0212); W_DATA(0x0000);
+ 353   1              W_COM(0x0213); W_DATA(0x018F);
+C51 COMPILER V8.02   TEXT1                                                                 11/08/2009 23:38:50 PAGE 7   
+
+ 354   1              W_COM(0x0200); W_DATA(0x0000);
+ 355   1              W_COM(0x0201); W_DATA(0x0000);
+ 356   1              W_COM(0x0280); W_DATA(0x0000);
+ 357   1              W_COM(0x0281); W_DATA(0x0000);
+ 358   1              W_COM(0x0282); W_DATA(0x0000);
+ 359   1      
+ 360   1              W_COM(0x0300); W_DATA(0x0501); //GAMMA Control
+ 361   1              W_COM(0x0301); W_DATA(0x0C2F);
+ 362   1              W_COM(0x0302); W_DATA(0x0D33);
+ 363   1              W_COM(0x0303); W_DATA(0x330D);
+ 364   1              W_COM(0x0304); W_DATA(0x2F0C);
+ 365   1              W_COM(0x0305); W_DATA(0x0105);
+ 366   1              W_COM(0x0306); W_DATA(0x030A);
+ 367   1              W_COM(0x0307); W_DATA(0x0A03);
+ 368   1              W_COM(0x0308); W_DATA(0x0006);
+ 369   1              W_COM(0x0309); W_DATA(0x0004);
+ 370   1              W_COM(0x030A); W_DATA(0x0E05);
+ 371   1              W_COM(0x030B); W_DATA(0x0E01);
+ 372   1              W_COM(0x030C); W_DATA(0x010E);
+ 373   1              W_COM(0x030D); W_DATA(0x050E);
+ 374   1              W_COM(0x030E); W_DATA(0x0400);
+ 375   1              W_COM(0x030F); W_DATA(0x0600);
+ 376   1      
+ 377   1              W_COM(0x0400); W_DATA(0x3500); //Base Image Number of Line
+ 378   1              W_COM(0x0401); W_DATA(0x0001); //Base Image Display Control
+ 379   1              W_COM(0x0404); W_DATA(0x0000); //Base Image Vertical Scroll Control
+ 380   1              W_COM(0x0500); W_DATA(0x0000);
+ 381   1              W_COM(0x0501); W_DATA(0x0000);
+ 382   1              W_COM(0x0502); W_DATA(0x0000);
+ 383   1              W_COM(0x0503); W_DATA(0x0000);
+ 384   1              W_COM(0x0504); W_DATA(0x0000);
+ 385   1              W_COM(0x0505); W_DATA(0x0000);
+ 386   1              W_COM(0x0600); W_DATA(0x0000); //
+ 387   1              W_COM(0x0606); W_DATA(0x0000); //
+ 388   1              W_COM(0x06F0); W_DATA(0x0000); //
+ 389   1      
+ 390   1              W_COM(0x07F0); W_DATA(0x5420);
+ 391   1              W_COM(0x07F2); W_DATA(0x00DF);
+ 392   1              W_COM(0x07F3); W_DATA(0x2890);
+ 393   1              W_COM(0x07F4); W_DATA(0x0022);
+ 394   1              W_COM(0x07F5); W_DATA(0x0011);
+ 395   1              W_COM(0x07F0); W_DATA(0x0000);
+ 396   1      
+ 397   1              W_COM(0x0007); W_DATA(0x0173); //Display Control 1
+ 398   1              Delay(200);
+ 399   1      }
+ 400          //---------------------------------------------------------------------------
+ 401          
+ 402          void ShowCharWithColor(UCHAR sx, UINT sy, UCHAR index, UINT CharColor, UINT BkColor)
+ 403          {
+ 404   1              UCHAR i, j;
+ 405   1              UCHAR mask;
+ 406   1      
+ 407   1              if ( index > 95 )
+ 408   1                      return;
+ 409   1      
+ 410   1              BlockWrite(sx, sx+7, sy, sy+15);        
+ 411   1              for ( i = 0; i < 16; i++ )
+ 412   1              {
+ 413   2                      mask = 0x80;
+ 414   2                      for ( j = 0; j < 8; j++ )
+ 415   2                      {
+C51 COMPILER V8.02   TEXT1                                                                 11/08/2009 23:38:50 PAGE 8   
+
+ 416   3                              W_DATA((ascii_font[index][i] & mask) ? CharColor : BkColor);
+ 417   3                              mask >>= 1;
+ 418   3                      }
+ 419   2              }
+ 420   1      }
+ 421          void ShowString(UCHAR sx, UINT sy, char* string)
+ 422          {
+ 423   1              UCHAR len;
+ 424   1      
+ 425   1              len = strlen( string );
+ 426   1              Show(sx, len*8+2, sy, sy+17, 0);
+ 427   1              ++sx;
+ 428   1              ++sy;
+ 429   1              while( *string != 0 )
+ 430   1              {
+ 431   2                      ShowCharWithColor(sx, sy, *string-32, 0xFFFF, 0x0000);
+ 432   2                      sx += 8;
+ 433   2                      string++;
+ 434   2              }
+ 435   1      }
+ 436          //---------------------------------------------------------------------------
+ 437          
+ 438          void ShowGradualColor(void)
+ 439          {
+ 440   1              unsigned int i, j, k;
+ 441   1      
+ 442   1              for ( i = 0; i <= 399; i++ )            
+ 443   1              {
+ 444   2                      k = 0;
+ 445   2                      for ( j = 0; j <= 239; j++ );
+ 446   2      //                      W_DATA(GradualColor[k++]);
+ 447   2              }
+ 448   1      }
+ 449          //---------------------------------------------------------------------------
+ 450          void Sleep_In(void)
+ 451          {
+ 452   1              W_COM(0x0007); W_DATA(0x0170);
+ 453   1              Delay(50);
+ 454   1              W_COM(0x0007); W_DATA(0x0000);//Display off
+ 455   1              Delay(50);
+ 456   1              W_COM(0x0100); W_DATA(0x16B2);//Set to sleep mode
+ 457   1      }
+ 458          //---------------------------------------------------------------------------
+ 459          void Sleep_Out(void)
+ 460          {
+ 461   1              W_COM(0x0100); W_DATA(0x16B0);//Release state
+ 462   1              W_COM(0x0007); W_DATA(0x0173);
+ 463   1      }
+ 464          //---------------------------------------------------------------------------
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2918    ----
+   CONSTANT SIZE    =   1993    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----     125
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

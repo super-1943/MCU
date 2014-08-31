@@ -1,0 +1,477 @@
+Warning[w30]: Module Keyboard is compiled with tools for x51, expected 8051
+Warning[w30]: Module descrip is compiled with tools for x51, expected 8051
+Warning[w30]: Module support is compiled with tools for x51, expected 8051
+Warning[w30]: Module usb is compiled with tools for x51, expected 8051
+Warning[w30]: Module usbinit is compiled with tools for x51, expected 8051
+Warning[w30]: Module vidpid is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?cexit is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?cmain is compiled with tools for x51, expected 8051
+Warning[w30]: Module CSTARTUP is compiled with tools for x51, expected 8051
+Warning[w30]: Module VIRTUAL_REGISTERS is compiled with tools for x51, expected 8051
+Warning[w30]: Module REGISTER_BANK0 is compiled with tools for x51, expected 8051
+Warning[w30]: Module REGISTER_BANK1 is compiled with tools for x51, expected 8051
+Warning[w30]: Module REGISTER_BANK2 is compiled with tools for x51, expected 8051
+Warning[w30]: Module REGISTER_BANK3 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?putchar is compiled with tools for x51, expected 8051
+Warning[w30]: Module getchar is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?BANKED_CODE_SUPPORT is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SC_DIV_MOD is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?clibheapasm is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_EQ is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_EQ_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_EQ_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_EQ_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_EQ8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SL_GT is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SL_GT_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SL_GT_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SL_GT_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SL_GT8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UL_GT is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UL_GT_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UL_GT_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UL_GT_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UL_GT8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_TEST_ZERO is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_TEST_ZERO_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_TEST_ZERO_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?G_EQ is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?G_GT is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?B_GPTR_LOAD is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?C_GPTR_LOAD is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?S_GPTR_LOAD is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?G_GPTR_LOAD is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_GPTR_LOAD is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?B_GPTR_STORE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?C_GPTR_STORE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?S_GPTR_STORE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?G_GPTR_STORE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_GPTR_STORE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_TO_FLT is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_TO_L is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_TEST_ZERO is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_TEST_ZERO_R1 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_TEST_INF is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_TEST_INF_R1 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_TEST_NAN is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_TEST_NAN_R1 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_EQ is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_GE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_LT is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_MUL is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_ADD is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FLT_DIV is compiled with tools for x51, expected 8051
+Warning[w30]: Module __init_extended1 is compiled with tools for x51, expected 8051
+Warning[w30]: Module __init_extended2 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?CALL_IND_EXT2 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?RET_EXT2 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MEX1PUSH is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOV_MCB_CB is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?RESTORE_MCB is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MUL is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MUL8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MUL8_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MUL8_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UL_DIV_MOD is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_DIV_MOD is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_NEG_R1 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_NEG is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_NEG_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_NEG_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_NOT is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_NOT_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_NOT_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SL_SHR is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UL_SHR is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_SHL is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_ADD is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_ADD_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_ADD_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_ADD_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_ADD8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_ADD_TO_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_ADD_TO_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_SUB is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_SUB_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_SUB_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_SUB_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_SUB8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_SUB_FROM_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_SUB_FROM_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_AND is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_AND_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_AND_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_AND_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_AND_TO_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_AND_TO_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_TEST is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_TEST_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_TEST_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_TEST_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_IOR is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_IOR_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_IOR_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_IOR_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_IOR_TO_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_IOR_TO_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_XOR is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_XOR_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_XOR_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_XOR_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_XOR_TO_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_XOR_TO_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_INC is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_INC_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_INC_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_DEC is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_DEC_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_DEC_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SC_TO_L is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SC_TO_L_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SC_TO_L_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MOV is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MOV_A is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MOV_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MOV_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MOV_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MOV_TO_PX is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MOV_TO_PX_A is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?L_MOV_TO_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_IDATA_IDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_IDATA_PDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_IDATA_XDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_IDATA_CODE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_PDATA_IDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_PDATA_PDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_PDATA_XDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_PDATA_CODE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_XDATA_IDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_XDATA_PDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_XDATA_XDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG8_XDATA_CODE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG16_XDATA_XDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG16_XDATA_CODE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG_IDATA_GPTR is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG_PDATA_GPTR is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG_XDATA_GPTR is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG_GPTR_IDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG_GPTR_PDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG_GPTR_XDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG_GPTR_CODE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?MOVE_LONG_GPTR_GPTR is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?DEC_DPTR_3 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SETJMP_XDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SETJMP_PDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SETJMP_IDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?LONGJMP_XDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?LONGJMP_PDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?LONGJMP_IDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?S_DIV_MOD is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SS_SHR is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?US_SHR is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?S_SHL is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?ALLOC_EXT_STACK8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?ALLOC_EXT_STACK16 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?DEALLOC_EXT_STACK8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?DEALLOC_EXT_STACK16 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?EXT_STACK_DISP8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?EXT_STACK_DISP16 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?ALLOC_XSTACK8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?DEALLOC_XSTACK8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?ADD_XSTACK_DISP8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?ADD_XSTACK_DISP16 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?XSTACK_DISP8 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?XSTACK_DISP16 is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?CALL_IND is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?POP_BIT_ISP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?POP_BIT_ESP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FUNC_ENTER_OVERLAY is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FUNC_LEAVE_OVERLAY is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FUNC_ENTER_SP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?BANKED_LEAVE_SP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FUNC_LEAVE_SP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?BANKED_ENTER_PDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FUNC_ENTER_PDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?BANKED_LEAVE_PDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FUNC_LEAVE_PDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?BANKED_ENTER_XDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FUNC_ENTER_XDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?BANKED_LEAVE_XDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?FUNC_LEAVE_XDATA is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?INTERRUPT_ENTER_OVERLAY is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SMALL_INTERRUPT_ENTER_OVERLAY is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?INTERRUPT_LEAVE_OVERLAY is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SMALL_INTERRUPT_LEAVE_OVERLAY is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?INTERRUPT_ENTER_SP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?INTERRUPT_LEAVE_SP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SMALL_INTERRUPT_ENTER_SP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SMALL_INTERRUPT_LEAVE_SP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SMALL_INTERRUPT_ENTER_PSP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?INTERRUPT_ENTER_PSP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?INTERRUPT_LEAVE_PSP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SMALL_INTERRUPT_LEAVE_PSP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?INTERRUPT_ENTER_XSP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SMALL_INTERRUPT_ENTER_XSP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?INTERRUPT_LEAVE_XSP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SMALL_INTERRUPT_LEAVE_XSP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?INTERRUPT_ENTER_ESP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SMALL_INTERRUPT_ENTER_ESP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?INTERRUPT_LEAVE_ESP is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?SMALL_INTERRUPT_LEAVE_ESP is compiled with tools for x51, expected 8051
+Warning[w30]: Module iar_stack_enter_leave_dptr is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_ISTACK_I is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_ISTACK_P is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_ISTACK_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_ISTACK_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_ISTACK_G is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_ISTACK16_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_ISTACK16_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_ISTACK16_G is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_PSTACK_I is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_PSTACK_P is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_PSTACK_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_PSTACK_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_PSTACK_G is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_XSTACK_I is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_XSTACK_P is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_XSTACK8_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_XSTACK8_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_XSTACK16_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_XSTACK16_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_XSTACK16_G is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_IND_OVERLAY16_I is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_IND_OVERLAY16_P is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_IND_OVERLAY16_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_IND_OVERLAY16_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_IND_OVERLAY_I is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_IND_OVERLAY_P is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_IND_OVERLAY_X is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_IND_OVERLAY_C is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?PUSH_IND_OVERLAY_G is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UC_SWITCH_DENSE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?US_SWITCH_DENSE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UL_SWITCH_DENSE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UC_SWITCH_SPARSE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UC_JMP_IF_IN_RANGE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UC_JMP_IF_VALUE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?US_SWITCH_SPARSE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?US_JMP_IF_IN_RANGE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?US_JMP_IF_VALUE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UL_SWITCH_SPARSE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UL_JMP_IF_IN_RANGE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?UL_JMP_IF_VALUE is compiled with tools for x51, expected 8051
+Warning[w30]: Module ?abort is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?abort uses unsigned plain chars
+Warning[w30]: Module ?abs is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?abs uses unsigned plain chars
+Warning[w30]: Module ?acos is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?acos uses unsigned plain chars
+Warning[w30]: Module ?asin is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?asin uses unsigned plain chars
+Warning[w30]: Module ?atan is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?atan uses unsigned plain chars
+Warning[w30]: Module ?atan2 is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?atan2 uses unsigned plain chars
+Warning[w30]: Module ?atof is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?atof uses unsigned plain chars
+Warning[w30]: Module ?atoi is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?atoi uses unsigned plain chars
+Warning[w30]: Module ?atol is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?atol uses unsigned plain chars
+Warning[w30]: Module ?bsearch is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?bsearch uses unsigned plain chars
+Warning[w30]: Module ?ceil is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?ceil uses unsigned plain chars
+Warning[w30]: Module ?cos is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?cos uses unsigned plain chars
+Warning[w30]: Module ?cosh is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?cosh uses unsigned plain chars
+Warning[w30]: Module ?div is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?div uses unsigned plain chars
+Warning[w30]: Module ?errno is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?errno uses unsigned plain chars
+Warning[w30]: Module ?exp is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?exp uses unsigned plain chars
+Warning[w30]: Module ?exp10 is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?exp10 uses unsigned plain chars
+Warning[w30]: Module ?fabs is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?fabs uses unsigned plain chars
+Warning[w30]: Module ?floor is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?floor uses unsigned plain chars
+Warning[w30]: Module ?fmod is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?fmod uses unsigned plain chars
+Warning[w30]: Module ?frexp is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?frexp uses unsigned plain chars
+Warning[w30]: Module ?gets is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?gets uses unsigned plain chars
+Warning[w30]: Module ?labs is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?labs uses unsigned plain chars
+Warning[w30]: Module ?largerd is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?largerd uses unsigned plain chars
+Warning[w30]: Module ?ldexp is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?ldexp uses unsigned plain chars
+Warning[w30]: Module ?ldiv is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?ldiv uses unsigned plain chars
+Warning[w30]: Module ?log is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?log uses unsigned plain chars
+Warning[w30]: Module ?log10 is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?log10 uses unsigned plain chars
+Warning[w30]: Module ?mediumrd is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?mediumrd uses unsigned plain chars
+Warning[w30]: Module ?memchr is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?memchr uses unsigned plain chars
+Warning[w30]: Module ?memcmp is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?memcmp uses unsigned plain chars
+Warning[w30]: Module ?memcpy is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?memcpy uses unsigned plain chars
+Warning[w30]: Module ?memmove is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?memmove uses unsigned plain chars
+Warning[w30]: Module ?memset is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?memset uses unsigned plain chars
+Warning[w30]: Module ?modf is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?modf uses unsigned plain chars
+Warning[w30]: Module ?pow is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?pow uses unsigned plain chars
+Warning[w30]: Module ?printf is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?printf uses unsigned plain chars
+Warning[w30]: Module ?puts is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?puts uses unsigned plain chars
+Warning[w30]: Module ?qsort is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?qsort uses unsigned plain chars
+Warning[w30]: Module ?rand is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?rand uses unsigned plain chars
+Warning[w30]: Module ?satan is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?satan uses unsigned plain chars
+Warning[w30]: Module ?scanf is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?scanf uses unsigned plain chars
+Warning[w30]: Module ?sin is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?sin uses unsigned plain chars
+Warning[w30]: Module ?sinh is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?sinh uses unsigned plain chars
+Warning[w30]: Module ?sinus is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?sinus uses unsigned plain chars
+Warning[w30]: Module ?sprintf is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?sprintf uses unsigned plain chars
+Warning[w30]: Module ?sqrt is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?sqrt uses unsigned plain chars
+Warning[w30]: Module ?srand is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?srand uses unsigned plain chars
+Warning[w30]: Module ?sscanf is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?sscanf uses unsigned plain chars
+Warning[w30]: Module ?strcat is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strcat uses unsigned plain chars
+Warning[w30]: Module ?strchr is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strchr uses unsigned plain chars
+Warning[w30]: Module ?strcmp is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strcmp uses unsigned plain chars
+Warning[w30]: Module ?strcoll is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strcoll uses unsigned plain chars
+Warning[w30]: Module ?strcpy is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strcpy uses unsigned plain chars
+Warning[w30]: Module ?strcspn is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strcspn uses unsigned plain chars
+Warning[w30]: Module ?strlen is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strlen uses unsigned plain chars
+Warning[w30]: Module ?strncat is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strncat uses unsigned plain chars
+Warning[w30]: Module ?strncmp is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strncmp uses unsigned plain chars
+Warning[w30]: Module ?strncpy is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strncpy uses unsigned plain chars
+Warning[w30]: Module ?strpbrk is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strpbrk uses unsigned plain chars
+Warning[w30]: Module ?strrchr is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strrchr uses unsigned plain chars
+Warning[w30]: Module ?strspn is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strspn uses unsigned plain chars
+Warning[w30]: Module ?strstr is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strstr uses unsigned plain chars
+Warning[w30]: Module ?strtod is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strtod uses unsigned plain chars
+Warning[w30]: Module ?strtol is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strtol uses unsigned plain chars
+Warning[w30]: Module ?strtoul is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strtoul uses unsigned plain chars
+Warning[w30]: Module ?strxfrm is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strxfrm uses unsigned plain chars
+Warning[w30]: Module ?tan is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?tan uses unsigned plain chars
+Warning[w30]: Module ?tanh is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?tanh uses unsigned plain chars
+Warning[w30]: Module ?tolower is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?tolower uses unsigned plain chars
+Warning[w30]: Module ?toupper is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?toupper uses unsigned plain chars
+Warning[w30]: Module ?vprintf is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?vprintf uses unsigned plain chars
+Warning[w30]: Module ?vsprintf is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?vsprintf uses unsigned plain chars
+Warning[w30]: Module ?__far_calloc is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?__far_calloc uses unsigned plain chars
+Warning[w30]: Module ?__far_free is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?__far_free uses unsigned plain chars
+Warning[w30]: Module ?__far_malloc is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?__far_malloc uses unsigned plain chars
+Warning[w30]: Module ?__far_realloc is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?__far_realloc uses unsigned plain chars
+Warning[w30]: Module ?__xdata_calloc is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?__xdata_calloc uses unsigned plain chars
+Warning[w30]: Module ?__xdata_free is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?__xdata_free uses unsigned plain chars
+Warning[w30]: Module ?__xdata_malloc is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?__xdata_malloc uses unsigned plain chars
+Warning[w30]: Module ?__xdata_realloc is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?__xdata_realloc uses unsigned plain chars
+Warning[w30]: Module ?assert is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?assert uses unsigned plain chars
+Warning[w30]: Module ?calloc is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?calloc uses unsigned plain chars
+Warning[w30]: Module ?ctype is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?ctype uses unsigned plain chars
+Warning[w30]: Module ?ctype8 is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?ctype8 uses unsigned plain chars
+Warning[w30]: Module ?free is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?free uses unsigned plain chars
+Warning[w30]: Module ?getchar is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?getchar uses unsigned plain chars
+Warning[w30]: Module ?isalnum is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?isalnum uses unsigned plain chars
+Warning[w30]: Module ?isalpha is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?isalpha uses unsigned plain chars
+Warning[w30]: Module ?iscntrl is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?iscntrl uses unsigned plain chars
+Warning[w30]: Module ?isdigit is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?isdigit uses unsigned plain chars
+Warning[w30]: Module ?isgraph is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?isgraph uses unsigned plain chars
+Warning[w30]: Module ?islower is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?islower uses unsigned plain chars
+Warning[w30]: Module ?isprint is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?isprint uses unsigned plain chars
+Warning[w30]: Module ?ispunct is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?ispunct uses unsigned plain chars
+Warning[w30]: Module ?isspace is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?isspace uses unsigned plain chars
+Warning[w30]: Module ?isupper is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?isupper uses unsigned plain chars
+Warning[w30]: Module ?isxdigit is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?isxdigit uses unsigned plain chars
+Warning[w30]: Module ?largewr is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?largewr uses unsigned plain chars
+Warning[w30]: Module ?malloc is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?malloc uses unsigned plain chars
+Warning[w30]: Module ?mediumwr is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?mediumwr uses unsigned plain chars
+Warning[w30]: Module ?putchar is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?putchar uses unsigned plain chars
+Warning[w30]: Module ?realloc is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?realloc uses unsigned plain chars
+Warning[w30]: Module ?smallwr is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?smallwr uses unsigned plain chars
+Warning[w30]: Module ?strerror is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strerror uses unsigned plain chars
+Warning[w30]: Module ?strtok is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?strtok uses unsigned plain chars
+Warning[w30]: Module ?low_level_init is compiled with tools for x51, expected 8051
+Warning[w31]: Modules have been compiled with possibly incompatible settings: Module Keyboard uses signed plain chars, while module ?low_level_init uses unsigned plain chars
+Error[e72]: Segment XDATA_Z must be defined in a segment definition option (-Z, -b or -P)

@@ -1,0 +1,79 @@
+A51 MACRO ASSEMBLER  AAA                                                                  12/19/2008 09:17:19 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.07
+OBJECT MODULE PLACED IN aaa.OBJ
+ASSEMBLER INVOKED BY: d:\Program Files\Keil\C51\BIN\A51.EXE aaa.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     org 00h
+0000 0102              2     ajmp start;
+0002                   3     start:
+                       4     
+0002 759800            5     mov scon,#0;
+0005 753001            6     mov 30h,#01h
+0008 753102            7     mov 31h,#02h
+000B 753204            8     mov 32h,#04h
+000E 753308            9     mov 33h,#08h
+0011 753410           10     mov 34h,#10h
+0014 753520           11     mov 35h,#20h
+0017 753640           12     mov 36h,#40h
+001A 753780           13     mov 37h,#80h;
+                      14     
+001D 7830             15     mov r0,#30h;
+001F 7A08             16     mov r2,#8
+                      17     
+0021                  18     loop:
+                      19     
+0021 E6               20     mov a,@r0;
+0022 F599             21     mov sbuf,a;
+0024                  22     lo:
+                      23     
+0024 3099FD           24     jnb TI,lo;
+0027 C299             25     clr TI
+0029 1130             26     acall delay;
+002B 08               27     inc r0
+002C DAF3             28     djnz r2,loop
+002E 80D2             29     sjmp start
+                      30     
+0030                  31     delay:
+                      32     
+0030 7F03             33     mov r7,#3;
+                      34     
+0032                  35     dd1:
+                      36     
+0032 7EFF             37     mov r6,#0ffh
+                      38     
+0034                  39     dd2:
+                      40     
+0034 7DFF             41     mov r5,#0ffh
+                      42     
+0036 DDFE             43     djnz r5,$;
+0038 DEFA             44     djnz r6,dd2
+003A DFF6             45     djnz r7,dd1
+003C 22               46     ret
+                      47     end
+A51 MACRO ASSEMBLER  AAA                                                                  12/19/2008 09:17:19 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+DD1. . . . . . . .  C ADDR   0032H   A   
+DD2. . . . . . . .  C ADDR   0034H   A   
+DELAY. . . . . . .  C ADDR   0030H   A   
+LO . . . . . . . .  C ADDR   0024H   A   
+LOOP . . . . . . .  C ADDR   0021H   A   
+SBUF . . . . . . .  D ADDR   0099H   A   
+SCON . . . . . . .  D ADDR   0098H   A   
+START. . . . . . .  C ADDR   0002H   A   
+TI . . . . . . . .  B ADDR   0098H.1 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

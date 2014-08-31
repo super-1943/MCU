@@ -1,0 +1,73 @@
+C51 COMPILER V8.02   TEXT1                                                                 01/26/2009 11:47:48 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <at89x51.h>
+   2          sbit str=P3^2;
+   3          
+   4          unsigned char number[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f};
+   5          unsigned char bits[]={0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80};
+   6          unsigned char buffer[8]={0,2,4,6,8,7,5,1};
+   7          void delay(unsigned char x)
+   8          {
+   9   1              unsigned char i,j;
+  10   1              while(x--)
+  11   1              for(i=48;i;i--)
+  12   1              for(j=88;j;j--);
+  13   1      }
+  14          
+  15          void senddata(unsigned char i,unsigned char j)
+  16          {
+  17   1              SCON=0x00;
+  18   1              str=0;
+  19   1              SBUF=i;
+  20   1              while(TI==0);
+  21   1              TI=0;
+  22   1              str=1;
+  23   1              str=0;
+  24   1              SBUF=j;
+  25   1              while(TI==0);
+  26   1              TI=0; 
+  27   1              str=1;
+  28   1      }
+  29          
+  30          void showbuffer(void)
+  31          {
+  32   1              unsigned char i,t;
+  33   1              for(i=0;i<8;i++)
+  34   1              {
+  35   2                      
+  36   2                      senddata(bits[i],number[buffer[i]]);
+  37   2                      delay(30);
+  38   2              }
+  39   1      }
+*** WARNING C280 IN LINE 32 OF TEXT1.C: 't': unreferenced local variable
+  40          void main(void)
+  41          {
+  42   1               while(1)
+  43   1               {
+  44   2                      showbuffer();
+  45   2               }
+  46   1      
+  47   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     81    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+C51 COMPILER V8.02   TEXT1                                                                 01/26/2009 11:47:48 PAGE 2   
+
+   DATA SIZE        =     26       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

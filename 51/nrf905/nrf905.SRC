@@ -1,0 +1,832 @@
+; .\nrf905.SRC generated from: nrf905.c
+; COMPILER INVOKED BY:
+;        C:\Keil\C51\BIN\C51.EXE nrf905.c BROWSE DEBUG OBJECTEXTEND SRC(.\nrf905.SRC)
+
+$NOMOD51
+
+NAME	NRF905
+
+P0	DATA	080H
+P1	DATA	090H
+P2	DATA	0A0H
+P3	DATA	0B0H
+T0	BIT	0B0H.4
+AC	BIT	0D0H.6
+T1	BIT	0B0H.5
+EA	BIT	0A8H.7
+IE	DATA	0A8H
+RD	BIT	0B0H.7
+ES	BIT	0A8H.4
+IP	DATA	0B8H
+RI	BIT	098H.0
+INT0	BIT	0B0H.2
+CY	BIT	0D0H.7
+TI	BIT	098H.1
+INT1	BIT	0B0H.3
+PS	BIT	0B8H.4
+SP	DATA	081H
+OV	BIT	0D0H.2
+WR	BIT	0B0H.6
+SBUF	DATA	099H
+PCON	DATA	087H
+SCON	DATA	098H
+TMOD	DATA	089H
+TCON	DATA	088H
+IE0	BIT	088H.1
+IE1	BIT	088H.3
+B	DATA	0F0H
+ACC	DATA	0E0H
+ET0	BIT	0A8H.1
+ET1	BIT	0A8H.3
+TF0	BIT	088H.5
+TF1	BIT	088H.7
+RB8	BIT	098H.2
+TH0	DATA	08CH
+EX0	BIT	0A8H.0
+IT0	BIT	088H.0
+TH1	DATA	08DH
+TB8	BIT	098H.3
+EX1	BIT	0A8H.2
+IT1	BIT	088H.2
+P	BIT	0D0H.0
+SM0	BIT	098H.7
+TL0	DATA	08AH
+SM1	BIT	098H.6
+TL1	DATA	08BH
+SM2	BIT	098H.5
+PT0	BIT	0B8H.1
+PT1	BIT	0B8H.3
+RS0	BIT	0D0H.3
+TR0	BIT	088H.4
+RS1	BIT	0D0H.4
+TR1	BIT	088H.6
+PX0	BIT	0B8H.0
+PX1	BIT	0B8H.2
+DPH	DATA	083H
+DPL	DATA	082H
+REN	BIT	098H.4
+RXD	BIT	0B0H.0
+TXD	BIT	0B0H.1
+F0	BIT	0D0H.5
+PSW	DATA	0D0H
+?PR?_delay_nrf905?NRF905                 SEGMENT CODE 
+?PR?_init_port_nrf905?NRF905             SEGMENT CODE 
+?DT?_init_port_nrf905?NRF905             SEGMENT DATA OVERLAYABLE 
+?PR?_send_byte_nrf905?NRF905             SEGMENT CODE 
+?PR?read_byte_nrf905?NRF905              SEGMENT CODE 
+?PR?read_status_nrf905?NRF905            SEGMENT CODE 
+?PR?_config_nrf905?NRF905                SEGMENT CODE 
+?DT?_config_nrf905?NRF905                SEGMENT DATA OVERLAYABLE 
+?PR?_fast_config_nrf905?NRF905           SEGMENT CODE 
+?PR?_check_config_nrf905?NRF905          SEGMENT CODE 
+?DT?_check_config_nrf905?NRF905          SEGMENT DATA OVERLAYABLE 
+?PR?_transmit_nrf905?NRF905              SEGMENT CODE 
+?DT?_transmit_nrf905?NRF905              SEGMENT DATA OVERLAYABLE 
+?PR?_listen_nrf905?NRF905                SEGMENT CODE 
+?DT?_listen_nrf905?NRF905                SEGMENT DATA OVERLAYABLE 
+	EXTRN	CODE (?C?ILDPTR)
+	EXTRN	CODE (?C?ISTPTR)
+	EXTRN	CODE (?C?CLDPTR)
+	EXTRN	CODE (?C?CSTPTR)
+	EXTRN	CODE (?C?CSTOPTR)
+	EXTRN	CODE (?C?CLDOPTR)
+	PUBLIC	_listen_nrf905
+	PUBLIC	_transmit_nrf905
+	PUBLIC	?_check_config_nrf905?BYTE
+	PUBLIC	_check_config_nrf905
+	PUBLIC	_fast_config_nrf905
+	PUBLIC	_config_nrf905
+	PUBLIC	read_status_nrf905
+	PUBLIC	read_byte_nrf905
+	PUBLIC	_send_byte_nrf905
+	PUBLIC	_init_port_nrf905
+	PUBLIC	_delay_nrf905
+
+	RSEG  ?DT?_check_config_nrf905?NRF905
+?_check_config_nrf905?BYTE:
+         pd?755:   DS   3
+	ORG  3
+        buf?756:   DS   3
+
+	RSEG  ?DT?_init_port_nrf905?NRF905
+?_init_port_nrf905?BYTE:
+         pa?141:   DS   3
+
+	RSEG  ?DT?_transmit_nrf905?NRF905
+?_transmit_nrf905?BYTE:
+       buff?858:   DS   3
+
+	RSEG  ?DT?_config_nrf905?NRF905
+?_config_nrf905?BYTE:
+         pd?548:   DS   3
+
+	RSEG  ?DT?_listen_nrf905?NRF905
+?_listen_nrf905?BYTE:
+      rxbuf?960:   DS   3
+; #include "nrf905.h"
+; 
+; 
+; void delay_nrf905(unsigned int i)
+
+	RSEG  ?PR?_delay_nrf905?NRF905
+_delay_nrf905:
+	USING	0
+			; SOURCE LINE # 4
+;---- Variable 'i?040' assigned to Register 'R6/R7' ----
+; {
+			; SOURCE LINE # 5
+?C0001:
+;   while(i--);
+			; SOURCE LINE # 6
+	MOV  	A,R7
+	DEC  	R7
+	MOV  	R4,AR6
+	JNZ  	?C0050
+	DEC  	R6
+?C0050:
+	ORL  	A,R4
+	JNZ  	?C0001
+; }
+			; SOURCE LINE # 7
+?C0003:
+	RET  	
+; END OF _delay_nrf905
+
+; /************************************
+; 完成IO口的初始化和初始数据（只做初始化但不写入无线模块，
+; 为后面做准备）
+; ************************************/
+; void init_port_nrf905(RF_CONFIG *pa)
+
+	RSEG  ?PR?_init_port_nrf905?NRF905
+_init_port_nrf905:
+	USING	0
+			; SOURCE LINE # 12
+	MOV  	pa?141,R3
+	MOV  	pa?141+01H,R2
+	MOV  	pa?141+02H,R1
+; {
+			; SOURCE LINE # 13
+; 
+;   CSN_1;
+;   SCK_0;
+;   if(pa)
+			; SOURCE LINE # 17
+	MOV  	A,R2
+	ORL  	A,R1
+	ORL  	A,R3
+	JNZ  	$ + 5H
+	LJMP 	?C0005
+;   {
+			; SOURCE LINE # 18
+;     pa->DETAIL.CH_NO=1;          //中心频率选择
+			; SOURCE LINE # 19
+	LCALL	?C?ILDPTR
+	MOV  	A,B
+	ANL  	A,#0FEH
+	MOV  	R6,A
+	MOV  	A,R6
+	MOV  	B,#01H
+	LCALL	?C?ISTPTR
+;     pa->DETAIL.AUTO_RETRAN=0;    //禁止自动重发
+			; SOURCE LINE # 20
+	MOV  	R3,pa?141
+	MOV  	R2,pa?141+01H
+	MOV  	R1,pa?141+02H
+	LCALL	?C?ILDPTR
+	MOV  	R7,A
+	MOV  	A,B
+	ANL  	A,#0DFH
+	MOV  	B,R7
+	LCALL	?C?ISTPTR
+;     pa->DETAIL.RX_RED_PWR=0;     //正常模式（相对于低功耗模式）
+			; SOURCE LINE # 21
+	MOV  	R3,pa?141
+	MOV  	R2,pa?141+01H
+	MOV  	R1,pa?141+02H
+	LCALL	?C?ILDPTR
+	MOV  	R7,A
+	MOV  	A,B
+	ANL  	A,#0EFH
+	MOV  	B,R7
+	LCALL	?C?ISTPTR
+;     pa->DETAIL.PA_PWR=3;         //输出功率+10db
+			; SOURCE LINE # 22
+	MOV  	R3,pa?141
+	MOV  	R2,pa?141+01H
+	MOV  	R1,pa?141+02H
+	LCALL	?C?ILDPTR
+	MOV  	R7,A
+	MOV  	A,B
+	ORL  	A,#0CH
+	MOV  	B,R7
+	LCALL	?C?ISTPTR
+;     pa->DETAIL.HFREQ_PLL=0;      //433Mhz 段
+			; SOURCE LINE # 23
+	MOV  	R3,pa?141
+	MOV  	R2,pa?141+01H
+	MOV  	R1,pa?141+02H
+	LCALL	?C?ILDPTR
+	MOV  	R7,A
+	MOV  	A,B
+	ANL  	A,#0FDH
+	MOV  	B,R7
+	LCALL	?C?ISTPTR
+;     pa->DETAIL.RX_AW=4;
+			; SOURCE LINE # 24
+	MOV  	R3,pa?141
+	MOV  	A,pa?141+02H
+	ADD  	A,#02H
+	MOV  	R1,A
+	CLR  	A
+	ADDC 	A,pa?141+01H
+	MOV  	R2,A
+	LCALL	?C?CLDPTR
+	ANL  	A,#0F8H
+	ORL  	A,#04H
+	LCALL	?C?CSTPTR
+;     pa->DETAIL.TX_AW=4;
+			; SOURCE LINE # 25
+	ANL  	A,#08FH
+	ORL  	A,#040H
+	LCALL	?C?CSTPTR
+;     pa->DETAIL.RX_DW=32;
+			; SOURCE LINE # 26
+	MOV  	R3,pa?141
+	MOV  	A,pa?141+02H
+	ADD  	A,#03H
+	MOV  	R1,A
+	CLR  	A
+	ADDC 	A,pa?141+01H
+	MOV  	R2,A
+	LCALL	?C?CLDPTR
+	ANL  	A,#0C0H
+	ORL  	A,#020H
+	LCALL	?C?CSTPTR
+;     pa->DETAIL.TX_DW=32;
+			; SOURCE LINE # 27
+	MOV  	R3,pa?141
+	MOV  	A,pa?141+02H
+	ADD  	A,#04H
+	MOV  	R1,A
+	CLR  	A
+	ADDC 	A,pa?141+01H
+	MOV  	R2,A
+	LCALL	?C?CLDPTR
+	ANL  	A,#0C0H
+	ORL  	A,#020H
+	LCALL	?C?CSTPTR
+;     pa->DETAIL.RX_ADDR[0]=0xcc;
+			; SOURCE LINE # 28
+	MOV  	R3,pa?141
+	MOV  	R2,pa?141+01H
+	MOV  	R1,pa?141+02H
+	MOV  	DPTR,#05H
+	MOV  	A,#0CCH
+	LCALL	?C?CSTOPTR
+;     pa->DETAIL.RX_ADDR[1]=0xcc;
+			; SOURCE LINE # 29
+	MOV  	DPTR,#06H
+	MOV  	A,#0CCH
+	LCALL	?C?CSTOPTR
+;     pa->DETAIL.RX_ADDR[2]=0xcc;
+			; SOURCE LINE # 30
+	MOV  	DPTR,#07H
+	MOV  	A,#0CCH
+	LCALL	?C?CSTOPTR
+;     pa->DETAIL.RX_ADDR[3]=0xcc;
+			; SOURCE LINE # 31
+	MOV  	DPTR,#08H
+	MOV  	A,#0CCH
+	LCALL	?C?CSTOPTR
+;     pa->DETAIL.CRC_MODE=0;       //8bit CRC
+			; SOURCE LINE # 32
+	MOV  	A,R1
+	ADD  	A,#09H
+	MOV  	R1,A
+	CLR  	A
+	ADDC 	A,R2
+	MOV  	R2,A
+	LCALL	?C?CLDPTR
+	ANL  	A,#07FH
+	LCALL	?C?CSTPTR
+;     pa->DETAIL.CRC_EN=1;         //Enable CRC check
+			; SOURCE LINE # 33
+	ORL  	A,#040H
+	LCALL	?C?CSTPTR
+;     pa->DETAIL.XOF=3;            //16MHz
+			; SOURCE LINE # 34
+	ANL  	A,#0C7H
+	ORL  	A,#018H
+	LCALL	?C?CSTPTR
+;   }
+			; SOURCE LINE # 35
+; }
+			; SOURCE LINE # 36
+?C0005:
+	RET  	
+; END OF _init_port_nrf905
+
+; 
+; void send_byte_nrf905(unsigned char d)
+
+	RSEG  ?PR?_send_byte_nrf905?NRF905
+L?0051:
+	USING	0
+	MOV  	DPL,R5
+	MOV  	DPH,#00H
+	LCALL	?C?CLDOPTR
+	MOV  	R7,A
+_send_byte_nrf905:
+	USING	0
+			; SOURCE LINE # 38
+;---- Variable 'd?242' assigned to Register 'R7' ----
+; {
+			; SOURCE LINE # 39
+;   unsigned char i;
+;   SCK_0;
+;   for(i=0;i<8;i++)
+			; SOURCE LINE # 42
+;---- Variable 'i?243' assigned to Register 'R6' ----
+	CLR  	A
+	MOV  	R6,A
+?C0006:
+;   {
+			; SOURCE LINE # 43
+;     if(d&0x80)
+			; SOURCE LINE # 44
+;     {
+			; SOURCE LINE # 45
+;       MOSI_1;
+;     }
+			; SOURCE LINE # 47
+;     else
+;     {
+			; SOURCE LINE # 49
+;       MOSI_0;
+;     }
+			; SOURCE LINE # 51
+?C0010:
+;     SCK_1;
+;     _NOP();
+	 NOP;
+;     SCK_0;
+;     d<<=1;
+			; SOURCE LINE # 55
+	MOV  	A,R7
+	ADD  	A,ACC
+	MOV  	R7,A
+;   }
+			; SOURCE LINE # 56
+	INC  	R6
+	CJNE 	R6,#08H,?C0006
+;   
+; }
+			; SOURCE LINE # 58
+?C0011:
+	RET  	
+; END OF _send_byte_nrf905
+
+; unsigned char read_byte_nrf905(void)
+
+	RSEG  ?PR?read_byte_nrf905?NRF905
+read_byte_nrf905:
+	USING	0
+			; SOURCE LINE # 59
+; {
+			; SOURCE LINE # 60
+;   unsigned char i,t=0;
+			; SOURCE LINE # 61
+;---- Variable 't?345' assigned to Register 'R7' ----
+	CLR  	A
+	MOV  	R7,A
+;   SCK_0;
+;   for(i=0;i<8;i++)
+			; SOURCE LINE # 63
+;---- Variable 'i?344' assigned to Register 'R6' ----
+	MOV  	R6,A
+?C0012:
+;   {
+			; SOURCE LINE # 64
+;     SCK_1;
+;     t<<=1;
+			; SOURCE LINE # 66
+	MOV  	A,R7
+	ADD  	A,ACC
+	MOV  	R7,A
+;     if(MISO_IN)
+			; SOURCE LINE # 67
+;     {
+			; SOURCE LINE # 68
+;       t|=0x01;
+			; SOURCE LINE # 69
+	ORL  	AR7,#01H
+;     }
+			; SOURCE LINE # 70
+;     SCK_0;
+;     _NOP();
+	 NOP;
+;   }
+			; SOURCE LINE # 73
+	INC  	R6
+	CJNE 	R6,#08H,?C0012
+?C0013:
+;   return t;
+			; SOURCE LINE # 74
+; }
+			; SOURCE LINE # 75
+?C0016:
+	RET  	
+; END OF read_byte_nrf905
+
+; /*************************************
+; 函数作用：读取当前状态值（AM和DR）
+; 返回值：  0xaa代表已经接收到数据，等待读取
+;           0x00……………………
+; *************************************/
+; unsigned char read_status_nrf905(void)
+
+	RSEG  ?PR?read_status_nrf905?NRF905
+read_status_nrf905:
+	USING	0
+			; SOURCE LINE # 81
+; {
+			; SOURCE LINE # 82
+;   unsigned char i,t=0;  
+			; SOURCE LINE # 83
+;---- Variable 't?447' assigned to Register 'R7' ----
+	CLR  	A
+	MOV  	R7,A
+;   MOSI_0;
+;   SCK_0;
+;   CSN_0;
+;   for(i=0;i<8;i++)
+			; SOURCE LINE # 87
+;---- Variable 'i?446' assigned to Register 'R6' ----
+	MOV  	R6,A
+?C0017:
+;   {
+			; SOURCE LINE # 88
+;     SCK_1;
+;     t<<=1;
+			; SOURCE LINE # 90
+	MOV  	A,R7
+	ADD  	A,ACC
+	MOV  	R7,A
+;     if(MISO_IN)
+			; SOURCE LINE # 91
+;     {
+			; SOURCE LINE # 92
+;       t|=0x01;
+			; SOURCE LINE # 93
+	ORL  	AR7,#01H
+;     }
+			; SOURCE LINE # 94
+;     SCK_0;
+;     _NOP();
+	 NOP;
+;   }
+			; SOURCE LINE # 97
+	INC  	R6
+	CJNE 	R6,#08H,?C0017
+?C0018:
+;   CSN_1;
+;   return t;
+			; SOURCE LINE # 99
+; }
+			; SOURCE LINE # 100
+?C0021:
+	RET  	
+; END OF read_status_nrf905
+
+; /*********************************
+; 函数作用：配置无线模块
+; 参数要求：结构体指针pd指向有效数据
+; 函数前奏：完成IO口初始化即可配置
+; *********************************/
+; void config_nrf905(RF_CONFIG * pd)
+
+	RSEG  ?PR?_config_nrf905?NRF905
+_config_nrf905:
+	USING	0
+			; SOURCE LINE # 106
+	MOV  	pd?548,R3
+	MOV  	pd?548+01H,R2
+	MOV  	pd?548+02H,R1
+; {
+			; SOURCE LINE # 107
+;   unsigned char x;
+;   STAND_BY_MODE;  
+;   delay_nrf905(100);
+			; SOURCE LINE # 110
+	MOV  	R7,#064H
+	MOV  	R6,#00H
+	LCALL	_delay_nrf905
+;   CSN_0;
+;   send_byte_nrf905(0x00);  //config
+			; SOURCE LINE # 112
+	CLR  	A
+	MOV  	R7,A
+	LCALL	_send_byte_nrf905
+;   for(x=0;x<10;x++)
+			; SOURCE LINE # 113
+;---- Variable 'x?549' assigned to Register 'R5' ----
+	CLR  	A
+	MOV  	R5,A
+?C0022:
+;   {
+			; SOURCE LINE # 114
+;     send_byte_nrf905(pd->buffer[x]);
+			; SOURCE LINE # 115
+	MOV  	R3,pd?548
+	MOV  	R2,pd?548+01H
+	MOV  	R1,pd?548+02H
+	LCALL	L?0051
+;   }
+			; SOURCE LINE # 116
+	INC  	R5
+	CJNE 	R5,#0AH,?C0022
+?C0023:
+;   CSN_1;
+;   CSN_0;
+;   send_byte_nrf905(WRITE_TX_ADDR);
+			; SOURCE LINE # 119
+	MOV  	R7,#022H
+	LCALL	_send_byte_nrf905
+;   send_byte_nrf905(0xcc);
+			; SOURCE LINE # 120
+	MOV  	R7,#0CCH
+	LCALL	_send_byte_nrf905
+;   send_byte_nrf905(0xcc);
+			; SOURCE LINE # 121
+	MOV  	R7,#0CCH
+	LCALL	_send_byte_nrf905
+;   send_byte_nrf905(0xcc);
+			; SOURCE LINE # 122
+	MOV  	R7,#0CCH
+	LCALL	_send_byte_nrf905
+;   send_byte_nrf905(0xcc);
+			; SOURCE LINE # 123
+	MOV  	R7,#0CCH
+	LJMP 	_send_byte_nrf905
+; END OF _config_nrf905
+
+;   CSN_1;
+;   
+; }
+; /***********************************************************************
+; 函数说明：快速配置中心频率和输出功率
+; 最终作用：
+;         使CH_NO=ch_no;
+;         HFREQ_PLL=hreq;
+;         PA_PWR=pa;
+; 函数前奏：完成IO口初始化即可配置
+; ***********************************************************************/
+; void fast_config_nrf905(unsigned int ch_no,unsigned char hfreq,unsigned char pa)
+
+	RSEG  ?PR?_fast_config_nrf905?NRF905
+_fast_config_nrf905:
+	USING	0
+			; SOURCE LINE # 135
+;---- Variable 'ch_no?650' assigned to Register 'DPTR' ----
+	MOV  	DPL,R7
+	MOV  	DPH,R6
+;---- Variable 'pa?652' assigned to Register 'R3' ----
+;---- Variable 'hfreq?651' assigned to Register 'R5' ----
+; {
+			; SOURCE LINE # 136
+;   unsigned char i,j;
+;   STAND_BY_MODE;  
+;   i=ch_no&0xff;
+			; SOURCE LINE # 139
+	MOV  	A,R7
+;---- Variable 'i?653' assigned to Register 'R4' ----
+	MOV  	R4,A
+;   j=(ch_no>>8)+((hfreq&0x01)<<1)+((pa&0x03)<<2)+0x80;
+			; SOURCE LINE # 140
+	MOV  	R7,DPH
+	MOV  	A,R5
+	ANL  	A,#01H
+	ADD  	A,ACC
+	ADD  	A,R7
+	MOV  	R7,A
+	MOV  	A,R3
+	ANL  	A,#03H
+	MOV  	R6,A
+	ADD  	A,ACC
+	ADD  	A,ACC
+	ADD  	A,R7
+	ADD  	A,#080H
+	MOV  	R7,A
+;---- Variable 'j?654' assigned to Register 'R7' ----
+;   CSN_0;
+;   send_byte_nrf905(j);  
+			; SOURCE LINE # 142
+	LCALL	_send_byte_nrf905
+;   send_byte_nrf905(i);
+			; SOURCE LINE # 143
+	MOV  	R7,AR4
+	LJMP 	_send_byte_nrf905
+; END OF _fast_config_nrf905
+
+;   CSN_1;
+; }  
+; /**********************************************************
+; 函数作用：检查配置，包括配置字节和发送地址
+; 参数要求：结构体指针pd指向有效区域，buf长度4字节
+; 函数前奏：对已经配置好的无线模块或者刚上电的模块都可以进行
+; **********************************************************/
+; void check_config_nrf905(RF_CONFIG * pd,unsigned char *buf)
+
+	RSEG  ?PR?_check_config_nrf905?NRF905
+_check_config_nrf905:
+	USING	0
+			; SOURCE LINE # 151
+	MOV  	pd?755,R3
+	MOV  	pd?755+01H,R2
+	MOV  	pd?755+02H,R1
+; {
+			; SOURCE LINE # 152
+;   unsigned char i;
+;   CSN_0;
+;   send_byte_nrf905(READ_CONFIG);
+			; SOURCE LINE # 155
+	MOV  	R7,#010H
+	LCALL	_send_byte_nrf905
+;   for(i=0;i<10;i++)
+			; SOURCE LINE # 156
+;---- Variable 'i?757' assigned to Register 'R5' ----
+	CLR  	A
+	MOV  	R5,A
+?C0027:
+;   {
+			; SOURCE LINE # 157
+;     pd->buffer[i]=read_byte_nrf905();
+			; SOURCE LINE # 158
+	LCALL	read_byte_nrf905
+	MOV  	R3,pd?755
+	MOV  	R2,pd?755+01H
+	MOV  	R1,pd?755+02H
+	MOV  	DPL,R5
+	MOV  	DPH,#00H
+	MOV  	A,R7
+	LCALL	?C?CSTOPTR
+;   }
+			; SOURCE LINE # 159
+	INC  	R5
+	CJNE 	R5,#0AH,?C0027
+?C0028:
+;   CSN_1;  
+;   CSN_0;
+;   send_byte_nrf905(READ_TX_ADDR);
+			; SOURCE LINE # 162
+	MOV  	R7,#023H
+	LCALL	_send_byte_nrf905
+;   for(i=0;i<4;i++)
+			; SOURCE LINE # 163
+	CLR  	A
+	MOV  	R5,A
+?C0030:
+;   {
+			; SOURCE LINE # 164
+;     buf[i]=read_byte_nrf905();
+			; SOURCE LINE # 165
+	LCALL	read_byte_nrf905
+	MOV  	R3,buf?756
+	MOV  	R2,buf?756+01H
+	MOV  	R1,buf?756+02H
+	MOV  	DPL,R5
+	MOV  	DPH,#00H
+	MOV  	A,R7
+	LCALL	?C?CSTOPTR
+;   }
+			; SOURCE LINE # 166
+	INC  	R5
+	CJNE 	R5,#04H,?C0030
+;   CSN_1; 
+; }
+			; SOURCE LINE # 168
+?C0033:
+	RET  	
+; END OF _check_config_nrf905
+
+; /****************************************
+; 函数作用：将32字节数据发送出去
+; 参数要求：buff长度为32字节
+; 返回值  : 无
+; 函数前奏：将无线模块配置好后即可发送数据
+; ****************************************/
+; void transmit_nrf905(unsigned char *buff)
+
+	RSEG  ?PR?_transmit_nrf905?NRF905
+_transmit_nrf905:
+	USING	0
+			; SOURCE LINE # 175
+	MOV  	buff?858,R3
+	MOV  	buff?858+01H,R2
+	MOV  	buff?858+02H,R1
+; {
+			; SOURCE LINE # 176
+;   unsigned char i;
+;   STAND_BY_MODE;
+;   CSN_0;
+;   send_byte_nrf905(WRITE_TX_DATA);
+			; SOURCE LINE # 180
+	MOV  	R7,#020H
+	LCALL	_send_byte_nrf905
+;   for(i=0;i<32;i++)
+			; SOURCE LINE # 181
+;---- Variable 'i?859' assigned to Register 'R5' ----
+	CLR  	A
+	MOV  	R5,A
+?C0034:
+;   {
+			; SOURCE LINE # 182
+;     send_byte_nrf905(buff[i]);
+			; SOURCE LINE # 183
+	MOV  	R3,buff?858
+	MOV  	R2,buff?858+01H
+	MOV  	R1,buff?858+02H
+	LCALL	L?0051
+;   }
+			; SOURCE LINE # 184
+	INC  	R5
+	CJNE 	R5,#020H,?C0034
+?C0035:
+;   CSN_1;
+;   delay_nrf905(100);
+			; SOURCE LINE # 186
+	MOV  	R7,#064H
+	MOV  	R6,#00H
+	LJMP 	_delay_nrf905
+; END OF _transmit_nrf905
+
+;   TX_MODE;  
+; }
+; /*************************************
+; 函数作用：监听
+; 参数要求：rxbuf长度32字节
+; *************************************/
+; void listen_nrf905(unsigned char * rxbuf)
+
+	RSEG  ?PR?_listen_nrf905?NRF905
+_listen_nrf905:
+	USING	0
+			; SOURCE LINE # 193
+	MOV  	rxbuf?960,R3
+	MOV  	rxbuf?960+01H,R2
+	MOV  	rxbuf?960+02H,R1
+; {
+			; SOURCE LINE # 194
+;   unsigned char ii;
+;   RX_MODE;  
+;   delay_nrf905(1000);
+			; SOURCE LINE # 197
+	MOV  	R7,#0E8H
+	MOV  	R6,#03H
+	LCALL	_delay_nrf905
+;   while(CD_IN==0);
+			; SOURCE LINE # 198
+;   while(AM_IN==0);
+			; SOURCE LINE # 199
+;   while(DR_IN==0);
+			; SOURCE LINE # 200
+?C0043:
+;   STAND_BY_MODE;
+;   _NOP();
+	 NOP;
+;   CSN_0;
+;   send_byte_nrf905(READ_RX_DATA);
+			; SOURCE LINE # 204
+	MOV  	R7,#024H
+	LCALL	_send_byte_nrf905
+;   for(ii=0;ii<32;ii++)
+			; SOURCE LINE # 205
+;---- Variable 'ii?961' assigned to Register 'R5' ----
+	CLR  	A
+	MOV  	R5,A
+?C0044:
+;   {
+			; SOURCE LINE # 206
+;     rxbuf[ii]=read_byte_nrf905();
+			; SOURCE LINE # 207
+	LCALL	read_byte_nrf905
+	MOV  	R3,rxbuf?960
+	MOV  	R2,rxbuf?960+01H
+	MOV  	R1,rxbuf?960+02H
+	MOV  	DPL,R5
+	MOV  	DPH,#00H
+	MOV  	A,R7
+	LCALL	?C?CSTOPTR
+;   }
+			; SOURCE LINE # 208
+	INC  	R5
+	CJNE 	R5,#020H,?C0044
+?C0047:
+;   CSN_1;// Disable spi
+;   while(DR_IN||AM_IN);
+			; SOURCE LINE # 210
+	SJMP 	?C0047
+; END OF _listen_nrf905
+
+	END

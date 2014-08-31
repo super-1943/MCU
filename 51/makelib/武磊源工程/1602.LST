@@ -1,0 +1,223 @@
+C51 COMPILER V8.02   1602                                                                  04/02/2011 21:57:14 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE 1602
+OBJECT MODULE PLACED IN 1602.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 1602.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1                                                  
+   2          
+   3          #include<intrins.h>  //包含_nop_()函数定义的头文件
+   4          #include<1602.h>
+   5          
+   6          unsigned char code string1[ ]= {"WELCOME TO YAN "};   //第一行显示的字符
+   7          unsigned char code string2[ ]={"SHAN UNIVERSITY"};        //第二行显示的字符
+   8          
+   9          /*****************************************************
+  10          函数功能：延时1ms
+  11          注：不同单片机不同晶振需要对此函数进行修改
+  12          ***************************************************/
+  13          void Lcd_delay1ms()
+  14          {
+  15   1                      unsigned char i,j;      
+  16   1                      for(i=0;i<25;i++)
+  17   1                      for(j=0;j<33;j++);               
+  18   1       }
+  19           /*****************************************************
+  20          函数功能：延时若干毫秒
+  21          入口参数：n
+  22          ***************************************************/
+  23           void Lcd_delay(unsigned int n)
+  24           {
+  25   1              unsigned int i;
+  26   1              for(i=0;i<n;i++)
+  27   1              Lcd_delay1ms();
+  28   1       }
+  29          /*****************************************************
+  30          函数功能：判断液晶模块的忙碌状态
+  31          返回值：result。result=1，忙碌;result=0，不忙
+  32          ***************************************************/
+  33           bit Lcd_BusyTest(void)
+  34            {
+  35   1              bit result;
+  36   1                      RS=0;       //根据规定，RS为低电平，RW为高电平时，可以读状态
+  37   1              RW=1;
+  38   1              E=1;        //E=1，才允许读写
+  39   1              _nop_();   //空操作
+  40   1              _nop_();
+  41   1              _nop_(); 
+  42   1                      _nop_();   //空操作四个机器周期，给硬件反应时间 
+  43   1              result=BF;  //将忙碌标志电平赋给result
+  44   1                      E=0;
+  45   1              return result;
+  46   1        }
+  47          /*****************************************************
+  48          函数功能：将模式设置指令或显示地址写入液晶模块
+  49          入口参数：dictate
+  50          ***************************************************/
+  51          void Lcd_WriteCom (unsigned char dictate)
+  52          {   
+  53   1          while(Lcd_BusyTest()==1); //如果忙就等待
+  54   1               RS=0;                  //根据规定，RS和R/W同时为低电平时，可以写入指令
+  55   1               RW=0;   
+C51 COMPILER V8.02   1602                                                                  04/02/2011 21:57:14 PAGE 2   
+
+  56   1               E=0;                   //E置低电平(写指令时，
+  57   1                                   // 就是让E从0到1发生正跳变，所以应先置"0"
+  58   1               _nop_();
+  59   1               _nop_();             //空操作两个机器周期，给硬件反应时间
+  60   1               Lcd_Data=dictate;            //将数据送入P0口，即写入指令或地址
+  61   1               _nop_();
+  62   1               _nop_();
+  63   1               _nop_();
+  64   1               _nop_();               //空操作四个机器周期，给硬件反应时间
+  65   1               E=1;                   //E置高电平
+  66   1               _nop_();
+  67   1               _nop_();
+  68   1               _nop_();
+  69   1               _nop_();               //空操作四个机器周期，给硬件反应时间
+  70   1                E=0;                  //当E由高电平跳变成低电平时，液晶模块开始执行命令
+  71   1       }
+  72          /*****************************************************
+  73          函数功能：指定字符显示的实际地址
+  74          入口参数：x
+  75          注：此函数已经加上了0x80,故只需写上实际地址就行
+  76          ***************************************************/
+  77           void Lcd_WriteAddress(unsigned char x)
+  78           {
+  79   1           Lcd_WriteCom(x|0x80); //显示位置的确定方法规定为"80H+地址码x"      
+  80   1       }
+  81          /*****************************************************
+  82          函数功能：将数据(字符的标准ASCII码)写入液晶模块
+  83          入口参数：y(为字符常量)
+  84          ***************************************************/
+  85           void Lcd_WriteData(unsigned char y)
+  86           {
+  87   1          while(Lcd_BusyTest()==1);  
+  88   1                RS=1;           //RS为高电平，RW为低电平时，可以写入数据
+  89   1                RW=0;
+  90   1                E=0;            //E置低电平(写指令时，，
+  91   1                             // 就是让E从0到1发生正跳变，所以应先置"0"
+  92   1                Lcd_Data=y;           //将数据送入P0口，即将数据写入液晶模块
+  93   1                _nop_();
+  94   1                _nop_();
+  95   1                _nop_();
+  96   1                _nop_();       //空操作四个机器周期，给硬件反应时间
+  97   1                E=1;          //E置高电平
+  98   1                _nop_();
+  99   1                _nop_();
+ 100   1                _nop_();
+ 101   1                _nop_();        //空操作四个机器周期，给硬件反应时间
+ 102   1                E=0;            //当E由高电平跳变成低电平时，液晶模块开始执行命令
+ 103   1       }
+ 104          /*****************************************************
+ 105          函数功能：对LCD的显示模式进行初始化设置
+ 106          ***************************************************/
+ 107          void Lcd_Int(void)
+ 108          {
+ 109   1              Lcd_delay(15);             //延时15ms，首次写指令时应给LCD一段较长的反应时间
+ 110   1              Lcd_WriteCom(0x38);  //显示模式设置：16×2显示，5×7点阵，8位数据接口
+ 111   1              Lcd_delay(5);   //延时5ms　
+ 112   1              Lcd_WriteCom(0x38);
+ 113   1              Lcd_delay(5);
+ 114   1              Lcd_WriteCom(0x38); //3次写 设置模式
+ 115   1              Lcd_delay(5);
+ 116   1              Lcd_WriteCom(0x0C);  //显示模式设置：显示开，有光标，光标闪烁
+ 117   1              Lcd_delay(5);
+C51 COMPILER V8.02   1602                                                                  04/02/2011 21:57:14 PAGE 3   
+
+ 118   1              Lcd_WriteCom(0x06);  //显示模式设置：光标右移，字符不移
+ 119   1              Lcd_delay(5);                                                                                     
+ 120   1              Lcd_WriteCom(0x01);  //清屏幕指令，将以前的显示内容清除
+ 121   1              Lcd_delay(5);
+ 122   1       }
+ 123           void hanying_show(void)
+ 124           {  unsigned char Lcd_i;
+ 125   1       Lcd_WriteCom(0x01);//清显示：清屏幕指令
+ 126   1              Lcd_delay(5);
+ 127   1              Lcd_WriteAddress(0x00);  // 设置显示位置为第一行的第1个字
+ 128   1          Lcd_delay(5);
+ 129   1              Lcd_i=0;
+ 130   1              while(string1[Lcd_i] != '\0')    //'\0'是数组结束标志   // 显示字符WELCOM TO YAN
+ 131   1                {                                             
+ 132   2                        Lcd_WriteData(string1[Lcd_i]);
+ 133   2                        Lcd_i++;
+ 134   2                        Lcd_delay(150);
+ 135   2                 }                      
+ 136   1                                                                       
+ 137   1              Lcd_WriteAddress(0x40);  // 设置显示位置为第二行的第1个字
+ 138   1               Lcd_i = 0;
+ 139   1              while(string2[Lcd_i] != '\0')   //'\0'是数组结束标志
+ 140   1                {                                             // 显示字符     SHAN UNIVERSITY
+ 141   2                        Lcd_WriteData(string2[Lcd_i]);
+ 142   2                        Lcd_i++;
+ 143   2                        Lcd_delay(150);
+ 144   2                 }  
+ 145   1               Lcd_delay(1500);       
+ 146   1                                  
+ 147   1            //右侧移位进来
+ 148   1              Lcd_WriteCom(0x01);//清显示：清屏幕指令
+ 149   1              Lcd_delay(5);
+ 150   1              Lcd_WriteAddress(0x10);  // 设置显示位置为最右侧
+ 151   1              Lcd_delay(5);
+ 152   1              Lcd_i = 0;
+ 153   1              while(string1[Lcd_i] != '\0')    //'\0'是数组结束标志             需先将字符存入
+ 154   1              {                                               
+ 155   2                  Lcd_WriteData(string1[Lcd_i]);       // 显示字符    WELCOM TO YAN
+ 156   2                  Lcd_i++;    
+ 157   2                  Lcd_delay(5);
+ 158   2              }
+ 159   1              Lcd_WriteAddress(0x50);  // 设置显示位置为第二行的第1个字
+ 160   1              Lcd_i = 0;
+ 161   1              while(string2[Lcd_i] != '\0')   //'\0'是数组结束标志
+ 162   1                      {                                               // 显示字符     HAN UNIVERSITY
+ 163   2                      Lcd_WriteData(string2[Lcd_i]);
+ 164   2                              Lcd_i++;
+ 165   2                              Lcd_delay(5);
+ 166   2                      }
+ 167   1              for(Lcd_i=0;Lcd_i<16;Lcd_i++ )  //开始左移
+ 168   1                      {
+ 169   2                              Lcd_WriteCom(0x18); //左移指令
+ 170   2                      Lcd_delay(500);    
+ 171   2                                                
+ 172   2                      }                               
+ 173   1           Lcd_delay(1000);
+ 174   1               Lcd_WriteCom(0x08);
+ 175   1               Lcd_delay(400);
+ 176   1               Lcd_WriteCom(0x0c);
+ 177   1               Lcd_delay(400);
+ 178   1               Lcd_WriteCom(0x08);
+ 179   1               Lcd_delay(400);
+C51 COMPILER V8.02   1602                                                                  04/02/2011 21:57:14 PAGE 4   
+
+ 180   1               Lcd_WriteCom(0x0c);
+ 181   1               Lcd_delay(400);
+ 182   1               Lcd_WriteCom(0x08);
+ 183   1               Lcd_delay(400);
+ 184   1               Lcd_WriteCom(0x0c);
+ 185   1               Lcd_delay(400);
+ 186   1               Lcd_WriteCom(0x08);
+ 187   1               Lcd_delay(400);
+ 188   1               Lcd_WriteCom(0x0c);
+ 189   1               Lcd_delay(1);
+ 190   1               Lcd_WriteCom(0x01);
+ 191   1                Lcd_delay(1);
+ 192   1      
+ 193   1               
+ 194   1         } 
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    420    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

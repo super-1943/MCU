@@ -1,0 +1,207 @@
+C51 COMPILER V8.02   MAIN                                                                  06/06/2010 14:31:41 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEFINE(WORK_AROUND_192) DEBUG OBJECTEXTEND CODE
+
+line level    source
+
+   1          #include "reg52modified.h"
+   2          #include "types.h"
+   3          #include "usb.h"
+   4          #include "tusb2136.h"
+   5          #include "serial.h"
+   6          
+   7          
+   8          extern void InitializeUsbFunction(void);
+   9          
+  10          extern bit deviceReady;
+  11          extern bit bSuspended;
+  12          
+  13          extern tEDB xdata tInputEndPointDescriptorBlock[3];
+  14          extern BYTE xdata pbInBufferAddress[EP_MAX_PACKET_SIZE];  // ENDPOINT 1 IN X buffer
+  15          extern BYTE xdata pb48BufferAddress[EP_MAX_PACKET_SIZE];  // use ENDPOINT 1 OUT Y buffer space for bufferi
+             -ng the 1st 
+  16                                                                    // half of 96-byte block write for UCD9110 flash
+             - programming
+  17          extern BYTE previous_crc8;
+  18          sbit key=P3^2;
+  19          sbit led=P1^1;
+  20          BYTE intFlags = 0x00;
+  21          BYTE otherFlags = 0x00;
+  22          BYTE modifierByte = 0x00;
+  23          
+  24          void IEP1InterruptHandler(void);
+  25          void OEP0SetLEDs(void);
+  26          void delay(unsigned int k)
+  27          {
+  28   1              unsigned char i,j;
+  29   1              for(;k;k--)
+  30   1              for(i=200;i;i--)
+  31   1              for(j=200;j;j--);
+  32   1      }
+  33          
+  34          
+  35          void main(void)
+  36          {
+  37   1              unsigned char i;
+  38   1              // Make sure we're disconnected from the upstream port
+  39   1              bUSBCTL = 0x00;
+  40   1              rs232_init();
+  41   1              rs232_printstr("Hello world!\r\n");
+  42   1              InitializeUsbFunction(); // Initialize the USB embedded function
+  43   1              while(1) 
+  44   1              { // Indefinite loop to handle keyboard scanning
+  45   2                      for(i=0x01;i;i<<=1)
+  46   2                      {
+  47   3                              pbInBufferAddress[0]=i;
+  48   3                              bIEPDCTX_1=0x08;
+  49   3                              delay(100);
+  50   3                              pbInBufferAddress[0]=0;
+  51   3                              bIEPDCTX_1=0x08;
+  52   3                              delay(10);
+  53   3                      }
+C51 COMPILER V8.02   MAIN                                                                  06/06/2010 14:31:41 PAGE 2   
+
+  54   2              }
+  55   1      }
+  56          
+  57          
+  58          void IEP1InterruptHandler(void)
+  59          {
+  60   1              // Just clear the NAK bit
+  61   1              bIEPDCTX_1=EPBCT_NAK;
+  62   1      }
+  63          
+  64          
+  65          void OEP0SetLEDs(void)
+  66          {
+  67   1      }
+C51 COMPILER V8.02   MAIN                                                                  06/06/2010 14:31:41 PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _delay (BEGIN)
+                                           ; SOURCE LINE # 26
+;---- Variable 'k' assigned to Register 'R6/R7' ----
+                                           ; SOURCE LINE # 27
+                                           ; SOURCE LINE # 29
+0000         ?C0001:
+0000 EF                MOV     A,R7
+0001 4E                ORL     A,R6
+0002 600F              JZ      ?C0010
+                                           ; SOURCE LINE # 30
+;---- Variable 'i' assigned to Register 'R5' ----
+0004 7DC8              MOV     R5,#0C8H
+0006         ?C0004:
+                                           ; SOURCE LINE # 31
+;---- Variable 'j' assigned to Register 'R4' ----
+0006 7CC8              MOV     R4,#0C8H
+0008         ?C0007:
+0008 DCFE              DJNZ    R4,?C0007
+000A         ?C0006:
+000A DDFA              DJNZ    R5,?C0004
+000C         ?C0003:
+000C EF                MOV     A,R7
+000D 1F                DEC     R7
+000E 70F0              JNZ     ?C0001
+0010 1E                DEC     R6
+0011         ?C0019:
+0011 80ED              SJMP    ?C0001
+                                           ; SOURCE LINE # 32
+0013         ?C0010:
+0013 22                RET     
+             ; FUNCTION _delay (END)
+
+             ; FUNCTION main (BEGIN)
+                                           ; SOURCE LINE # 35
+                                           ; SOURCE LINE # 36
+                                           ; SOURCE LINE # 39
+0000 90FFFC            MOV     DPTR,#0FFFCH
+0003 E4                CLR     A
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 40
+0005 120000      E     LCALL   rs232_init
+                                           ; SOURCE LINE # 41
+0008 7BFF              MOV     R3,#0FFH
+000A 7A00        R     MOV     R2,#HIGH ?SC_0
+000C 7900        R     MOV     R1,#LOW ?SC_0
+000E 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 42
+0011 120000      E     LCALL   InitializeUsbFunction
+0014         ?C0011:
+                                           ; SOURCE LINE # 43
+                                           ; SOURCE LINE # 44
+                                           ; SOURCE LINE # 45
+;---- Variable 'i' assigned to Register 'R3' ----
+0014 7B01              MOV     R3,#01H
+0016         ?C0013:
+0016 EB                MOV     A,R3
+0017 60FB              JZ      ?C0011
+                                           ; SOURCE LINE # 46
+                                           ; SOURCE LINE # 47
+C51 COMPILER V8.02   MAIN                                                                  06/06/2010 14:31:41 PAGE 4   
+
+0019 900000      E     MOV     DPTR,#pbInBufferAddress
+001C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 48
+001D 90FF4A            MOV     DPTR,#0FF4AH
+0020 7408              MOV     A,#08H
+0022 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 49
+0023 7F64              MOV     R7,#064H
+0025 7E00              MOV     R6,#00H
+0027 120000      R     LCALL   _delay
+                                           ; SOURCE LINE # 50
+002A E4                CLR     A
+002B 900000      E     MOV     DPTR,#pbInBufferAddress
+002E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 51
+002F 90FF4A            MOV     DPTR,#0FF4AH
+0032 7408              MOV     A,#08H
+0034 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 52
+0035 7F0A              MOV     R7,#0AH
+0037 7E00              MOV     R6,#00H
+0039 120000      R     LCALL   _delay
+                                           ; SOURCE LINE # 53
+003C EB                MOV     A,R3
+003D 25E0              ADD     A,ACC
+003F FB                MOV     R3,A
+0040 80D4              SJMP    ?C0013
+             ; FUNCTION main (END)
+
+             ; FUNCTION IEP1InterruptHandler (BEGIN)
+                                           ; SOURCE LINE # 58
+                                           ; SOURCE LINE # 59
+                                           ; SOURCE LINE # 61
+0000 90FF4A            MOV     DPTR,#0FF4AH
+0003 7480              MOV     A,#080H
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 62
+0006 22                RET     
+             ; FUNCTION IEP1InterruptHandler (END)
+
+             ; FUNCTION OEP0SetLEDs (BEGIN)
+                                           ; SOURCE LINE # 65
+                                           ; SOURCE LINE # 66
+                                           ; SOURCE LINE # 67
+0000 22                RET     
+             ; FUNCTION OEP0SetLEDs (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     94    ----
+   CONSTANT SIZE    =     15    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

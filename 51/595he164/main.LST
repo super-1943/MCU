@@ -1,0 +1,110 @@
+C51 COMPILER V8.02   MAIN                                                                  01/17/2009 14:39:01 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #ifndef _595he164_H
+   2          #define _595he164_H
+   3          #include <at89x51.h>
+   4          #define uchar unsigned char 
+   5          
+   6          sbit Din=P1^0;
+   7          sbit Sclk=P1^2;
+   8          sbit Rclk=P1^3;
+   9          
+  10          
+  11          uchar number[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f};
+  12          uchar bits[]={0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80};
+  13          uchar buffer[8]={0,2,4,6,8,7,5,1};
+  14          void delay_1ms(uchar a)
+  15          {
+  16   1              uchar b,c;
+  17   1              while(a--)
+  18   1                      for(b=45;b;b--)
+  19   1                              for(c=34;c;c--);
+  20   1      }
+  21          
+  22          void senddata(uchar a,uchar b)
+  23          {
+  24   1              uchar t,i;
+  25   1              Din=0;
+  26   1              Sclk=0;
+  27   1              Rclk=0;
+  28   1              for(i=0;i<8;i++)
+  29   1              {
+  30   2                      t=a&0x80;
+  31   2                      if(t)
+  32   2                      {
+  33   3                              Din=1;
+  34   3                      }
+  35   2                      else
+  36   2                      {
+  37   3                              Din=0;
+  38   3                      }
+  39   2                      Sclk=0;
+  40   2                      ;
+  41   2                      Sclk=1;
+  42   2                      ;
+  43   2                      a<<=1;
+  44   2              }
+  45   1              for(i=0;i<8;i++)
+  46   1              {
+  47   2                      t=b&0x80;
+  48   2                      if(t)
+  49   2                      {
+  50   3                              Din=1;
+  51   3                      }
+  52   2                      else
+  53   2                      {
+  54   3                              Din=0;
+  55   3                      }
+C51 COMPILER V8.02   MAIN                                                                  01/17/2009 14:39:01 PAGE 2   
+
+  56   2                      Sclk=0;
+  57   2                      ;
+  58   2                      Sclk=1;
+  59   2                      ;
+  60   2                      b<<=1;
+  61   2              }
+  62   1              Rclk=0;
+  63   1              ;
+  64   1              Rclk=1;
+  65   1              ;
+  66   1      }
+  67          
+  68          void showbuffer(void)
+  69          {
+  70   1              uchar i;
+  71   1              for(i=0;i<8;i++)
+  72   1              {
+  73   2                      senddata(bits[i],number[buffer[i]]);
+  74   2                      delay_1ms(1);
+  75   2              }
+  76   1      }
+  77          #endif
+  78          void main(void)
+  79          {
+  80   1              
+  81   1              while(1)
+  82   1              {
+  83   2                      showbuffer();
+  84   2              }
+  85   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    118    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     26    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

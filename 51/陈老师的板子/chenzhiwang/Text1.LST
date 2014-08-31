@@ -1,0 +1,532 @@
+A51 MACRO ASSEMBLER  TEXT1                                                                09/26/2009 18:12:35 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN Text1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE Text1.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+  8FFF                 1     PORTA   EQU   8FFFH                     ;8255A¿ÚµØÖ·
+  9FFF                 2     PORTB   EQU   9FFFH                     ;8255B¿ÚµØÖ·
+  AFFF                 3     PORTC   EQU   0AFFFH            ;8255C¿ÚµØÖ·
+  BFFF                 4     CADDR   EQU   0BFFFH            ;8255¿ØÖÆ×ÖµØÖ·
+                       5     
+  8FFF                 6     ADDR_A  EQU   08FFFH        ;8255A¿ÚµØÖ·Îª8FFFH
+  9FFF                 7     ADDR_B  EQU   09FFFH        ;8255B¿ÚµØÖ·Îª9FFFH
+  AFFF                 8     ADDR_C  EQU   0AFFFH        ;8255C¿ÚµØÖ·Îª0AFFFH
+  BFFF                 9     ADDR_K  EQU   0BFFFH
+  00B6                10     _ST             EQU       P3.6
+  00B7                11     _OE             EQU       P3.7
+  00B3                12     _EOC    EQU       P3.3
+                      13     
+  0070                14     SHOW1   EQU   70H           ;ÊÂë¹Ü1Î»Ê´æ·ÅÄÚ´æÎ»ÖÃ
+  0071                15     SHOW2   EQU   71H           ;ÊÂë¹Ü2Î»Ê´æ·ÅÄÚ´æÎ»ÖÃ
+  0072                16     SHOW3   EQU   72H           ;ÊÂë¹Ü3Î»Ê´æ·ÅÄÚ´æÎ»ÖÃ
+  0073                17     SHOW4   EQU   73H           ;ÊÂë¹Ü4Î»Ê´æ·ÅÄÚ´æÎ»ÖÃ
+  0074                18     SHOW5   EQU   74H           ;ÊÂë¹Ü5Î»Ê´æ·ÅÄÚ´æÎ»ÖÃ
+  0075                19     SHOW6   EQU   75H           ;ÊÂë¹Ü6Î»Ê´æ·ÅÄÚ´æÎ»ÖÃ
+  0076                20     SHOW7   EQU   76H           ;ÊÂë¹Ü7Î»Ê´æ·ÅÄÚ´æÎ»ÖÃ
+  0077                21     SHOW8   EQU   77H           ;ÊÂë¹Ü8Î»Ê´æ·ÅÄÚ´æÎ»ÖÃ
+                      22     
+  0078                23     KEYNUM  EQU   78H               ;¼üÅÌÂë
+  0079                24     KEYCNT  EQU   79H           ;¼üÅÌ¼ÆÊÆ÷
+                      25     
+  0071                26     KEYPRES BIT   71H           ;°´¼ü¼àÊÓÎ»
+                      27     
+  00B2                28     buttonA equ p3.2
+  00B5                29     buttonB equ p3.5
+                      30     
+0000                  31     org 0000h
+0000 2102             32     ajmp Processes1
+001B                  33     org   001bh
+001B 020352           34     ljmp  st1
+                      35     
+                      36     ;ÊµÑé°åÉÏµÄ7¶ÎÊÂë¹Ü0¡«9Ê×ÖµÄ¹²ÒõÏÔÊ¾´úÂë
+001E 3F065B4F         37     NUMLAB: DB      3FH,06H,5BH,4FH,66H,6DH,7DH,07H,7FH,6FH,77H,7CH,39H,5EH,79H,71H 
+0022 666D7D07                
+0026 7F6F777C                
+002A 395E7971                
+                      38     
+0100                  39     org 0100h
+0100 C2AF             40     clr ea
+0102                  41     Processes1:;ÊÂë¹ÜÓë·¢¹â¶þ¼«¹ÜÈ«ÁÁ
+0102 90BFFF           42     mov dptr,#CADDR
+0105 7480             43     mov a,#80h
+0107 F0               44     movx @dptr,a
+0108 908FFF           45     mov dptr,#PORTA
+010B 74FF             46     mov a,#0FFH
+010D F0               47     movx @dptr,a
+010E 909FFF           48     mov dptr,#PORTB
+0111 74FF             49     mov a,#0FFH
+0113 F0               50     movx @dptr,a
+0114 759007           51     mov p1,#07h
+0117 7481             52     mov a,#81h
+0119 90BFFF           53     mov dptr,#CADDR
+011C F0               54     movx @dptr,a
+011D 90AFFF           55     mov dptr,#PORTC
+A51 MACRO ASSEMBLER  TEXT1                                                                09/26/2009 18:12:35 PAGE     2
+
+0120 7400             56     mov a,#00h
+0122 F0               57     movx @dptr,a
+0123 E0               58     movx a,@dptr
+0124 540F             59     anl a,#0fh
+0126 B40F02           60     cjne a,#0fh,next1
+0129 80D7             61     jmp Processes1
+012B                  62     next1:
+                      63     
+                      64     
+012B 7481             65     MOV     A,#81H                  ;ÉèÖÃ8255¹¤×÷·½Ê½
+012D 90BFFF           66     MOV     DPTR,#CADDR
+0130 F0               67     MOVX    @DPTR,A         
+0131 90AFFF           68     MOV     DPTR,#PORTC     
+0134 7400             69     MOV     A,#00H  
+0136 F0               70     MOVX    @DPTR ,A
+                      71     
+0137 757000           72     MOV     SHOW1,#00H              ;³õÊ¼»¯ÊÂë¹ÜÊ×é
+013A 757100           73     MOV     SHOW2,#00H
+013D 757200           74     MOV     SHOW3,#00H
+0140 757300           75     MOV     SHOW4,#00H
+0143 757400           76     MOV     SHOW5,#00H
+0146 757500           77     MOV     SHOW6,#00H
+0149 757600           78     MOV     SHOW7,#00H
+014C 757700           79     MOV     SHOW8,#00H
+014F C271             80     CLR     KEYPRES
+                      81     
+0151                  82     Processes2:;ÏÔÊ¾¼üÅÌ°´¼ü
+0151 757800           83     MOV     KEYNUM,#00H               ;¼üÅÌÉ¨Ãè
+                      84     
+0154 316B             85     ACALL   SCAN
+0156 E578             86     MOV     A,KEYNUM
+0158 A271             87     MOV     C,KEYPRES
+015A 5008             88     JNC             DISP
+015C 90001E           89     MOV     DPTR,#NUMLAB
+015F 93               90     MOVC    A,@A+DPTR
+0160 F570             91     MOV     SHOW1,A
+0162 C271             92     CLR     KEYPRES
+0164                  93     DISP:
+0164 5126             94     ACALL   PLAY
+0166 20B2E8           95     jb buttonA,Processes2
+0169 414A             96     JMP next2
+                      97     
+                      98     
+                      99      
+                     100     
+                     101     
+016B 7804            102     SCAN:   MOV     R0,#04H 
+016D 7980            103             MOV     R1,#80H
+016F E9              104     SCLOP:  MOV     A,R1
+0170 F4              105             CPL     A
+0171 90AFFF          106             MOV     DPTR,#PORTC               ;Êä³ö¸ßËÄÎ»ÆÁ±ÎÂë
+0174 F0              107             MOVX    @DPTR,A
+0175 54F0            108                     ANL     A,#0F0H
+0177 FA              109                     MOV     R2,A
+0178 E0              110                     MOVX    A,@DPTR                   ;¶Á»ØÉ¨Ãè½á¹û
+0179 540F            111                     ANL     A,#0FH
+017B B40F02          112                     CJNE    A,#0FH,STORE      ;ÅÐ¶ÏÊÇ·ñÓÐ°´¼ü°´ÏÂ
+017E 8018            113                     JMP     NEXT
+                     114     
+0180 F578            115     STORE:  MOV     KEYNUM,A                  ;±£´æ°´¼üÎ»Í¼Öµ
+0182 EA              116             MOV     A,R2
+0183 4578            117                     ORL     A,KEYNUM
+0185 F578            118                     MOV     KEYNUM,A
+                     119     
+0187 5145            120                     ACALL   D1MS
+                     121     
+A51 MACRO ASSEMBLER  TEXT1                                                                09/26/2009 18:12:35 PAGE     3
+
+0189 E0              122                     MOVX    A,@DPTR
+018A 540F            123                     ANL     A,#0FH
+018C B40FF1          124                     CJNE    A,#0FH,STORE      ;µÈ´°´¼üÊÍ·Å
+                     125     
+018F E579            126                     MOV     A,KEYCNT
+0191 04              127                     INC     A
+0192 F579            128                     MOV     KEYCNT,A
+0194 D271            129                     SETB    KEYPRES
+                     130     
+0196 800A            131                     JMP     HANDLE
+                     132     
+0198 E9              133     NEXT:   MOV     A,R1
+0199 03              134             RR      A
+019A F9              135                     MOV     R1,A
+019B D8D2            136             DJNZ    R0,SCLOP
+019D 757800          137                     MOV     KEYNUM,#00H
+01A0 4125            138                     JMP     EXIT
+                     139     
+01A2 E578            140     HANDLE: MOV     A,KEYNUM                  ;°´¼üÎ»Í¼Âë×ª»»Îª°´¼üÖµ
+01A4 757800          141             MOV     KEYNUM,#00H
+01A7 B4EE05          142     IF1:    CJNE    A,#0EEH,IF2
+01AA 757801          143             MOV     KEYNUM,#01H
+01AD 8076            144                     JMP     EXIT
+01AF B4ED05          145     IF2:    CJNE    A,#0EDH,IF3
+01B2 757802          146             MOV     KEYNUM,#02H
+01B5 806E            147                     JMP     EXIT
+01B7 B4EB05          148     IF3:    CJNE    A,#0EBH,IF4
+01BA 757803          149             MOV     KEYNUM,#03H
+01BD 8066            150                     JMP     EXIT
+01BF B4E705          151     IF4:    CJNE    A,#0E7H,IF5
+01C2 757804          152             MOV     KEYNUM,#04H
+01C5 805E            153                     JMP     EXIT
+01C7 B4DE05          154     IF5:    CJNE    A,#0DEH,IF6
+01CA 757805          155             MOV     KEYNUM,#05H
+01CD 8056            156                     JMP     EXIT
+01CF B4DD05          157     IF6:    CJNE    A,#0DDH,IF7
+01D2 757806          158             MOV     KEYNUM,#06H
+01D5 804E            159                     JMP     EXIT
+01D7 B4DB05          160     IF7:    CJNE    A,#0DBH,IF8
+01DA 757807          161             MOV     KEYNUM,#07H
+01DD 8046            162                     JMP     EXIT
+01DF B4D705          163     IF8:    CJNE    A,#0D7H,IF9
+01E2 757808          164             MOV     KEYNUM,#08H
+01E5 803E            165                     JMP     EXIT
+01E7 B4BE05          166     IF9:    CJNE    A,#0BEH,IF0
+01EA 757809          167             MOV     KEYNUM,#09H
+01ED 8036            168                     JMP     EXIT
+01EF B4BD05          169     IF0:    CJNE    A,#0BDH,IFA
+01F2 757800          170             MOV     KEYNUM,#00H
+01F5 802E            171                     JMP     EXIT
+01F7 B4BB05          172     IFA:    CJNE    A,#0BBH,IFB
+01FA 75780A          173             MOV     KEYNUM,#0AH
+01FD 8026            174                     JMP     EXIT
+01FF B4B705          175     IFB:    CJNE    A,#0B7H,IFC
+0202 75780B          176             MOV     KEYNUM,#0BH
+0205 801E            177                     JMP     EXIT
+0207 B47E05          178     IFC:    CJNE    A,#7EH,IFD
+020A 75780C          179             MOV     KEYNUM,#0CH
+020D 8016            180                     JMP     EXIT
+020F B47D05          181     IFD:    CJNE    A,#7DH,IFE
+0212 75780D          182             MOV     KEYNUM,#0DH
+0215 800E            183                     JMP     EXIT
+0217 B47B05          184     IFE:    CJNE    A,#7BH,IFF
+021A 75780E          185             MOV     KEYNUM,#0EH
+021D 8006            186                     JMP     EXIT
+021F B47703          187     IFF:    CJNE    A,#77H,EXIT
+A51 MACRO ASSEMBLER  TEXT1                                                                09/26/2009 18:12:35 PAGE     4
+
+0222 75780F          188             MOV     KEYNUM,#0FH
+0225 22              189     EXIT:   RET   
+                     190     
+                     191     
+                     192      
+                     193     
+                     194     
+0226 7808            195     PLAY:   MOV     R0,#08H
+0228 7970            196             MOV     R1,#SHOW1                 ;È¡ÏÔÊ¾Âë
+022A 7AFF            197                     MOV     R2,#0ffH
+022C E7              198     DPLOP:  MOV     A,@R1
+022D 908FFF          199             MOV     DPTR,#PORTA             
+0230 F0              200             MOVX    @DPTR,A           ;ËÍ³ö¸öÎ»µÄ7¶Î´úÂë
+0231 909FFF          201             MOV     DPTR,#PORTB     
+0234 EA              202                 MOV     A,R2        
+0235 F0              203                 MOVX    @DPTR ,A          ;¿ªÏàÓ¦µÄÎ»ÏÔÊ¾
+0236 5145            204             ACALL   D1MS              ;ÏÔÊ¾162Î¢Ãë
+0238 909FFF          205             MOV     DPTR,#PORTB     
+023B 7400            206                 MOV     A,#0
+023D F0              207                 MOVX    @DPTR ,A          ;¹Ø±ÕÊ®Î»ÏÔÊ¾,·ÀÖ¹¹íÓ°
+                     208     
+023E EA              209                     MOV     A,R2
+023F 03              210                     RR      A
+0240 FA              211                     MOV     R2,A
+0241 09              212                     INC     R1
+                     213     
+0242 D8E8            214             DJNZ    R0,DPLOP          ;Ñ­»·Ö´ÐÐ8´Î
+0244 22              215             RET 
+                     216     
+                     217      
+                     218     
+                     219     
+0245 7E96            220     D1MS:   MOV     R6,#150 
+0247 DEFE            221             DJNZ    R6,$
+0249 22              222             RET
+                     223     
+024A                 224     next2:
+                     225     
+024A 90BFFF          226     MOV         DPTR,#ADDR_K
+024D 7480            227     MOV         A,#80H
+024F F0              228     MOVX        @DPTR,A
+0250 90AFFF          229     MOV               DPTR,#ADDR_C
+0253 74FF            230     MOV               A,#0FFH
+0255 F0              231     MOVX              @DPTR,A
+0256 D2B7            232     SETB    _OE  ;³õÊ¼»¯Ê±Ê¹_STÓë_OEÈ«ÎªµÍµçÆ½
+0258 D2B6            233     SETB    _ST
+025A 53A0F0          234     ANL             P2,#0F0H;P2.3ÎªµÍÑ¡ÖÐ0809,P2.2P2.1P2.0ËÍÍ¨µÀºÅ00
+                     235     
+025D                 236     Processes3:
+                     237             
+                     238     ;CLR    _ST  ;¸ø_STÕÂö³å,Æô¶¯×ª»»
+                     239     ;SETB   _ST
+025D 90F0FF          240     MOV DPTR,#0f0FFH
+0260 F0              241     MOVX @DPTR,A
+0261 51BE            242     ACALL DLY1;ÑÓÊ±×ª»»½áÊø
+0263                 243     READ:
+0263 E0              244     MOVX A,@DPTR
+0264                 245     TRANS:  
+0264 75F033          246     MOV             B,#51;½üËÆ×ª»»µÃµçÑ¹ÕûÊÖµ
+0267 84              247     DIV             AB
+0268 FB              248     MOV             R3,A
+0269 C5F0            249     XCH             A,B
+026B 75F005          250     MOV             B,#5
+026E 84              251     DIV             AB
+026F FA              252     MOV             R2,A;½üËÆµÃµçÑ¹0.1VÊÖµ
+0270 A9F0            253     MOV             R1,B;½üËÆµÃµçÑ¹0.01VÊÖµ
+A51 MACRO ASSEMBLER  TEXT1                                                                09/26/2009 18:12:35 PAGE     5
+
+0272                 254     DISPLAY:
+0272 909FFF          255     MOV             DPTR,#ADDR_B
+0275 7480            256     MOV     A,#80H   ;Ñ¡ÖÐÏÔÊ¾0.01VµÄLED   
+0277 F0              257     MOVX    @DPTR,A
+0278 E9              258     MOV             A,R1
+0279 90001E          259     MOV             DPTR,#NUMLAB
+027C 93              260     MOVC    A,@A+DPTR
+027D 908FFF          261     MOV     DPTR,#ADDR_A
+0280 F0              262     MOVX    @DPTR,A
+0281 51C4            263     ACALL   DELAY
+0283 7400            264     mov a,#0
+0285 908FFF          265     mov dptr, #ADDR_A
+0288 F0              266     movx @dptr,a
+0289 909FFF          267     MOV             DPTR,#ADDR_B
+028C 7440            268     MOV     A,#40H    ;Ñ¡ÖÐÏÔÊ¾0.1VµÄLED 
+028E F0              269     MOVX    @DPTR,A
+028F EA              270     MOV             A,R2
+0290 90001E          271     MOV             DPTR,#NUMLAB
+0293 93              272     MOVC    A,@A+DPTR
+0294 908FFF          273     MOV     DPTR,#ADDR_A
+0297 F0              274     MOVX    @DPTR,A
+0298 51C4            275     CALL    DELAY
+029A 7400            276     mov a,#0
+029C 908FFF          277     mov dptr, #ADDR_A
+029F F0              278     movx @dptr,a
+02A0 909FFF          279     MOV             DPTR,#ADDR_B
+02A3 7420            280     MOV     A,#20H    ;Ñ¡ÖÐÏÔÊ¾1VµÄLED  
+02A5 F0              281     MOVX    @DPTR,A
+02A6 EB              282     MOV             A,R3
+02A7 240B            283     ADD             A,#11;¼ÓÉÏÐ¡Êµã
+02A9 90001E          284     MOV             DPTR,#NUMLAB
+02AC 93              285     MOVC    A,@A+DPTR
+02AD 908FFF          286     MOV     DPTR,#ADDR_A
+02B0 F0              287     MOVX    @DPTR,A
+02B1 51C4            288     ACALL   DELAY
+02B3 7400            289     mov a,#0
+02B5 908FFF          290     mov dptr, #ADDR_A
+02B8 F0              291     movx @dptr,a
+02B9 20B5A1          292     jb buttonB,Processes3
+02BC 800F            293     jmp next3
+                     294     
+02BE 7E05            295     DLY1:MOV R6,#05
+02C0 00              296     DLY2:NOP
+02C1 DEFD            297          DJNZ R6,DLY2
+02C3 22              298          RET
+02C4                 299     DELAY:  
+02C4 7D02            300                     MOV             R5,#02H
+02C6 7EE0            301     L1:             MOV             R6,#0E0H
+02C8 DEFE            302     L2:             DJNZ    R6,L2
+02CA DDFA            303                     DJNZ    R5,L1
+02CC 22              304                     RET
+                     305     
+02CD                 306     next3:
+                     307     
+02CD 7480            308     MOV     A,#80H                  ;·½Ê½0
+02CF 90BFFF          309     MOV     DPTR,#CADDR
+02D2 F0              310     MOVX    @DPTR,A         ;ÉèÖÃ8255¹¤×÷·½Ê½
+02D3 D2A6            311     SETB    P2.6            
+02D5 758A00          312     mov  tl0,#0
+02D8 758C00          313     mov  th0,#0
+02DB 758BB0          314     mov  tl1,#0b0h
+02DE 758D3C          315     mov  th1,#3ch           ;t1Òç³öÂÊÎª50ms
+02E1 758915          316     mov  tmod,#15h
+02E4 D2AF            317     setb ea
+02E6 D2AB            318     setb et1
+02E8 D28C            319     setb tr0
+A51 MACRO ASSEMBLER  TEXT1                                                                09/26/2009 18:12:35 PAGE     6
+
+02EA D28E            320     setb tr1
+02EC 7F14            321     mov  r7,#20
+                     322     
+02EE                 323     Processes4:
+02EE EB              324     MOV A,R3
+02EF 75F064          325     MOV B,#100
+02F2 84              326     DIV AB
+02F3 FA              327     MOV R2,A          ;r2ÎªµÚ°ÙÎ»
+02F4 E5F0            328     MOV A,B
+02F6 75F00A          329     MOV B,#10
+02F9 84              330     DIV AB
+02FA F9              331     MOV R1,A         ;r1ÎªµÚÊ®Î»
+02FB A8F0            332     MOV R0,B         ;r0Îª×î¸öÎ»
+02FD 7480            333     MOV     A,#80H
+02FF 909FFF          334     MOV     DPTR,#PORTB             
+0302 F0              335     MOVX    @DPTR,A                 ;ÖÃ¸öÎ»ÊÂë¹ÜÓÐÐ§                
+0303 90001E          336     MOV     DPTR,#NUMLAB
+0306 E8              337     MOV     A,R0
+0307 93              338     MOVC    A,@A+DPTR  ;ÉèÖÃ¸öÎ»ÏÔÊ¾Âë  
+0308 908FFF          339     MOV     DPTR,#PORTA             
+030B F0              340     MOVX    @DPTR,A                                 
+030C 7149            341     CALL    DELAY1
+030E 7400            342     mov a,#0
+0310 908FFF          343     mov dptr, #ADDR_A
+0313 F0              344     movx @dptr,a            
+0314 90001E          345     MOV     DPTR,#NUMLAB
+0317 E9              346     MOV             A,R1
+0318 93              347     MOVC    A,@A+DPTR  ;ÉèÖÃÊ®Î»ÏÔÊ¾Âë  
+                     348     
+0319 908FFF          349     MOV     DPTR,#PORTA             
+031C F0              350     MOVX    @DPTR,A                 
+                     351     
+031D 7440            352     MOV     A,#040H        ;ÖÃÊ®Î»ÊÂë¹ÜÓÐÐ§
+031F 909FFF          353     MOV     DPTR,#PORTB             
+0322 F0              354     MOVX    @DPTR,A                 
+0323 7149            355     CALL    DELAY1  
+0325 7400            356     mov a,#0
+0327 908FFF          357     mov dptr, #ADDR_A
+032A F0              358     movx @dptr,a            
+032B 90001E          359     MOV     DPTR,#NUMLAB
+032E EA              360     MOV     A,R2
+032F 93              361     MOVC    A,@A+DPTR  ;ÉèÖÃ°ÙÎ»ÏÔÊ¾Âë  
+                     362     
+0330 908FFF          363     MOV     DPTR,#PORTA             
+0333 F0              364     MOVX    @DPTR,A                 
+                     365     
+0334 7420            366     MOV     A,#020H        ;ÖÃ°ÙÎ»ÊÂë¹ÜÓÐÐ§
+0336 909FFF          367     MOV     DPTR,#PORTB             
+0339 F0              368     MOVX    @DPTR,A                 
+033A 7149            369     CALL    DELAY1
+033C 7400            370     mov a,#0
+033E 908FFF          371     mov dptr, #ADDR_A
+0341 F0              372     movx @dptr,a
+0342 20B2A9          373     jb buttonA,Processes4
+0345 C2AF            374     clr ea
+0347 801D            375     jmp next4
+                     376     
+0349 7E0A            377     DELAY1: MOV     R6,#10           ;ÑÓÊ±×Ó³ÌÐò     
+034B 7D0A            378     LOOP1:  MOV     R5,#10
+                     379          
+034D DDFE            380                     DJNZ    R5,$
+034F DEFA            381                     DJNZ    R6,LOOP1
+0351 22              382                     RET
+                     383     
+0352 C0E0            384     st1:  PUSH ACC
+0354 758BB0          385           mov  tl1,#0b0h             ;ÖÐ¶Ï×Ó³ÌÐò
+A51 MACRO ASSEMBLER  TEXT1                                                                09/26/2009 18:12:35 PAGE     7
+
+0357 758D3C          386           mov  th1,#3ch
+035A DF07            387           djnz r7,jies               ;50*20=1000MS
+035C 7F14            388           mov  r7,#20
+035E AB8A            389           MOV R3,TL0     
+0360 758A00          390           MOV  TL0,#0
+0363 D0E0            391     JIES: POP ACC
+0365 32              392           RETI
+                     393     
+0366                 394     next4:
+0366                 395     Processes5:
+0366 D293            396     setb p1.3
+0368 51C4            397     call DELAY
+036A C293            398     clr p1.3
+036C 51C4            399     call DELAY
+036E 20B5F5          400     jb buttonB,Processes5
+0371 2102            401     jmp Processes1
+                     402     
+0373 6173            403     ajmp $
+                     404     
+                     405     end
+                             
+A51 MACRO ASSEMBLER  TEXT1                                                                09/26/2009 18:12:35 PAGE     8
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ACC. . . . . . . .  D ADDR   00E0H   A   
+ADDR_A . . . . . .  N NUMB   8FFFH   A   
+ADDR_B . . . . . .  N NUMB   9FFFH   A   
+ADDR_C . . . . . .  N NUMB   AFFFH   A   
+ADDR_K . . . . . .  N NUMB   BFFFH   A   
+B. . . . . . . . .  D ADDR   00F0H   A   
+BUTTONA. . . . . .  B ADDR   00B0H.2 A   
+BUTTONB. . . . . .  B ADDR   00B0H.5 A   
+CADDR. . . . . . .  N NUMB   BFFFH   A   
+D1MS . . . . . . .  C ADDR   0245H   A   
+DELAY. . . . . . .  C ADDR   02C4H   A   
+DELAY1 . . . . . .  C ADDR   0349H   A   
+DISP . . . . . . .  C ADDR   0164H   A   
+DISPLAY. . . . . .  C ADDR   0272H   A   
+DLY1 . . . . . . .  C ADDR   02BEH   A   
+DLY2 . . . . . . .  C ADDR   02C0H   A   
+DPLOP. . . . . . .  C ADDR   022CH   A   
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+ET1. . . . . . . .  B ADDR   00A8H.3 A   
+EXIT . . . . . . .  C ADDR   0225H   A   
+HANDLE . . . . . .  C ADDR   01A2H   A   
+IF0. . . . . . . .  C ADDR   01EFH   A   
+IF1. . . . . . . .  C ADDR   01A7H   A   
+IF2. . . . . . . .  C ADDR   01AFH   A   
+IF3. . . . . . . .  C ADDR   01B7H   A   
+IF4. . . . . . . .  C ADDR   01BFH   A   
+IF5. . . . . . . .  C ADDR   01C7H   A   
+IF6. . . . . . . .  C ADDR   01CFH   A   
+IF7. . . . . . . .  C ADDR   01D7H   A   
+IF8. . . . . . . .  C ADDR   01DFH   A   
+IF9. . . . . . . .  C ADDR   01E7H   A   
+IFA. . . . . . . .  C ADDR   01F7H   A   
+IFB. . . . . . . .  C ADDR   01FFH   A   
+IFC. . . . . . . .  C ADDR   0207H   A   
+IFD. . . . . . . .  C ADDR   020FH   A   
+IFE. . . . . . . .  C ADDR   0217H   A   
+IFF. . . . . . . .  C ADDR   021FH   A   
+JIES . . . . . . .  C ADDR   0363H   A   
+KEYCNT . . . . . .  N NUMB   0079H   A   
+KEYNUM . . . . . .  N NUMB   0078H   A   
+KEYPRES. . . . . .  B ADDR   002EH.1 A   
+L1 . . . . . . . .  C ADDR   02C6H   A   
+L2 . . . . . . . .  C ADDR   02C8H   A   
+LOOP1. . . . . . .  C ADDR   034BH   A   
+NEXT . . . . . . .  C ADDR   0198H   A   
+NEXT1. . . . . . .  C ADDR   012BH   A   
+NEXT2. . . . . . .  C ADDR   024AH   A   
+NEXT3. . . . . . .  C ADDR   02CDH   A   
+NEXT4. . . . . . .  C ADDR   0366H   A   
+NUMLAB . . . . . .  C ADDR   001EH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+PLAY . . . . . . .  C ADDR   0226H   A   
+PORTA. . . . . . .  N NUMB   8FFFH   A   
+PORTB. . . . . . .  N NUMB   9FFFH   A   
+PORTC. . . . . . .  N NUMB   AFFFH   A   
+PROCESSES1 . . . .  C ADDR   0102H   A   
+PROCESSES2 . . . .  C ADDR   0151H   A   
+PROCESSES3 . . . .  C ADDR   025DH   A   
+A51 MACRO ASSEMBLER  TEXT1                                                                09/26/2009 18:12:35 PAGE     9
+
+PROCESSES4 . . . .  C ADDR   02EEH   A   
+PROCESSES5 . . . .  C ADDR   0366H   A   
+READ . . . . . . .  C ADDR   0263H   A   
+SCAN . . . . . . .  C ADDR   016BH   A   
+SCLOP. . . . . . .  C ADDR   016FH   A   
+SHOW1. . . . . . .  N NUMB   0070H   A   
+SHOW2. . . . . . .  N NUMB   0071H   A   
+SHOW3. . . . . . .  N NUMB   0072H   A   
+SHOW4. . . . . . .  N NUMB   0073H   A   
+SHOW5. . . . . . .  N NUMB   0074H   A   
+SHOW6. . . . . . .  N NUMB   0075H   A   
+SHOW7. . . . . . .  N NUMB   0076H   A   
+SHOW8. . . . . . .  N NUMB   0077H   A   
+ST1. . . . . . . .  C ADDR   0352H   A   
+STORE. . . . . . .  C ADDR   0180H   A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TL0. . . . . . . .  D ADDR   008AH   A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+TRANS. . . . . . .  C ADDR   0264H   A   
+_EOC . . . . . . .  B ADDR   00B0H.3 A   
+_OE. . . . . . . .  B ADDR   00B0H.7 A   
+_ST. . . . . . . .  B ADDR   00B0H.6 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

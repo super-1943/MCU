@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>948248078</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$TOOLKIT_DIR$\inc\io51.h</file>
+      <file>$PROJ_DIR$\Debug\List\vidpid.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\usbold.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\Keyboard.r51</file>
+      <file>$PROJ_DIR$\Debug\Obj\usb.r51</file>
+      <file>$PROJ_DIR$\Debug\List\vidpid.s51</file>
+      <file>$PROJ_DIR$\KeyBoard.xcl</file>
+      <file>$PROJ_DIR$\Debug\List\Keyboard.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\vidpid.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\descrip.lst</file>
+      <file>$PROJ_DIR$\Debug\List\usbinit.s51</file>
+      <file>$PROJ_DIR$\Debug\Obj\usbinit.r51</file>
+      <file>$PROJ_DIR$\Debug\Obj\usbinit.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\support.r51</file>
+      <file>$PROJ_DIR$\Debug\List\usbinit.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\descrip.r51</file>
+      <file>$PROJ_DIR$\Debug\Obj\descrip.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\support.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\Keyboard.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\support.s51</file>
+      <file>$PROJ_DIR$\Debug\List\support.lst</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl-pli-nlxd-1e16x01.r51</file>
+      <file>$PROJ_DIR$\Debug\Obj\kkk.pbd</file>
+      <file>$PROJ_DIR$\Debug\Obj\vidpid.r51</file>
+      <file>$PROJ_DIR$\Debug\Obj\usb.pbi</file>
+      <file>$PROJ_DIR$\descrip.c</file>
+      <file>$PROJ_DIR$\Debug\Exe\kkk.d51</file>
+      <file>$PROJ_DIR$\Debug\List\descrip.s51</file>
+      <file>$PROJ_DIR$\Debug\Obj\usbold.r51</file>
+      <file>$PROJ_DIR$\Debug\List\usb.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r51</file>
+      <file>$PROJ_DIR$\Debug\List\usb.s51</file>
+      <file>$PROJ_DIR$\Debug\List\Keyboard.s51</file>
+      <file>$PROJ_DIR$\usbold.c</file>
+      <file>$PROJ_DIR$\Keyboard.c</file>
+      <file>$PROJ_DIR$\delay.h</file>
+      <file>$PROJ_DIR$\support.c</file>
+      <file>$PROJ_DIR$\tusb2136.h</file>
+      <file>$PROJ_DIR$\Types.h</file>
+      <file>$PROJ_DIR$\usb.c</file>
+      <file>$PROJ_DIR$\usb.h</file>
+      <file>$PROJ_DIR$\usbinit.c</file>
+      <file>$PROJ_DIR$\vidpid.c</file>
+      <file>$PROJ_DIR$\main.c</file>
+    </outputs>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 27</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Obj\kkk.pbd</name>
+      <inputs>
+        <tool>
+          <name>BILINK</name>
+          <file> 19 17 18 25 12 8</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\descrip.c</name>
+      <outputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 28 9 16</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 17</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 39 38 41</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 39 38 41</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\kkk.d51</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 6 3 16 14 4 11 24 22</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usbold.c</name>
+      <outputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 29</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 2</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 0 39 38 41 36</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 0 39 38 41 36</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Keyboard.c</name>
+      <outputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 33 7 3</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 19</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 0 39 36 41 38</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 0 39 36 41 38</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\support.c</name>
+      <outputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 20 21 14</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 18</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 0 39 38</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 0 39 38</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb.c</name>
+      <outputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 32 30 4</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 25</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 0 39 38 41 36</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 0 39 38 41 36</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usbinit.c</name>
+      <outputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 10 15 11</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 12</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 0 39 38 41 36</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 0 39 38 41 36</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\vidpid.c</name>
+      <outputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 5 1 24</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 8</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 0 39 38</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 0 39 38</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 31</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 13</file>
+        </tool>
+      </outputs>
+    </file>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+

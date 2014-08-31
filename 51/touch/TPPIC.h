@@ -1,0 +1,243 @@
+unsigned int code PIC_Cross[16] =
+{
+	0xC003,
+	0xE007,
+	0x700E,
+	0x381C,
+	0x1C38,
+	0x0E70,
+	0x07E0,
+	0x03C0,
+	0x03C0,
+	0x07E0,
+	0x0E70,
+	0x1C38,
+	0x381C,
+	0x700E,
+	0xE007,
+	0xC003
+};
+
+unsigned int code PIC_Arrowhead2[16] =
+{
+	0x0,
+	0x0,
+	0xC,
+	0x1C,
+	0x1038,
+	0x3070,
+	0x30E0,
+	0x31C0,
+	0x3380,
+	0x3700,
+	0x3E00,
+	0x3C00,
+	0x3FF0,
+	0x3FE0,
+	0x0,
+	0x0
+};
+
+unsigned int code PIC_Arrowhead3[16] =
+{
+	0x0,
+	0x0,
+	0xC,
+	0x1C,
+	0x1038,
+	0x3070,
+	0x30E0,
+	0x31C0,
+	0x3380,
+	0x3700,
+	0x3E00,
+	0x3C00,
+	0x3FF0,
+	0x3FE0,
+	0x0,
+	0x0
+};
+
+unsigned int code PIC_ICON[][16] =
+{
+/*
+.XXXXXXXXXXXXXX.
+X......XX......X
+X.....XXXX.X...X
+X....XX..XXX...X
+X...XX....XX...X
+X..XX......XX..X
+X.XX........XX.X
+XXXX........XXXX
+X..X..XXXX..X..X
+X..X..X..X..X..X
+X..X..X..X..X..X
+X..X..X..X..X..X
+X..X..X..X..X..X
+X..XXXXXXXXXX..X
+X..............X
+.XXXXXXXXXXXXXX.
+*/
+	{
+		0x7FFE,
+		0x8181,
+		0x83D1,
+		0x8671,
+		0x8C31,
+		0x9819,
+		0xB00D,
+		0xF00F,
+		0x93C9,
+		0x9249,
+		0x9249,
+		0x9249,
+		0x9249,
+		0x9FF9,
+		0x8001,
+		0x7FFE
+	},
+/*
+.XXXXXXXXXXXXXX.
+X..............X
+X..XXXX..XXXX..X
+X..X...XX...X..X
+X.XXXX.XX.XXXX.X
+X.X...XXXX...X.X
+X.X....XX....X.X
+X.X....XX....X.X
+X.X....XX....X.X
+X.X....XX....X.X
+X.X....XX....X.X
+X.X....XX....X.X
+X.XXXXXXXXXXXX.X
+X......XX......X
+X..............X
+.XXXXXXXXXXXXXX.
+*/
+	{
+		0x7FFE,
+		0x8001,
+		0x9E79,
+		0x9189,
+		0xBDBD,
+		0xA3C5,
+		0xA185,
+		0xA185,
+		0xA185,
+		0xA185,
+		0xA185,
+		0xA185,
+		0xBFFD,
+		0x8181,
+		0x8001,
+		0x7FFE
+	},
+/*
+.XXXXXXXXXXXXXX.
+X..............X
+X..............X
+X.XXXXXXXXXXXX.X
+X.XX........XX.X
+X.XXX......XXX.X
+X.X.XX....XX.X.X
+X.X..XX..XX..X.X
+X.X...XXXX...X.X
+X.X..X.XX.X..X.X
+X.X.X......X.X.X
+X.XX........XX.X
+X.XXXXXXXXXXXX.X
+X..............X
+X..............X
+.XXXXXXXXXXXXXX.
+*/
+	{
+		0x7FFE,
+		0x8001,
+		0x8001,
+		0xBFFD,
+		0xB00D,
+		0xB81D,
+		0xAC35,
+		0xA665,
+		0xA3C5,
+		0xA5A5,
+		0xA815,
+		0xB00D,
+		0xBFFD,
+		0x8001,
+		0x8001,
+		0x7FFE
+	},
+/*
+.XXXXXXXXXXXXXX.
+X..............X
+X..XX.X........X
+X.XXXXXXXXXXXX.X
+X.X..........X.X
+X.X....XX..X.X.X
+X.X...X..X...X.X
+X.X..X....X..X.X
+X.X..X....X..X.X
+X.X...X..X...X.X
+X.X....XX....X.X
+X.X..........X.X
+X.XXXXXXXXXXXX.X
+X..............X
+X..............X
+.XXXXXXXXXXXXXX.
+*/
+	{
+		0x7FFE,
+		0x8001,
+		0x9A01,
+		0xBFFD,
+		0xA005,
+		0xA195,
+		0xA245,
+		0xA425,
+		0xA425,
+		0xA245,
+		0xA185,
+		0xA005,
+		0xBFFD,
+		0x8001,
+		0x8001,
+		0x7FFE
+	},
+/*
+.XXXXXXXXXXXXXX.
+X..............X
+X..............X
+X.XXXXXXXXXXXX.X
+X.X..........X.X
+X.X..........X.X
+X.X..........X.X
+X.X..........X.X
+X.X..........X.X
+X.XXXXXXXXXXXX.X
+X....X....X....X
+X....X....X....X
+X.XXXXXXXXXXXX.X
+X..............X
+X..............X
+.XXXXXXXXXXXXXX.
+*/
+	{
+		0x7FFE,
+		0x8001,
+		0x8001,
+		0xBFFD,
+		0xA005,
+		0xA005,
+		0xA005,
+		0xA005,
+		0xA005,
+		0xBFFD,
+		0x8421,
+		0x8421,
+		0xBFFD,
+		0x8001,
+		0x8001,
+		0x7FFE
+	}
+};

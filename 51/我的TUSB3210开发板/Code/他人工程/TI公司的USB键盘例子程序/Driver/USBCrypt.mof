@@ -1,0 +1,21 @@
+[Dynamic, Provider("WMIProv"),
+ WMI,
+ Description("USB En(De)Crypt sample driver"),
+ guid("{11656D81-F533-461a-B1DA-F0BDEB089CC4}"),
+ locale("MS\\0x409")]
+class USBCryptInformation
+{
+    [key, read]
+     string InstanceName;
+
+    [read] boolean Active;
+
+    [WmiDataId(1),
+     read,
+     write,
+     Description("The DecryptByteCount property is a count of the number of bytes the USB device has decrypted.")
+     ]
+    uint32 DecryptByteCount;
+	
+
+};

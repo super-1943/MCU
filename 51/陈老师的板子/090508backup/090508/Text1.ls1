@@ -1,0 +1,681 @@
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 08:20:07 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN Text1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE Text1.src PR(.\Text1.ls1) EP DEBUG
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ; .\Text1.SRC generated from: Text1.c
+                       2     ; COMPILER INVOKED BY:
+                       3     ;        C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND SRC(.\Text1.SRC)
+                       4     
+                       5     $nomod51 
+                       6     
+                       7     NAME    TEXT1
+                       8     
+  0080                 9     P0      DATA    080H
+  0090                10     P1      DATA    090H
+  00A0                11     P2      DATA    0A0H
+  00B0                12     P3      DATA    0B0H
+  00B4                13     T0      BIT     0B0H.4
+  00D6                14     AC      BIT     0D0H.6
+  00B5                15     T1      BIT     0B0H.5
+  0090                16     T2      BIT     090H.0
+  00AF                17     EA      BIT     0A8H.7
+  00A8                18     IE      DATA    0A8H
+  00CE                19     EXF2    BIT     0C8H.6
+  00B7                20     RD      BIT     0B0H.7
+  00AC                21     ES      BIT     0A8H.4
+  00B8                22     IP      DATA    0B8H
+  0098                23     RI      BIT     098H.0
+  00B2                24     INT0    BIT     0B0H.2
+  00D7                25     CY      BIT     0D0H.7
+  0099                26     TI      BIT     098H.1
+  00B3                27     INT1    BIT     0B0H.3
+  00CB                28     RCAP2H  DATA    0CBH
+  00BC                29     PS      BIT     0B8H.4
+  0081                30     SP      DATA    081H
+  0091                31     T2EX    BIT     090H.1
+  00D2                32     OV      BIT     0D0H.2
+  00CA                33     RCAP2L  DATA    0CAH
+  00C9                34     C_T2    BIT     0C8H.1
+  00B6                35     WR      BIT     0B0H.6
+  00CD                36     RCLK    BIT     0C8H.5
+  00CC                37     TCLK    BIT     0C8H.4
+  0099                38     SBUF    DATA    099H
+  0087                39     PCON    DATA    087H
+  0098                40     SCON    DATA    098H
+  0089                41     TMOD    DATA    089H
+  0088                42     TCON    DATA    088H
+  0089                43     IE0     BIT     088H.1
+  008B                44     IE1     BIT     088H.3
+  00F0                45     B       DATA    0F0H
+  00C8                46     CP_RL2  BIT     0C8H.0
+  00E0                47     ACC     DATA    0E0H
+  00A9                48     ET0     BIT     0A8H.1
+  00AB                49     ET1     BIT     0A8H.3
+  008D                50     TF0     BIT     088H.5
+  00AD                51     ET2     BIT     0A8H.5
+  008F                52     TF1     BIT     088H.7
+  00CF                53     TF2     BIT     0C8H.7
+  009A                54     RB8     BIT     098H.2
+  008C                55     TH0     DATA    08CH
+  00A8                56     EX0     BIT     0A8H.0
+  0088                57     IT0     BIT     088H.0
+  008D                58     TH1     DATA    08DH
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 08:20:07 PAGE     2
+
+  009B                59     TB8     BIT     098H.3
+  00AA                60     EX1     BIT     0A8H.2
+  008A                61     IT1     BIT     088H.2
+  00CD                62     TH2     DATA    0CDH
+  00D0                63     P       BIT     0D0H.0
+  009F                64     SM0     BIT     098H.7
+  008A                65     TL0     DATA    08AH
+  009E                66     SM1     BIT     098H.6
+  008B                67     TL1     DATA    08BH
+  0093                68     buz     BIT     090H.3
+  009D                69     SM2     BIT     098H.5
+  00CC                70     TL2     DATA    0CCH
+  00B9                71     PT0     BIT     0B8H.1
+  00BB                72     PT1     BIT     0B8H.3
+  00D3                73     RS0     BIT     0D0H.3
+  00BD                74     PT2     BIT     0B8H.5
+  008C                75     TR0     BIT     088H.4
+  00D4                76     RS1     BIT     0D0H.4
+  008E                77     TR1     BIT     088H.6
+  00CA                78     TR2     BIT     0C8H.2
+  00B8                79     PX0     BIT     0B8H.0
+  00BA                80     PX1     BIT     0B8H.2
+  0083                81     DPH     DATA    083H
+  0082                82     DPL     DATA    082H
+  00CB                83     EXEN2   BIT     0C8H.3
+  009C                84     REN     BIT     098H.4
+  00C8                85     T2CON   DATA    0C8H
+  00B0                86     RXD     BIT     0B0H.0
+  00B1                87     TXD     BIT     0B0H.1
+  00D5                88     F0      BIT     0D0H.5
+  00D0                89     PSW     DATA    0D0H
+  0090                90     key1    BIT     090H.0
+  0091                91     key2    BIT     090H.1
+                      92     ?PR?_delay?TEXT1     SEGMENT CODE 
+                      93     ?PR?shortdelay?TEXT1 SEGMENT CODE 
+                      94     ?PR?_buzzer?TEXT1    SEGMENT CODE 
+                      95     ?PR?_show?TEXT1      SEGMENT CODE 
+                      96     ?DT?_show?TEXT1      SEGMENT DATA OVERLAYABLE 
+                      97     ?PR?myint0?TEXT1     SEGMENT CODE 
+                      98     ?PR?myt1?TEXT1       SEGMENT CODE 
+                      99     ?PR?main?TEXT1       SEGMENT CODE 
+                     100     ?C_INITSEG           SEGMENT CODE 
+                     101     ?DT?TEXT1            SEGMENT DATA 
+                     102             EXTRN   CODE (?C?CLDOPTR)
+                     103             EXTRN   CODE (?C_STARTUP)
+                     104             PUBLIC  buffer
+                     105             PUBLIC  tcount
+                     106             PUBLIC  table
+                     107             PUBLIC  main
+                     108             PUBLIC  myt1
+                     109             PUBLIC  myint0
+                     110             PUBLIC  _show
+                     111             PUBLIC  _buzzer
+                     112             PUBLIC  shortdelay
+                     113             PUBLIC  _delay
+                     114     
+----                 115             RSEG  ?DT?_show?TEXT1
+0000                 116     ?_show?BYTE:
+0000                 117             buf?345:   DS   3
+                     118     
+----                 119             RSEG  ?DT?TEXT1
+0000                 120               table:   DS   17
+0011                 121              tcount:   DS   1
+0012                 122              buffer:   DS   8
+                     123     
+----                 124             RSEG  ?C_INITSEG
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 08:20:07 PAGE     3
+
+0000 01              125             DB      001H
+0001 00       F      126             DB      tcount
+0002 00              127             DB      000H
+                     128     
+0003 11              129             DB      011H
+0004 00       F      130             DB      table
+0005 3F              131             DB      03FH
+0006 06              132             DB      006H
+0007 5B              133             DB      05BH
+0008 4F              134             DB      04FH
+0009 66              135             DB      066H
+000A 6D              136             DB      06DH
+000B 7D              137             DB      07DH
+000C 07              138             DB      007H
+000D 7F              139             DB      07FH
+000E 6F              140             DB      06FH
+000F 77              141             DB      077H
+0010 7C              142             DB      07CH
+0011 39              143             DB      039H
+0012 5E              144             DB      05EH
+0013 79              145             DB      079H
+0014 71              146             DB      071H
+0015 00              147             DB      000H
+                     148     
+0016 08              149             DB      008H
+0017 00       F      150             DB      buffer
+0018 00              151             DB      000H
+0019 00              152             DB      000H
+001A 00              153             DB      000H
+001B 00              154             DB      000H
+001C 00              155             DB      000H
+001D 00              156             DB      000H
+001E 00              157             DB      000H
+001F 00              158             DB      000H
+                     159     
+                     160     ; /*******************************************************
+                     161     ; Àµ√˜£∫ ¬Îπ‹œ‘ æ
+                     162     ; “ª£¨∂˛ ¬Îπ‹œ‘ æAD ‰≥ˆ£®±ÿ–Î∞¥œ¬S4¥•∑¢int0÷–∂œ÷Æ∫Û£©
+                     163     ; 3Œªœ‘ æ «∑Ò”–AD ‰≥ˆ
+                     164     ; 4£¨5Œªø’œ–
+                     165     ; 6Œªœ‘ æ555µƒ¥•∑¢∆µ¬ £®0-F£©
+                     166     ; 7£¨8Œªø’œ–
+                     167     ; *******************************************************/
+                     168     ; #include <absacc.h>
+                     169     ; #include <reg52.h>
+                     170     ; #include <stdarg.h>
+                     171     ; #include <stdio.h>
+                     172     ; sbit key1=P1^0;
+                     173     ; sbit key2=P1^1;
+                     174     ; sbit buz=P1^3;
+                     175     ; unsigned char tcount=0;
+                     176     ; #define PORTA XBYTE[0x8fff]
+                     177     ; #define PORTB XBYTE[0x9fff]
+                     178     ; #define PORTC XBYTE[0xafff]
+                     179     ; #define CADDR XBYTE[0xbfff]
+                     180     ; #define ADREAD XBYTE[0x00ff]
+                     181     ; unsigned char table[]={
+                     182     ; 0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00
+                     183     ; };
+                     184     ; unsigned char buffer[8]={0,0,0,0,0,0,0,0};
+                     185     ; void delay(unsigned char j)
+                     186     
+----                 187             RSEG  ?PR?_delay?TEXT1
+0000                 188     _delay:
+                     189             USING   0
+                     190                             ; SOURCE LINE # 26
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 08:20:07 PAGE     4
+
+                     191     ;---- Variable 'j?040' assigned to Register 'R7' ----
+                     192     ; {
+                     193                             ; SOURCE LINE # 27
+                     194     ;       unsigned char i,k;
+                     195     ;       for(i=123;i;i--)
+                     196                             ; SOURCE LINE # 29
+                     197     ;---- Variable 'i?041' assigned to Register 'R6' ----
+0000 7E7B            198             MOV     R6,#07BH
+0002                 199     ?C0001:
+                     200     ;       for(k=5;k;k--)
+                     201                             ; SOURCE LINE # 30
+                     202     ;---- Variable 'k?042' assigned to Register 'R5' ----
+0002 7D05            203             MOV     R5,#05H
+0004                 204     ?C0004:
+                     205     ;       for(;j;j--);
+                     206                             ; SOURCE LINE # 31
+0004                 207     ?C0007:
+0004 EF              208             MOV     A,R7
+0005 6003            209             JZ      ?C0006
+0007 1F              210             DEC     R7
+0008 80FA            211             SJMP    ?C0007
+000A                 212     ?C0006:
+000A DDF8            213             DJNZ    R5,?C0004
+000C                 214     ?C0003:
+000C DEF4            215             DJNZ    R6,?C0001
+                     216     ; }
+                     217                             ; SOURCE LINE # 32
+000E                 218     ?C0010:
+000E 22              219             RET     
+                     220     ; END OF _delay
+                     221     
+                     222     ; void shortdelay(void)
+                     223     
+----                 224             RSEG  ?PR?shortdelay?TEXT1
+0000                 225     shortdelay:
+                     226             USING   0
+                     227                             ; SOURCE LINE # 33
+                     228     ; {
+                     229                             ; SOURCE LINE # 34
+                     230     ;       unsigned char i;
+                     231     ;       for(i=200;i;i--);
+                     232                             ; SOURCE LINE # 36
+                     233     ;---- Variable 'i?143' assigned to Register 'R7' ----
+0000 7FC8            234             MOV     R7,#0C8H
+0002                 235     ?C0011:
+0002 DFFE            236             DJNZ    R7,?C0011
+                     237     ; }
+                     238                             ; SOURCE LINE # 37
+0004                 239     ?C0014:
+0004 22              240             RET     
+                     241     ; END OF shortdelay
+                     242     
+                     243     ; void buzzer(unsigned char i)
+                     244     
+----                 245             RSEG  ?PR?_buzzer?TEXT1
+0000                 246     _buzzer:
+                     247             USING   0
+                     248                             ; SOURCE LINE # 38
+                     249     ;---- Variable 'i?244' assigned to Register 'R7' ----
+                     250     ; {
+                     251                             ; SOURCE LINE # 39
+                     252     ;       buz=0;
+                     253                             ; SOURCE LINE # 40
+0000 C293            254             CLR     buz
+                     255     ;       delay(i);
+                     256                             ; SOURCE LINE # 41
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 08:20:07 PAGE     5
+
+0002 120000   F      257             LCALL   _delay
+                     258     ;       buz=1;
+                     259                             ; SOURCE LINE # 42
+0005 D293            260             SETB    buz
+                     261     ;       shortdelay();
+                     262                             ; SOURCE LINE # 43
+0007 020000   F      263             LJMP    shortdelay
+                     264     ; END OF _buzzer
+                     265     
+                     266     ; }
+                     267     ; void show(unsigned char *buf)
+                     268     
+----                 269             RSEG  ?PR?_show?TEXT1
+0000                 270     _show:
+                     271             USING   0
+                     272                             ; SOURCE LINE # 45
+0000 8B00     F      273             MOV     buf?345,R3
+0002 8A00     F      274             MOV     buf?345+01H,R2
+0004 8900     F      275             MOV     buf?345+02H,R1
+                     276     ; {
+                     277                             ; SOURCE LINE # 46
+                     278     ;       unsigned char i;
+                     279     ;       CADDR=0x80;
+                     280                             ; SOURCE LINE # 48
+0006 90BFFF          281             MOV     DPTR,#0BFFFH
+0009 7480            282             MOV     A,#080H
+000B F0              283             MOVX    @DPTR,A
+                     284     ;       PORTC=0xff;
+                     285                             ; SOURCE LINE # 49
+000C 90AFFF          286             MOV     DPTR,#0AFFFH
+000F 74FF            287             MOV     A,#0FFH
+0011 F0              288             MOVX    @DPTR,A
+                     289     ;       PORTB=0xfe;
+                     290                             ; SOURCE LINE # 50
+0012 909FFF          291             MOV     DPTR,#09FFFH
+0015 14              292             DEC     A
+0016 F0              293             MOVX    @DPTR,A
+                     294     ;       PORTA=0x00;
+                     295                             ; SOURCE LINE # 51
+0017 908FFF          296             MOV     DPTR,#08FFFH
+001A E4              297             CLR     A
+001B F0              298             MOVX    @DPTR,A
+                     299     ;       for(i=0;i<8;i++)
+                     300                             ; SOURCE LINE # 52
+                     301     ;---- Variable 'i?346' assigned to Register 'R4' ----
+001C FC              302             MOV     R4,A
+001D                 303     ?C0016:
+                     304     ;       {
+                     305                             ; SOURCE LINE # 53
+                     306     ;               PORTA=table[buf[i]];
+                     307                             ; SOURCE LINE # 54
+001D AB00     F      308             MOV     R3,buf?345
+001F AA00     F      309             MOV     R2,buf?345+01H
+0021 A900     F      310             MOV     R1,buf?345+02H
+0023 8C82            311             MOV     DPL,R4
+0025 758300          312             MOV     DPH,#00H
+0028 120000   F      313             LCALL   ?C?CLDOPTR
+002B 2400     F      314             ADD     A,#LOW (table)
+002D F8              315             MOV     R0,A
+002E E6              316             MOV     A,@R0
+002F 908FFF          317             MOV     DPTR,#08FFFH
+0032 F0              318             MOVX    @DPTR,A
+                     319     ;               delay(7);
+                     320                             ; SOURCE LINE # 55
+0033 7F07            321             MOV     R7,#07H
+0035 120000   F      322             LCALL   _delay
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 08:20:07 PAGE     6
+
+                     323     ;               PORTB<<=1;
+                     324                             ; SOURCE LINE # 56
+0038 909FFF          325             MOV     DPTR,#09FFFH
+003B E0              326             MOVX    A,@DPTR
+003C 25E0            327             ADD     A,ACC
+003E F0              328             MOVX    @DPTR,A
+                     329     ;               PORTB+=1;
+                     330                             ; SOURCE LINE # 57
+003F E0              331             MOVX    A,@DPTR
+0040 04              332             INC     A
+0041 F0              333             MOVX    @DPTR,A
+                     334     ;       }
+                     335                             ; SOURCE LINE # 58
+0042 0C              336             INC     R4
+0043 BC08D7          337             CJNE    R4,#08H,?C0016
+                     338     ; }
+                     339                             ; SOURCE LINE # 59
+0046                 340     ?C0019:
+0046 22              341             RET     
+                     342     ; END OF _show
+                     343     
+----                 344     CSEG    AT      00003H
+0003 020000   F      345             LJMP    myint0
+                     346     
+                     347     ; void myint0(void)interrupt 0 using 1
+                     348     
+----                 349             RSEG  ?PR?myint0?TEXT1
+                     350             USING   1
+0000                 351     myint0:
+0000 C0E0            352             PUSH    ACC
+0002 C083            353             PUSH    DPH
+0004 C082            354             PUSH    DPL
+0006 C0D0            355             PUSH    PSW
+                     356             USING   1
+0008 75D008          357             MOV     PSW,#08H
+                     358                             ; SOURCE LINE # 60
+                     359     ; {
+                     360     ;       unsigned char i;
+                     361     ;       IT1=1;
+                     362                             ; SOURCE LINE # 63
+000B D28A            363             SETB    IT1
+                     364     ;       EX1=1;
+                     365                             ; SOURCE LINE # 64
+000D D2AA            366             SETB    EX1
+                     367     ;       ADREAD=0;
+                     368                             ; SOURCE LINE # 65
+000F 9000FF          369             MOV     DPTR,#0FFH
+0012 E4              370             CLR     A
+0013 F0              371             MOVX    @DPTR,A
+                     372     ;       for(i=0;i<8;i++)
+                     373                             ; SOURCE LINE # 66
+                     374     ;---- Variable 'i?447' assigned to Register 'R7' ----
+0014                 375     ?C0020:
+                     376     ;       {
+                     377                             ; SOURCE LINE # 67
+                     378     ;               buffer[i]=0;
+                     379                             ; SOURCE LINE # 68
+0014 7F08            380             MOV     R7,#08H
+0016 7800     F      381             MOV     R0,#LOW (buffer)
+0018 E4              382             CLR     A
+0019                 383     ?C0030:
+0019 F6              384             MOV     @R0,A
+001A 08              385             INC     R0
+001B DFFC            386             DJNZ    R7,?C0030
+                     387     ;       }
+                     388                             ; SOURCE LINE # 69
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 08:20:07 PAGE     7
+
+001D                 389     ?C0021:
+                     390     ;       buzzer(1);
+                     391                             ; SOURCE LINE # 70
+001D 7F01            392             MOV     R7,#01H
+001F 120000   F      393             LCALL   _buzzer
+                     394     ; }
+                     395                             ; SOURCE LINE # 71
+0022 D0D0            396             POP     PSW
+0024 D082            397             POP     DPL
+0026 D083            398             POP     DPH
+0028 D0E0            399             POP     ACC
+002A 32              400             RETI    
+                     401     ; END OF myint0
+                     402     
+----                 403     CSEG    AT      0001BH
+001B 020000   F      404             LJMP    myt1
+                     405     
+                     406     ; /*
+                     407     ; void int1(void)interrupt 2 using 2
+                     408     ; {
+                     409     ; //    EX1=0;
+                     410     ;       buffer[2]=1;
+                     411     ;       buffer[0]=ADREAD/16;
+                     412     ;       buffer[1]=ADREAD%16;
+                     413     ; }
+                     414     ; */
+                     415     ; #pragma asm
+                     416     ; #pragma endasm
+                     417     ; void myt1(void)interrupt 3 using 2
+                     418     
+----                 419             RSEG  ?PR?myt1?TEXT1
+                     420             USING   2
+0000                 421     myt1:
+0000 C0E0            422             PUSH    ACC
+0002 C0D0            423             PUSH    PSW
+                     424                             ; SOURCE LINE # 83
+                     425     ; {
+                     426     ;       if(tcount==0)
+                     427                             ; SOURCE LINE # 85
+0004 E500     F      428             MOV     A,tcount
+0006 7002            429             JNZ     ?C0024
+                     430     ;       {
+                     431                             ; SOURCE LINE # 86
+                     432     ;               TR0=1;
+                     433                             ; SOURCE LINE # 87
+0008 D28C            434             SETB    TR0
+                     435     ;       }
+                     436                             ; SOURCE LINE # 88
+000A                 437     ?C0024:
+                     438     ;       TH1=(65536-50000)/256;
+                     439                             ; SOURCE LINE # 89
+000A 758D3C          440             MOV     TH1,#03CH
+                     441     ;       TL1=(65536-50000)%256;
+                     442                             ; SOURCE LINE # 90
+000D 758BB0          443             MOV     TL1,#0B0H
+                     444     ;       tcount++;
+                     445                             ; SOURCE LINE # 91
+0010 0500     F      446             INC     tcount
+                     447     ;       if(tcount==20)
+                     448                             ; SOURCE LINE # 92
+0012 E500     F      449             MOV     A,tcount
+0014 B4140B          450             CJNE    A,#014H,?C0026
+                     451     ;       {
+                     452                             ; SOURCE LINE # 93
+                     453     ;               TR0=0;
+                     454                             ; SOURCE LINE # 94
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 08:20:07 PAGE     8
+
+0017 C28C            455             CLR     TR0
+                     456     ;               buffer[5]=TL0;
+                     457                             ; SOURCE LINE # 95
+0019 858A00   F      458             MOV     buffer+05H,TL0
+                     459     ;               TL0=0;
+                     460                             ; SOURCE LINE # 96
+001C 758A00          461             MOV     TL0,#00H
+                     462     ;               tcount=0;
+                     463                             ; SOURCE LINE # 97
+001F 750000   F      464             MOV     tcount,#00H
+                     465     ;       }
+                     466                             ; SOURCE LINE # 98
+                     467     ; }
+                     468                             ; SOURCE LINE # 99
+0022                 469     ?C0026:
+0022 D0D0            470             POP     PSW
+0024 D0E0            471             POP     ACC
+0026 32              472             RETI    
+                     473     ; END OF myt1
+                     474     
+                     475     ; 
+                     476     ; void main(void)
+                     477     
+----                 478             RSEG  ?PR?main?TEXT1
+0000                 479     main:
+                     480             USING   0
+                     481                             ; SOURCE LINE # 101
+                     482     ; {
+                     483                             ; SOURCE LINE # 102
+                     484     ;       EX0=1;
+                     485                             ; SOURCE LINE # 103
+0000 D2A8            486             SETB    EX0
+                     487     ;       ET1=1;
+                     488                             ; SOURCE LINE # 104
+0002 D2AB            489             SETB    ET1
+                     490     ;       TMOD=0x16;
+                     491                             ; SOURCE LINE # 105
+0004 758916          492             MOV     TMOD,#016H
+                     493     ;       TH1=(65536-50000)/256;
+                     494                             ; SOURCE LINE # 106
+0007 758D3C          495             MOV     TH1,#03CH
+                     496     ;       TL1=(65536-50000)%256;
+                     497                             ; SOURCE LINE # 107
+000A 758BB0          498             MOV     TL1,#0B0H
+                     499     ;       TR1=1;
+                     500                             ; SOURCE LINE # 108
+000D D28E            501             SETB    TR1
+000F                 502     ?C0027:
+                     503     ;       while(1)
+                     504                             ; SOURCE LINE # 109
+                     505     ;       {
+                     506                             ; SOURCE LINE # 110
+                     507     ;               show(buffer);
+                     508                             ; SOURCE LINE # 111
+000F 7B00            509             MOV     R3,#00H
+0011 7A00     F      510             MOV     R2,#HIGH (buffer)
+0013 7900     F      511             MOV     R1,#LOW (buffer)
+0015 120000   F      512             LCALL   _show
+                     513     ;       }
+                     514                             ; SOURCE LINE # 112
+0018 80F5            515             SJMP    ?C0027
+                     516     ; END OF main
+                     517     
+                     518             END
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 08:20:07 PAGE     9
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E               T Y P E  V A L U E   ATTRIBUTES
+
+?C0001 . . . . . . .  C ADDR   0002H   R   SEG=?PR?_DELAY?TEXT1
+?C0003 . . . . . . .  C ADDR   000CH   R   SEG=?PR?_DELAY?TEXT1
+?C0004 . . . . . . .  C ADDR   0004H   R   SEG=?PR?_DELAY?TEXT1
+?C0006 . . . . . . .  C ADDR   000AH   R   SEG=?PR?_DELAY?TEXT1
+?C0007 . . . . . . .  C ADDR   0004H   R   SEG=?PR?_DELAY?TEXT1
+?C0010 . . . . . . .  C ADDR   000EH   R   SEG=?PR?_DELAY?TEXT1
+?C0011 . . . . . . .  C ADDR   0002H   R   SEG=?PR?SHORTDELAY?TEXT1
+?C0014 . . . . . . .  C ADDR   0004H   R   SEG=?PR?SHORTDELAY?TEXT1
+?C0016 . . . . . . .  C ADDR   001DH   R   SEG=?PR?_SHOW?TEXT1
+?C0019 . . . . . . .  C ADDR   0046H   R   SEG=?PR?_SHOW?TEXT1
+?C0020 . . . . . . .  C ADDR   0014H   R   SEG=?PR?MYINT0?TEXT1
+?C0021 . . . . . . .  C ADDR   001DH   R   SEG=?PR?MYINT0?TEXT1
+?C0024 . . . . . . .  C ADDR   000AH   R   SEG=?PR?MYT1?TEXT1
+?C0026 . . . . . . .  C ADDR   0022H   R   SEG=?PR?MYT1?TEXT1
+?C0027 . . . . . . .  C ADDR   000FH   R   SEG=?PR?MAIN?TEXT1
+?C0030 . . . . . . .  C ADDR   0019H   R   SEG=?PR?MYINT0?TEXT1
+?C?CLDOPTR . . . . .  C ADDR   -----       EXT
+?C_INITSEG . . . . .  C SEG    0020H       REL=UNIT
+?C_STARTUP . . . . .  C ADDR   -----       EXT
+?DT?TEXT1. . . . . .  D SEG    001AH       REL=UNIT
+?DT?_SHOW?TEXT1. . .  D SEG    0003H       REL=UNIT
+?PR?MAIN?TEXT1 . . .  C SEG    001AH       REL=UNIT
+?PR?MYINT0?TEXT1 . .  C SEG    002BH       REL=UNIT
+?PR?MYT1?TEXT1 . . .  C SEG    0027H       REL=UNIT
+?PR?SHORTDELAY?TEXT1  C SEG    0005H       REL=UNIT
+?PR?_BUZZER?TEXT1. .  C SEG    000AH       REL=UNIT
+?PR?_DELAY?TEXT1 . .  C SEG    000FH       REL=UNIT
+?PR?_SHOW?TEXT1. . .  C SEG    0047H       REL=UNIT
+?_SHOW?BYTE. . . . .  D ADDR   0000H   R   SEG=?DT?_SHOW?TEXT1
+AC . . . . . . . . .  B ADDR   00D0H.6 A   
+ACC. . . . . . . . .  D ADDR   00E0H   A   
+B. . . . . . . . . .  D ADDR   00F0H   A   
+BUF?345. . . . . . .  D ADDR   0000H   R   SEG=?DT?_SHOW?TEXT1
+BUFFER . . . . . . .  D ADDR   0012H   R   SEG=?DT?TEXT1
+BUZ. . . . . . . . .  B ADDR   0090H.3 A   
+CP_RL2 . . . . . . .  B ADDR   00C8H.0 A   
+CY . . . . . . . . .  B ADDR   00D0H.7 A   
+C_T2 . . . . . . . .  B ADDR   00C8H.1 A   
+DPH. . . . . . . . .  D ADDR   0083H   A   
+DPL. . . . . . . . .  D ADDR   0082H   A   
+EA . . . . . . . . .  B ADDR   00A8H.7 A   
+ES . . . . . . . . .  B ADDR   00A8H.4 A   
+ET0. . . . . . . . .  B ADDR   00A8H.1 A   
+ET1. . . . . . . . .  B ADDR   00A8H.3 A   
+ET2. . . . . . . . .  B ADDR   00A8H.5 A   
+EX0. . . . . . . . .  B ADDR   00A8H.0 A   
+EX1. . . . . . . . .  B ADDR   00A8H.2 A   
+EXEN2. . . . . . . .  B ADDR   00C8H.3 A   
+EXF2 . . . . . . . .  B ADDR   00C8H.6 A   
+F0 . . . . . . . . .  B ADDR   00D0H.5 A   
+IE . . . . . . . . .  D ADDR   00A8H   A   
+IE0. . . . . . . . .  B ADDR   0088H.1 A   
+IE1. . . . . . . . .  B ADDR   0088H.3 A   
+INT0 . . . . . . . .  B ADDR   00B0H.2 A   
+INT1 . . . . . . . .  B ADDR   00B0H.3 A   
+IP . . . . . . . . .  D ADDR   00B8H   A   
+IT0. . . . . . . . .  B ADDR   0088H.0 A   
+IT1. . . . . . . . .  B ADDR   0088H.2 A   
+KEY1 . . . . . . . .  B ADDR   0090H.0 A   
+KEY2 . . . . . . . .  B ADDR   0090H.1 A   
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 08:20:07 PAGE    10
+
+MAIN . . . . . . . .  C ADDR   0000H   R   SEG=?PR?MAIN?TEXT1
+MYINT0 . . . . . . .  C ADDR   0000H   R   SEG=?PR?MYINT0?TEXT1
+MYT1 . . . . . . . .  C ADDR   0000H   R   SEG=?PR?MYT1?TEXT1
+OV . . . . . . . . .  B ADDR   00D0H.2 A   
+P. . . . . . . . . .  B ADDR   00D0H.0 A   
+P0 . . . . . . . . .  D ADDR   0080H   A   
+P1 . . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . . .  D ADDR   00A0H   A   
+P3 . . . . . . . . .  D ADDR   00B0H   A   
+PCON . . . . . . . .  D ADDR   0087H   A   
+PS . . . . . . . . .  B ADDR   00B8H.4 A   
+PSW. . . . . . . . .  D ADDR   00D0H   A   
+PT0. . . . . . . . .  B ADDR   00B8H.1 A   
+PT1. . . . . . . . .  B ADDR   00B8H.3 A   
+PT2. . . . . . . . .  B ADDR   00B8H.5 A   
+PX0. . . . . . . . .  B ADDR   00B8H.0 A   
+PX1. . . . . . . . .  B ADDR   00B8H.2 A   
+RB8. . . . . . . . .  B ADDR   0098H.2 A   
+RCAP2H . . . . . . .  D ADDR   00CBH   A   
+RCAP2L . . . . . . .  D ADDR   00CAH   A   
+RCLK . . . . . . . .  B ADDR   00C8H.5 A   
+RD . . . . . . . . .  B ADDR   00B0H.7 A   
+REN. . . . . . . . .  B ADDR   0098H.4 A   
+RI . . . . . . . . .  B ADDR   0098H.0 A   
+RS0. . . . . . . . .  B ADDR   00D0H.3 A   
+RS1. . . . . . . . .  B ADDR   00D0H.4 A   
+RXD. . . . . . . . .  B ADDR   00B0H.0 A   
+SBUF . . . . . . . .  D ADDR   0099H   A   
+SCON . . . . . . . .  D ADDR   0098H   A   
+SHORTDELAY . . . . .  C ADDR   0000H   R   SEG=?PR?SHORTDELAY?TEXT1
+SM0. . . . . . . . .  B ADDR   0098H.7 A   
+SM1. . . . . . . . .  B ADDR   0098H.6 A   
+SM2. . . . . . . . .  B ADDR   0098H.5 A   
+SP . . . . . . . . .  D ADDR   0081H   A   
+T0 . . . . . . . . .  B ADDR   00B0H.4 A   
+T1 . . . . . . . . .  B ADDR   00B0H.5 A   
+T2 . . . . . . . . .  B ADDR   0090H.0 A   
+T2CON. . . . . . . .  D ADDR   00C8H   A   
+T2EX . . . . . . . .  B ADDR   0090H.1 A   
+TABLE. . . . . . . .  D ADDR   0000H   R   SEG=?DT?TEXT1
+TB8. . . . . . . . .  B ADDR   0098H.3 A   
+TCLK . . . . . . . .  B ADDR   00C8H.4 A   
+TCON . . . . . . . .  D ADDR   0088H   A   
+TCOUNT . . . . . . .  D ADDR   0011H   R   SEG=?DT?TEXT1
+TEXT1. . . . . . . .  N NUMB   -----       
+TF0. . . . . . . . .  B ADDR   0088H.5 A   
+TF1. . . . . . . . .  B ADDR   0088H.7 A   
+TF2. . . . . . . . .  B ADDR   00C8H.7 A   
+TH0. . . . . . . . .  D ADDR   008CH   A   
+TH1. . . . . . . . .  D ADDR   008DH   A   
+TH2. . . . . . . . .  D ADDR   00CDH   A   
+TI . . . . . . . . .  B ADDR   0098H.1 A   
+TL0. . . . . . . . .  D ADDR   008AH   A   
+TL1. . . . . . . . .  D ADDR   008BH   A   
+TL2. . . . . . . . .  D ADDR   00CCH   A   
+TMOD . . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . . .  B ADDR   0088H.4 A   
+TR1. . . . . . . . .  B ADDR   0088H.6 A   
+TR2. . . . . . . . .  B ADDR   00C8H.2 A   
+TXD. . . . . . . . .  B ADDR   00B0H.1 A   
+WR . . . . . . . . .  B ADDR   00B0H.6 A   
+_BUZZER. . . . . . .  C ADDR   0000H   R   SEG=?PR?_BUZZER?TEXT1
+_DELAY . . . . . . .  C ADDR   0000H   R   SEG=?PR?_DELAY?TEXT1
+_SHOW. . . . . . . .  C ADDR   0000H   R   SEG=?PR?_SHOW?TEXT1
+
+
+REGISTER BANK(S) USED: 0 1 2 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

@@ -1,0 +1,523 @@
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 14:52:11 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN Text1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE Text1.src PR(.\Text1.ls1) EP DEBUG
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ; .\Text1.SRC generated from: Text1.c
+                       2     ; COMPILER INVOKED BY:
+                       3     ;        C:\Keil\C51\BIN\C51.EXE Text1.c LARGE BROWSE DEBUG OBJECTEXTEND SRC(.\Text1.SRC)
+                       4     
+                       5     $nomod51 
+                       6     
+                       7     NAME    TEXT1
+                       8     
+  0080                 9     P0      DATA    080H
+  0090                10     P1      DATA    090H
+  00A0                11     P2      DATA    0A0H
+  00B0                12     P3      DATA    0B0H
+  00B4                13     T0      BIT     0B0H.4
+  00D6                14     AC      BIT     0D0H.6
+  00B5                15     T1      BIT     0B0H.5
+  00AF                16     EA      BIT     0A8H.7
+  00A8                17     IE      DATA    0A8H
+  00B7                18     RD      BIT     0B0H.7
+  00AC                19     ES      BIT     0A8H.4
+  00B8                20     IP      DATA    0B8H
+  0098                21     RI      BIT     098H.0
+  00B2                22     INT0    BIT     0B0H.2
+  00D7                23     CY      BIT     0D0H.7
+  0099                24     TI      BIT     098H.1
+  00B3                25     INT1    BIT     0B0H.3
+  00B4                26     SFAH    DATA    0B4H
+  00B1                27     SFCF    DATA    0B1H
+  00BC                28     PS      BIT     0B8H.4
+  0081                29     SP      DATA    081H
+  00D2                30     OV      BIT     0D0H.2
+  00B3                31     SFAL    DATA    0B3H
+  00B6                32     WR      BIT     0B0H.6
+  00B2                33     SFCM    DATA    0B2H
+  0099                34     SBUF    DATA    099H
+  0087                35     PCON    DATA    087H
+  00B5                36     SFDT    DATA    0B5H
+  00C0                37     WDTC    DATA    0C0H
+  0085                38     WDTD    DATA    085H
+  0098                39     SCON    DATA    098H
+  0089                40     TMOD    DATA    089H
+  0088                41     TCON    DATA    088H
+  0089                42     IE0     BIT     088H.1
+  008B                43     IE1     BIT     088H.3
+  00B6                44     SFST    DATA    0B6H
+  00F0                45     B       DATA    0F0H
+  00E0                46     ACC     DATA    0E0H
+  00A9                47     ET0     BIT     0A8H.1
+  00AB                48     ET1     BIT     0A8H.3
+  008D                49     TF0     BIT     088H.5
+  008F                50     TF1     BIT     088H.7
+  009A                51     RB8     BIT     098H.2
+  008C                52     TH0     DATA    08CH
+  00A8                53     EX0     BIT     0A8H.0
+  0088                54     IT0     BIT     088H.0
+  008D                55     TH1     DATA    08DH
+  009B                56     TB8     BIT     098H.3
+  00AA                57     EX1     BIT     0A8H.2
+  008A                58     IT1     BIT     088H.2
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 14:52:11 PAGE     2
+
+  00D0                59     P       BIT     0D0H.0
+  009F                60     SM0     BIT     098H.7
+  008A                61     TL0     DATA    08AH
+  009E                62     SM1     BIT     098H.6
+  008B                63     TL1     DATA    08BH
+  009D                64     SM2     BIT     098H.5
+  00B9                65     PT0     BIT     0B8H.1
+  00BB                66     PT1     BIT     0B8H.3
+  00D3                67     RS0     BIT     0D0H.3
+  008C                68     TR0     BIT     088H.4
+  00D4                69     RS1     BIT     0D0H.4
+  008E                70     TR1     BIT     088H.6
+  00B8                71     PX0     BIT     0B8H.0
+  00BA                72     PX1     BIT     0B8H.2
+  0083                73     DPH     DATA    083H
+  0082                74     DPL     DATA    082H
+  009C                75     REN     BIT     098H.4
+  00B0                76     RXD     BIT     0B0H.0
+  00B1                77     TXD     BIT     0B0H.1
+  00D5                78     F0      BIT     0D0H.5
+  00D0                79     PSW     DATA    0D0H
+                      80     ?PR?main?TEXT1       SEGMENT CODE 
+                      81     ?XD?main?TEXT1       SEGMENT XDATA OVERLAYABLE 
+                      82     ?PR?_delay?TEXT1     SEGMENT CODE 
+                      83     ?C_INITSEG           SEGMENT CODE 
+                      84     ?CO?TEXT1            SEGMENT CODE 
+                      85     ?XD?TEXT1            SEGMENT XDATA 
+                      86             EXTRN   CODE (_byte_verify)
+                      87             EXTRN   CODE (error)
+                      88             EXTRN   CODE (show)
+                      89             EXTRN   CODE (_sector_erase)
+                      90             EXTRN   CODE (_byte_program)
+                      91             EXTRN   CODE (?C_STARTUP)
+                      92             PUBLIC  buffer
+                      93             PUBLIC  BLK1_DST_ADDR
+                      94             PUBLIC  SECT_SIZE
+                      95             PUBLIC  ErrorCode
+                      96             PUBLIC  tab
+                      97             PUBLIC  _delay
+                      98             PUBLIC  main
+                      99     
+----                 100             RSEG  ?XD?main?TEXT1
+0000                 101     ?main?BYTE:
+0000                 102        destAddr?040:   DS   2
+0002                 103             ORG  2
+0002                 104         byteCnt?041:   DS   1
+0003                 105             ORG  3
+0003                 106        origData?042:   DS   1
+                     107     
+----                 108             RSEG  ?XD?TEXT1
+0000                 109           ErrorCode:   DS   1
+0001                 110           SECT_SIZE:   DS   1
+0002                 111       BLK1_DST_ADDR:   DS   2
+0004                 112              buffer:   DS   4
+                     113     
+----                 114             RSEG  ?CO?TEXT1
+0000                 115     tab:
+0000 FC              116             DB      0FCH
+0001 60              117             DB      060H
+0002 DA              118             DB      0DAH
+0003 F2              119             DB      0F2H
+0004 66              120             DB      066H
+0005 B6              121             DB      0B6H
+0006 BE              122             DB      0BEH
+0007 E0              123             DB      0E0H
+0008 FE              124             DB      0FEH
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 14:52:11 PAGE     3
+
+0009 F6              125             DB      0F6H
+000A EE              126             DB      0EEH
+000B 3E              127             DB      03EH
+000C 9C              128             DB      09CH
+000D 7A              129             DB      07AH
+000E 9E              130             DB      09EH
+000F 8E              131             DB      08EH
+                     132     
+                     133     
+----                 134             RSEG  ?C_INITSEG
+0000 42              135             DB      042H
+0001 0000     F      136             DW      BLK1_DST_ADDR
+0003 1000            137             DW      01000H
+                     138     
+0005 41              139             DB      041H
+0006 0000     F      140             DW      SECT_SIZE
+0008 80              141             DB      080H
+                     142     
+0009 44              143             DB      044H
+000A 0000     F      144             DW      buffer
+000C 00              145             DB      000H
+000D 00              146             DB      000H
+000E 00              147             DB      000H
+000F 00              148             DB      000H
+                     149     
+                     150     ; #include <reg51.h>
+                     151     ; sfr WDTD=0x85;
+                     152     ; sfr WDTC=0xc0;
+                     153     ; sfr SFCF=0xb1;
+                     154     ; sfr SFCM=0xb2;
+                     155     ; sfr SFAL=0xb3;
+                     156     ; sfr SFAH=0xb4;
+                     157     ; sfr SFDT=0xb5;
+                     158     ; sfr SFST=0xb6;
+                     159     ; #define SFCM_SE 0x0b
+                     160     ; #define SFCM_VB 0x0c
+                     161     ; #define SFCM_PB 0x0e
+                     162     ; 
+                     163     ; const unsigned short int BLK1_DST_ADDR=0x1000;
+                     164     ; const unsigned char SECT_SIZE=0x80;
+                     165     ; unsigned char ErrorCode;
+                     166     ; 
+                     167     ; #include<stdio.h>
+                     168     ; 
+                     169     ; #define uchar unsigned char
+                     170     ; #define uint  unsigned int
+                     171     ; #define LOWBYTE(v)  ((unsigned char)(v))
+                     172     ; #define HIGHBYTE(v)  ((unsigned char)(((unsigned int)(v))>>8))
+                     173     ; /****************************************************************************************
+                             **********************************
+                     174     ;  ¬Îπ‹øÿ÷∆£∫P0.0~P0.3øÿ÷∆Œª—°£¨µÕµÁ∆Ω”––ß£ª
+                     175     ;                       P2.0~P2.7øÿ÷∆∂Œ—°£¨µÕµÁ∆Ω”––ß£ª
+                     176     ;                       ◊¢“‚P2ø⁄œﬂ–Ú∑¥œÚ£¨º¥ æ›0b10111100------°∑0b00111101
+                     177     ; *****************************************************************************************
+                             *********************************/
+                     178     ; unsigned char code tab[]={0xfc,0x60,0xda,0xf2,0x66,0xb6,0xbe,0xe0,0xfe,0xf6,0xee,0x3e,0x9
+                             c,0x7a,0x9e,0x8e};
+                     179     ; unsigned char buffer[4]={0,0,0,0};
+                     180     ; 
+                     181     ; void delay(unsigned char i);
+                     182     ; void show(void);
+                     183     ; void byte_program(unsigned short int dataAddr,unsigned char dataByte);
+                     184     ; unsigned char byte_verify(unsigned short int dataAddr);
+                     185     ; void sector_erase(unsigned short int dataAddr);
+                     186     ; int ready();
+                     187     ; void error();
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 14:52:11 PAGE     4
+
+                     188     ; void main(void)
+                     189     
+----                 190             RSEG  ?PR?main?TEXT1
+0000                 191     main:
+                     192             USING   0
+                     193                             ; SOURCE LINE # 39
+                     194     ; {
+                     195                             ; SOURCE LINE # 40
+                     196     ;       unsigned int destAddr=BLK1_DST_ADDR;
+                     197                             ; SOURCE LINE # 41
+0000 900000   F      198             MOV     DPTR,#BLK1_DST_ADDR
+0003 E0              199             MOVX    A,@DPTR
+0004 FE              200             MOV     R6,A
+0005 A3              201             INC     DPTR
+0006 E0              202             MOVX    A,@DPTR
+0007 FF              203             MOV     R7,A
+0008 900000   F      204             MOV     DPTR,#destAddr?040
+000B EE              205             MOV     A,R6
+000C F0              206             MOVX    @DPTR,A
+000D A3              207             INC     DPTR
+000E EF              208             MOV     A,R7
+000F F0              209             MOVX    @DPTR,A
+                     210     ;       unsigned char byteCnt;
+                     211     ;       unsigned char origData;
+                     212     ;       unsigned char verifyData;
+                     213     ;       WDTC=0;
+                     214                             ; SOURCE LINE # 45
+0010 E4              215             CLR     A
+0011 F5C0            216             MOV     WDTC,A
+                     217     ;       sector_erase(destAddr);
+                     218                             ; SOURCE LINE # 46
+0013 120000   F      219             LCALL   _sector_erase
+                     220     ;       origData=0;
+                     221                             ; SOURCE LINE # 47
+0016 E4              222             CLR     A
+0017 900000   F      223             MOV     DPTR,#origData?042
+001A F0              224             MOVX    @DPTR,A
+                     225     ;       for(byteCnt=0;byteCnt<SECT_SIZE;byteCnt++)
+                     226                             ; SOURCE LINE # 48
+001B 900000   F      227             MOV     DPTR,#byteCnt?041
+001E F0              228             MOVX    @DPTR,A
+001F                 229     ?C0001:
+001F 900000   F      230             MOV     DPTR,#SECT_SIZE
+0022 E0              231             MOVX    A,@DPTR
+0023 FF              232             MOV     R7,A
+0024 900000   F      233             MOV     DPTR,#byteCnt?041
+0027 E0              234             MOVX    A,@DPTR
+0028 C3              235             CLR     C
+0029 9F              236             SUBB    A,R7
+002A 5041            237             JNC     ?C0002
+                     238     ;       {
+                     239                             ; SOURCE LINE # 49
+                     240     ;               byte_program(destAddr,origData);
+                     241                             ; SOURCE LINE # 50
+002C 900000   F      242             MOV     DPTR,#destAddr?040
+002F E0              243             MOVX    A,@DPTR
+0030 FE              244             MOV     R6,A
+0031 A3              245             INC     DPTR
+0032 E0              246             MOVX    A,@DPTR
+0033 FF              247             MOV     R7,A
+0034 900000   F      248             MOV     DPTR,#origData?042
+0037 E0              249             MOVX    A,@DPTR
+0038 FD              250             MOV     R5,A
+0039 120000   F      251             LCALL   _byte_program
+                     252     ;               verifyData=byte_verify(destAddr);
+                     253                             ; SOURCE LINE # 51
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 14:52:11 PAGE     5
+
+003C 900000   F      254             MOV     DPTR,#destAddr?040
+003F E0              255             MOVX    A,@DPTR
+0040 FE              256             MOV     R6,A
+0041 A3              257             INC     DPTR
+0042 E0              258             MOVX    A,@DPTR
+0043 FF              259             MOV     R7,A
+0044 120000   F      260             LCALL   _byte_verify
+                     261     ;---- Variable 'verifyData?043' assigned to Register 'R7' ----
+                     262     ;               if(verifyData!=origData)
+                     263                             ; SOURCE LINE # 52
+0047 900000   F      264             MOV     DPTR,#origData?042
+004A E0              265             MOVX    A,@DPTR
+004B 6F              266             XRL     A,R7
+004C 6003            267             JZ      ?C0004
+                     268     ;               {
+                     269                             ; SOURCE LINE # 53
+                     270     ;                       error();
+                     271                             ; SOURCE LINE # 54
+004E 120000   F      272             LCALL   error
+                     273     ;               }
+                     274                             ; SOURCE LINE # 55
+0051                 275     ?C0004:
+                     276     ;               destAddr++;
+                     277                             ; SOURCE LINE # 56
+0051 900000   F      278             MOV     DPTR,#destAddr?040+01H
+0054 E0              279             MOVX    A,@DPTR
+0055 04              280             INC     A
+0056 F0              281             MOVX    @DPTR,A
+0057 7006            282             JNZ     ?C0017
+0059 900000   F      283             MOV     DPTR,#destAddr?040
+005C E0              284             MOVX    A,@DPTR
+005D 04              285             INC     A
+005E F0              286             MOVX    @DPTR,A
+005F                 287     ?C0017:
+                     288     ;               origData++;
+                     289                             ; SOURCE LINE # 57
+005F 900000   F      290             MOV     DPTR,#origData?042
+0062 E0              291             MOVX    A,@DPTR
+0063 04              292             INC     A
+0064 F0              293             MOVX    @DPTR,A
+                     294     ;       }
+                     295                             ; SOURCE LINE # 58
+0065 900000   F      296             MOV     DPTR,#byteCnt?041
+0068 E0              297             MOVX    A,@DPTR
+0069 04              298             INC     A
+006A F0              299             MOVX    @DPTR,A
+006B 80B2            300             SJMP    ?C0001
+006D                 301     ?C0002:
+                     302     ;       ErrorCode=0;
+                     303                             ; SOURCE LINE # 59
+006D E4              304             CLR     A
+006E 900000   F      305             MOV     DPTR,#ErrorCode
+0071 F0              306             MOVX    @DPTR,A
+0072                 307     ?C0005:
+                     308     ; 
+                     309     ;       while(1)
+                     310                             ; SOURCE LINE # 61
+                     311     ;       {
+                     312                             ; SOURCE LINE # 62
+                     313     ;               buffer[2]=byte_verify(BLK1_DST_ADDR+3);
+                     314                             ; SOURCE LINE # 63
+0072 900000   F      315             MOV     DPTR,#BLK1_DST_ADDR+01H
+0075 E0              316             MOVX    A,@DPTR
+0076 2403            317             ADD     A,#03H
+0078 FF              318             MOV     R7,A
+0079 900000   F      319             MOV     DPTR,#BLK1_DST_ADDR
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 14:52:11 PAGE     6
+
+007C E0              320             MOVX    A,@DPTR
+007D 3400            321             ADDC    A,#00H
+007F FE              322             MOV     R6,A
+0080 120000   F      323             LCALL   _byte_verify
+0083 900000   F      324             MOV     DPTR,#buffer+02H
+0086 EF              325             MOV     A,R7
+0087 F0              326             MOVX    @DPTR,A
+                     327     ;               show();
+                     328                             ; SOURCE LINE # 64
+0088 120000   F      329             LCALL   show
+                     330     ;       }
+                     331                             ; SOURCE LINE # 65
+008B 80E5            332             SJMP    ?C0005
+                     333     ; END OF main
+                     334     
+                     335     ; }
+                     336     ; void delay(unsigned char i)
+                     337     
+----                 338             RSEG  ?PR?_delay?TEXT1
+0000                 339     _delay:
+                     340             USING   0
+                     341                             ; SOURCE LINE # 67
+                     342     ;---- Variable 'j?145' assigned to Register 'R6' ----
+                     343     ;---- Variable 'i?144' assigned to Register 'R7' ----
+                     344     ; {
+                     345                             ; SOURCE LINE # 68
+0000                 346     ?C0008:
+                     347     ;       unsigned char j,k;
+                     348     ;       while(i--)
+                     349                             ; SOURCE LINE # 70
+0000 AD07            350             MOV     R5,AR7
+0002 1F              351             DEC     R7
+0003 ED              352             MOV     A,R5
+0004 600C            353             JZ      ?C0016
+                     354     ;       {
+                     355                             ; SOURCE LINE # 71
+                     356     ;               for(j=20;j;j--)
+                     357                             ; SOURCE LINE # 72
+0006 7E14            358             MOV     R6,#014H
+0008                 359     ?C0010:
+0008 EE              360             MOV     A,R6
+0009 60F5            361             JZ      ?C0008
+                     362     ;               for(k=10;k;k--);
+                     363                             ; SOURCE LINE # 73
+                     364     ;---- Variable 'k?146' assigned to Register 'R5' ----
+000B 7D0A            365             MOV     R5,#0AH
+000D                 366     ?C0013:
+000D DDFE            367             DJNZ    R5,?C0013
+000F                 368     ?C0012:
+000F 1E              369             DEC     R6
+0010 80F6            370             SJMP    ?C0010
+                     371     ;       }
+                     372                             ; SOURCE LINE # 74
+                     373     ; }
+                     374                             ; SOURCE LINE # 75
+0012                 375     ?C0016:
+0012 22              376             RET     
+                     377     ; END OF _delay
+                     378     
+                     379             END
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 14:52:11 PAGE     7
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+?C0001 . . . . . .  C ADDR   001FH   R   SEG=?PR?MAIN?TEXT1
+?C0002 . . . . . .  C ADDR   006DH   R   SEG=?PR?MAIN?TEXT1
+?C0004 . . . . . .  C ADDR   0051H   R   SEG=?PR?MAIN?TEXT1
+?C0005 . . . . . .  C ADDR   0072H   R   SEG=?PR?MAIN?TEXT1
+?C0008 . . . . . .  C ADDR   0000H   R   SEG=?PR?_DELAY?TEXT1
+?C0010 . . . . . .  C ADDR   0008H   R   SEG=?PR?_DELAY?TEXT1
+?C0012 . . . . . .  C ADDR   000FH   R   SEG=?PR?_DELAY?TEXT1
+?C0013 . . . . . .  C ADDR   000DH   R   SEG=?PR?_DELAY?TEXT1
+?C0016 . . . . . .  C ADDR   0012H   R   SEG=?PR?_DELAY?TEXT1
+?C0017 . . . . . .  C ADDR   005FH   R   SEG=?PR?MAIN?TEXT1
+?CO?TEXT1. . . . .  C SEG    0010H       REL=UNIT
+?C_INITSEG . . . .  C SEG    0010H       REL=UNIT
+?C_STARTUP . . . .  C ADDR   -----       EXT
+?MAIN?BYTE . . . .  X ADDR   0000H   R   SEG=?XD?MAIN?TEXT1
+?PR?MAIN?TEXT1 . .  C SEG    008DH       REL=UNIT
+?PR?_DELAY?TEXT1 .  C SEG    0013H       REL=UNIT
+?XD?MAIN?TEXT1 . .  X SEG    0004H       REL=UNIT
+?XD?TEXT1. . . . .  X SEG    0008H       REL=UNIT
+AC . . . . . . . .  B ADDR   00D0H.6 A   
+ACC. . . . . . . .  D ADDR   00E0H   A   
+AR7. . . . . . . .  D ADDR   0007H   A   
+B. . . . . . . . .  D ADDR   00F0H   A   
+BLK1_DST_ADDR. . .  X ADDR   0002H   R   SEG=?XD?TEXT1
+BUFFER . . . . . .  X ADDR   0004H   R   SEG=?XD?TEXT1
+BYTECNT?041. . . .  X ADDR   0002H   R   SEG=?XD?MAIN?TEXT1
+CY . . . . . . . .  B ADDR   00D0H.7 A   
+DESTADDR?040 . . .  X ADDR   0000H   R   SEG=?XD?MAIN?TEXT1
+DPH. . . . . . . .  D ADDR   0083H   A   
+DPL. . . . . . . .  D ADDR   0082H   A   
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+ERROR. . . . . . .  C ADDR   -----       EXT
+ERRORCODE. . . . .  X ADDR   0000H   R   SEG=?XD?TEXT1
+ES . . . . . . . .  B ADDR   00A8H.4 A   
+ET0. . . . . . . .  B ADDR   00A8H.1 A   
+ET1. . . . . . . .  B ADDR   00A8H.3 A   
+EX0. . . . . . . .  B ADDR   00A8H.0 A   
+EX1. . . . . . . .  B ADDR   00A8H.2 A   
+F0 . . . . . . . .  B ADDR   00D0H.5 A   
+IE . . . . . . . .  D ADDR   00A8H   A   
+IE0. . . . . . . .  B ADDR   0088H.1 A   
+IE1. . . . . . . .  B ADDR   0088H.3 A   
+INT0 . . . . . . .  B ADDR   00B0H.2 A   
+INT1 . . . . . . .  B ADDR   00B0H.3 A   
+IP . . . . . . . .  D ADDR   00B8H   A   
+IT0. . . . . . . .  B ADDR   0088H.0 A   
+IT1. . . . . . . .  B ADDR   0088H.2 A   
+MAIN . . . . . . .  C ADDR   0000H   R   SEG=?PR?MAIN?TEXT1
+ORIGDATA?042 . . .  X ADDR   0003H   R   SEG=?XD?MAIN?TEXT1
+OV . . . . . . . .  B ADDR   00D0H.2 A   
+P. . . . . . . . .  B ADDR   00D0H.0 A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+PCON . . . . . . .  D ADDR   0087H   A   
+PS . . . . . . . .  B ADDR   00B8H.4 A   
+PSW. . . . . . . .  D ADDR   00D0H   A   
+PT0. . . . . . . .  B ADDR   00B8H.1 A   
+PT1. . . . . . . .  B ADDR   00B8H.3 A   
+PX0. . . . . . . .  B ADDR   00B8H.0 A   
+A51 MACRO ASSEMBLER  TEXT1                                                                07/04/2009 14:52:11 PAGE     8
+
+PX1. . . . . . . .  B ADDR   00B8H.2 A   
+RB8. . . . . . . .  B ADDR   0098H.2 A   
+RD . . . . . . . .  B ADDR   00B0H.7 A   
+REN. . . . . . . .  B ADDR   0098H.4 A   
+RI . . . . . . . .  B ADDR   0098H.0 A   
+RS0. . . . . . . .  B ADDR   00D0H.3 A   
+RS1. . . . . . . .  B ADDR   00D0H.4 A   
+RXD. . . . . . . .  B ADDR   00B0H.0 A   
+SBUF . . . . . . .  D ADDR   0099H   A   
+SCON . . . . . . .  D ADDR   0098H   A   
+SECT_SIZE. . . . .  X ADDR   0001H   R   SEG=?XD?TEXT1
+SFAH . . . . . . .  D ADDR   00B4H   A   
+SFAL . . . . . . .  D ADDR   00B3H   A   
+SFCF . . . . . . .  D ADDR   00B1H   A   
+SFCM . . . . . . .  D ADDR   00B2H   A   
+SFDT . . . . . . .  D ADDR   00B5H   A   
+SFST . . . . . . .  D ADDR   00B6H   A   
+SHOW . . . . . . .  C ADDR   -----       EXT
+SM0. . . . . . . .  B ADDR   0098H.7 A   
+SM1. . . . . . . .  B ADDR   0098H.6 A   
+SM2. . . . . . . .  B ADDR   0098H.5 A   
+SP . . . . . . . .  D ADDR   0081H   A   
+T0 . . . . . . . .  B ADDR   00B0H.4 A   
+T1 . . . . . . . .  B ADDR   00B0H.5 A   
+TAB. . . . . . . .  C ADDR   0000H   R   SEG=?CO?TEXT1
+TB8. . . . . . . .  B ADDR   0098H.3 A   
+TCON . . . . . . .  D ADDR   0088H   A   
+TEXT1. . . . . . .  N NUMB   -----       
+TF0. . . . . . . .  B ADDR   0088H.5 A   
+TF1. . . . . . . .  B ADDR   0088H.7 A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TI . . . . . . . .  B ADDR   0098H.1 A   
+TL0. . . . . . . .  D ADDR   008AH   A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+TXD. . . . . . . .  B ADDR   00B0H.1 A   
+WDTC . . . . . . .  D ADDR   00C0H   A   
+WDTD . . . . . . .  D ADDR   0085H   A   
+WR . . . . . . . .  B ADDR   00B0H.6 A   
+_BYTE_PROGRAM. . .  C ADDR   -----       EXT
+_BYTE_VERIFY . . .  C ADDR   -----       EXT
+_DELAY . . . . . .  C ADDR   0000H   R   SEG=?PR?_DELAY?TEXT1
+_SECTOR_ERASE. . .  C ADDR   -----       EXT
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

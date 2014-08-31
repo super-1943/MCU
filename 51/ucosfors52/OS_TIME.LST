@@ -1,0 +1,240 @@
+C51 COMPILER V8.02   OS_TIME                                                               02/27/2009 13:42:31 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE OS_TIME
+OBJECT MODULE PLACED IN OS_TIME.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE OS_TIME.C BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /*
+   2          *********************************************************************************************************
+   3          *                                                uC/OS-II
+   4          *                                          The Real-Time Kernel
+   5          *                                             TIME MANAGEMENT
+   6          *
+   7          *                        (c) Copyright 1992-1998, Jean J. Labrosse, Plantation, FL
+   8          *                                           All Rights Reserved
+   9          *
+  10          *                                                  V2.00
+  11          *
+  12          * File : OS_TIME.C
+  13          * By   : Jean J. Labrosse
+  14          *********************************************************************************************************
+  15          */
+  16          
+  17          #ifndef  OS_MASTER_FILE
+  18          #include "includes.h"
+  19          #endif
+  20          
+  21          /*
+  22          *********************************************************************************************************
+  23          *                                DELAY TASK 'n' TICKS   (n from 0 to 65535)
+  24          *
+  25          * Description: This function is called to delay execution of the currently running task until the 
+  26          *              specified number of system ticks expires.  This, of course, directly equates to delaying
+  27          *              the current task for some time to expire.  No delay will result If the specified delay is 
+  28          *              0.  If the specified delay is greater than 0 then, a context switch will result.
+  29          *
+  30          * Arguments  : ticks     is the time delay that the task will be suspended in number of clock 'ticks'.  
+  31          *                        Note that by specifying 0, the task will not be delayed.
+  32          *
+  33          * Returns    : none
+  34          *********************************************************************************************************
+  35          */
+  36          #if OS_Time_Dly_EN
+              void OSTimeDly (INT16U ticks)reentrant
+              {
+                  if (ticks > 0) {                                                      /* 0 means no delay!         */
+                      OS_ENTER_CRITICAL();
+                      if ((OSRdyTbl[OSTCBCur->OSTCBY] &= ~OSTCBCur->OSTCBBitX) == 0) {  /* Delay current task        */
+                          OSRdyGrp &= ~OSTCBCur->OSTCBBitY;
+                      }
+                      OSTCBCur->OSTCBDly = ticks;                                       /* Load ticks in TCB         */
+                      OS_EXIT_CRITICAL();
+                      OSSched();                                                        /* Find next task to run!    */
+                  }
+              }
+              #endif
+  50          /*$PAGE*/
+  51          /*
+  52          *********************************************************************************************************
+  53          *                                     DELAY TASK FOR SPECIFIED TIME
+  54          *
+  55          * Description: This function is called to delay execution of the currently running task until some time
+C51 COMPILER V8.02   OS_TIME                                                               02/27/2009 13:42:31 PAGE 2   
+
+  56          *              expires.  This call allows you to specify the delay time in HOURS, MINUTES, SECONDS and
+  57          *              MILLISECONDS instead of ticks.
+  58          *
+  59          * Arguments  : hours     specifies the number of hours that the task will be delayed (max. is 255)
+  60          *              minutes   specifies the number of minutes (max. 59)    
+  61          *              seconds   specifies the number of seconds (max. 59)
+  62          *              milli     specifies the number of milliseconds (max. 999)
+  63          *
+  64          * Returns    : OS_NO_ERR
+  65          *              OS_TIME_INVALID_MINUTES
+  66          *              OS_TIME_INVALID_SECONDS
+  67          *              OS_TIME_INVALID_MS
+  68          *              OS_TIME_ZERO_DLY
+  69          *
+  70          * Note(s)    : The resolution on the milliseconds depends on the tick rate.  For example, you can't do
+  71          *              a 10 mS delay if the ticker interrupts every 100 mS.  In this case, the delay would be
+  72          *              set to 0.  The actual delay is rounded to the nearest tick.
+  73          *********************************************************************************************************
+  74          */
+  75          #if OS_Time_DlyHMSM_EN
+              INT8U OSTimeDlyHMSM (INT8U hours, INT8U minutes, INT8U seconds, INT16U milli)reentrant
+              {
+                  INT32U ticks;
+                  INT16U loops;
+              
+              
+                  if (hours > 0 || minutes > 0 || seconds > 0 || milli > 0) {
+                      if (minutes > 59) {
+                          return (OS_TIME_INVALID_MINUTES);    /* Validate arguments to be within range              */
+                      }
+                      if (seconds > 59) {
+                          return (OS_TIME_INVALID_SECONDS);
+                      }
+                      if (milli > 999) {
+                          return (OS_TIME_INVALID_MILLI);
+                      }
+                                                               /* Compute the total number of clock ticks required.. */
+                                                               /* .. (rounded to the nearest tick)                   */
+                      ticks = ((INT32U)hours * 3600L + (INT32U)minutes * 60L + (INT32U)seconds) * OS_TICKS_PER_SEC
+                            + OS_TICKS_PER_SEC * ((INT32U)milli + 500L / OS_TICKS_PER_SEC) / 1000L;
+                      loops = ticks / 65536L;                  /* Compute the integral number of 65536 tick delays   */
+                      ticks = ticks % 65536L;                  /* Obtain  the fractional number of ticks             */
+                      OSTimeDly(ticks);
+                      while (loops > 0) {
+                          OSTimeDly(32768);
+                          OSTimeDly(32768);
+                          loops--;
+                      }
+                      return (OS_NO_ERR);
+                  } else {
+                      return (OS_TIME_ZERO_DLY);
+                  }
+              }
+              #endif
+ 110          /*$PAGE*/
+ 111          /*
+ 112          *********************************************************************************************************
+ 113          *                                         RESUME A DELAYED TASK
+ 114          *
+ 115          * Description: This function is used resume a task that has been delayed through a call to either
+ 116          *              OSTimeDly() or OSTimeDlyHMSM().  Note that you MUST NOT call this function to resume a 
+ 117          *              task that is waiting for an event with timeout.  This situation would make the task look 
+C51 COMPILER V8.02   OS_TIME                                                               02/27/2009 13:42:31 PAGE 3   
+
+ 118          *              like a timeout occurred (unless you desire this effect).  Also, you cannot resume a task 
+ 119          *              that has called OSTimeDlyHMSM() with a combined time that exceeds 65535 clock ticks.  In 
+ 120          *              other words, if the clock tick runs at 100 Hz then, you will not be able to resume a 
+ 121          *              delayed task that called OSTimeDlyHMSM(0, 10, 55, 350) or higher.  
+ 122          *
+ 123          *                  (10 Minutes * 60 + 55 Seconds + 0.35) * 100 ticks/second.
+ 124          *
+ 125          * Arguments  : prio      specifies the priority of the task to resume
+ 126          *
+ 127          * Returns    : OS_NO_ERR                 Task has been resumed
+ 128          *              OS_PRIO_INVALID           if the priority you specify is higher that the maximum allowed 
+ 129          *                                        (i.e. >= OS_LOWEST_PRIO)
+ 130          *              OS_TIME_NOT_DLY           Task is not waiting for time to expire
+ 131          *              OS_TASK_NOT_EXIST         The desired task has not been created
+ 132          *********************************************************************************************************
+ 133          */
+ 134          #if OS_Time_DlyResume_EN
+              INT8U OSTimeDlyResume (INT8U prio)reentrant
+              {
+                  OS_TCB *ptcb;
+              
+              
+                  if (prio >= OS_LOWEST_PRIO) {
+                      return (OS_PRIO_INVALID);
+                  }
+                  OS_ENTER_CRITICAL();
+                  ptcb = (OS_TCB *)OSTCBPrioTbl[prio];                   /* Make sure that task exist                */
+                  if (ptcb != (OS_TCB *)0) {
+                      if (ptcb->OSTCBDly != 0) {                         /* See if task is delayed                   */
+                          ptcb->OSTCBDly  = 0;                           /* Clear the time delay                     */
+                          if (!(ptcb->OSTCBStat & OS_STAT_SUSPEND)) {    /* See if task is ready to run              */
+                              OSRdyGrp               |= ptcb->OSTCBBitY; /* Make task ready to run                   */
+                              OSRdyTbl[ptcb->OSTCBY] |= ptcb->OSTCBBitX;
+                              OS_EXIT_CRITICAL();
+                              OSSched();                                 /* See if this is new highest priority      */
+                          } else {
+                              OS_EXIT_CRITICAL();                        /* Task may be suspended                    */
+                          }
+                          return (OS_NO_ERR);
+                      } else {
+                          OS_EXIT_CRITICAL();
+                          return (OS_TIME_NOT_DLY);                      /* Indicate that task was not delayed       */
+                      }
+                  } else {
+                      OS_EXIT_CRITICAL();
+                      return (OS_TASK_NOT_EXIST);                        /* The task does not exist                  */
+                  }
+              }
+              #endif
+ 167          /*$PAGE*/
+ 168          /*
+ 169          *********************************************************************************************************
+ 170          *                                         GET CURRENT SYSTEM TIME
+ 171          *
+ 172          * Description: This function is used by your application to obtain the current value of the 32-bit 
+ 173          *              counter which keeps track of the number of clock ticks.
+ 174          *
+ 175          * Arguments  : none
+ 176          *
+ 177          * Returns    : The current value of OSTime
+ 178          *********************************************************************************************************
+ 179          */
+C51 COMPILER V8.02   OS_TIME                                                               02/27/2009 13:42:31 PAGE 4   
+
+ 180          #if OS_Time_Get_EN
+              INT32U OSTimeGet (void)reentrant
+              {
+                  INT32U ticks;
+              
+              
+                  OS_ENTER_CRITICAL();
+                  ticks = OSTime;
+                  OS_EXIT_CRITICAL();
+                  return (ticks);
+              }
+              #endif
+ 192          
+ 193          /*
+ 194          *********************************************************************************************************
+ 195          *                                            SET SYSTEM CLOCK
+ 196          *
+ 197          * Description: This function sets the 32-bit counter which keeps track of the number of clock ticks.
+ 198          *
+ 199          * Arguments  : ticks      specifies the new value that OSTime needs to take.
+ 200          *
+ 201          * Returns    : none
+ 202          *********************************************************************************************************
+ 203          */
+ 204          #if OS_Time_Set_EN
+              void OSTimeSet (INT32U ticks)reentrant
+              {
+                  OS_ENTER_CRITICAL();
+                  OSTime = ticks;
+                  OS_EXIT_CRITICAL();
+              }
+              #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

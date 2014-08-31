@@ -1,0 +1,1247 @@
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE OS_CORE
+OBJECT MODULE PLACED IN .\OS_CORE.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\UCOS_II\OS_CORE.C LARGE BROWSE DEBUG OBJECTEXTEND PRINT(.\OS_CORE.lst) O
+                    -BJECT(.\OS_CORE.obj)
+
+line level    source
+
+   1          /*
+   2          *********************************************************************************************************
+   3          *                                                uC/OS-II
+   4          *                                          The Real-Time Kernel
+   5          *                                             CORE FUNCTIONS
+   6          *
+   7          *                          (c) Copyright 1992-2002, Jean J. Labrosse, Weston, FL
+   8          *                                           All Rights Reserved
+   9          *
+  10          * File : OS_CORE.C
+  11          * By   : Jean J. Labrosse
+  12          *********************************************************************************************************
+  13          */
+  14          
+  15          #ifndef  OS_MASTER_FILE
+  16          #define  OS_GLOBALS
+  17          #include "includes.h"
+*** WARNING C318 IN LINE 18 OF includes.h: can't open file '..\ucos_ii.h'
+  18          #endif
+  19          
+  20          /*
+  21          *********************************************************************************************************
+  22          *                              MAPPING TABLE TO MAP BIT POSITION TO BIT MASK
+  23          *
+  24          * Note: Index into table is desired bit position, 0..7
+  25          *       Indexed value corresponds to bit mask
+  26          *********************************************************************************************************
+  27          */
+  28          
+  29          INT8U  const  OSMapTbl[]   = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
+  30          
+  31          /*
+  32          *********************************************************************************************************
+  33          *                                       PRIORITY RESOLUTION TABLE
+  34          *
+  35          * Note: Index into table is bit pattern to resolve highest priority
+  36          *       Indexed value corresponds to highest priority bit position (i.e. 0..7)
+  37          *********************************************************************************************************
+  38          */
+  39          
+  40          INT8U  const  OSUnMapTbl[] = {
+  41              0, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0x00 to 0x0F                             */
+  42              4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0x10 to 0x1F                             */
+  43              5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0x20 to 0x2F                             */
+  44              4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0x30 to 0x3F                             */
+  45              6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0x40 to 0x4F                             */
+  46              4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0x50 to 0x5F                             */
+  47              5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0x60 to 0x6F                             */
+  48              4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0x70 to 0x7F                             */
+  49              7, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0x80 to 0x8F                             */
+  50              4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0x90 to 0x9F                             */
+  51              5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0xA0 to 0xAF                             */
+  52              4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0xB0 to 0xBF                             */
+  53              6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0xC0 to 0xCF                             */
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 2   
+
+  54              4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0xD0 to 0xDF                             */
+  55              5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,       /* 0xE0 to 0xEF                             */
+  56              4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0        /* 0xF0 to 0xFF                             */
+  57          };
+  58          
+  59          /*
+  60          *********************************************************************************************************
+  61          *                                       FUNCTION PROTOTYPES
+  62          *********************************************************************************************************
+  63          */
+  64          static  void  OS_InitEventList(void);
+  65          static  void  OS_InitMisc(void);
+  66          static  void  OS_InitRdyList(void);
+  67          static  void  OS_InitTaskIdle(void);
+  68          static  void  OS_InitTaskStat(void);
+  69          static  void  OS_InitTCBList(void);
+  70          
+  71          /*$PAGE*/
+  72          /*
+  73          *********************************************************************************************************
+  74          *                                             INITIALIZATION
+  75          *
+  76          * Description: This function is used to initialize the internals of uC/OS-II and MUST be called prior to
+  77          *              creating any uC/OS-II object and, prior to calling OSStart().
+  78          *
+  79          * Arguments  : none
+  80          *
+  81          * Returns    : none
+  82          *********************************************************************************************************
+  83          */
+  84          
+  85          void  OSInit (void)
+  86          {
+  87   1      #if OS_VERSION >= 204
+*** WARNING C322 IN LINE 87 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                  OSInitHookBegin();                                           /* Call port specific initialization code
+             -   */
+              #endif
+  90   1      
+  91   1          OS_InitMisc();                                               /* Initialize miscellaneous variables    
+             -   */
+  92   1      
+  93   1          OS_InitRdyList();                                            /* Initialize the Ready List             
+             -   */
+  94   1          OS_InitTCBList();                                            /* Initialize the free list of OS_TCBs   
+             -   */
+  95   1          OS_InitEventList();                                          /* Initialize the free list of OS_EVENTs 
+             -   */
+  96   1      
+  97   1      #if (OS_VERSION >= 251) && (OS_FLAG_EN > 0) && (OS_MAX_FLAGS > 0)
+*** WARNING C322 IN LINE 97 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                  OS_FlagInit();                                               /* Initialize the event flag structures  
+             -   */
+              #endif
+ 100   1      
+ 101   1      #if (OS_MEM_EN > 0) && (OS_MAX_MEM_PART > 0)
+                  OS_MemInit();                                                /* Initialize the memory manager         
+             -   */
+              #endif
+ 104   1      
+ 105   1      #if (OS_Q_EN > 0) && (OS_MAX_QS > 0)
+                  OS_QInit();                                                  /* Initialize the message queue structure
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 3   
+
+             -s  */
+              #endif
+ 108   1      
+ 109   1          OS_InitTaskIdle();                                           /* Create the Idle Task                  
+             -   */
+ 110   1      #if OS_TASK_STAT_EN > 0
+                  OS_InitTaskStat();                                           /* Create the Statistic Task             
+             -   */
+              #endif
+ 113   1      
+ 114   1      #if OS_VERSION >= 204
+*** WARNING C322 IN LINE 114 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                  OSInitHookEnd();                                             /* Call port specific init. code         
+             -   */
+              #endif
+ 117   1      }
+ 118          /*$PAGE*/
+ 119          /*
+ 120          *********************************************************************************************************
+ 121          *                                              ENTER ISR
+ 122          *
+ 123          * Description: This function is used to notify uC/OS-II that you are about to service an interrupt
+ 124          *              service routine (ISR).  This allows uC/OS-II to keep track of interrupt nesting and thus
+ 125          *              only perform rescheduling at the last nested ISR.
+ 126          *
+ 127          * Arguments  : none
+ 128          *
+ 129          * Returns    : none
+ 130          *
+ 131          * Notes      : 1) This function should be called ith interrupts already disabled
+ 132          *              2) Your ISR can directly increment OSIntNesting without calling this function because
+ 133          *                 OSIntNesting has been declared 'global'.  
+ 134          *              3) You MUST still call OSIntExit() even though you increment OSIntNesting directly.
+ 135          *              4) You MUST invoke OSIntEnter() and OSIntExit() in pair.  In other words, for every call
+ 136          *                 to OSIntEnter() at the beginning of the ISR you MUST have a call to OSIntExit() at the
+ 137          *                 end of the ISR.
+ 138          *              5) You are allowed to nest interrupts up to 255 levels deep.
+ 139          *              6) I removed the OS_ENTER_CRITICAL() and OS_EXIT_CRITICAL() around the increment because
+ 140          *                 OSIntEnter() is always called with interrupts disabled.
+ 141          *********************************************************************************************************
+ 142          */
+ 143          
+ 144          void  OSIntEnter (void)
+ 145          {
+ 146   1          if (OSRunning == TRUE) {
+*** ERROR C202 IN LINE 146 OF ..\UCOS_II\OS_CORE.C: 'OSRunning': undefined identifier
+ 147   2              if (OSIntNesting < 255) {
+*** ERROR C202 IN LINE 147 OF ..\UCOS_II\OS_CORE.C: 'OSIntNesting': undefined identifier
+ 148   3                  OSIntNesting++;                      /* Increment ISR nesting level                        */
+*** ERROR C202 IN LINE 148 OF ..\UCOS_II\OS_CORE.C: 'OSIntNesting': undefined identifier
+ 149   3              }
+ 150   2          }
+ 151   1      }
+ 152          /*$PAGE*/
+ 153          /*
+ 154          *********************************************************************************************************
+ 155          *                                               EXIT ISR
+ 156          *
+ 157          * Description: This function is used to notify uC/OS-II that you have completed serviving an ISR.  When
+ 158          *              the last nested ISR has completed, uC/OS-II will call the scheduler to determine whether
+ 159          *              a new, high-priority task, is ready to run.
+ 160          *
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 4   
+
+ 161          * Arguments  : none
+ 162          *
+ 163          * Returns    : none
+ 164          *
+ 165          * Notes      : 1) You MUST invoke OSIntEnter() and OSIntExit() in pair.  In other words, for every call
+ 166          *                 to OSIntEnter() at the beginning of the ISR you MUST have a call to OSIntExit() at the
+ 167          *                 end of the ISR.
+ 168          *              2) Rescheduling is prevented when the scheduler is locked (see OS_SchedLock())
+ 169          *********************************************************************************************************
+ 170          */
+ 171          
+ 172          void  OSIntExit (void)
+ 173          {
+ 174   1      #if OS_CRITICAL_METHOD == 3                                /* Allocate storage for CPU status register */
+                  OS_CPU_SR  cpu_sr;
+              #endif
+ 177   1          
+ 178   1          
+ 179   1          if (OSRunning == TRUE) {
+*** ERROR C202 IN LINE 179 OF ..\UCOS_II\OS_CORE.C: 'OSRunning': undefined identifier
+ 180   2              OS_ENTER_CRITICAL();
+ 181   2              if (OSIntNesting > 0) {                            /* Prevent OSIntNesting from wrapping       */
+*** ERROR C202 IN LINE 181 OF ..\UCOS_II\OS_CORE.C: 'OSIntNesting': undefined identifier
+ 182   3                  OSIntNesting--;
+*** ERROR C202 IN LINE 182 OF ..\UCOS_II\OS_CORE.C: 'OSIntNesting': undefined identifier
+ 183   3              }
+ 184   2              if ((OSIntNesting == 0) && (OSLockNesting == 0)) { /* Reschedule only if all ISRs complete ... */
+*** ERROR C202 IN LINE 184 OF ..\UCOS_II\OS_CORE.C: 'OSIntNesting': undefined identifier
+ 185   3                  OSIntExitY    = OSUnMapTbl[OSRdyGrp];          /* ... and not locked.                      */
+*** ERROR C202 IN LINE 185 OF ..\UCOS_II\OS_CORE.C: 'OSIntExitY': undefined identifier
+ 186   3                  OSPrioHighRdy = (INT8U)((OSIntExitY << 3) + OSUnMapTbl[OSRdyTbl[OSIntExitY]]);
+*** ERROR C202 IN LINE 186 OF ..\UCOS_II\OS_CORE.C: 'OSPrioHighRdy': undefined identifier
+ 187   3                  if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy */
+*** ERROR C202 IN LINE 187 OF ..\UCOS_II\OS_CORE.C: 'OSPrioHighRdy': undefined identifier
+ 188   4                      OSTCBHighRdy  = OSTCBPrioTbl[OSPrioHighRdy];
+*** ERROR C202 IN LINE 188 OF ..\UCOS_II\OS_CORE.C: 'OSTCBHighRdy': undefined identifier
+ 189   4                      OSCtxSwCtr++;                              /* Keep track of the number of ctx switches */
+*** ERROR C202 IN LINE 189 OF ..\UCOS_II\OS_CORE.C: 'OSCtxSwCtr': undefined identifier
+ 190   4                      OSIntCtxSw();                              /* Perform interrupt level ctx switch       */
+ 191   4                  }
+ 192   3              }
+ 193   2              OS_EXIT_CRITICAL();
+ 194   2          }
+ 195   1      }
+ 196          /*$PAGE*/
+ 197          /*
+ 198          *********************************************************************************************************
+ 199          *                                          PREVENT SCHEDULING
+ 200          *
+ 201          * Description: This function is used to prevent rescheduling to take place.  This allows your application
+ 202          *              to prevent context switches until you are ready to permit context switching.
+ 203          *
+ 204          * Arguments  : none
+ 205          *
+ 206          * Returns    : none
+ 207          *
+ 208          * Notes      : 1) You MUST invoke OSSchedLock() and OSSchedUnlock() in pair.  In other words, for every
+ 209          *                 call to OSSchedLock() you MUST have a call to OSSchedUnlock().
+ 210          *********************************************************************************************************
+ 211          */
+ 212          
+ 213          #if OS_SCHED_LOCK_EN > 0
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 5   
+
+ 214          void  OSSchedLock (void)
+ 215          {
+ 216   1      #if OS_CRITICAL_METHOD == 3                      /* Allocate storage for CPU status register           */
+                  OS_CPU_SR  cpu_sr;
+              #endif    
+ 219   1          
+ 220   1          
+ 221   1          if (OSRunning == TRUE) {                     /* Make sure multitasking is running                  */
+ 222   2              OS_ENTER_CRITICAL();
+ 223   2              if (OSLockNesting < 255) {               /* Prevent OSLockNesting from wrapping back to 0      */
+ 224   3                  OSLockNesting++;                     /* Increment lock nesting level                       */
+ 225   3              }
+ 226   2              OS_EXIT_CRITICAL();
+ 227   2          }
+ 228   1      }
+ 229          #endif    
+ 230          
+ 231          /*$PAGE*/
+ 232          /*
+ 233          *********************************************************************************************************
+ 234          *                                          ENABLE SCHEDULING
+ 235          *
+ 236          * Description: This function is used to re-allow rescheduling.
+ 237          *
+ 238          * Arguments  : none
+ 239          *
+ 240          * Returns    : none
+ 241          *
+ 242          * Notes      : 1) You MUST invoke OSSchedLock() and OSSchedUnlock() in pair.  In other words, for every
+ 243          *                 call to OSSchedLock() you MUST have a call to OSSchedUnlock().
+ 244          *********************************************************************************************************
+ 245          */
+ 246          
+ 247          #if OS_SCHED_LOCK_EN > 0
+ 248          void  OSSchedUnlock (void)
+ 249          {
+ 250   1      #if OS_CRITICAL_METHOD == 3                                /* Allocate storage for CPU status register */
+                  OS_CPU_SR  cpu_sr;
+              #endif    
+ 253   1          
+ 254   1          
+ 255   1          if (OSRunning == TRUE) {                                   /* Make sure multitasking is running    */
+ 256   2              OS_ENTER_CRITICAL();
+ 257   2              if (OSLockNesting > 0) {                               /* Do not decrement if already 0        */
+ 258   3                  OSLockNesting--;                                   /* Decrement lock nesting level         */
+ 259   3                  if ((OSLockNesting == 0) && (OSIntNesting == 0)) { /* See if sched. enabled and not an ISR */
+ 260   4                      OS_EXIT_CRITICAL();
+ 261   4                      OS_Sched();                                    /* See if a HPT is ready                */
+ 262   4                  } else {
+ 263   4                      OS_EXIT_CRITICAL();
+ 264   4                  }
+ 265   3              } else {
+ 266   3                  OS_EXIT_CRITICAL();
+ 267   3              }
+ 268   2          }
+ 269   1      }
+ 270          #endif    
+ 271          
+ 272          /*$PAGE*/
+ 273          /*
+ 274          *********************************************************************************************************
+ 275          *                                          START MULTITASKING
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 6   
+
+ 276          *
+ 277          * Description: This function is used to start the multitasking process which lets uC/OS-II manages the
+ 278          *              task that you have created.  Before you can call OSStart(), you MUST have called OSInit()
+ 279          *              and you MUST have created at least one task.
+ 280          *
+ 281          * Arguments  : none
+ 282          *
+ 283          * Returns    : none
+ 284          *
+ 285          * Note       : OSStartHighRdy() MUST:
+ 286          *                 a) Call OSTaskSwHook() then,
+ 287          *                 b) Set OSRunning to TRUE.
+ 288          *                 c) Load the context of the task pointed to by OSTCBHighRdy.
+ 289          *                 d_ Execute the task.
+ 290          *********************************************************************************************************
+ 291          */
+ 292          
+ 293          void  OSStart (void)
+ 294          {
+ 295   1          INT8U y;
+ 296   1          INT8U x;
+ 297   1      
+ 298   1      
+ 299   1          if (OSRunning == FALSE) {
+ 300   2              y             = OSUnMapTbl[OSRdyGrp];        /* Find highest priority's task priority number   */
+ 301   2              x             = OSUnMapTbl[OSRdyTbl[y]];
+ 302   2              OSPrioHighRdy = (INT8U)((y << 3) + x);
+ 303   2              OSPrioCur     = OSPrioHighRdy;
+ 304   2              OSTCBHighRdy  = OSTCBPrioTbl[OSPrioHighRdy]; /* Point to highest priority task ready to run    */
+ 305   2              OSTCBCur      = OSTCBHighRdy;
+ 306   2              OSStartHighRdy();                            /* Execute target specific code to start task     */
+ 307   2          }
+ 308   1      }
+ 309          /*$PAGE*/
+ 310          /*
+ 311          *********************************************************************************************************
+ 312          *                                        STATISTICS INITIALIZATION
+ 313          *
+ 314          * Description: This function is called by your application to establish CPU usage by first determining
+ 315          *              how high a 32-bit counter would count to in 1 second if no other tasks were to execute
+ 316          *              during that time.  CPU usage is then determined by a low priority task which keeps track
+ 317          *              of this 32-bit counter every second but this time, with other tasks running.  CPU usage is
+ 318          *              determined by:
+ 319          *
+ 320          *                                             OSIdleCtr
+ 321          *                 CPU Usage (%) = 100 * (1 - ------------)
+ 322          *                                            OSIdleCtrMax
+ 323          *
+ 324          * Arguments  : none
+ 325          *
+ 326          * Returns    : none
+ 327          *********************************************************************************************************
+ 328          */
+ 329          
+ 330          #if OS_TASK_STAT_EN > 0
+              void  OSStatInit (void)
+              {
+              #if OS_CRITICAL_METHOD == 3                      /* Allocate storage for CPU status register           */
+                  OS_CPU_SR  cpu_sr;
+              #endif    
+                  
+                  
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 7   
+
+                  OSTimeDly(2);                                /* Synchronize with clock tick                        */
+                  OS_ENTER_CRITICAL();
+                  OSIdleCtr    = 0L;                           /* Clear idle counter                                 */
+                  OS_EXIT_CRITICAL();
+                  OSTimeDly(OS_TICKS_PER_SEC);                 /* Determine MAX. idle counter value for 1 second     */
+                  OS_ENTER_CRITICAL();
+                  OSIdleCtrMax = OSIdleCtr;                    /* Store maximum idle counter count in 1 second       */
+                  OSStatRdy    = TRUE;
+                  OS_EXIT_CRITICAL();
+              }
+              #endif
+ 349          /*$PAGE*/
+ 350          /*
+ 351          *********************************************************************************************************
+ 352          *                                         PROCESS SYSTEM TICK
+ 353          *
+ 354          * Description: This function is used to signal to uC/OS-II the occurrence of a 'system tick' (also known
+ 355          *              as a 'clock tick').  This function should be called by the ticker ISR but, can also be
+ 356          *              called by a high priority task.
+ 357          *
+ 358          * Arguments  : none
+ 359          *
+ 360          * Returns    : none
+ 361          *********************************************************************************************************
+ 362          */
+ 363          
+ 364          void  OSTimeTick (void)
+ 365          {
+ 366   1      #if OS_CRITICAL_METHOD == 3                                /* Allocate storage for CPU status register */
+                  OS_CPU_SR  cpu_sr;
+              #endif    
+ 369   1          OS_TCB    *ptcb;
+ 370   1      
+ 371   1      
+ 372   1          OSTimeTickHook();                                      /* Call user definable hook                 */
+ 373   1      #if OS_TIME_GET_SET_EN > 0   
+                  OS_ENTER_CRITICAL();                                   /* Update the 32-bit tick counter           */
+                  OSTime++;
+                  OS_EXIT_CRITICAL();
+              #endif
+ 378   1          if (OSRunning == TRUE) {    
+ 379   2              ptcb = OSTCBList;                                  /* Point at first TCB in TCB list           */
+ 380   2              while (ptcb->OSTCBPrio != OS_IDLE_PRIO) {          /* Go through all TCBs in TCB list          */
+ 381   3                  OS_ENTER_CRITICAL();
+ 382   3                  if (ptcb->OSTCBDly != 0) {                     /* Delayed or waiting for event with TO     */
+ 383   4                      if (--ptcb->OSTCBDly == 0) {               /* Decrement nbr of ticks to end of delay   */
+ 384   5                          if ((ptcb->OSTCBStat & OS_STAT_SUSPEND) == OS_STAT_RDY) { /* Is task suspended?    */
+ 385   6                              OSRdyGrp               |= ptcb->OSTCBBitY; /* No,  Make task R-to-R (timed out)*/
+ 386   6                              OSRdyTbl[ptcb->OSTCBY] |= ptcb->OSTCBBitX;
+ 387   6                          } else {                               /* Yes, Leave 1 tick to prevent ...         */
+ 388   6                              ptcb->OSTCBDly = 1;                /* ... loosing the task when the ...        */
+ 389   6                          }                                      /* ... suspension is removed.               */
+ 390   5                      }
+ 391   4                  }
+ 392   3                  ptcb = ptcb->OSTCBNext;                        /* Point at next TCB in TCB list            */
+ 393   3                  OS_EXIT_CRITICAL();
+ 394   3              }
+ 395   2          }
+ 396   1      }
+ 397          /*$PAGE*/
+ 398          /*
+ 399          *********************************************************************************************************
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 8   
+
+ 400          *                                             GET VERSION
+ 401          *
+ 402          * Description: This function is used to return the version number of uC/OS-II.  The returned value
+ 403          *              corresponds to uC/OS-II's version number multiplied by 100.  In other words, version 2.00
+ 404          *              would be returned as 200.
+ 405          *
+ 406          * Arguments  : none
+ 407          *
+ 408          * Returns    : the version number of uC/OS-II multiplied by 100.
+ 409          *********************************************************************************************************
+ 410          */
+ 411          
+ 412          INT16U  OSVersion (void)
+ 413          {
+ 414   1          return (OS_VERSION);
+ 415   1      }
+ 416          
+ 417          /*$PAGE*/
+ 418          /*
+ 419          *********************************************************************************************************
+ 420          *                                            DUMMY FUNCTION
+ 421          *
+ 422          * Description: This function doesn't do anything.  It is called by OSTaskDel().
+ 423          *
+ 424          * Arguments  : none
+ 425          *
+ 426          * Returns    : none
+ 427          *********************************************************************************************************
+ 428          */
+ 429          
+ 430          #if OS_TASK_DEL_EN > 0
+              void  OS_Dummy (void)
+              {
+              }
+              #endif
+ 435          
+ 436          /*$PAGE*/
+ 437          /*
+ 438          *********************************************************************************************************
+ 439          *                             MAKE TASK READY TO RUN BASED ON EVENT OCCURING
+ 440          *
+ 441          * Description: This function is called by other uC/OS-II services and is used to ready a task that was
+ 442          *              waiting for an event to occur.
+ 443          *
+ 444          * Arguments  : pevent    is a pointer to the event control block corresponding to the event.
+ 445          *
+ 446          *              msg       is a pointer to a message.  This pointer is used by message oriented services
+ 447          *                        such as MAILBOXEs and QUEUEs.  The pointer is not used when called by other
+ 448          *                        service functions.
+ 449          *
+ 450          *              msk       is a mask that is used to clear the status byte of the TCB.  For example,
+ 451          *                        OSSemPost() will pass OS_STAT_SEM, OSMboxPost() will pass OS_STAT_MBOX etc.
+ 452          *
+ 453          * Returns    : none
+ 454          *
+ 455          * Note       : This function is INTERNAL to uC/OS-II and your application should not call it.
+ 456          *********************************************************************************************************
+ 457          */
+ 458          #if OS_EVENT_EN > 0
+*** WARNING C322 IN LINE 458 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+              INT8U  OS_EventTaskRdy (OS_EVENT *pevent, void *msg, INT8U msk)
+              {
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 9   
+
+                  OS_TCB *ptcb;
+                  INT8U   x;
+                  INT8U   y;
+                  INT8U   bitx;
+                  INT8U   bity;
+                  INT8U   prio;
+              
+              
+                  y    = OSUnMapTbl[pevent->OSEventGrp];            /* Find highest prio. task waiting for message   */
+                  bity = OSMapTbl[y];
+                  x    = OSUnMapTbl[pevent->OSEventTbl[y]];
+                  bitx = OSMapTbl[x];
+                  prio = (INT8U)((y << 3) + x);                     /* Find priority of task getting the msg         */
+                  if ((pevent->OSEventTbl[y] &= ~bitx) == 0x00) {   /* Remove this task from the waiting list        */
+                      pevent->OSEventGrp &= ~bity;                  /* Clr group bit if this was only task pending   */
+                  }
+                  ptcb                 =  OSTCBPrioTbl[prio];       /* Point to this task's OS_TCB                   */
+                  ptcb->OSTCBDly       =  0;                        /* Prevent OSTimeTick() from readying task       */
+                  ptcb->OSTCBEventPtr  = (OS_EVENT *)0;             /* Unlink ECB from this task                     */
+              #if ((OS_Q_EN > 0) && (OS_MAX_QS > 0)) || (OS_MBOX_EN > 0)
+                  ptcb->OSTCBMsg       = msg;                       /* Send message directly to waiting task         */
+              #else
+                  msg                  = msg;                       /* Prevent compiler warning if not used          */
+              #endif
+                  ptcb->OSTCBStat     &= ~msk;                      /* Clear bit associated with event type          */
+                  if (ptcb->OSTCBStat == OS_STAT_RDY) {             /* See if task is ready (could be susp'd)        */
+                      OSRdyGrp        |=  bity;                     /* Put task in the ready to run list             */
+                      OSRdyTbl[y]     |=  bitx;
+                  }
+                  return (prio);
+              }
+              #endif
+ 493          /*$PAGE*/
+ 494          /*
+ 495          *********************************************************************************************************
+ 496          *                                   MAKE TASK WAIT FOR EVENT TO OCCUR
+ 497          *
+ 498          * Description: This function is called by other uC/OS-II services to suspend a task because an event has
+ 499          *              not occurred.
+ 500          *
+ 501          * Arguments  : pevent   is a pointer to the event control block for which the task will be waiting for.
+ 502          *
+ 503          * Returns    : none
+ 504          *
+ 505          * Note       : This function is INTERNAL to uC/OS-II and your application should not call it.
+ 506          *********************************************************************************************************
+ 507          */
+ 508          #if OS_EVENT_EN > 0
+*** WARNING C322 IN LINE 508 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+              void  OS_EventTaskWait (OS_EVENT *pevent)
+              {
+                  OSTCBCur->OSTCBEventPtr = pevent;            /* Store pointer to event control block in TCB        */
+                  if ((OSRdyTbl[OSTCBCur->OSTCBY] &= ~OSTCBCur->OSTCBBitX) == 0x00) {   /* Task no longer ready      */
+                      OSRdyGrp &= ~OSTCBCur->OSTCBBitY;        /* Clear event grp bit if this was only task pending  */
+                  }
+                  pevent->OSEventTbl[OSTCBCur->OSTCBY] |= OSTCBCur->OSTCBBitX;          /* Put task in waiting list  */
+                  pevent->OSEventGrp                   |= OSTCBCur->OSTCBBitY;
+              }
+              #endif
+ 519          /*$PAGE*/
+ 520          /*
+ 521          *********************************************************************************************************
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 10  
+
+ 522          *                              MAKE TASK READY TO RUN BASED ON EVENT TIMEOUT
+ 523          *
+ 524          * Description: This function is called by other uC/OS-II services to make a task ready to run because a
+ 525          *              timeout occurred.
+ 526          *
+ 527          * Arguments  : pevent   is a pointer to the event control block which is readying a task.
+ 528          *
+ 529          * Returns    : none
+ 530          *
+ 531          * Note       : This function is INTERNAL to uC/OS-II and your application should not call it.
+ 532          *********************************************************************************************************
+ 533          */
+ 534          #if OS_EVENT_EN > 0
+*** WARNING C322 IN LINE 534 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+              void  OS_EventTO (OS_EVENT *pevent)
+              {
+                  if ((pevent->OSEventTbl[OSTCBCur->OSTCBY] &= ~OSTCBCur->OSTCBBitX) == 0x00) {
+                      pevent->OSEventGrp &= ~OSTCBCur->OSTCBBitY;
+                  }
+                  OSTCBCur->OSTCBStat     = OS_STAT_RDY;       /* Set status to ready                                */
+                  OSTCBCur->OSTCBEventPtr = (OS_EVENT *)0;     /* No longer waiting for event                        */
+              }
+              #endif
+ 544          /*$PAGE*/
+ 545          /*
+ 546          *********************************************************************************************************
+ 547          *                                 INITIALIZE EVENT CONTROL BLOCK'S WAIT LIST
+ 548          *
+ 549          * Description: This function is called by other uC/OS-II services to initialize the event wait list.
+ 550          *
+ 551          * Arguments  : pevent    is a pointer to the event control block allocated to the event.
+ 552          *
+ 553          * Returns    : none
+ 554          *
+ 555          * Note       : This function is INTERNAL to uC/OS-II and your application should not call it.
+ 556          *********************************************************************************************************
+ 557          */
+ 558          #if ((OS_Q_EN > 0) && (OS_MAX_QS > 0)) || (OS_MBOX_EN > 0) || (OS_SEM_EN > 0) || (OS_MUTEX_EN > 0)
+ 559          void  OS_EventWaitListInit (OS_EVENT *pevent)
+ 560          {
+ 561   1          INT8U  *ptbl;
+ 562   1      
+ 563   1      
+ 564   1          pevent->OSEventGrp = 0x00;                   /* No task waiting on event                           */
+ 565   1          ptbl               = &pevent->OSEventTbl[0];
+ 566   1      
+ 567   1      #if OS_EVENT_TBL_SIZE > 0
+*** WARNING C322 IN LINE 567 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                  *ptbl++            = 0x00;
+              #endif
+ 570   1      
+ 571   1      #if OS_EVENT_TBL_SIZE > 1
+*** WARNING C322 IN LINE 571 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                  *ptbl++            = 0x00;
+              #endif
+ 574   1      
+ 575   1      #if OS_EVENT_TBL_SIZE > 2
+*** WARNING C322 IN LINE 575 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                  *ptbl++            = 0x00;
+              #endif
+ 578   1      
+ 579   1      #if OS_EVENT_TBL_SIZE > 3
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 11  
+
+*** WARNING C322 IN LINE 579 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                  *ptbl++            = 0x00;
+              #endif
+ 582   1      
+ 583   1      #if OS_EVENT_TBL_SIZE > 4
+*** WARNING C322 IN LINE 583 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                  *ptbl++            = 0x00;
+              #endif
+ 586   1      
+ 587   1      #if OS_EVENT_TBL_SIZE > 5
+*** WARNING C322 IN LINE 587 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                  *ptbl++            = 0x00;
+              #endif
+ 590   1      
+ 591   1      #if OS_EVENT_TBL_SIZE > 6
+*** WARNING C322 IN LINE 591 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                  *ptbl++            = 0x00;
+              #endif
+ 594   1      
+ 595   1      #if OS_EVENT_TBL_SIZE > 7
+*** WARNING C322 IN LINE 595 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                  *ptbl              = 0x00;
+              #endif
+ 598   1      }
+ 599          #endif
+ 600          /*$PAGE*/
+ 601          /*
+ 602          *********************************************************************************************************
+ 603          *                                             INITIALIZATION
+ 604          *                           INITIALIZE THE FREE LIST OF EVENT CONTROL BLOCKS
+ 605          *
+ 606          * Description: This function is called by OSInit() to initialize the free list of event control blocks.
+ 607          *
+ 608          * Arguments  : none
+ 609          *
+ 610          * Returns    : none
+ 611          *********************************************************************************************************
+ 612          */
+ 613          
+ 614          static  void  OS_InitEventList (void)
+ 615          {
+ 616   1      #if (OS_EVENT_EN > 0) && (OS_MAX_EVENTS > 0)
+*** WARNING C322 IN LINE 616 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+              #if (OS_MAX_EVENTS > 1)
+                  INT16U     i;
+                  OS_EVENT  *pevent1;
+                  OS_EVENT  *pevent2;
+              
+              
+                  pevent1 = &OSEventTbl[0];
+                  pevent2 = &OSEventTbl[1];
+                  for (i = 0; i < (OS_MAX_EVENTS - 1); i++) {                  /* Init. list of free EVENT control block
+             -s  */
+                      pevent1->OSEventType = OS_EVENT_TYPE_UNUSED;
+                      pevent1->OSEventPtr  = pevent2;
+                      pevent1++;
+                      pevent2++;
+                  }
+                  pevent1->OSEventType = OS_EVENT_TYPE_UNUSED;
+                  pevent1->OSEventPtr  = (OS_EVENT *)0;
+                  OSEventFreeList      = &OSEventTbl[0];
+              #else
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 12  
+
+                  OSEventFreeList              = &OSEventTbl[0];               /* Only have ONE event control block     
+             -   */
+                  OSEventFreeList->OSEventType = OS_EVENT_TYPE_UNUSED;
+                  OSEventFreeList->OSEventPtr  = (OS_EVENT *)0;
+              #endif
+              #endif
+ 640   1      }
+ 641          /*$PAGE*/
+ 642          /*
+ 643          *********************************************************************************************************
+ 644          *                                             INITIALIZATION
+ 645          *                                    INITIALIZE MISCELLANEOUS VARIABLES
+ 646          *
+ 647          * Description: This function is called by OSInit() to initialize miscellaneous variables.
+ 648          *
+ 649          * Arguments  : none
+ 650          *
+ 651          * Returns    : none
+ 652          *********************************************************************************************************
+ 653          */
+ 654          
+ 655          static  void  OS_InitMisc (void)
+ 656          {
+ 657   1      #if OS_TIME_GET_SET_EN > 0   
+                  OSTime        = 0L;                                          /* Clear the 32-bit system clock         
+             -   */
+              #endif
+ 660   1      
+ 661   1          OSIntNesting  = 0;                                           /* Clear the interrupt nesting counter   
+             -   */
+ 662   1          OSLockNesting = 0;                                           /* Clear the scheduling lock counter     
+             -   */
+ 663   1      
+ 664   1          OSTaskCtr     = 0;                                           /* Clear the number of tasks             
+             -   */
+ 665   1      
+ 666   1          OSRunning     = FALSE;                                       /* Indicate that multitasking not started
+             -   */
+ 667   1          
+ 668   1          OSCtxSwCtr    = 0;                                           /* Clear the context switch counter      
+             -   */
+ 669   1          OSIdleCtr     = 0L;                                          /* Clear the 32-bit idle counter         
+             -   */
+ 670   1      
+ 671   1      #if (OS_TASK_STAT_EN > 0) && (OS_TASK_CREATE_EXT_EN > 0)
+                  OSIdleCtrRun  = 0L;
+                  OSIdleCtrMax  = 0L;
+                  OSStatRdy     = FALSE;                                       /* Statistic task is not ready           
+             -   */
+              #endif
+ 676   1      }
+ 677          /*$PAGE*/
+ 678          /*
+ 679          *********************************************************************************************************
+ 680          *                                             INITIALIZATION
+ 681          *                                       INITIALIZE THE READY LIST
+ 682          *
+ 683          * Description: This function is called by OSInit() to initialize the Ready List.
+ 684          *
+ 685          * Arguments  : none
+ 686          *
+ 687          * Returns    : none
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 13  
+
+ 688          *********************************************************************************************************
+ 689          */
+ 690          
+ 691          static  void  OS_InitRdyList (void)
+ 692          {
+ 693   1          INT16U   i;
+ 694   1          INT8U   *prdytbl;
+ 695   1      
+ 696   1      
+ 697   1          OSRdyGrp      = 0x00;                                        /* Clear the ready list                  
+             -   */
+ 698   1          prdytbl       = &OSRdyTbl[0];
+ 699   1          for (i = 0; i < OS_RDY_TBL_SIZE; i++) {
+ 700   2              *prdytbl++ = 0x00;
+ 701   2          }
+ 702   1      
+ 703   1          OSPrioCur     = 0;
+ 704   1          OSPrioHighRdy = 0;
+ 705   1      
+ 706   1          OSTCBHighRdy  = (OS_TCB *)0;                                 
+ 707   1          OSTCBCur      = (OS_TCB *)0;
+ 708   1      }
+ 709          
+ 710          /*$PAGE*/
+ 711          /*
+ 712          *********************************************************************************************************
+ 713          *                                             INITIALIZATION
+ 714          *                                         CREATING THE IDLE TASK
+ 715          *
+ 716          * Description: This function creates the Idle Task.
+ 717          *
+ 718          * Arguments  : none
+ 719          *
+ 720          * Returns    : none
+ 721          *********************************************************************************************************
+ 722          */
+ 723          
+ 724          static  void  OS_InitTaskIdle (void)
+ 725          {
+ 726   1      #if OS_TASK_CREATE_EXT_EN > 0
+                  #if OS_STK_GROWTH == 1
+                  (void)OSTaskCreateExt(OS_TaskIdle,
+                                        (void *)0,                                 /* No arguments passed to OS_TaskIdle
+             -() */
+                                        &OSTaskIdleStk[OS_TASK_IDLE_STK_SIZE - 1], /* Set Top-Of-Stack                  
+             -   */
+                                        OS_IDLE_PRIO,                              /* Lowest priority level             
+             -   */
+                                        OS_TASK_IDLE_ID,
+                                        &OSTaskIdleStk[0],                         /* Set Bottom-Of-Stack               
+             -   */
+                                        OS_TASK_IDLE_STK_SIZE,
+                                        (void *)0,                                 /* No TCB extension                  
+             -   */
+                                        OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);/* Enable stack checking + clear stac
+             -k  */
+                  #else
+                  (void)OSTaskCreateExt(OS_TaskIdle,
+                                        (void *)0,                                 /* No arguments passed to OS_TaskIdle
+             -() */
+                                        &OSTaskIdleStk[0],                         /* Set Top-Of-Stack                  
+             -   */
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 14  
+
+                                        OS_IDLE_PRIO,                              /* Lowest priority level             
+             -   */
+                                        OS_TASK_IDLE_ID,
+                                        &OSTaskIdleStk[OS_TASK_IDLE_STK_SIZE - 1], /* Set Bottom-Of-Stack               
+             -   */
+                                        OS_TASK_IDLE_STK_SIZE,
+                                        (void *)0,                                 /* No TCB extension                  
+             -   */
+                                        OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);/* Enable stack checking + clear stac
+             -k  */
+                  #endif
+              #else
+ 749   1          #if OS_STK_GROWTH == 1
+                  (void)OSTaskCreate(OS_TaskIdle,
+                                     (void *)0,
+                                     &OSTaskIdleStk[OS_TASK_IDLE_STK_SIZE - 1],
+                                     OS_IDLE_PRIO);
+                  #else
+ 755   1          (void)OSTaskCreate(OS_TaskIdle,
+ 756   1                             (void *)0,
+ 757   1                             &OSTaskIdleStk[0],
+ 758   1                             OS_IDLE_PRIO);
+ 759   1          #endif
+ 760   1      #endif
+ 761   1      }
+ 762          /*$PAGE*/
+ 763          /*
+ 764          *********************************************************************************************************
+ 765          *                                             INITIALIZATION
+ 766          *                                      CREATING THE STATISTIC TASK
+ 767          *
+ 768          * Description: This function creates the Statistic Task.
+ 769          *
+ 770          * Arguments  : none
+ 771          *
+ 772          * Returns    : none
+ 773          *********************************************************************************************************
+ 774          */
+ 775          
+ 776          #if OS_TASK_STAT_EN > 0
+              static  void  OS_InitTaskStat (void)
+              {
+              #if OS_TASK_CREATE_EXT_EN > 0
+                  #if OS_STK_GROWTH == 1
+                  (void)OSTaskCreateExt(OS_TaskStat,
+                                        (void *)0,                                   /* No args passed to OS_TaskStat()*
+             -/
+                                        &OSTaskStatStk[OS_TASK_STAT_STK_SIZE - 1],   /* Set Top-Of-Stack               *
+             -/
+                                        OS_STAT_PRIO,                                /* One higher than the idle task  *
+             -/
+                                        OS_TASK_STAT_ID,
+                                        &OSTaskStatStk[0],                           /* Set Bottom-Of-Stack            *
+             -/
+                                        OS_TASK_STAT_STK_SIZE,
+                                        (void *)0,                                   /* No TCB extension               *
+             -/
+                                        OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);  /* Enable stack checking + clear  *
+             -/
+                  #else
+                  (void)OSTaskCreateExt(OS_TaskStat,
+                                        (void *)0,                                   /* No args passed to OS_TaskStat()*
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 15  
+
+             -/
+                                        &OSTaskStatStk[0],                           /* Set Top-Of-Stack               *
+             -/
+                                        OS_STAT_PRIO,                                /* One higher than the idle task  *
+             -/
+                                        OS_TASK_STAT_ID,
+                                        &OSTaskStatStk[OS_TASK_STAT_STK_SIZE - 1],   /* Set Bottom-Of-Stack            *
+             -/
+                                        OS_TASK_STAT_STK_SIZE,
+                                        (void *)0,                                   /* No TCB extension               *
+             -/
+                                        OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);  /* Enable stack checking + clear  *
+             -/
+                  #endif
+              #else
+                  #if OS_STK_GROWTH == 1
+                  (void)OSTaskCreate(OS_TaskStat,
+                                     (void *)0,                                      /* No args passed to OS_TaskStat()*
+             -/
+                                     &OSTaskStatStk[OS_TASK_STAT_STK_SIZE - 1],      /* Set Top-Of-Stack               *
+             -/
+                                     OS_STAT_PRIO);                                  /* One higher than the idle task  *
+             -/
+                  #else
+                  (void)OSTaskCreate(OS_TaskStat,
+                                     (void *)0,                                      /* No args passed to OS_TaskStat()*
+             -/
+                                     &OSTaskStatStk[0],                              /* Set Top-Of-Stack               *
+             -/
+                                     OS_STAT_PRIO);                                  /* One higher than the idle task  *
+             -/
+                  #endif
+              #endif
+              }
+              #endif
+ 816          /*$PAGE*/
+ 817          /*
+ 818          *********************************************************************************************************
+ 819          *                                             INITIALIZATION
+ 820          *                            INITIALIZE THE FREE LIST OF TASK CONTROL BLOCKS
+ 821          *
+ 822          * Description: This function is called by OSInit() to initialize the free list of OS_TCBs.
+ 823          *
+ 824          * Arguments  : none
+ 825          *
+ 826          * Returns    : none
+ 827          *********************************************************************************************************
+ 828          */
+ 829          
+ 830          static  void  OS_InitTCBList (void)
+ 831          {
+ 832   1          INT8U    i;
+ 833   1          OS_TCB  *ptcb1;
+ 834   1          OS_TCB  *ptcb2;
+ 835   1      
+ 836   1      
+ 837   1          OSTCBList     = (OS_TCB *)0;                                 /* TCB Initialization                    
+             -   */
+ 838   1          for (i = 0; i < (OS_LOWEST_PRIO + 1); i++) {                 /* Clear the priority table              
+             -   */
+ 839   2              OSTCBPrioTbl[i] = (OS_TCB *)0;
+ 840   2          }
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 16  
+
+ 841   1          ptcb1 = &OSTCBTbl[0];
+ 842   1          ptcb2 = &OSTCBTbl[1];
+ 843   1          for (i = 0; i < (OS_MAX_TASKS + OS_N_SYS_TASKS - 1); i++) {  /* Init. list of free TCBs               
+             -   */
+ 844   2              ptcb1->OSTCBNext = ptcb2;
+ 845   2              ptcb1++;
+ 846   2              ptcb2++;
+ 847   2          }
+ 848   1          ptcb1->OSTCBNext = (OS_TCB *)0;                              /* Last OS_TCB                           
+             -   */
+ 849   1          OSTCBFreeList    = &OSTCBTbl[0];
+ 850   1      }
+ 851          /*$PAGE*/
+ 852          /*
+ 853          *********************************************************************************************************
+ 854          *                                              SCHEDULER
+ 855          *
+ 856          * Description: This function is called by other uC/OS-II services to determine whether a new, high
+ 857          *              priority task has been made ready to run.  This function is invoked by TASK level code
+ 858          *              and is not used to reschedule tasks from ISRs (see OSIntExit() for ISR rescheduling).
+ 859          *
+ 860          * Arguments  : none
+ 861          *
+ 862          * Returns    : none
+ 863          *
+ 864          * Notes      : 1) This function is INTERNAL to uC/OS-II and your application should not call it.
+ 865          *              2) Rescheduling is prevented when the scheduler is locked (see OS_SchedLock())
+ 866          *********************************************************************************************************
+ 867          */
+ 868          
+ 869          void  OS_Sched (void)
+ 870          {
+ 871   1      #if OS_CRITICAL_METHOD == 3                            /* Allocate storage for CPU status register     */
+                  OS_CPU_SR  cpu_sr;
+              #endif    
+ 874   1          INT8U      y;
+ 875   1      
+ 876   1      
+ 877   1          OS_ENTER_CRITICAL();
+ 878   1          if ((OSIntNesting == 0) && (OSLockNesting == 0)) { /* Sched. only if all ISRs done & not locked    */
+ 879   2              y             = OSUnMapTbl[OSRdyGrp];          /* Get pointer to HPT ready to run              */
+ 880   2              OSPrioHighRdy = (INT8U)((y << 3) + OSUnMapTbl[OSRdyTbl[y]]);
+ 881   2              if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy     */
+ 882   3                  OSTCBHighRdy = OSTCBPrioTbl[OSPrioHighRdy];
+ 883   3                  OSCtxSwCtr++;                              /* Increment context switch counter             */
+ 884   3                  OS_TASK_SW();                              /* Perform a context switch                     */
+ 885   3              }
+ 886   2          }
+ 887   1          OS_EXIT_CRITICAL();
+ 888   1      }
+ 889          /*$PAGE*/
+ 890          /*
+ 891          *********************************************************************************************************
+ 892          *                                              IDLE TASK
+ 893          *
+ 894          * Description: This task is internal to uC/OS-II and executes whenever no other higher priority tasks
+ 895          *              executes because they are ALL waiting for event(s) to occur.
+ 896          *
+ 897          * Arguments  : none
+ 898          *
+ 899          * Returns    : none
+ 900          *
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 17  
+
+ 901          * Note(s)    : 1) OSTaskIdleHook() is called after the critical section to ensure that interrupts will be
+ 902          *                 enabled for at least a few instructions.  On some processors (ex. Philips XA), enabling
+ 903          *                 and then disabling interrupts didn't allow the processor enough time to have interrupts
+ 904          *                 enabled before they were disabled again.  uC/OS-II would thus never recognize
+ 905          *                 interrupts.
+ 906          *              2) This hook has been added to allow you to do such things as STOP the CPU to conserve 
+ 907          *                 power.
+ 908          *********************************************************************************************************
+ 909          */
+ 910          
+ 911          void  OS_TaskIdle (void *pdata)
+ 912          {
+ 913   1      #if OS_CRITICAL_METHOD == 3                      /* Allocate storage for CPU status register           */
+                  OS_CPU_SR  cpu_sr;
+              #endif    
+ 916   1          
+ 917   1          
+ 918   1          pdata = pdata;                               /* Prevent compiler warning for not using 'pdata'     */
+ 919   1          for (;;) {
+ 920   2              OS_ENTER_CRITICAL();
+ 921   2              OSIdleCtr++;
+ 922   2              OS_EXIT_CRITICAL();
+ 923   2              OSTaskIdleHook();                        /* Call user definable HOOK                           */
+ 924   2          }
+ 925   1      }
+ 926          /*$PAGE*/
+ 927          /*
+ 928          *********************************************************************************************************
+ 929          *                                            STATISTICS TASK
+ 930          *
+ 931          * Description: This task is internal to uC/OS-II and is used to compute some statistics about the
+ 932          *              multitasking environment.  Specifically, OS_TaskStat() computes the CPU usage.
+ 933          *              CPU usage is determined by:
+ 934          *
+ 935          *                                          OSIdleCtr
+ 936          *                 OSCPUUsage = 100 * (1 - ------------)     (units are in %)
+ 937          *                                         OSIdleCtrMax
+ 938          *
+ 939          * Arguments  : pdata     this pointer is not used at this time.
+ 940          *
+ 941          * Returns    : none
+ 942          *
+ 943          * Notes      : 1) This task runs at a priority level higher than the idle task.  In fact, it runs at the
+ 944          *                 next higher priority, OS_IDLE_PRIO-1.
+ 945          *              2) You can disable this task by setting the configuration #define OS_TASK_STAT_EN to 0.
+ 946          *              3) We delay for 5 seconds in the beginning to allow the system to reach steady state and
+ 947          *                 have all other tasks created before we do statistics.  You MUST have at least a delay
+ 948          *                 of 2 seconds to allow for the system to establish the maximum value for the idle
+ 949          *                 counter.
+ 950          *********************************************************************************************************
+ 951          */
+ 952          
+ 953          #if OS_TASK_STAT_EN > 0
+              void  OS_TaskStat (void *pdata)
+              {
+              #if OS_CRITICAL_METHOD == 3                      /* Allocate storage for CPU status register           */
+                  OS_CPU_SR  cpu_sr;
+              #endif    
+                  INT32U     run;
+                  INT32U     max;
+                  INT8S      usage;
+              
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 18  
+
+              
+                  pdata = pdata;                               /* Prevent compiler warning for not using 'pdata'     */
+                  while (OSStatRdy == FALSE) {
+                      OSTimeDly(2 * OS_TICKS_PER_SEC);         /* Wait until statistic task is ready                 */
+                  }
+                  max = OSIdleCtrMax / 100L;
+                  for (;;) {
+                      OS_ENTER_CRITICAL();
+                      OSIdleCtrRun = OSIdleCtr;                /* Obtain the of the idle counter for the past second */
+                      run          = OSIdleCtr;
+                      OSIdleCtr    = 0L;                       /* Reset the idle counter for the next second         */
+                      OS_EXIT_CRITICAL();
+                      if (max > 0L) {
+                          usage = (INT8S)(100L - run / max);
+                          if (usage >= 0) {                    /* Make sure we don't have a negative percentage      */
+                              OSCPUUsage = usage;
+                          } else {
+                              OSCPUUsage = 0;
+                          }
+                      } else {
+                          OSCPUUsage = 0;
+                          max        = OSIdleCtrMax / 100L;
+                      }
+                      OSTaskStatHook();                        /* Invoke user definable hook                         */
+                      OSTimeDly(OS_TICKS_PER_SEC);             /* Accumulate OSIdleCtr for the next second           */
+                  }
+              }
+              #endif
+ 991          /*$PAGE*/
+ 992          /*
+ 993          *********************************************************************************************************
+ 994          *                                            INITIALIZE TCB
+ 995          *
+ 996          * Description: This function is internal to uC/OS-II and is used to initialize a Task Control Block when
+ 997          *              a task is created (see OSTaskCreate() and OSTaskCreateExt()).
+ 998          *
+ 999          * Arguments  : prio          is the priority of the task being created
+1000          *
+1001          *              ptos          is a pointer to the task's top-of-stack assuming that the CPU registers
+1002          *                            have been placed on the stack.  Note that the top-of-stack corresponds to a
+1003          *                            'high' memory location is OS_STK_GROWTH is set to 1 and a 'low' memory
+1004          *                            location if OS_STK_GROWTH is set to 0.  Note that stack growth is CPU
+1005          *                            specific.
+1006          *
+1007          *              pbos          is a pointer to the bottom of stack.  A NULL pointer is passed if called by
+1008          *                            'OSTaskCreate()'.
+1009          *
+1010          *              id            is the task's ID (0..65535)
+1011          *
+1012          *              stk_size      is the size of the stack (in 'stack units').  If the stack units are INT8Us
+1013          *                            then, 'stk_size' contains the number of bytes for the stack.  If the stack
+1014          *                            units are INT32Us then, the stack contains '4 * stk_size' bytes.  The stack
+1015          *                            units are established by the #define constant OS_STK which is CPU
+1016          *                            specific.  'stk_size' is 0 if called by 'OSTaskCreate()'.
+1017          *
+1018          *              pext          is a pointer to a user supplied memory area that is used to extend the task
+1019          *                            control block.  This allows you to store the contents of floating-point
+1020          *                            registers, MMU registers or anything else you could find useful during a
+1021          *                            context switch.  You can even assign a name to each task and store this name
+1022          *                            in this TCB extension.  A NULL pointer is passed if called by OSTaskCreate().
+1023          *
+1024          *              opt           options as passed to 'OSTaskCreateExt()' or,
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 19  
+
+1025          *                            0 if called from 'OSTaskCreate()'.
+1026          *
+1027          * Returns    : OS_NO_ERR         if the call was successful
+1028          *              OS_NO_MORE_TCB    if there are no more free TCBs to be allocated and thus, the task cannot
+1029          *                                be created.
+1030          *
+1031          * Note       : This function is INTERNAL to uC/OS-II and your application should not call it.
+1032          *********************************************************************************************************
+1033          */
+1034          
+1035          INT8U  OS_TCBInit (INT8U prio, OS_STK *ptos, OS_STK *pbos, INT16U id, INT32U stk_size, void *pext, INT16U 
+             -opt)
+1036          {
+1037   1      #if OS_CRITICAL_METHOD == 3                                /* Allocate storage for CPU status register */
+                  OS_CPU_SR  cpu_sr;
+              #endif    
+1040   1          OS_TCB    *ptcb;
+1041   1      
+1042   1      
+1043   1          OS_ENTER_CRITICAL();
+1044   1          ptcb = OSTCBFreeList;                                  /* Get a free TCB from the free TCB list    */
+1045   1          if (ptcb != (OS_TCB *)0) {
+1046   2              OSTCBFreeList        = ptcb->OSTCBNext;            /* Update pointer to free TCB list          */
+1047   2              OS_EXIT_CRITICAL();
+1048   2              ptcb->OSTCBStkPtr    = ptos;                       /* Load Stack pointer in TCB                */
+1049   2              ptcb->OSTCBPrio      = (INT8U)prio;                /* Load task priority into TCB              */
+1050   2              ptcb->OSTCBStat      = OS_STAT_RDY;                /* Task is ready to run                     */
+1051   2              ptcb->OSTCBDly       = 0;                          /* Task is not delayed                      */
+1052   2      
+1053   2      #if OS_TASK_CREATE_EXT_EN > 0
+                      ptcb->OSTCBExtPtr    = pext;                       /* Store pointer to TCB extension           */
+                      ptcb->OSTCBStkSize   = stk_size;                   /* Store stack size                         */
+                      ptcb->OSTCBStkBottom = pbos;                       /* Store pointer to bottom of stack         */
+                      ptcb->OSTCBOpt       = opt;                        /* Store task options                       */
+                      ptcb->OSTCBId        = id;                         /* Store task ID                            */
+              #else
+1060   2              pext                 = pext;                       /* Prevent compiler warning if not used     */
+1061   2              stk_size             = stk_size;
+1062   2              pbos                 = pbos;
+1063   2              opt                  = opt;
+1064   2              id                   = id;
+1065   2      #endif
+1066   2      
+1067   2      #if OS_TASK_DEL_EN > 0
+                      ptcb->OSTCBDelReq    = OS_NO_ERR;
+              #endif
+1070   2      
+1071   2              ptcb->OSTCBY         = prio >> 3;                  /* Pre-compute X, Y, BitX and BitY          */
+1072   2              ptcb->OSTCBBitY      = OSMapTbl[ptcb->OSTCBY];
+1073   2              ptcb->OSTCBX         = prio & 0x07;
+1074   2              ptcb->OSTCBBitX      = OSMapTbl[ptcb->OSTCBX];
+1075   2      
+1076   2      #if OS_EVENT_EN > 0
+*** WARNING C322 IN LINE 1076 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                      ptcb->OSTCBEventPtr  = (OS_EVENT *)0;              /* Task is not pending on an event          */
+              #endif
+1079   2      
+1080   2      #if (OS_VERSION >= 251) && (OS_FLAG_EN > 0) && (OS_MAX_FLAGS > 0) && (OS_TASK_DEL_EN > 0)
+*** WARNING C322 IN LINE 1080 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                      ptcb->OSTCBFlagNode  = (OS_FLAG_NODE *)0;          /* Task is not pending on an event flag     */
+              #endif
+1083   2      
+C51 COMPILER V8.02   OS_CORE                                                               07/25/2010 11:06:16 PAGE 20  
+
+1084   2      #if (OS_MBOX_EN > 0) || ((OS_Q_EN > 0) && (OS_MAX_QS > 0))
+1085   2              ptcb->OSTCBMsg       = (void *)0;                  /* No message received                      */
+1086   2      #endif
+1087   2      
+1088   2      #if OS_VERSION >= 204
+*** WARNING C322 IN LINE 1088 OF ..\UCOS_II\OS_CORE.C: unknown identifier
+                      OSTCBInitHook(ptcb);
+              #endif
+1091   2      
+1092   2              OSTaskCreateHook(ptcb);                            /* Call user defined hook                   */
+1093   2              
+1094   2              OS_ENTER_CRITICAL();
+1095   2              OSTCBPrioTbl[prio] = ptcb;
+1096   2              ptcb->OSTCBNext    = OSTCBList;                    /* Link into TCB chain                      */
+1097   2              ptcb->OSTCBPrev    = (OS_TCB *)0;
+1098   2              if (OSTCBList != (OS_TCB *)0) {
+1099   3                  OSTCBList->OSTCBPrev = ptcb;
+1100   3              }
+1101   2              OSTCBList               = ptcb;
+1102   2              OSRdyGrp               |= ptcb->OSTCBBitY;         /* Make task ready to run                   */
+1103   2              OSRdyTbl[ptcb->OSTCBY] |= ptcb->OSTCBBitX;
+1104   2              OS_EXIT_CRITICAL();
+1105   2              return (OS_NO_ERR);
+1106   2          }
+1107   1          OS_EXIT_CRITICAL();
+1108   1          return (OS_NO_MORE_TCB);
+1109   1      }
+
+C51 COMPILATION COMPLETE.  19 WARNING(S),  12 ERROR(S)

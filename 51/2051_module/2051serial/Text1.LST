@@ -1,0 +1,118 @@
+C51 COMPILER V8.02   TEXT1                                                                 07/10/2009 16:27:22 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c ROM(SMALL) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          /*
+   3          sbit rst=P2^0;
+   4          sbit io=P2^1;
+   5          sbit sck=P2^2;
+   6          void delay(unsigned char i)
+   7          {
+   8                  unsigned char j;
+   9                  while(i--)
+  10                  {
+  11                          for(j=200;j;j--);
+  12                  }
+  13          }
+  14          */
+  15          void initserial(void)
+  16          {
+  17   1              TMOD = 0x20;                    // 定时器1工作于8位自动重载模式, 用于产生波特率
+  18   1              TH1 = 0xFD;                             // 波特率9600
+  19   1              TL1 = 0xFD;
+  20   1              SCON = 0x50;                    // 设定串行口工作方式
+  21   1              PCON &= 0xef;                   // 波特率不倍增
+  22   1              TR1 = 1;                                // 启动定时器1
+  23   1              IE = 0x0;                               // 禁止任何中断
+  24   1              EA=1;
+  25   1              ES=1;
+  26   1      }
+  27          void serialint(void)interrupt 4 using 2
+  28          {
+  29   1              if(RI)
+  30   1              {
+  31   2                      RI=0;
+  32   2                      SBUF=SBUF;
+  33   2              }
+  34   1      }
+  35          
+  36          void send_str(unsigned char *str)// 传送字串
+  37          {
+  38   1              unsigned char i = 0;
+  39   1              ES=0;
+  40   1              while(str[i] != '\0')
+  41   1              {
+  42   2                      SBUF = str[i];
+  43   2                      while(!TI);                             // 等特数据传送
+  44   2                      TI = 0;                                 // 清除数据传送标志
+  45   2                      i++;                                    // 下一个字符
+  46   2              }
+  47   1              ES=1;
+  48   1      }
+  49          /*
+  50          void send1302(unsigned char d)
+  51          {
+  52                  unsigned char i;
+  53                  sck=0;
+  54                  for(i=0;i<8;i++)
+  55                  {
+C51 COMPILER V8.02   TEXT1                                                                 07/10/2009 16:27:22 PAGE 2   
+
+  56                          if(d&0x01)
+  57                          {
+  58                                  io=1;
+  59                          }
+  60                          else
+  61                          {
+  62                                  io=0;
+  63                          }
+  64                          sck=0;
+  65                          sck=1;
+  66                          d>>=1;
+  67                  }
+  68          }
+  69          
+  70          unsigned char read1302(void)
+  71          {
+  72                  unsigned char d=0,i;
+  73                  sck=0;
+  74                  for(i=0;i<8;i++)
+  75                  {
+  76                          d>>=1;
+  77                          io=1;
+  78                          sck=0;
+  79                          sck=1;
+  80                          if(io)
+  81                          {
+  82                                  d|=0x80;
+  83                          }
+  84                  }
+  85                  return d;
+  86          }
+  87          */
+  88          void main(void)
+  89          {
+  90   1              initserial();
+  91   1              send_str("Hello world");
+  92   1              while(1);
+  93   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     84    ----
+   CONSTANT SIZE    =     12    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

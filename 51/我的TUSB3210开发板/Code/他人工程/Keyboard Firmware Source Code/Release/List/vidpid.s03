@@ -1,0 +1,168 @@
+	NAME	vidpid(17)
+	RSEG	CODE(0)
+	RSEG	CSTR(0)
+	RSEG	CONST(0)
+	RSEG	I_UDATA(0)
+	PUBLIC	GetVidPidSetting
+	$DEFFN	GetVidPidSetting(0,2,0,0,32768,0,0,0)
+	PUBLIC	fncOffset
+	PUBLIC	funcDefs
+	PUBLIC	s0123
+	EXTERN	?CL8051S_5_50_L17
+	RSEG	CODE
+GetVidPidSetting:
+	CLR	A
+	MOV	R6,A
+	MOV	R7,A
+?0007:
+	CLR	C
+	MOV	A,R6
+	SUBB	A,#50
+	MOV	A,R7
+	XRL	A,#128
+	SUBB	A,#128
+	JNC	?0006
+?0008:
+	INC	R6
+	CJNE	R6,#0,?0018
+	INC	R7
+?0018:
+	SJMP	?0007
+?0006:
+	MOV	R0,#$LOCBI GetVidPidSetting
+	MOV	A,R7
+	MOV	@R0,A
+	INC	R0
+	MOV	A,R6
+	MOV	@R0,A
+	MOV	R0,#s0123
+	MOV	@R0,#1
+	MOV	R0,#fncOffset
+	MOV	@R0,#0
+?0011:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	ADD	A,#239
+	JC	?0010
+?0012:
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs)
+	MOV	DPH,A
+	CLR	A
+	MOVC	A,@A+DPTR
+	MOV	R0,#s0123
+	XRL	A,@R0
+	JZ	?0014
+	MOV	R0,#fncOffset
+	MOV	A,@R0
+	MOV	B,#20
+	MUL	AB
+	ADD	A,#LOW(funcDefs)
+	MOV	DPL,A
+	MOV	A,B
+	ADDC	A,#HIGH(funcDefs)
+	MOV	DPH,A
+	CLR	A
+	MOVC	A,@A+DPTR
+	INC	A
+	JNZ	?0015
+?0016:
+?0017:
+?0014:
+	SJMP	?0010
+?0015:
+	MOV	R0,#fncOffset
+	INC	@R0
+	SJMP	?0011
+?0010:
+	RET
+	RSEG	CSTR
+?0000:
+	DB	'Texas Instruments',0
+?0001:
+	DB	'Texas Instruments TUSB2136 Keyboard (Ver 0)',0
+?0002:
+	DB	'Texas Instruments TUSB2136 EVM DEMO 1 (Ver 1)',0
+?0003:
+	DB	'Texas Instruments TUSB2136 EVM DEMO 2 (Ver 2)',0
+?0004:
+	DB	'Texas Instruments TUSB2136 for Flat Keyboard (Ver 3)',0
+?0005:
+	DB	'Texas Instruments TUSB2136 Generic Setting',0
+	RSEG	CONST
+funcDefs:
+	DB	0
+	DW	1105
+	DW	1
+	DW	1105
+	DW	16
+	DW	4369
+	DB	2
+	DW	?0000
+	DB	2
+	DW	?0001
+	DB	0,0,0
+	DB	1
+	DW	1105
+	DW	2
+	DW	1105
+	DW	32
+	DW	8738
+	DB	2
+	DW	?0000
+	DB	2
+	DW	?0002
+	DB	0,0,0
+	DB	2
+	DW	1105
+	DW	3
+	DW	1105
+	DW	48
+	DW	13107
+	DB	2
+	DW	?0000
+	DB	2
+	DW	?0003
+	DB	0,0,0
+	DB	3
+	DW	1105
+	DW	4
+	DW	1105
+	DW	64
+	DW	17476
+	DB	2
+	DW	?0000
+	DB	2
+	DW	?0004
+	DB	0,0,0
+	DB	255
+	DW	1105
+	DW	61166
+	DW	1105
+	DW	65535
+	DW	65535
+	DB	2
+	DW	?0000
+	DB	2
+	DW	?0005
+	DB	0,0,0
+	DB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	DB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	DB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	DB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	DB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	DB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	DB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	DB	0,0
+	RSEG	I_UDATA
+s0123:
+	DS	1
+fncOffset:
+	DS	1
+	END

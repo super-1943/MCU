@@ -1,0 +1,412 @@
+C51 COMPILER V8.02   MAIN                                                                  02/01/2011 10:20:44 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEFINE(WORK_AROUND_192) DEBUG OBJECTEXTEND CODE
+
+line level    source
+
+   1          #include "reg52modified.h"
+   2          #include "types.h"
+   3          #include "usb.h"
+   4          #include "tusb2136.h"
+   5          #include "serial.h"
+   6          
+   7          
+   8          extern void InitializeUsbFunction(void);
+   9          
+  10          extern bit deviceReady;
+  11          extern bit bSuspended;
+  12          
+  13          extern tEDB xdata tInputEndPointDescriptorBlock[3];
+  14          extern BYTE xdata pbInBufferAddress[EP_MAX_PACKET_SIZE];  // ENDPOINT 1 IN X buffer
+  15          extern BYTE xdata pb48BufferAddress[EP_MAX_PACKET_SIZE];  // use ENDPOINT 1 OUT Y buffer space for bufferi
+             -ng the 1st 
+  16                                                                    // half of 96-byte block write for UCD9110 flash
+             - programming
+  17          extern BYTE previous_crc8;
+  18          
+  19          BYTE intFlags = 0x00;
+  20          BYTE otherFlags = 0x00;
+  21          BYTE modifierByte = 0x00;
+  22          
+  23          unsigned char FC_flag=0;
+  24          #define FC_PORT         P3
+  25          #define FC_PIN          P3
+  26          #define FC_LATCH        0x20
+  27          #define FC_CLK          0x10
+  28          #define FC_DATA         0x08
+  29          #define FC_LATCH_0      FC_PORT&=       ~FC_LATCH
+  30          #define FC_LATCH_1      FC_PORT|=    FC_LATCH
+  31          #define FC_CLK_0        FC_PORT&=       ~FC_CLK
+  32          #define FC_CLK_1        FC_PORT|=    FC_CLK
+  33          #define FC_DATA_IN      (FC_PIN&FC_DATA)
+  34          
+  35          void FC_Init(void)
+  36          {
+  37   1              FC_PORT|=FC_LATCH|FC_CLK|FC_DATA;
+  38   1              FC_PORT&=~FC_LATCH;
+  39   1      }
+  40          unsigned char FC_Getdata(void)
+  41          {
+  42   1              unsigned char i,t=0;
+  43   1              FC_LATCH_1;
+  44   1              FC_LATCH_1;
+  45   1              FC_LATCH_1;
+  46   1              FC_LATCH_1;
+  47   1              FC_LATCH_0;
+  48   1              for(i=0;i<8;i++)
+  49   1              {
+  50   2                      t>>=1;
+  51   2                      FC_CLK_0;
+  52   2                      if(FC_DATA_IN)
+  53   2                      {
+C51 COMPILER V8.02   MAIN                                                                  02/01/2011 10:20:44 PAGE 2   
+
+  54   3                              t|=0x80;
+  55   3                      }
+  56   2                      
+  57   2                      FC_CLK_1;
+  58   2                      
+  59   2              }
+  60   1              return t;
+  61   1      }
+  62          
+  63          void IEP1InterruptHandler(void);
+  64          void OEP0SetLEDs(void);
+  65          void delay(unsigned int k)
+  66          {
+  67   1              unsigned char i,j;
+  68   1              for(;k;k--)
+  69   1              for(i=200;i;i--)
+  70   1              for(j=200;j;j--);
+  71   1      }
+  72          
+  73          
+  74          void main(void)
+  75          {
+  76   1              unsigned char key;
+  77   1              // Make sure we're disconnected from the upstream port
+  78   1              bUSBCTL = 0x00;
+  79   1              FC_Init();
+  80   1              rs232_init();
+  81   1              rs232_printstr("Hello world!\r\n");
+  82   1              InitializeUsbFunction(); // Initialize the USB embedded function
+  83   1              while(1) 
+  84   1              { // Indefinite loop to handle keyboard scanning
+  85   2                      key=FC_Getdata();
+  86   2                      P0=key;
+  87   2                      if(FC_flag)
+  88   2                      {
+  89   3                              FC_flag=0;
+  90   3                              pbInBufferAddress[0]=0x00;
+  91   3                              pbInBufferAddress[1]=0x00;                      
+  92   3                              pbInBufferAddress[2]=(key&0x10)?0x00:0x1a;//w
+  93   3                              pbInBufferAddress[3]=(key&0x20)?0x00:0x16;//s
+  94   3                              pbInBufferAddress[4]=(key&0x40)?0x00:0x04;//a
+  95   3                              pbInBufferAddress[5]=(key&0x80)?0x00:0x07;//d
+  96   3                              pbInBufferAddress[6]=(key&0x01)?0x00:0x0e;//k
+  97   3                              pbInBufferAddress[7]=(key&0x02)?0x00:0x0d;//j
+  98   3                              if(!(key&0x04))
+  99   3                              {
+ 100   4                                      pbInBufferAddress[6]=0x09;//f
+ 101   4                              }
+ 102   3                              if(!(key&0x08))
+ 103   3                              {
+ 104   4                                      pbInBufferAddress[7]=0x0a;//g
+ 105   4                              }
+ 106   3                              
+ 107   3                              bIEPDCTX_1=0x08;                        
+ 108   3                      }
+ 109   2                      
+ 110   2              }
+ 111   1      }
+ 112          
+ 113          
+ 114          void IEP1InterruptHandler(void)
+ 115          {
+C51 COMPILER V8.02   MAIN                                                                  02/01/2011 10:20:44 PAGE 3   
+
+ 116   1              // Just clear the NAK bit
+ 117   1              bIEPDCTX_1=EPBCT_NAK;
+ 118   1              FC_flag=1;
+ 119   1      }
+ 120          
+ 121          
+ 122          void OEP0SetLEDs(void)
+ 123          {
+ 124   1      }
+C51 COMPILER V8.02   MAIN                                                                  02/01/2011 10:20:44 PAGE 4   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION FC_Init (BEGIN)
+                                           ; SOURCE LINE # 35
+                                           ; SOURCE LINE # 36
+                                           ; SOURCE LINE # 37
+0000 43B038            ORL     P3,#038H
+                                           ; SOURCE LINE # 38
+0003 53B0DF            ANL     P3,#0DFH
+                                           ; SOURCE LINE # 39
+0006 22                RET     
+             ; FUNCTION FC_Init (END)
+
+             ; FUNCTION FC_Getdata (BEGIN)
+                                           ; SOURCE LINE # 40
+                                           ; SOURCE LINE # 41
+                                           ; SOURCE LINE # 42
+;---- Variable 't' assigned to Register 'R7' ----
+0000 E4                CLR     A
+0001 FF                MOV     R7,A
+                                           ; SOURCE LINE # 43
+0002 43B020            ORL     P3,#020H
+                                           ; SOURCE LINE # 44
+0005 43B020            ORL     P3,#020H
+                                           ; SOURCE LINE # 45
+0008 43B020            ORL     P3,#020H
+                                           ; SOURCE LINE # 46
+000B 43B020            ORL     P3,#020H
+                                           ; SOURCE LINE # 47
+000E 53B0DF            ANL     P3,#0DFH
+                                           ; SOURCE LINE # 48
+;---- Variable 'i' assigned to Register 'R6' ----
+0011 FE                MOV     R6,A
+0012         ?C0002:
+                                           ; SOURCE LINE # 49
+                                           ; SOURCE LINE # 50
+0012 EF                MOV     A,R7
+0013 C3                CLR     C
+0014 13                RRC     A
+0015 FF                MOV     R7,A
+                                           ; SOURCE LINE # 51
+0016 53B0EF            ANL     P3,#0EFH
+                                           ; SOURCE LINE # 52
+0019 E5B0              MOV     A,P3
+001B 30E303            JNB     ACC.3,?C0005
+                                           ; SOURCE LINE # 53
+                                           ; SOURCE LINE # 54
+001E 430780            ORL     AR7,#080H
+                                           ; SOURCE LINE # 55
+0021         ?C0005:
+                                           ; SOURCE LINE # 57
+0021 43B010            ORL     P3,#010H
+                                           ; SOURCE LINE # 59
+0024 0E                INC     R6
+0025 BE08EA            CJNE    R6,#08H,?C0002
+0028         ?C0003:
+                                           ; SOURCE LINE # 60
+                                           ; SOURCE LINE # 61
+0028         ?C0006:
+0028 22                RET     
+             ; FUNCTION FC_Getdata (END)
+C51 COMPILER V8.02   MAIN                                                                  02/01/2011 10:20:44 PAGE 5   
+
+
+             ; FUNCTION _delay (BEGIN)
+                                           ; SOURCE LINE # 65
+;---- Variable 'k' assigned to Register 'R6/R7' ----
+                                           ; SOURCE LINE # 66
+                                           ; SOURCE LINE # 68
+0000         ?C0007:
+0000 EF                MOV     A,R7
+0001 4E                ORL     A,R6
+0002 600F              JZ      ?C0016
+                                           ; SOURCE LINE # 69
+;---- Variable 'i' assigned to Register 'R5' ----
+0004 7DC8              MOV     R5,#0C8H
+0006         ?C0010:
+                                           ; SOURCE LINE # 70
+;---- Variable 'j' assigned to Register 'R4' ----
+0006 7CC8              MOV     R4,#0C8H
+0008         ?C0013:
+0008 DCFE              DJNZ    R4,?C0013
+000A         ?C0012:
+000A DDFA              DJNZ    R5,?C0010
+000C         ?C0009:
+000C EF                MOV     A,R7
+000D 1F                DEC     R7
+000E 70F0              JNZ     ?C0007
+0010 1E                DEC     R6
+0011         ?C0037:
+0011 80ED              SJMP    ?C0007
+                                           ; SOURCE LINE # 71
+0013         ?C0016:
+0013 22                RET     
+             ; FUNCTION _delay (END)
+
+             ; FUNCTION main (BEGIN)
+                                           ; SOURCE LINE # 74
+                                           ; SOURCE LINE # 75
+                                           ; SOURCE LINE # 78
+0000 90FFFC            MOV     DPTR,#0FFFCH
+0003 E4                CLR     A
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 79
+0005 120000      R     LCALL   FC_Init
+                                           ; SOURCE LINE # 80
+0008 120000      E     LCALL   rs232_init
+                                           ; SOURCE LINE # 81
+000B 7BFF              MOV     R3,#0FFH
+000D 7A00        R     MOV     R2,#HIGH ?SC_0
+000F 7900        R     MOV     R1,#LOW ?SC_0
+0011 120000      E     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 82
+0014 120000      E     LCALL   InitializeUsbFunction
+0017         ?C0017:
+                                           ; SOURCE LINE # 83
+                                           ; SOURCE LINE # 84
+                                           ; SOURCE LINE # 85
+0017 120000      R     LCALL   FC_Getdata
+;---- Variable 'key' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 86
+001A 8F80              MOV     P0,R7
+                                           ; SOURCE LINE # 87
+001C E500        R     MOV     A,FC_flag
+001E 60F7              JZ      ?C0017
+C51 COMPILER V8.02   MAIN                                                                  02/01/2011 10:20:44 PAGE 6   
+
+                                           ; SOURCE LINE # 88
+                                           ; SOURCE LINE # 89
+0020 E4                CLR     A
+0021 F500        R     MOV     FC_flag,A
+                                           ; SOURCE LINE # 90
+0023 900000      E     MOV     DPTR,#pbInBufferAddress
+0026 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 91
+0027 A3                INC     DPTR
+0028 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 92
+0029 EF                MOV     A,R7
+002A 30E404            JNB     ACC.4,?C0020
+002D 7E00              MOV     R6,#00H
+002F 8002              SJMP    ?C0021
+0031         ?C0020:
+0031 7E1A              MOV     R6,#01AH
+0033         ?C0021:
+0033 900000      E     MOV     DPTR,#pbInBufferAddress+02H
+0036 EE                MOV     A,R6
+0037 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 93
+0038 EF                MOV     A,R7
+0039 30E504            JNB     ACC.5,?C0022
+003C 7E00              MOV     R6,#00H
+003E 8002              SJMP    ?C0023
+0040         ?C0022:
+0040 7E16              MOV     R6,#016H
+0042         ?C0023:
+0042 900000      E     MOV     DPTR,#pbInBufferAddress+03H
+0045 EE                MOV     A,R6
+0046 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 94
+0047 EF                MOV     A,R7
+0048 30E604            JNB     ACC.6,?C0024
+004B 7E00              MOV     R6,#00H
+004D 8002              SJMP    ?C0025
+004F         ?C0024:
+004F 7E04              MOV     R6,#04H
+0051         ?C0025:
+0051 900000      E     MOV     DPTR,#pbInBufferAddress+04H
+0054 EE                MOV     A,R6
+0055 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 95
+0056 EF                MOV     A,R7
+0057 30E704            JNB     ACC.7,?C0026
+005A 7E00              MOV     R6,#00H
+005C 8002              SJMP    ?C0027
+005E         ?C0026:
+005E 7E07              MOV     R6,#07H
+0060         ?C0027:
+0060 900000      E     MOV     DPTR,#pbInBufferAddress+05H
+0063 EE                MOV     A,R6
+0064 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 96
+0065 EF                MOV     A,R7
+0066 30E004            JNB     ACC.0,?C0028
+0069 7E00              MOV     R6,#00H
+006B 8002              SJMP    ?C0029
+006D         ?C0028:
+006D 7E0E              MOV     R6,#0EH
+006F         ?C0029:
+C51 COMPILER V8.02   MAIN                                                                  02/01/2011 10:20:44 PAGE 7   
+
+006F 900000      E     MOV     DPTR,#pbInBufferAddress+06H
+0072 EE                MOV     A,R6
+0073 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 97
+0074 EF                MOV     A,R7
+0075 30E104            JNB     ACC.1,?C0030
+0078 7E00              MOV     R6,#00H
+007A 8002              SJMP    ?C0031
+007C         ?C0030:
+007C 7E0D              MOV     R6,#0DH
+007E         ?C0031:
+007E 900000      E     MOV     DPTR,#pbInBufferAddress+07H
+0081 EE                MOV     A,R6
+0082 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 98
+0083 EF                MOV     A,R7
+0084 20E206            JB      ACC.2,?C0032
+                                           ; SOURCE LINE # 99
+                                           ; SOURCE LINE # 100
+0087 900000      E     MOV     DPTR,#pbInBufferAddress+06H
+008A 7409              MOV     A,#09H
+008C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 101
+008D         ?C0032:
+                                           ; SOURCE LINE # 102
+008D EF                MOV     A,R7
+008E 20E306            JB      ACC.3,?C0033
+                                           ; SOURCE LINE # 103
+                                           ; SOURCE LINE # 104
+0091 900000      E     MOV     DPTR,#pbInBufferAddress+07H
+0094 740A              MOV     A,#0AH
+0096 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 105
+0097         ?C0033:
+                                           ; SOURCE LINE # 107
+0097 90FF4A            MOV     DPTR,#0FF4AH
+009A 7408              MOV     A,#08H
+009C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 108
+                                           ; SOURCE LINE # 110
+009D 020000      R     LJMP    ?C0017
+             ; FUNCTION main (END)
+
+             ; FUNCTION IEP1InterruptHandler (BEGIN)
+                                           ; SOURCE LINE # 114
+                                           ; SOURCE LINE # 115
+                                           ; SOURCE LINE # 117
+0000 90FF4A            MOV     DPTR,#0FF4AH
+0003 7480              MOV     A,#080H
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 118
+0006 750001      R     MOV     FC_flag,#01H
+                                           ; SOURCE LINE # 119
+0009 22                RET     
+             ; FUNCTION IEP1InterruptHandler (END)
+
+             ; FUNCTION OEP0SetLEDs (BEGIN)
+                                           ; SOURCE LINE # 122
+                                           ; SOURCE LINE # 123
+                                           ; SOURCE LINE # 124
+0000 22                RET     
+             ; FUNCTION OEP0SetLEDs (END)
+C51 COMPILER V8.02   MAIN                                                                  02/01/2011 10:20:44 PAGE 8   
+
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    239    ----
+   CONSTANT SIZE    =     15    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

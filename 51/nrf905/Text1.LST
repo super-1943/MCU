@@ -1,0 +1,63 @@
+C51 COMPILER V8.02   TEXT1                                                                 12/15/2009 15:29:53 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          
+   3          #include "nrf905.h"
+   4          /********************
+   5          /OE---PG4
+   6          DIR---PE4
+   7          
+   8          CSN--------PB0         o
+   9          SCK--------PB1         o
+  10          MOSI-------PB2         o
+  11          MISO-------PB3         i
+  12          TXE--------PB4         o
+  13          CE---------PB5         o
+  14          PWR--------PB6         o
+  15          AM---------PE7         i
+  16          DR---------PE6         i
+  17          CD---------PE5         i
+  18          ********************/
+  19          unsigned char i,j;
+  20          unsigned char txbuf[32];//发送缓存
+  21          unsigned char rxbuf[32];//接收缓存
+  22          unsigned char txaddr[4];//发送地址
+  23          unsigned char rxaddr[4];//接收地址
+  24          unsigned char state;//当前状态：0空闲；1接收；2发射
+  25          RF_CONFIG a;//全局变量，便于观察配置寄存器
+  26          void main(void)
+  27          {
+  28   1      
+  29   1              init_port_nrf905(&a);
+  30   1              STAND_BY_MODE;
+  31   1              delay_nrf905(100);
+  32   1              config_nrf905(&a);
+  33   1              check_config_nrf905(&a,txaddr);
+  34   1              while(1)
+  35   1              {
+  36   2                      transmit_nrf905(txbuf);
+  37   2                      delay_nrf905(1000);
+  38   2                      listen_nrf905(rxbuf);
+  39   2              }
+  40   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     70    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     85    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

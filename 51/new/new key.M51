@@ -1,0 +1,246 @@
+BL51 BANKED LINKER/LOCATER V5.00                                                        07/28/2008  10:30:31  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V5.00, INVOKED BY:
+C:\ELECS\KEILC\C51\BIN\BL51.EXE Text1.obj TO new key
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  Text1.obj (TEXT1)
+  C:\ELECS\KEILC\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\ELECS\KEILC\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  new key (TEXT1)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+                    0008H     0018H                  *** GAP ***
+            BIT     0020H.0   0000H.1   UNIT         ?BI?TEXT1
+                    0020H.1   0000H.7                *** GAP ***
+            IDATA   0021H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     07FDH                  *** GAP ***
+            CODE    0800H     00E5H     UNIT         ?PR?KEYSCAN?TEXT1
+            CODE    08E5H     008CH     UNIT         ?C_C51STARTUP
+            CODE    0971H     0012H     UNIT         ?CO?TEXT1
+            CODE    0983H     000DH     UNIT         ?PR?DELAY_10MS?TEXT1
+            CODE    0990H     0008H     UNIT         ?PR?MAIN?TEXT1
+            CODE    0998H     0003H     UNIT         ?C_INITSEG
+
+
+
+OVERLAY MAP OF MODULE:   new key (TEXT1)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?TEXT1
+  +--> ?C_INITSEG
+
+?PR?MAIN?TEXT1
+  +--> ?PR?KEYSCAN?TEXT1
+
+?PR?KEYSCAN?TEXT1
+  +--> ?PR?DELAY_10MS?TEXT1
+  +--> ?CO?TEXT1
+
+
+
+SYMBOL TABLE OF MODULE:  new key (TEXT1)
+BL51 BANKED LINKER/LOCATER V5.00                                                      07/28/2008  10:30:31  PAGE 2
+
+
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        TEXT1
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  B:00B0H.4       PUBLIC        T0
+  B:00D0H.6       PUBLIC        AC
+  B:00B0H.5       PUBLIC        T1
+  B:00A8H.7       PUBLIC        EA
+  D:00A8H         PUBLIC        IE
+  B:00B0H.7       PUBLIC        RD
+  B:00A8H.4       PUBLIC        ES
+  B:0098H.0       PUBLIC        RI
+  B:00B0H.2       PUBLIC        INT0
+  B:00D0H.7       PUBLIC        CY
+  B:0098H.1       PUBLIC        TI
+  B:00B0H.3       PUBLIC        INT1
+  B:00B8H.4       PUBLIC        PS
+  B:00D0H.2       PUBLIC        OV
+  C:0990H         PUBLIC        main
+  B:00B0H.6       PUBLIC        WR
+  B:0090H.0       PUBLIC        P10
+  B:0090H.1       PUBLIC        P11
+  B:0090H.2       PUBLIC        P12
+  B:0090H.3       PUBLIC        P13
+  C:0983H         PUBLIC        delay_10ms
+  B:0090H.4       PUBLIC        P14
+  B:0090H.5       PUBLIC        P15
+  B:0090H.6       PUBLIC        P16
+  B:0090H.7       PUBLIC        P17
+  B:0088H.1       PUBLIC        IE0
+  B:0088H.3       PUBLIC        IE1
+  B:0020H.0       PUBLIC        key_flag
+  B:00A8H.1       PUBLIC        ET0
+  B:00A8H.3       PUBLIC        ET1
+  B:0088H.5       PUBLIC        TF0
+  B:0088H.7       PUBLIC        TF1
+  B:0098H.2       PUBLIC        RB8
+  B:00A8H.0       PUBLIC        EX0
+  B:0088H.0       PUBLIC        IT0
+  B:0098H.3       PUBLIC        TB8
+  B:00A8H.2       PUBLIC        EX1
+  B:0088H.2       PUBLIC        IT1
+  B:00D0H.0       PUBLIC        P
+  B:0098H.7       PUBLIC        SM0
+  B:0098H.6       PUBLIC        SM1
+  B:0098H.5       PUBLIC        SM2
+  C:0971H         PUBLIC        ledcode
+  B:00B8H.1       PUBLIC        PT0
+  B:00B8H.3       PUBLIC        PT1
+  B:00D0H.3       PUBLIC        RS0
+  B:0088H.4       PUBLIC        TR0
+  B:00D0H.4       PUBLIC        RS1
+  B:0088H.6       PUBLIC        TR1
+BL51 BANKED LINKER/LOCATER V5.00                                                      07/28/2008  10:30:31  PAGE 3
+
+
+  B:00B8H.0       PUBLIC        PX0
+  B:00B8H.2       PUBLIC        PX1
+  B:0098H.4       PUBLIC        REN
+  B:00B0H.0       PUBLIC        RXD
+  B:00B0H.1       PUBLIC        TXD
+  C:0800H         PUBLIC        keyscan
+  B:00D0H.5       PUBLIC        F0
+  -------         PROC          MAIN
+  C:0990H         LINE#         30
+  C:0990H         LINE#         31
+  C:0990H         LINE#         32
+  C:0993H         LINE#         34
+  C:0993H         LINE#         35
+  C:0993H         LINE#         36
+  C:0996H         LINE#         37
+  -------         ENDPROC       MAIN
+  -------         PROC          KEYSCAN
+  C:0800H         LINE#         42
+  C:0800H         LINE#         43
+  C:0800H         LINE#         45
+  C:0802H         LINE#         46
+  C:0805H         LINE#         47
+  C:0805H         LINE#         48
+  C:0808H         LINE#         49
+  C:080FH         LINE#         50
+  C:080FH         LINE#         51
+  C:0812H         LINE#         52
+  C:0815H         LINE#         53
+  C:081CH         LINE#         54
+  C:081CH         LINE#         56
+  C:081FH         LINE#         57
+  C:0822H         LINE#         58
+  C:0829H         LINE#         59
+  C:0829H         LINE#         60
+  C:082CH         LINE#         61
+  C:082FH         LINE#         62
+  C:0836H         LINE#         63
+  C:0836H         LINE#         64
+  C:0839H         LINE#         66
+  C:083BH         LINE#         67
+  C:083EH         LINE#         68
+  C:083EH         LINE#         69
+  C:0841H         LINE#         70
+  C:0848H         LINE#         71
+  C:0848H         LINE#         72
+  C:084BH         LINE#         73
+  C:084EH         LINE#         74
+  C:0855H         LINE#         75
+  C:0855H         LINE#         77
+  C:0858H         LINE#         78
+  C:085BH         LINE#         79
+  C:0862H         LINE#         80
+  C:0862H         LINE#         81
+  C:0865H         LINE#         82
+  C:0868H         LINE#         83
+  C:086FH         LINE#         84
+  C:086FH         LINE#         85
+BL51 BANKED LINKER/LOCATER V5.00                                                      07/28/2008  10:30:31  PAGE 4
+
+
+  C:0872H         LINE#         87
+  C:0874H         LINE#         88
+  C:0877H         LINE#         89
+  C:0877H         LINE#         90
+  C:087AH         LINE#         91
+  C:0881H         LINE#         92
+  C:0881H         LINE#         93
+  C:0884H         LINE#         94
+  C:0887H         LINE#         95
+  C:088EH         LINE#         96
+  C:088EH         LINE#         98
+  C:0891H         LINE#         99
+  C:0894H         LINE#         100
+  C:089BH         LINE#         101
+  C:089BH         LINE#         102
+  C:089EH         LINE#         103
+  C:08A1H         LINE#         104
+  C:08A8H         LINE#         105
+  C:08A8H         LINE#         106
+  C:08ABH         LINE#         108
+  C:08ADH         LINE#         109
+  C:08B0H         LINE#         110
+  C:08B0H         LINE#         111
+  C:08B3H         LINE#         112
+  C:08BAH         LINE#         113
+  C:08BAH         LINE#         114
+  C:08BDH         LINE#         115
+  C:08C0H         LINE#         116
+  C:08C7H         LINE#         117
+  C:08C7H         LINE#         119
+  C:08CAH         LINE#         120
+  C:08CDH         LINE#         121
+  C:08D4H         LINE#         122
+  C:08D4H         LINE#         123
+  C:08D7H         LINE#         124
+  C:08DAH         LINE#         125
+  C:08E1H         LINE#         126
+  C:08E1H         LINE#         127
+  C:08E4H         LINE#         129
+  -------         ENDPROC       KEYSCAN
+  -------         PROC          DELAY_10MS
+  -------         DO            
+  D:0007H         SYMBOL        i
+  D:0007H         SYMBOL        j
+  -------         ENDDO         
+  C:0983H         LINE#         132
+  C:0983H         LINE#         133
+  C:0983H         LINE#         135
+  C:0989H         LINE#         136
+  C:098FH         LINE#         137
+  -------         ENDPROC       DELAY_10MS
+  -------         ENDMOD        TEXT1
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 0114H BYTE (13%) *
+******************************************************************************
+
+BL51 BANKED LINKER/LOCATER V5.00                                                      07/28/2008  10:30:31  PAGE 5
+
+
+Program Size: data=9.1 xdata=0 code=414
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

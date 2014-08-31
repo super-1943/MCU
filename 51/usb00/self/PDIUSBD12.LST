@@ -1,0 +1,535 @@
+C51 COMPILER V8.02   PDIUSBD12                                                             12/19/2009 11:45:45 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE PDIUSBD12
+OBJECT MODULE PLACED IN PDIUSBD12.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE PDIUSBD12.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "AT89x52.H"
+   2          #include "My_type.h"
+   3          #include "PDIUSBD12.H"
+   4          #include "uart.h"
+   5          
+   6          extern code uint8 DeviceDescriptor[18];
+   7          extern code uint8 ConfigurationDescriptor[];
+   8          extern code uint8 LanguageId[4];
+   9          extern code uint8 ManufacturerStringDescriptor[52];
+  10          extern code uint8 ProductStringDescriptor[28];
+  11          extern code uint8 SerialNumberStringDescriptor[22];
+  12          extern code uint8 ReportDescriptor[52];
+  13          extern uint8 Ep1InIsBusy;
+  14          extern uint8 *pSendData;
+  15          extern uint16 SendLength;
+  16          extern uint8 NeedZeroPacket;
+  17          extern uint8 ConfigValue;
+  18          #define GET_STATUS         0
+  19          #define CLEAR_FEATURE      1
+  20          #define SET_FEATURE        3
+  21          #define SET_ADDRESS        5
+  22          #define GET_DESCRIPTOR     6
+  23          #define SET_DESCRIPTOR     7
+  24          #define GET_CONFIGURATION  8
+  25          #define SET_CONFIGURATION  9
+  26          #define GET_INTERFACE      10
+  27          #define SET_INTERFACE      11
+  28          #define SYNCH_FRAME        12
+  29          /********************************************************************
+  30          函数功能：写USB命令。
+  31          入口参数：一字节命令。
+  32          返    回：无。
+  33          备    注：无。
+  34          ********************************************************************/
+  35          void D12WriteCommand(uint8 usb_command)
+  36          {
+  37   1              USB_A0=USB_COMMAND_ADD;
+  38   1              USB_DATA=usb_command;
+  39   1              USB_WR=0;
+  40   1              USB_WR=1;
+  41   1              USB_DATA=0xFF;
+  42   1      }
+  43          void D12WriteByte(uint8 usb_data)
+  44          {
+  45   1              USB_A0=USB_DATA_ADD;
+  46   1              USB_DATA=usb_data;
+  47   1              USB_WR=0;
+  48   1              USB_WR=1;
+  49   1              USB_DATA=0xFF;
+  50   1      }
+  51          ////////////////////////End of function//////////////////////////////
+  52          
+  53          /********************************************************************
+  54          函数功能：读一字节USB数据。
+  55          入口参数：无。
+C51 COMPILER V8.02   PDIUSBD12                                                             12/19/2009 11:45:45 PAGE 2   
+
+  56          返    回：读回的一字节。
+  57          备    注：无。
+  58          ********************************************************************/
+  59          uint8 D12ReadByte(void)
+  60          {
+  61   1              uint8 temp;
+  62   1              USB_A0=USB_DATA_ADD;
+  63   1              USB_RD=0;
+  64   1              temp=USB_DATA;
+  65   1              USB_RD=1;
+  66   1              return temp;
+  67   1      }
+  68          ////////////////////////End of function//////////////////////////////
+  69          
+  70          /********************************************************************
+  71          函数功能：读D12的ID。
+  72          入口参数：无。
+  73          返    回：D12的ID。
+  74          备    注：无。
+  75          ********************************************************************/
+  76          uint16 ReadD12ID(void)
+  77          {
+  78   1              uint16 id;
+  79   1              D12WriteCommand(Read_ID);
+  80   1              ((uint8*)&id)[1]=D12ReadByte();
+  81   1              ((uint8*)&id)[0]=D12ReadByte();
+  82   1              return id;
+  83   1      }
+  84          
+  85          void DelayXms(uint16 x)
+  86          {
+  87   1              uint16 i,j;
+  88   1              for(i=0;i<x;i++)
+  89   1              {
+  90   2                      for(j=0;j<227;j++)
+  91   2                      ;
+  92   2              }
+  93   1      }
+  94          
+  95          void UsbDisconnect(void)
+  96          {
+  97   1              print_str("断开usb连接.\r\n");
+  98   1              D12WriteCommand(Set_Mode);
+  99   1              D12WriteByte(0x06);
+ 100   1              D12WriteByte(0x47);
+ 101   1              DelayXms(1000); 
+ 102   1      }
+ 103          
+ 104          void UsbConnect(void)
+ 105          {
+ 106   1              print_str("连接usb.\r\n");
+ 107   1              D12WriteCommand(Set_Mode);
+ 108   1              D12WriteByte(0x16);
+ 109   1              D12WriteByte(0x47);     
+ 110   1      }
+ 111          
+ 112          void D12SelectEndpoint(uint8 endp)
+ 113          {
+ 114   1      
+ 115   1              D12WriteCommand(0x00+endp);
+ 116   1      
+ 117   1      }
+C51 COMPILER V8.02   PDIUSBD12                                                             12/19/2009 11:45:45 PAGE 3   
+
+ 118          void D12SetEndpointEnable(uint8 Enable)
+ 119          {
+ 120   1              D12WriteCommand(Set_Endpoint_Enable);
+ 121   1              if(Enable!=0)
+ 122   1              {
+ 123   2                      D12WriteByte(0x01);
+ 124   2              }
+ 125   1              else
+ 126   1              {
+ 127   2                      D12WriteByte(0x00);
+ 128   2              }
+ 129   1      }
+ 130          
+ 131          uint8 D12ReadEndpointBuffer(uint8 endp,uint8 len ,uint8 * buf)
+ 132          {
+ 133   1      
+ 134   1              uint8 i,j;      
+ 135   1              D12SelectEndpoint(endp);        
+ 136   1              D12WriteCommand(Read_Buffer);   
+ 137   1              D12ReadByte();  
+ 138   1              j=D12ReadByte();
+ 139   1              if(j>len)j=len; 
+ 140   1              for(i=0;i<j;i++)        
+ 141   1              {
+ 142   2                      USB_A0=USB_DATA_ADD;
+ 143   2                      USB_DATA=0xff;
+ 144   2                      USB_RD=0;       
+ 145   2                      *(buf+i)=USB_DATA;                      
+ 146   2                      USB_RD=1;               
+ 147   2                      print_hex(*(buf+i));            
+ 148   2                      print_str(" "); 
+ 149   2              }
+ 150   1      
+ 151   1              D12SetPortOut();        
+ 152   1              return j;
+ 153   1      }
+ 154          
+ 155          void UsbBusSuspend()
+ 156          {
+ 157   1      
+ 158   1              print_str("UsbBusSuspend()\r\n");
+ 159   1      
+ 160   1      }
+ 161          
+ 162          void UsbBusReset()
+ 163          {
+ 164   1      
+ 165   1              print_str("UsbBusReset()\r\n");
+ 166   1              Ep1InIsBusy=0;
+ 167   1      
+ 168   1      }
+ 169          uint8 D12ReadEndpointLastStatus(uint8 endp)
+ 170          {
+ 171   1              D12WriteCommand(0x40+endp);
+ 172   1              return D12ReadByte();
+ 173   1      }
+ 174          void D12ClearBuffer(void)
+ 175          {
+ 176   1              D12WriteCommand(Clear_Buffer);
+ 177   1      }
+ 178          void D12AcknowledgeSetup(void)
+ 179          {
+C51 COMPILER V8.02   PDIUSBD12                                                             12/19/2009 11:45:45 PAGE 4   
+
+ 180   1              D12SelectEndpoint(1);
+ 181   1              D12WriteCommand(Ack_Setup);
+ 182   1              D12SelectEndpoint(0);
+ 183   1              D12WriteCommand(Ack_Setup);     
+ 184   1      }
+ 185          void UsbEp0Out()
+ 186          {
+ 187   1              extern uint8 idata Buffer[16];
+ 188   1              print_str("UsbEp0Out()\r\n");
+ 189   1              if(D12ReadEndpointLastStatus(0)&0x20)
+ 190   1              {
+ 191   2                      D12ReadEndpointBuffer(0,16,Buffer);
+ 192   2                      D12AcknowledgeSetup();
+ 193   2                      D12ClearBuffer();
+ 194   2              }
+ 195   1              else
+ 196   1              {
+ 197   2                      D12ReadEndpointBuffer(0,16,Buffer);
+ 198   2                      D12ClearBuffer();
+ 199   2              }
+ 200   1              if((Buffer[0]&0x80)==0x80)
+ 201   1              {
+ 202   2                      switch((Buffer[0]>>5)&0x03)
+ 203   2                      {
+ 204   3                              case 0:
+ 205   3                                      print_str("USB标准输入请求,");
+ 206   3                                      switch(Buffer[1])
+ 207   3                                      {
+ 208   4                                              case GET_CONFIGURATION:
+ 209   4                                                      print_str("获取配置\r\n");
+ 210   4                                                      break;
+ 211   4                                              case GET_DESCRIPTOR:
+ 212   4                                                      print_str("获取描述符----");
+ 213   4                                                      switch(Buffer[3])
+ 214   4                                                      {
+ 215   5                                                              case 0x01:
+ 216   5                                                                      print_str("设备描述符\r\n");
+ 217   5                                                                      pSendData=DeviceDescriptor;
+ 218   5                                                                      SendLength=18;
+ 219   5                                                                      NeedZeroPacket=0;
+ 220   5                                                                      UsbEp0SendData();
+ 221   5                                                                      break;
+ 222   5                                                              case 0x02:
+ 223   5                                                                      print_str("配置描述符\r\n");
+ 224   5                                                                      pSendData=ConfigurationDescriptor;
+ 225   5                                                                      SendLength=ConfigurationDescriptor[3];
+ 226   5                                                                      SendLength=SendLength*256+ConfigurationDescriptor[2];   
+ 227   5                                                                      SendLength=Buffer[6];
+ 228   5                                                                      UsbEp0SendData();                                                       ;
+ 229   5                                                                      break;
+ 230   5                                                              case 0x03:
+ 231   5                                                                      print_str("字符串描述符\r\n");
+ 232   5                                                                      switch(Buffer[2])
+ 233   5                                                                      {
+ 234   6                                                                              case 0:
+ 235   6                                                                                      print_str("语言ID\r\n");
+ 236   6                                                                                      
+ 237   6                                                                                      pSendData=LanguageId;
+ 238   6                                                                                      SendLength=LanguageId[0];
+ 239   6                                                                                      break;
+ 240   6                                                                              case 1:
+ 241   6                                                                                      print_str("厂商描述\r\n");
+C51 COMPILER V8.02   PDIUSBD12                                                             12/19/2009 11:45:45 PAGE 5   
+
+ 242   6                                                                                      pSendData=ManufacturerStringDescriptor;
+ 243   6                                                                                      SendLength=ManufacturerStringDescriptor[0];
+ 244   6                                                                                      break;
+ 245   6                                                                              case 2:
+ 246   6                                                                                      print_str("产品描述\r\n");
+ 247   6                                                                                      pSendData=ProductStringDescriptor;
+ 248   6                                                                                      SendLength=ProductStringDescriptor[0];
+ 249   6                                                                                      break;
+ 250   6                                                                              case 3:
+ 251   6                                                                                      print_str("产品序列号\r\n");
+ 252   6                                                                                      pSendData=SerialNumberStringDescriptor;
+ 253   6                                                                                      SendLength=SerialNumberStringDescriptor[0];
+ 254   6                                                                                      break;
+ 255   6                                                                              default:
+ 256   6                                                                                      print_str("未知的索引值\r\n");
+ 257   6                                                                                      SendLength=0;
+ 258   6                                                                                      NeedZeroPacket=1;
+ 259   6                                                                                      break;
+ 260   6                                                                                      
+ 261   6                                                                      }
+ 262   5                                                                      if(Buffer[6]>SendLength)
+ 263   5                                                                      {
+ 264   6                                                                              if(SendLength%DeviceDescriptor[7]==0)
+ 265   6                                                                              {
+ 266   7                                                                                      NeedZeroPacket=1;
+ 267   7                                                                              }
+ 268   6                                                                      }
+ 269   5                                                                      else
+ 270   5                                                                      {
+ 271   6                                                                              SendLength=Buffer[6];
+ 272   6                                                                      }
+ 273   5                                                                      UsbEp0SendData();
+ 274   5                                                                      break;  
+ 275   5                                                              case 0x22://report descriptor
+ 276   5                                                                      print_str("报告描述符\r\n");    
+ 277   5                                                                      pSendData=ReportDescriptor;
+ 278   5                                                                      SendLength=sizeof(ReportDescriptor);
+ 279   5                                                                      if(Buffer[6]>SendLength)
+ 280   5                                                                      {
+ 281   6                                                                              if(SendLength%DeviceDescriptor[7]==0)
+ 282   6                                                                              {
+ 283   7                                                                                      NeedZeroPacket=1;
+ 284   7                                                                              }
+ 285   6                                                                      }
+ 286   5                                                                      else
+ 287   5                                                                      {
+ 288   6                                                                              SendLength=Buffer[6];
+ 289   6                                                                      }
+ 290   5                                                                      UsbEp0SendData();
+ 291   5                                                                      break;
+ 292   5                                                              default:
+ 293   5                                                                      print_str("其他描述符，描述符代码：");
+ 294   5                                                                      print_hex(Buffer[3]);
+ 295   5                                                                      print_str("\r\n");
+ 296   5                                                                      break;
+ 297   5                                                      }
+ 298   4                                                      break;                  
+ 299   4                                              case GET_INTERFACE:
+ 300   4                                                      print_str("获取接口\r\n");
+ 301   4                                                      break;
+ 302   4                                              case GET_STATUS:
+ 303   4                                                      print_str("获取状态\r\n");
+C51 COMPILER V8.02   PDIUSBD12                                                             12/19/2009 11:45:45 PAGE 6   
+
+ 304   4                                                      break;  
+ 305   4                                              case SYNCH_FRAME:
+ 306   4                                                      print_str("同步帧\r\n");
+ 307   4                                                      break;
+ 308   4                                              default:
+ 309   4                                                      print_str("错误：未定义的标准输入请求。\r\n");
+ 310   4                                                      break;                          
+ 311   4                                      }
+ 312   3                                      break;
+ 313   3                              case 1:
+ 314   3                                      print_str("USB类输入请求\r\n");
+ 315   3                                      break;
+ 316   3                              case 2:
+ 317   3                                      print_str("USB厂商输入请求\r\n");
+ 318   3                                      break;
+ 319   3                              default:
+ 320   3                                      print_str("错误：未定义的输入请求\r\n");
+ 321   3                                      break;
+ 322   3                              }
+ 323   2              }
+ 324   1              else
+ 325   1              {
+ 326   2                      switch(((Buffer[0]>>5)&0x03))
+ 327   2                      {
+ 328   3                              case 0:
+ 329   3                                      print_str("USB标准输出请求：");
+ 330   3                                      switch(Buffer[1])
+ 331   3                                      {                                       
+ 332   4                                              case CLEAR_FEATURE:
+ 333   4                                                      print_str("清除特性\r\n");
+ 334   4                                                      break;
+ 335   4                                              case SET_ADDRESS:
+ 336   4                                                      print_str("设置地址.地址为：");
+ 337   4                                                      print_hex(Buffer[2]);
+ 338   4                                                      print_str("\r\n");
+ 339   4                                                      D12SetAddress(Buffer[2]);
+ 340   4                                                      SendLength=0;
+ 341   4                                                      NeedZeroPacket=1;
+ 342   4                                                      UsbEp0SendData();
+ 343   4                                                      break;
+ 344   4                                              case SET_CONFIGURATION:
+ 345   4                                                      print_str("设置配置\r\n");
+ 346   4                                                      ConfigValue=Buffer[2];
+ 347   4                                                      D12SetEndpointEnable(Buffer[2]);
+ 348   4                                                      SendLength=0;
+ 349   4                                                      NeedZeroPacket=1;
+ 350   4                                                      UsbEp0SendData();
+ 351   4                                                      break;
+ 352   4                                              case SET_DESCRIPTOR:
+ 353   4                                                      print_str("设置描述符\r\n");
+ 354   4                                                      break;
+ 355   4                                              case SET_FEATURE:
+ 356   4                                                      print_str("设置特性\r\n");
+ 357   4                                                      break;  
+ 358   4                                              case SET_INTERFACE:
+ 359   4                                                      print_str("设置接口\r\n");
+ 360   4                                                      break;
+ 361   4                                              default:
+ 362   4                                                      print_str("错误：未定义的标准输出请求\r\n");
+ 363   4                                                      break;
+ 364   4                                              }
+ 365   3                                      break;
+C51 COMPILER V8.02   PDIUSBD12                                                             12/19/2009 11:45:45 PAGE 7   
+
+ 366   3                              case 1:
+ 367   3                                      print_str("USB类输出请求：\r\n");
+ 368   3                                      switch(Buffer[1])
+ 369   3                                      {
+ 370   4                                              case 0x0a://Set_Idle
+ 371   4                                                      print_str("设置空闲\r\n");
+ 372   4                                                      SendLength=0;
+ 373   4                                                      NeedZeroPacket=1;
+ 374   4                                                      UsbEp0SendData();
+ 375   4                                                      break;
+ 376   4                                              default:
+ 377   4                                                      print_str("未知请求\r\n");
+ 378   4                                                      break;
+ 379   4                                      }                                               
+ 380   3                                      break;
+ 381   3                              case 2:
+ 382   3                                      print_str("USB厂商输出请求");
+ 383   3                                      break;
+ 384   3                              default:
+ 385   3                                      print_str("错误：未定义的输出请求\r\n");
+ 386   3                                      break;                                                  
+ 387   3                      }
+ 388   2              }
+ 389   1      }
+ 390          
+ 391          void UsbEp0In()
+ 392          {
+ 393   1              print_str("UsbEp0In()\r\n");
+ 394   1              D12ReadEndpointLastStatus(1);
+ 395   1              UsbEp0SendData();
+ 396   1      }
+ 397          
+ 398          void UsbEp1Out()
+ 399          {
+ 400   1              uint8 Buf[1];
+ 401   1              print_str("UsbEp1Out()\r\n");
+ 402   1              D12ReadEndpointLastStatus(2);
+ 403   1              D12ReadEndpointBuffer(2,1,Buf);
+ 404   1              D12ClearBuffer();
+ 405   1              P1=~Buf[0];
+ 406   1      }
+ 407          
+ 408          void UsbEp1In()
+ 409          {
+ 410   1      
+ 411   1              print_str("UsbEp1In()\r\n");
+ 412   1              D12ReadEndpointLastStatus(3);
+ 413   1              Ep1InIsBusy=0;
+ 414   1      }
+ 415          
+ 416          void UsbEp2Out()
+ 417          {
+ 418   1      
+ 419   1              print_str("UsbEp2Out()\r\n");
+ 420   1      
+ 421   1      }
+ 422          
+ 423          void UsbEp2In()
+ 424          {
+ 425   1      
+ 426   1              print_str("UsbEp2In()\r\n");
+ 427   1      
+C51 COMPILER V8.02   PDIUSBD12                                                             12/19/2009 11:45:45 PAGE 8   
+
+ 428   1      }
+ 429          
+ 430          
+ 431          
+ 432          void D12ValidateBuffer(void)
+ 433          {
+ 434   1              D12WriteCommand(Validate_Buffer);
+ 435   1      }
+ 436          uint8 D12WriteEndpointBuffer(uint8 Endp,uint8 Len,uint8 *Buf)
+ 437          {
+ 438   1              uint8 i;
+ 439   1              D12SelectEndpoint(Endp);
+ 440   1              D12WriteCommand(Write_Buffer);
+ 441   1              D12WriteByte(0);
+ 442   1              D12WriteByte(Len);
+ 443   1              print_str("写端点");
+ 444   1              print_longint(Endp/2);
+ 445   1              print_str("缓冲区");
+ 446   1              print_longint(Len);
+ 447   1              print_str("字节.\r\n");
+ 448   1              
+ 449   1              D12SetPortOut()
+ 450   1              USB_A0=USB_DATA_ADD;
+ 451   1              for(i=0;i<Len;i++)
+ 452   1              {
+ 453   2                      USB_DATA=*(Buf+i);
+ 454   2                      USB_WR=0;
+ 455   2                      USB_WR=1;
+ 456   2              }
+ 457   1              D12SetPortIn();
+ 458   1              D12ValidateBuffer();
+ 459   1              return Len;
+ 460   1      }
+ 461          
+ 462          
+ 463          void UsbEp0SendData()
+ 464          {
+ 465   1      
+ 466   1              if(SendLength>DeviceDescriptor[7])
+ 467   1              {
+ 468   2                      D12WriteEndpointBuffer(1,DeviceDescriptor[7],pSendData);
+ 469   2                      SendLength-=DeviceDescriptor[7];
+ 470   2                      pSendData+=DeviceDescriptor[7];
+ 471   2              }
+ 472   1              else
+ 473   1              {
+ 474   2                      if(SendLength!=0)
+ 475   2                      {
+ 476   3                              D12WriteEndpointBuffer(1,SendLength,pSendData);
+ 477   3                              SendLength=0;
+ 478   3                      }
+ 479   2                      else
+ 480   2                      {
+ 481   3                              if(NeedZeroPacket==1)
+ 482   3                              {
+ 483   4                                      D12WriteEndpointBuffer(1,0,pSendData);
+ 484   4                                      NeedZeroPacket=0;
+ 485   4                              }
+ 486   3                      }
+ 487   2              }
+ 488   1      }
+ 489          
+C51 COMPILER V8.02   PDIUSBD12                                                             12/19/2009 11:45:45 PAGE 9   
+
+ 490          void D12SetAddress(uint8 Addr)
+ 491          {
+ 492   1              D12WriteCommand(Set_Address);
+ 493   1              D12WriteByte(0x80|Addr);
+ 494   1      }
+ 495          ////////////////////////End of function//////////////////////////////
+ 496          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1463    ----
+   CONSTANT SIZE    =    671    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      13
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

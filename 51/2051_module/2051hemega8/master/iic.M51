@@ -1,0 +1,222 @@
+BL51 BANKED LINKER/LOCATER V6.00                                                        07/11/2009  00:17:17  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.00, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE Text1.obj TO iic
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  Text1.obj (TEXT1)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CSTPTR)
+
+
+LINK MAP OF MODULE:  iic (TEXT1)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     000AH     UNIT         ?DT?TEXT1
+            DATA    0012H     0003H     UNIT         ?DT?_READNBYTE?TEXT1
+            IDATA   0015H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     004BH     UNIT         ?PR?_READNBYTE?TEXT1
+            CODE    004EH     002AH     UNIT         ?PR?_SEND1BYTE?TEXT1
+            CODE    0078H     001AH     UNIT         ?PR?MAIN?TEXT1
+            CODE    0092H     0013H     UNIT         ?PR?_DELAY?TEXT1
+            CODE    00A5H     0012H     UNIT         ?C?LIB_CODE
+            CODE    00B7H     000CH     UNIT         ?C_C51STARTUP
+            CODE    00C3H     000AH     UNIT         ?PR?START_IIC?TEXT1
+            CODE    00CDH     000AH     UNIT         ?PR?STOP_IIC?TEXT1
+
+
+
+OVERLAY MAP OF MODULE:   iic (TEXT1)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?TEXT1
+
+?PR?MAIN?TEXT1
+  +--> ?PR?START_IIC?TEXT1
+  +--> ?PR?_SEND1BYTE?TEXT1
+  +--> ?PR?STOP_IIC?TEXT1
+
+
+
+SYMBOL TABLE OF MODULE:  iic (TEXT1)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+BL51 BANKED LINKER/LOCATER V6.00                                                      07/11/2009  00:17:17  PAGE 2
+
+
+
+  -------         MODULE        TEXT1
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  C:0003H         PUBLIC        _readnbyte
+  C:0078H         PUBLIC        main
+  D:0008H         PUBLIC        tab
+  C:00C3H         PUBLIC        start_iic
+  B:0090H.7       PUBLIC        SDA
+  C:00CDH         PUBLIC        stop_iic
+  B:0090H.6       PUBLIC        SCL
+  C:0092H         PUBLIC        _delay
+  C:004EH         PUBLIC        _send1byte
+  -------         PROC          MAIN
+  C:0078H         LINE#         16
+  C:0078H         LINE#         17
+  C:0078H         LINE#         19
+  C:007BH         LINE#         20
+  C:0083H         LINE#         21
+  C:0083H         LINE#         22
+  C:0088H         LINE#         23
+  C:008DH         LINE#         24
+  C:008DH         LINE#         25
+  C:0090H         LINE#         27
+  C:0090H         LINE#         28
+  C:0090H         LINE#         29
+  -------         ENDPROC       MAIN
+  -------         PROC          START_IIC
+  C:00C3H         LINE#         31
+  C:00C3H         LINE#         32
+  C:00C3H         LINE#         33
+  C:00C5H         LINE#         34
+  C:00C7H         LINE#         35
+  C:00C9H         LINE#         36
+  C:00CAH         LINE#         37
+  C:00CCH         LINE#         38
+  -------         ENDPROC       START_IIC
+  -------         PROC          STOP_IIC
+  C:00CDH         LINE#         39
+  C:00CDH         LINE#         40
+  C:00CDH         LINE#         41
+  C:00CFH         LINE#         42
+  C:00D1H         LINE#         43
+  C:00D3H         LINE#         44
+  C:00D4H         LINE#         45
+  C:00D6H         LINE#         46
+  -------         ENDPROC       STOP_IIC
+  -------         PROC          _SEND1BYTE
+  D:0007H         SYMBOL        b
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:004EH         LINE#         47
+  C:004EH         LINE#         48
+  C:004EH         LINE#         50
+  C:0050H         LINE#         51
+  C:0050H         LINE#         52
+BL51 BANKED LINKER/LOCATER V6.00                                                      07/11/2009  00:17:17  PAGE 3
+
+
+  C:0052H         LINE#         53
+  C:0056H         LINE#         54
+  C:0056H         LINE#         55
+  C:0058H         LINE#         56
+  C:005AH         LINE#         58
+  C:005AH         LINE#         59
+  C:005CH         LINE#         60
+  C:005CH         LINE#         61
+  C:005EH         LINE#         62
+  C:005FH         LINE#         63
+  C:0063H         LINE#         64
+  C:0067H         LINE#         65
+  C:0069H         LINE#         66
+  C:006AH         LINE#         67
+  C:006CH         LINE#         68
+  C:006DH         LINE#         69
+  C:006FH         LINE#         70
+  C:0072H         LINE#         71
+  C:0072H         LINE#         72
+  C:0075H         LINE#         73
+  C:0075H         LINE#         75
+  C:0077H         LINE#         76
+  -------         ENDPROC       _SEND1BYTE
+  -------         PROC          _READNBYTE
+  D:0012H         SYMBOL        d
+  D:0005H         SYMBOL        n
+  -------         DO            
+  D:0006H         SYMBOL        i
+  D:0007H         SYMBOL        t
+  -------         ENDDO         
+  C:0003H         LINE#         77
+  C:0009H         LINE#         78
+  C:0009H         LINE#         80
+  C:000FH         LINE#         81
+  C:000FH         LINE#         82
+  C:0011H         LINE#         83
+  C:0012H         LINE#         84
+  C:0012H         LINE#         85
+  C:0016H         LINE#         86
+  C:0018H         LINE#         87
+  C:0019H         LINE#         88
+  C:001BH         LINE#         89
+  C:001CH         LINE#         90
+  C:001FH         LINE#         91
+  C:001FH         LINE#         92
+  C:0022H         LINE#         93
+  C:0022H         LINE#         94
+  C:0026H         LINE#         95
+  C:0038H         LINE#         96
+  C:003BH         LINE#         97
+  C:003BH         LINE#         98
+  C:003DH         LINE#         99
+  C:003FH         LINE#         100
+  C:003FH         LINE#         101
+  C:003FH         LINE#         102
+  C:003FH         LINE#         103
+  C:0041H         LINE#         105
+BL51 BANKED LINKER/LOCATER V6.00                                                      07/11/2009  00:17:17  PAGE 4
+
+
+  C:0041H         LINE#         106
+  C:0043H         LINE#         107
+  C:0045H         LINE#         108
+  C:0047H         LINE#         109
+  C:0049H         LINE#         110
+  C:004BH         LINE#         111
+  C:004BH         LINE#         112
+  C:004DH         LINE#         115
+  -------         ENDPROC       _READNBYTE
+  -------         PROC          _DELAY
+  D:0007H         SYMBOL        i
+  -------         DO            
+  D:0006H         SYMBOL        j
+  D:0005H         SYMBOL        k
+  -------         ENDDO         
+  C:0092H         LINE#         117
+  C:0092H         LINE#         118
+  C:0092H         LINE#         120
+  C:0098H         LINE#         121
+  C:0098H         LINE#         122
+  C:009DH         LINE#         123
+  C:00A4H         LINE#         124
+  C:00A4H         LINE#         125
+  -------         ENDPROC       _DELAY
+  -------         ENDMOD        TEXT1
+
+  -------         MODULE        ?C?CSTPTR
+  C:00A5H         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_READNBYTE?TEXT1
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY?TEXT1
+
+Program Size: data=22.0 xdata=0 code=215
+LINK/LOCATE RUN COMPLETE.  2 WARNING(S),  0 ERROR(S)

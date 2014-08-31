@@ -1,0 +1,379 @@
+; .\Text1.SRC generated from: Text1.c
+; COMPILER INVOKED BY:
+;        C:\Keil\C51\BIN\C51.EXE Text1.c LARGE BROWSE DEBUG OBJECTEXTEND SRC(.\Text1.SRC)
+
+$NOMOD51
+
+NAME	TEXT1
+
+P0	DATA	080H
+P1	DATA	090H
+P2	DATA	0A0H
+P3	DATA	0B0H
+T0	BIT	0B0H.4
+AC	BIT	0D0H.6
+T1	BIT	0B0H.5
+EA	BIT	0A8H.7
+IE	DATA	0A8H
+RD	BIT	0B0H.7
+ES	BIT	0A8H.4
+IP	DATA	0B8H
+RI	BIT	098H.0
+INT0	BIT	0B0H.2
+CY	BIT	0D0H.7
+TI	BIT	098H.1
+INT1	BIT	0B0H.3
+SFAH	DATA	0B4H
+SFCF	DATA	0B1H
+PS	BIT	0B8H.4
+SP	DATA	081H
+OV	BIT	0D0H.2
+SFAL	DATA	0B3H
+WR	BIT	0B0H.6
+SFCM	DATA	0B2H
+SBUF	DATA	099H
+PCON	DATA	087H
+SFDT	DATA	0B5H
+WDTC	DATA	0C0H
+WDTD	DATA	085H
+SCON	DATA	098H
+TMOD	DATA	089H
+TCON	DATA	088H
+IE0	BIT	088H.1
+IE1	BIT	088H.3
+SFST	DATA	0B6H
+B	DATA	0F0H
+ACC	DATA	0E0H
+ET0	BIT	0A8H.1
+ET1	BIT	0A8H.3
+TF0	BIT	088H.5
+TF1	BIT	088H.7
+RB8	BIT	098H.2
+TH0	DATA	08CH
+EX0	BIT	0A8H.0
+IT0	BIT	088H.0
+TH1	DATA	08DH
+TB8	BIT	098H.3
+EX1	BIT	0A8H.2
+IT1	BIT	088H.2
+P	BIT	0D0H.0
+SM0	BIT	098H.7
+TL0	DATA	08AH
+SM1	BIT	098H.6
+TL1	DATA	08BH
+SM2	BIT	098H.5
+PT0	BIT	0B8H.1
+PT1	BIT	0B8H.3
+RS0	BIT	0D0H.3
+TR0	BIT	088H.4
+RS1	BIT	0D0H.4
+TR1	BIT	088H.6
+PX0	BIT	0B8H.0
+PX1	BIT	0B8H.2
+DPH	DATA	083H
+DPL	DATA	082H
+REN	BIT	098H.4
+RXD	BIT	0B0H.0
+TXD	BIT	0B0H.1
+F0	BIT	0D0H.5
+PSW	DATA	0D0H
+?PR?main?TEXT1       SEGMENT CODE 
+?XD?main?TEXT1       SEGMENT XDATA OVERLAYABLE 
+?PR?_delay?TEXT1     SEGMENT CODE 
+?C_INITSEG           SEGMENT CODE 
+?CO?TEXT1            SEGMENT CODE 
+?XD?TEXT1            SEGMENT XDATA 
+	EXTRN	CODE (_byte_verify)
+	EXTRN	CODE (error)
+	EXTRN	CODE (show)
+	EXTRN	CODE (_sector_erase)
+	EXTRN	CODE (_byte_program)
+	EXTRN	CODE (?C_STARTUP)
+	PUBLIC	buffer
+	PUBLIC	BLK1_DST_ADDR
+	PUBLIC	SECT_SIZE
+	PUBLIC	ErrorCode
+	PUBLIC	tab
+	PUBLIC	_delay
+	PUBLIC	main
+
+	RSEG  ?XD?main?TEXT1
+?main?BYTE:
+   destAddr?040:   DS   2
+	ORG  2
+    byteCnt?041:   DS   1
+	ORG  3
+   origData?042:   DS   1
+
+	RSEG  ?XD?TEXT1
+      ErrorCode:   DS   1
+      SECT_SIZE:   DS   1
+  BLK1_DST_ADDR:   DS   2
+         buffer:   DS   4
+
+	RSEG  ?CO?TEXT1
+tab:
+	DB	0FCH
+	DB	060H
+	DB	0DAH
+	DB	0F2H
+	DB	066H
+	DB	0B6H
+	DB	0BEH
+	DB	0E0H
+	DB	0FEH
+	DB	0F6H
+	DB	0EEH
+	DB	03EH
+	DB	09CH
+	DB	07AH
+	DB	09EH
+	DB	08EH
+
+
+	RSEG  ?C_INITSEG
+	DB	042H
+	DW	BLK1_DST_ADDR
+	DW	01000H
+
+	DB	041H
+	DW	SECT_SIZE
+	DB	080H
+
+	DB	044H
+	DW	buffer
+	DB	000H
+	DB	000H
+	DB	000H
+	DB	000H
+
+; #include <reg51.h>
+; sfr WDTD=0x85;
+; sfr WDTC=0xc0;
+; sfr SFCF=0xb1;
+; sfr SFCM=0xb2;
+; sfr SFAL=0xb3;
+; sfr SFAH=0xb4;
+; sfr SFDT=0xb5;
+; sfr SFST=0xb6;
+; #define SFCM_SE 0x0b
+; #define SFCM_VB 0x0c
+; #define SFCM_PB 0x0e
+; 
+; const unsigned short int BLK1_DST_ADDR=0x1000;
+; const unsigned char SECT_SIZE=0x80;
+; unsigned char ErrorCode;
+; 
+; #include<stdio.h>
+; 
+; #define uchar unsigned char
+; #define uint  unsigned int
+; #define LOWBYTE(v)  ((unsigned char)(v))
+; #define HIGHBYTE(v)  ((unsigned char)(((unsigned int)(v))>>8))
+; /**************************************************************************************************************************
+; 数码管控制：P0.0~P0.3控制位选，低电平有效；
+; 			P2.0~P2.7控制段选，低电平有效；
+; 			注意P2口线序反向，即数据0b10111100------》0b00111101
+; **************************************************************************************************************************/
+; unsigned char code tab[]={0xfc,0x60,0xda,0xf2,0x66,0xb6,0xbe,0xe0,0xfe,0xf6,0xee,0x3e,0x9c,0x7a,0x9e,0x8e};
+; unsigned char buffer[4]={0,0,0,0};
+; 
+; void delay(unsigned char i);
+; void show(void);
+; void byte_program(unsigned short int dataAddr,unsigned char dataByte);
+; unsigned char byte_verify(unsigned short int dataAddr);
+; void sector_erase(unsigned short int dataAddr);
+; int ready();
+; void error();
+; void main(void)
+
+	RSEG  ?PR?main?TEXT1
+main:
+	USING	0
+			; SOURCE LINE # 39
+; {
+			; SOURCE LINE # 40
+; 	unsigned int destAddr=BLK1_DST_ADDR;
+			; SOURCE LINE # 41
+	MOV  	DPTR,#BLK1_DST_ADDR
+	MOVX 	A,@DPTR
+	MOV  	R6,A
+	INC  	DPTR
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	MOV  	DPTR,#destAddr?040
+	MOV  	A,R6
+	MOVX 	@DPTR,A
+	INC  	DPTR
+	MOV  	A,R7
+	MOVX 	@DPTR,A
+; 	unsigned char byteCnt;
+; 	unsigned char origData;
+; 	unsigned char verifyData;
+; 	WDTC=0;
+			; SOURCE LINE # 45
+	CLR  	A
+	MOV  	WDTC,A
+; 	sector_erase(destAddr);
+			; SOURCE LINE # 46
+	LCALL	_sector_erase
+; 	origData=0;
+			; SOURCE LINE # 47
+	CLR  	A
+	MOV  	DPTR,#origData?042
+	MOVX 	@DPTR,A
+; 	for(byteCnt=0;byteCnt<SECT_SIZE;byteCnt++)
+			; SOURCE LINE # 48
+	MOV  	DPTR,#byteCnt?041
+	MOVX 	@DPTR,A
+?C0001:
+	MOV  	DPTR,#SECT_SIZE
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	MOV  	DPTR,#byteCnt?041
+	MOVX 	A,@DPTR
+	CLR  	C
+	SUBB 	A,R7
+	JNC  	?C0002
+; 	{
+			; SOURCE LINE # 49
+; 		byte_program(destAddr,origData);
+			; SOURCE LINE # 50
+	MOV  	DPTR,#destAddr?040
+	MOVX 	A,@DPTR
+	MOV  	R6,A
+	INC  	DPTR
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	MOV  	DPTR,#origData?042
+	MOVX 	A,@DPTR
+	MOV  	R5,A
+	LCALL	_byte_program
+; 		verifyData=byte_verify(destAddr);
+			; SOURCE LINE # 51
+	MOV  	DPTR,#destAddr?040
+	MOVX 	A,@DPTR
+	MOV  	R6,A
+	INC  	DPTR
+	MOVX 	A,@DPTR
+	MOV  	R7,A
+	LCALL	_byte_verify
+;---- Variable 'verifyData?043' assigned to Register 'R7' ----
+; 		if(verifyData!=origData)
+			; SOURCE LINE # 52
+	MOV  	DPTR,#origData?042
+	MOVX 	A,@DPTR
+	XRL  	A,R7
+	JZ   	?C0004
+; 		{
+			; SOURCE LINE # 53
+; 			error();
+			; SOURCE LINE # 54
+	LCALL	error
+; 		}
+			; SOURCE LINE # 55
+?C0004:
+; 		destAddr++;
+			; SOURCE LINE # 56
+	MOV  	DPTR,#destAddr?040+01H
+	MOVX 	A,@DPTR
+	INC  	A
+	MOVX 	@DPTR,A
+	JNZ  	?C0017
+	MOV  	DPTR,#destAddr?040
+	MOVX 	A,@DPTR
+	INC  	A
+	MOVX 	@DPTR,A
+?C0017:
+; 		origData++;
+			; SOURCE LINE # 57
+	MOV  	DPTR,#origData?042
+	MOVX 	A,@DPTR
+	INC  	A
+	MOVX 	@DPTR,A
+; 	}
+			; SOURCE LINE # 58
+	MOV  	DPTR,#byteCnt?041
+	MOVX 	A,@DPTR
+	INC  	A
+	MOVX 	@DPTR,A
+	SJMP 	?C0001
+?C0002:
+; 	ErrorCode=0;
+			; SOURCE LINE # 59
+	CLR  	A
+	MOV  	DPTR,#ErrorCode
+	MOVX 	@DPTR,A
+?C0005:
+; 
+; 	while(1)
+			; SOURCE LINE # 61
+; 	{
+			; SOURCE LINE # 62
+; 		buffer[2]=byte_verify(BLK1_DST_ADDR+3);
+			; SOURCE LINE # 63
+	MOV  	DPTR,#BLK1_DST_ADDR+01H
+	MOVX 	A,@DPTR
+	ADD  	A,#03H
+	MOV  	R7,A
+	MOV  	DPTR,#BLK1_DST_ADDR
+	MOVX 	A,@DPTR
+	ADDC 	A,#00H
+	MOV  	R6,A
+	LCALL	_byte_verify
+	MOV  	DPTR,#buffer+02H
+	MOV  	A,R7
+	MOVX 	@DPTR,A
+; 		show();
+			; SOURCE LINE # 64
+	LCALL	show
+; 	}
+			; SOURCE LINE # 65
+	SJMP 	?C0005
+; END OF main
+
+; }
+; void delay(unsigned char i)
+
+	RSEG  ?PR?_delay?TEXT1
+_delay:
+	USING	0
+			; SOURCE LINE # 67
+;---- Variable 'j?145' assigned to Register 'R6' ----
+;---- Variable 'i?144' assigned to Register 'R7' ----
+; {
+			; SOURCE LINE # 68
+?C0008:
+; 	unsigned char j,k;
+; 	while(i--)
+			; SOURCE LINE # 70
+	MOV  	R5,AR7
+	DEC  	R7
+	MOV  	A,R5
+	JZ   	?C0016
+; 	{
+			; SOURCE LINE # 71
+; 		for(j=20;j;j--)
+			; SOURCE LINE # 72
+	MOV  	R6,#014H
+?C0010:
+	MOV  	A,R6
+	JZ   	?C0008
+; 		for(k=10;k;k--);
+			; SOURCE LINE # 73
+;---- Variable 'k?146' assigned to Register 'R5' ----
+	MOV  	R5,#0AH
+?C0013:
+	DJNZ 	R5,?C0013
+?C0012:
+	DEC  	R6
+	SJMP 	?C0010
+; 	}
+			; SOURCE LINE # 74
+; }
+			; SOURCE LINE # 75
+?C0016:
+	RET  	
+; END OF _delay
+
+	END

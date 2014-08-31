@@ -1,0 +1,103 @@
+C51 COMPILER V8.02   TEXT1                                                                 07/07/2011 16:42:19 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "serial.h"
+   3          
+   4          sbit SCK_7705=P2^0;
+   5          sbit DIN_7705=P2^1;
+   6          sbit DOUT_7705=P2^2;
+   7          sbit DRDY_7705=P2^3;
+   8          
+   9          
+  10          
+  11          
+  12          unsigned char buffer[8]={7,8,9,3,3,2,1,0};
+  13          
+  14          /***************************************
+  15          AD7705SPI接口信息：
+  16          8位，MSB在先；
+  17          SCK空闲为高，上升沿采样
+  18          ***************************************/
+  19          unsigned char spi_rwbyte(unsigned char d)
+  20          {
+  21   1              unsigned char i;
+  22   1              for(i=0;i<8;i++)
+  23   1              {
+  24   2                      SCK_7705=0;
+  25   2                      (d&0x80)?(DIN_7705=1):(DIN_7705=0);
+  26   2                      d<<=1;          
+  27   2                      SCK_7705=1;
+  28   2                      (DOUT_7705)?(d++):(d+=0);               
+  29   2              }
+  30   1              return d;
+  31   1      }
+  32          void init_spi(void)
+  33          {
+  34   1              SCK_7705=1;
+  35   1              DIN_7705=1;
+  36   1              DOUT_7705=1;
+  37   1              DRDY_7705=1;
+  38   1      }
+  39          
+  40          #define RESET_AD7705()  {spi_rwbyte(0xff);spi_rwbyte(0xff);spi_rwbyte(0xff);spi_rwbyte(0xff);}
+  41          
+  42          void delay_ms(unsigned int k)
+  43          {
+  44   1              unsigned char i,j;
+  45   1              for(;k;k--)
+  46   1              for(i=20;i;i--)
+  47   1              for(j=100;j;j--);
+  48   1      }
+  49          void init_ad7705(void)
+  50          {
+  51   1              init_spi();
+  52   1              RESET_AD7705();
+  53   1              spi_rwbyte(0x20);//写Clock寄存器
+  54   1              spi_rwbyte(0x00);//写0到ZERO，CLKOUT禁止，CLKDIV=1，更新率100Hz
+  55   1              spi_rwbyte(0x10);//写Setup寄存器
+C51 COMPILER V8.02   TEXT1                                                                 07/07/2011 16:42:19 PAGE 2   
+
+  56   1              spi_rwbyte(0x22);//普通模式，增益16，双极性，带缓冲，滤波器同步=0
+  57   1      }
+  58          
+  59          void main(void)
+  60          {
+  61   1              unsigned char tmp;
+  62   1              unsigned int advalue=0;
+  63   1              P0=0x55;
+  64   1              rs232_init();
+  65   1              rs232_printstr("Hello\r\n");
+  66   1              init_ad7705();
+  67   1              while(1)
+  68   1              {
+  69   2                      while(DRDY_7705);
+  70   2                      spi_rwbyte(0x38);
+  71   2                      tmp=spi_rwbyte(0x00);
+  72   2                      rs232_putchar(tmp);
+  73   2                      tmp=spi_rwbyte(0x00);
+  74   2                      rs232_putchar(tmp);
+  75   2                      init_ad7705();
+  76   2      //              delay_ms(200);
+  77   2              }
+  78   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    152    ----
+   CONSTANT SIZE    =      8    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

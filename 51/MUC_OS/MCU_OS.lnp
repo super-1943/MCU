@@ -1,0 +1,16 @@
+"MCU_OS.obj",
+"OS_CPU_C.obj",
+"STARTUP.obj",
+"OS_CPU_A.obj",
+".\OS_FLAG.obj",
+".\OS_MBOX.obj",
+".\OS_MEM.obj",
+".\OS_MUTEX.obj",
+".\OS_Q.obj",
+".\OS_SEM.obj",
+".\OS_TASK.obj",
+".\OS_TIME.obj",
+".\OS_CORE.obj" 
+TO "MCU_OS" 
+RAMSIZE(256) 
+XDATA( 0X0000-0X7FFE )

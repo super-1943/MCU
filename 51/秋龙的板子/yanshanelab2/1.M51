@@ -1,0 +1,292 @@
+BL51 BANKED LINKER/LOCATER V6.00                                                        09/19/2009  11:39:05  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.00, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE Text1.obj TO 1 RTX51 RAMSIZE (256) CODE (0X0000-0XFFFF)
+
+
+MEMORY MODEL: LARGE
+
+
+INPUT MODULES INCLUDED:
+  Text1.obj (TEXT1)
+  C:\KEIL\C51\LIB\C51L.LIB (?C_STARTUP)
+  C:\KEIL\C51\LIB\C51L.LIB (?C?UIDIV)
+  C:\KEIL\C51\LIB\C51L.LIB (?C?ULCMP)
+  C:\KEIL\C51\LIB\C51L.LIB (?C?LSTXDATA)
+  C:\KEIL\C51\LIB\C51L.LIB (?C?LSTKXDATA)
+  C:\KEIL\C51\LIB\C51L.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  1 (TEXT1)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            IDATA   0008H     0001H     UNIT         ?STACK
+
+            * * * * * * *  X D A T A   M E M O R Y  * * * * * * *
+            XDATA   0000H     0008H     UNIT         ?XD?TEXT1
+            XDATA   0008H     0004H     UNIT         ?XD?READY?TEXT1
+            XDATA   000CH     0002H     UNIT         _XDATA_GROUP_
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     00A3H     UNIT         ?C?LIB_CODE
+            CODE    00A6H     008CH     UNIT         ?C_C51STARTUP
+            CODE    0132H     005FH     UNIT         ?PR?READY?TEXT1
+            CODE    0191H     0051H     UNIT         ?PR?_SHOW?TEXT1
+            CODE    01E2H     0031H     UNIT         ?PR?MAIN?TEXT1
+            CODE    0213H     0020H     UNIT         ?PR?_BYTE_PROGRAM?TEXT1
+            CODE    0233H     001DH     UNIT         ?PR?_DELAY?TEXT1
+            CODE    0250H     001CH     UNIT         ?PR?_SECTOR_ERASE?TEXT1
+            CODE    026CH     001AH     UNIT         ?PR?_BYTE_VERIFY?TEXT1
+            CODE    0286H     0011H     UNIT         ?C_INITSEG
+            CODE    0297H     0010H     UNIT         ?CO?TEXT1
+            CODE    02A7H     000FH     UNIT         ?PR?ERROR?TEXT1
+
+
+
+OVERLAY MAP OF MODULE:   1 (TEXT1)
+
+
+SEGMENT                           XDATA_GROUP
+  +--> CALLED SEGMENT           START    LENGTH
+-----------------------------------------------
+?C_C51STARTUP                   -----    -----
+  +--> ?PR?MAIN?TEXT1
+  +--> ?C_INITSEG
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/19/2009  11:39:05  PAGE 2
+
+
+
+?PR?MAIN?TEXT1                  000CH    0002H
+  +--> ?PR?_SHOW?TEXT1
+  +--> ?PR?_DELAY?TEXT1
+
+?PR?_SHOW?TEXT1                 -----    -----
+  +--> ?PR?_DELAY?TEXT1
+  +--> ?CO?TEXT1
+
+?PR?_DELAY?TEXT1                -----    -----
+  +--> ?CO?TEXT1
+
+
+
+SYMBOL TABLE OF MODULE:  1 (TEXT1)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        TEXT1
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  X:0000H         PUBLIC        ErrorCode
+  C:026CH         PUBLIC        _byte_verify
+  C:0132H         PUBLIC        ready
+  C:0191H         PUBLIC        _show
+  D:00B4H         PUBLIC        SFAH
+  D:00B1H         PUBLIC        SFCF
+  C:01E2H         PUBLIC        main
+  D:00B3H         PUBLIC        SFAL
+  D:00B2H         PUBLIC        SFCM
+  C:02A7H         PUBLIC        error
+  D:00B5H         PUBLIC        SFDT
+  C:0297H         PUBLIC        tab
+  D:00B6H         PUBLIC        SFST
+  X:0001H         PUBLIC        SECT_SIZE
+  X:0002H         PUBLIC        BLK1_DST_ADDR
+  C:0250H         PUBLIC        _sector_erase
+  C:023DH         PUBLIC        _delay
+  C:0213H         PUBLIC        _byte_program
+  X:0004H         PUBLIC        buffer
+  -------         PROC          MAIN
+  -------         DO            
+  X:000CH         SYMBOL        i
+  -------         ENDDO         
+  C:01E2H         LINE#         34
+  C:01E2H         LINE#         35
+  C:01E2H         LINE#         57
+  C:01E9H         LINE#         58
+  C:01EBH         LINE#         59
+  C:01EDH         LINE#         60
+  C:01F0H         LINE#         61
+  C:01F3H         LINE#         62
+  C:01F3H         LINE#         63
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/19/2009  11:39:05  PAGE 3
+
+
+  C:01F3H         LINE#         64
+  C:0201H         LINE#         65
+  C:020CH         LINE#         66
+  C:0211H         LINE#         67
+  -------         ENDPROC       MAIN
+  C:0233H         SYMBOL        L?0028
+  -------         PROC          L?0027
+  -------         ENDPROC       L?0027
+  C:0233H         SYMBOL        L?0028
+  -------         PROC          _DELAY
+  D:0007H         SYMBOL        i
+  -------         DO            
+  D:0006H         SYMBOL        j
+  D:0005H         SYMBOL        k
+  -------         ENDDO         
+  C:023DH         LINE#         69
+  C:023DH         LINE#         70
+  C:023DH         LINE#         72
+  C:0243H         LINE#         73
+  C:0243H         LINE#         74
+  C:0248H         LINE#         75
+  C:024FH         LINE#         76
+  C:024FH         LINE#         77
+  -------         ENDPROC       _DELAY
+  -------         PROC          _SHOW
+  D:0006H         SYMBOL        i
+  C:0191H         LINE#         78
+  C:0191H         LINE#         79
+  C:0191H         LINE#         80
+  C:0196H         LINE#         81
+  C:019CH         LINE#         82
+  C:01A0H         LINE#         83
+  C:01A7H         LINE#         84
+  C:01AAH         LINE#         85
+  C:01B1H         LINE#         86
+  C:01B4H         LINE#         87
+  C:01B7H         LINE#         88
+  C:01BAH         LINE#         89
+  C:01BDH         LINE#         90
+  C:01C0H         LINE#         91
+  C:01C3H         LINE#         92
+  C:01C6H         LINE#         93
+  C:01C9H         LINE#         94
+  C:01CCH         LINE#         95
+  C:01CFH         LINE#         96
+  C:01D2H         LINE#         97
+  C:01DDH         LINE#         98
+  -------         ENDPROC       _SHOW
+  -------         PROC          _SECTOR_ERASE
+  D:0006H         SYMBOL        dataAddr
+  -------         DO            
+  D:0004H         SYMBOL        destAddr
+  -------         ENDDO         
+  C:0250H         LINE#         101
+  C:0250H         LINE#         102
+  C:0250H         LINE#         103
+  C:0254H         LINE#         104
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/19/2009  11:39:05  PAGE 4
+
+
+  C:0257H         LINE#         105
+  C:025AH         LINE#         106
+  C:025EH         LINE#         107
+  C:0261H         LINE#         108
+  C:0268H         LINE#         109
+  C:026BH         LINE#         110
+  -------         ENDPROC       _SECTOR_ERASE
+  -------         PROC          _BYTE_PROGRAM
+  D:0006H         SYMBOL        dataAddr
+  D:0005H         SYMBOL        dataByte
+  -------         DO            
+  D:0002H         SYMBOL        destAddr
+  -------         ENDDO         
+  C:0213H         LINE#         112
+  C:0213H         LINE#         113
+  C:0213H         LINE#         114
+  C:0217H         LINE#         115
+  C:021AH         LINE#         116
+  C:021DH         LINE#         117
+  C:0221H         LINE#         118
+  C:0225H         LINE#         119
+  C:0228H         LINE#         120
+  C:022FH         LINE#         121
+  C:0232H         LINE#         122
+  -------         ENDPROC       _BYTE_PROGRAM
+  -------         PROC          _BYTE_VERIFY
+  D:0006H         SYMBOL        dataAddr
+  -------         DO            
+  D:0004H         SYMBOL        destAddr
+  D:0007H         SYMBOL        readByte
+  -------         ENDDO         
+  C:026CH         LINE#         124
+  C:026CH         LINE#         125
+  C:026CH         LINE#         126
+  C:0270H         LINE#         128
+  C:0273H         LINE#         129
+  C:0276H         LINE#         130
+  C:027AH         LINE#         131
+  C:027DH         LINE#         132
+  C:027FH         LINE#         134
+  C:0282H         LINE#         135
+  C:0285H         LINE#         136
+  C:0285H         LINE#         137
+  -------         ENDPROC       _BYTE_VERIFY
+  -------         PROC          READY
+  -------         DO            
+  X:0008H         SYMBOL        TimeOut
+  -------         ENDDO         
+  C:0132H         LINE#         139
+  C:0132H         LINE#         140
+  C:0132H         LINE#         141
+  C:013CH         LINE#         143
+  C:0158H         LINE#         144
+  C:0158H         LINE#         145
+  C:015DH         LINE#         146
+  C:015DH         LINE#         147
+  C:0160H         LINE#         148
+BL51 BANKED LINKER/LOCATER V6.00                                                      09/19/2009  11:39:05  PAGE 5
+
+
+  C:0163H         LINE#         149
+  C:0167H         LINE#         150
+  C:0167H         LINE#         151
+  C:0186H         LINE#         152
+  C:0188H         LINE#         153
+  C:018BH         LINE#         154
+  C:018EH         LINE#         155
+  C:0190H         LINE#         156
+  -------         ENDPROC       READY
+  -------         PROC          ERROR
+  C:02A7H         LINE#         158
+  C:02A7H         LINE#         159
+  C:02A7H         LINE#         160
+  C:02ADH         LINE#         161
+  C:02B1H         LINE#         162
+  C:02B1H         LINE#         163
+  C:02B1H         LINE#         164
+  C:02B4H         LINE#         165
+  -------         ENDPROC       ERROR
+  -------         ENDMOD        TEXT1
+
+  -------         MODULE        ?C?UIDIV
+  C:0003H         PUBLIC        ?C?UIDIV
+  -------         ENDMOD        ?C?UIDIV
+
+  -------         MODULE        ?C?ULCMP
+  C:0058H         PUBLIC        ?C?ULCMP
+  -------         ENDMOD        ?C?ULCMP
+
+  -------         MODULE        ?C?LSTXDATA
+  C:0069H         PUBLIC        ?C?LSTXDATA
+  -------         ENDMOD        ?C?LSTXDATA
+
+  -------         MODULE        ?C?LSTKXDATA
+  C:0075H         PUBLIC        ?C?LSTKXDATA
+  -------         ENDMOD        ?C?LSTKXDATA
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SECTOR_ERASE?TEXT1
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_PROGRAM?TEXT1
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_BYTE_VERIFY?TEXT1
+
+Program Size: data=9.0 xdata=14 code=694
+LINK/LOCATE RUN COMPLETE.  3 WARNING(S),  0 ERROR(S)

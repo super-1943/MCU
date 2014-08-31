@@ -1,0 +1,58 @@
+C51 COMPILER V7.06   TEXT1                                                                 10/12/2009 15:43:04 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: D:\keil c51\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg51.h>
+   2          #include <intrins.h>
+   3          sbit data_240=P1^0;
+   4          sbit clk_240=P1^1;
+   5          sbit clk_320=P1^2;
+   6          void delay(void)
+   7          {
+   8   1              unsigned char i,j;
+   9   1              for(i=0;i<100;i++)
+  10   1              for(j=200;j;j++);
+  11   1      }
+  12          void main(void)
+  13          {
+  14   1              unsigned char i,j;
+  15   1              P1=0x00;
+  16   1              P2=0x00;
+  17   1              while(1)
+  18   1              {
+  19   2                      for(j=0;j<240;j++)
+  20   2                      {
+  21   3                              data_240=1;
+  22   3                              clk_240=1;
+  23   3                              for(i=0;i<80;i++)
+  24   3                              {
+  25   4                                      clk_320=1;
+  26   4                                      P2=0x55;
+  27   4                                      clk_320=0;
+  28   4                                      _nop_();
+  29   4                              }
+  30   3                              clk_240=0;
+  31   3                              _nop_();
+  32   3                      }
+  33   2                      delay();
+  34   2              }
+  35   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     50    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

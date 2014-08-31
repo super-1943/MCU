@@ -1,0 +1,134 @@
+A51 MACRO ASSEMBLER  TEXT1                                                                01/26/2009 19:52:59 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN Text1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE Text1.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ;begin
+                       2     
+                       3     public WriteLCDCommand,WriteLCDData,InitLCD,ClearLCD,GotoxyLCD,DisplayLCDString
+                       4     
+  00A2                 5     E bit P2.2
+  00A1                 6     RW bit P2.1
+  00A0                 7     RS bit P2.0
+                       8     
+  0090                 9     LCDPORT EQU P1
+  0030                10     LCDX EQU 30H
+  0031                11     LCDY EQU 31H
+                      12     ;
+                      13     DE segment code ;       定义DE段为再定位程序段
+                      14     
+----                  15     RSEG DE;                        选择DE段为当前段
+                      16     
+0000                  17     WriteLCDCommand:
+0000 C2A1             18             clr RW;
+0002 C2A0             19             clr RS;
+0004 D2A2             20             SETB E
+0006 F590             21             mov LCDPORT,A;
+0008 D2A2             22             setb E;
+000A 120000   F       23             call Delay;
+000D C2A2             24             clr E;
+000F 22               25             RET
+                      26             
+0010                  27     WriteLCDData:
+0010 C2A1             28             clr RW;
+0012 D2A0             29             setb RS;
+0014 D2A2             30             setb E;
+0016 F590             31             mov LCDPORT,A;
+0018 D2A2             32             setb E;
+001A 120000   F       33             call Delay;
+001D C2A2             34             clr E;
+001F 22               35             ret;
+                      36             
+0020                  37     InitLCD:
+0020 7438             38             mov a,#38H;
+0022 120000   F       39             call WriteLCDCommand;
+0025 740C             40             mov a,#00CH;
+0027 120000   F       41             call WriteLCDCommand;
+002A 7406             42             mov a,#06h
+002C 120000   F       43             call WriteLCDCommand;
+002F 22               44             ret;
+                      45             
+                      46             
+0030                  47     ClearLCD:
+0030 7401             48             mov a,#01h
+0032 120000   F       49             call WriteLCDCommand;
+0035 7402             50             mov a,#02h;
+0037 120000   F       51             call WriteLCDCommand;
+003A 22               52             ret;
+                      53     
+003B                  54     GotoxyLCD:
+003B E530             55             mov a,LCDX;
+003D B40109           56             cjne a,#1,NextLine;
+0040 7480             57             mov a,#80h;
+0042 2531             58             add a,LCDY;
+A51 MACRO ASSEMBLER  TEXT1                                                                01/26/2009 19:52:59 PAGE     2
+
+0044 120000   F       59             call WriteLCDCommand;
+0047 8007             60             sjmp RETU
+0049                  61     NextLine:
+0049 74C0             62             mov a,#0c0h;
+004B 2531             63             add a,LCDY;
+004D 120000   F       64             call WriteLCDCommand;
+                      65     
+0050                  66     RETU:
+0050 22               67             ret;
+                      68             
+0051                  69     DisplayLCDString:
+0051 7800             70             mov r0,#0;
+0053                  71     NextData:
+0053 E8               72             mov a,r0;
+0054 93               73             movc a,@a+dptr;
+0055 120000   F       74             call WriteLCDData
+0058 08               75             inc r0;
+0059 D9F8             76             djnz r1,NextData;
+005B 22               77             ret;
+                      78     
+                      79     
+005C                  80     Delay:
+005C 7C14             81             mov r4,#20;
+005E                  82             loop:
+005E 7D30             83                     mov r5,#48;
+0060 DDFE             84                     djnz r5,$;
+0062 DCFA             85                     djnz r4,loop;
+0064 22               86             ret;
+                      87             
+                      88     END
+                             
+A51 MACRO ASSEMBLER  TEXT1                                                                01/26/2009 19:52:59 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+CLEARLCD . . . . .  C ADDR   0030H   R   SEG=DE
+DE . . . . . . . .  C SEG    0065H       REL=UNIT
+DELAY. . . . . . .  C ADDR   005CH   R   SEG=DE
+DISPLAYLCDSTRING .  C ADDR   0051H   R   SEG=DE
+E. . . . . . . . .  B ADDR   00A0H.2 A   
+GOTOXYLCD. . . . .  C ADDR   003BH   R   SEG=DE
+INITLCD. . . . . .  C ADDR   0020H   R   SEG=DE
+LCDPORT. . . . . .  D ADDR   0090H   A   
+LCDX . . . . . . .  N NUMB   0030H   A   
+LCDY . . . . . . .  N NUMB   0031H   A   
+LOOP . . . . . . .  C ADDR   005EH   R   SEG=DE
+NEXTDATA . . . . .  C ADDR   0053H   R   SEG=DE
+NEXTLINE . . . . .  C ADDR   0049H   R   SEG=DE
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+RETU . . . . . . .  C ADDR   0050H   R   SEG=DE
+RS . . . . . . . .  B ADDR   00A0H.0 A   
+RW . . . . . . . .  B ADDR   00A0H.1 A   
+WRITELCDCOMMAND. .  C ADDR   0000H   R   SEG=DE
+WRITELCDDATA . . .  C ADDR   0010H   R   SEG=DE
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

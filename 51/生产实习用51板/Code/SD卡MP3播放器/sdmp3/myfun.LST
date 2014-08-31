@@ -1,0 +1,108 @@
+C51 COMPILER V8.02   MYFUN                                                                 04/22/2011 18:12:39 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MYFUN
+OBJECT MODULE PLACED IN myfun.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE myfun.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "myfun.h"
+   2          #include "string.h"
+   3          
+   4          /*******************************************************
+   5          
+   6                  +------------------------------------+
+   7                  |振南电子 原创程序模块 公共函数部分  |
+   8                  +------------------------------------+
+   9          
+  10            此源码版权属 振南 全权享有，如欲引用，敬请署名并告知
+  11                  严禁随意用于商业目的，违者必究，后果自负
+  12                   振南电子 
+  13                       ->产品网站 http://www.znmcu.cn/
+  14                       ->产品论坛 http://bbs.znmcu.cn/
+  15                       ->产品网店 http://shop.znmcu.cn/
+  16                       ->产品咨询 QQ:987582714 MSN:yzn07@126.com
+  17                                  WW:yzn07                                  
+  18          ********************************************************/
+  19          
+  20          /******************************************************************
+  21           - 功能描述：延时函数
+  22           - 隶属模块：公开函数模块
+  23           - 函数属性：外部，用户可调用
+  24           - 参数说明：time:time值决定了延时的时间长短           
+  25           - 返回说明：无
+  26           - 注：.....
+  27           ******************************************************************/
+  28          
+  29          void delay(unsigned int time) 
+  30          {
+  31   1       while(time--);
+  32   1      }
+  33          
+  34          /******************************************************************
+  35           - 功能描述：将一个32位的变量dat转为字符串，比如把1234转为"1234"
+  36           - 隶属模块：公开函数模块
+  37           - 函数属性：外部，用户可调用
+  38           - 参数说明：dat:带转的long型的变量
+  39                       str:指向字符数组的指针，转换后的字节串放在其中           
+  40           - 返回说明：无
+  41           ******************************************************************/
+  42          
+  43          void u32tostr(unsigned long dat,char *str) 
+  44          {
+  45   1       char temp[20];
+  46   1       unsigned char i=0,j=0;
+  47   1       i=0;
+  48   1       while(dat)
+  49   1       {
+  50   2        temp[i]=dat%10+0x30;
+  51   2        i++;
+  52   2        dat/=10;
+  53   2       }
+  54   1       j=i;
+  55   1       for(i=0;i<j;i++)
+C51 COMPILER V8.02   MYFUN                                                                 04/22/2011 18:12:39 PAGE 2   
+
+  56   1       {
+  57   2        str[i]=temp[j-i-1];
+  58   2       }
+  59   1       if(!i) {str[i++]='0';}
+  60   1       str[i]=0;
+  61   1      }
+  62          
+  63          /******************************************************************
+  64           - 功能描述：将一个字符串转为32位的变量，比如"1234"转为1234
+  65           - 隶属模块：公开函数模块
+  66           - 函数属性：外部，用户可调用
+  67           - 参数说明：str:指向待转换的字符串           
+  68           - 返回说明：转换后的数值
+  69           ******************************************************************/
+  70          
+  71          unsigned long strtou32(char *str) 
+  72          {
+  73   1       unsigned long temp=0;
+  74   1       unsigned long fact=1;
+  75   1       unsigned char len=strlen(str);
+  76   1       unsigned char i;
+  77   1       for(i=len;i>0;i--)
+  78   1       {
+  79   2        temp+=((str[i-1]-0x30)*fact);
+  80   2        fact*=10;
+  81   2       }
+  82   1       return temp;
+  83   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    482    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      41
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,84 @@
+;                       F:\USB\Sample\Driver\CryptUSB.inf
+; 
+;        Created by GenINF. 
+; 
+; 
+ 
+ 
+ 
+[Version] 
+Signature = "$Windows NT$" 
+Class=USB
+ClassGUID={36fc9e60-c465-11cf-8056-444553540000} 
+Provider=%GoldenBits% 
+CatalogFile=CryptUSB.cat
+DriverVer= 9/27/2003
+
+[DestinationDirs] 
+USB_Encryption.Files.x86_12 = 12 
+
+[SourceDisksNames.x86]
+0=%Desc_x860%
+
+[SourceDisksNames.ia64]
+
+
+[SourceDisksFiles.x86]
+UsbCrypt.sys=0,, 
+
+[SourceDisksFiles.ia64]
+
+
+[Manufacturer] 
+%GoldenBits%=GoldenBits
+
+[GoldenBits]
+%USB_EncryptionDesc%=USB_Encryption_Inst,USB\VID_7055&PID_0100
+
+[USB_Encryption_Inst.ntx86] 
+CopyFiles = USB_Encryption.Files.x86_12 
+
+[USB_Encryption_Inst.ntx86.Services] 
+AddService = UsbCrypt,0x00000002,USB_Encryption_Service_Instx86, 
+
+[USB_Encryption_Service_Instx86] 
+ServiceType = %SERVICE_KERNEL_DRIVER% 
+StartType = %SERVICE_DEMAND_START% 
+ErrorControl = %SERVICE_ERROR_IGNORE% 
+ServiceBinary = %12%\UsbCrypt.sys 
+
+
+[USB_Encryption.Files.x86_12] 
+UsbCrypt.sys
+
+[USB_Encryption_EventLog_Inst] 
+AddReg = USB_Encryption_EventLog_Inst.AddReg 
+ 
+[USB_Encryption_EventLog_Inst.AddReg] 
+HKR,,EventMessageFile,%REG_EXPAND_SZ%,"%%SystemRoot%%\System32\IoLogMsg.dll" 
+HKR,,TypesSupported,%REG_DWORD%,7
+
+
+[Strings] 
+
+;  *******Localizable Strings******* 
+GoldenBits= "Golden Bits Software" 
+Desc_x860= "Golden Bits Software USBdrivers" 
+USB_EncryptionDesc= "GB Encryption" 
+
+;  *******Non Localizable Strings******* 
+
+SERVICE_BOOT_START = 0x0 
+SERVICE_SYSTEM_START = 0x1 
+SERVICE_AUTO_START = 0x2 
+SERVICE_DEMAND_START = 0x3 
+SERVICE_DISABLED = 0x4 
+
+SERVICE_KERNEL_DRIVER = 0x1 
+SERVICE_ERROR_IGNORE = 0x0 
+SERVICE_ERROR_NORMAL = 0x1 
+SERVICE_ERROR_SEVERE = 0x2 
+SERVICE_ERROR_CRITICAL = 0x3 
+
+REG_EXPAND_SZ = 0x00020000 
+REG_DWORD = 0x00010001 

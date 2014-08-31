@@ -1,0 +1,87 @@
+C51 COMPILER V8.02   TEXT1                                                                 12/12/2009 21:25:55 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          #include "uart.h"
+   3          #include "iic.h"
+   4          sbit led=P3^7;
+   5          
+   6          void delay(unsigned char t)
+   7          {
+   8   1              unsigned char i,j;
+   9   1              while(t--)
+  10   1              {
+  11   2                      for(i=200;i;i--)
+  12   2                      for(j=200;j;j--);
+  13   2              }
+  14   1      }
+  15          
+  16          void uart_isr(void) interrupt 4
+  17          {
+  18   1              if(RI)    //收到数据
+  19   1              {
+  20   2                      RI=0;   //清中断请求
+  21   2                      uart_putchar(SBUF);
+  22   2              }
+  23   1              else      //发送完一字节数据
+  24   1              {
+  25   2                      TI=0;
+  26   2              }
+  27   1      }
+  28          void IIC_NUM(unsigned char i)
+  29          {
+  30   1              unsigned char num[]={0xfc,0x60,0xda,0xf2,0x66,0xb6,0xbe,0xe0,0xfe,0xf6};
+  31   1              iic_init();     
+  32   1              iic_start();
+  33   1              iic_send_byte(ADDR_pca6107);
+  34   1              if(iic_read_ack())
+  35   1              {
+  36   2                      print_str("No IIC slave found!!!");
+  37   2              }
+  38   1              else
+  39   1              {
+  40   2                      print_str("OK!");
+  41   2                      iic_send_byte(0x01);
+  42   2                      iic_send_byte(num[i]);//这里是显示的数字
+  43   2                      iic_start();
+  44   2                      iic_send_byte(ADDR_pca6107);
+  45   2                      iic_send_byte(0x03);
+  46   2                      iic_send_byte(0x00);
+  47   2              }
+  48   1              iic_stop();
+  49   1      }
+  50          void main(void)
+  51          {
+  52   1              led=0;
+  53   1              uart_init();
+  54   1              print_str("Hello world!\r\n");
+  55   1              iic_init();
+C51 COMPILER V8.02   TEXT1                                                                 12/12/2009 21:25:55 PAGE 2   
+
+  56   1              while(1)
+  57   1              {
+  58   2                      IIC_NUM(led);
+  59   2                      led=~led;
+  60   2                      delay(20);
+  61   2              }
+  62   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    405    ----
+   CONSTANT SIZE    =     51    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      11
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,267 @@
+C51 COMPILER V8.02   SERIAL                                                                02/01/2011 10:20:44 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE SERIAL
+OBJECT MODULE PLACED IN serial.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE serial.c BROWSE DEFINE(WORK_AROUND_192) DEBUG OBJECTEXTEND CODE
+
+line level    source
+
+   1          #include "reg52modified.h"
+   2          /*****************************************************************
+   3          计算波特率注意，Fclk=48MHz
+   4          定时器1采用方式二
+   5          串行口采用方式一,波特率倍增位SMOD置1
+   6          波特率初值计算公式：Baud=Fclk/(12*16*（256-x）)，x为定时器1初值
+   7          *****************************************************************/
+   8          void rs232_init(void)
+   9          {
+  10   1              TMOD&=0x0f;
+  11   1              TMOD|=0x20;                     // 定时器1工作于8位自动重载模式, 用于产生波特率
+  12   1              TH1 = 243;                      // 波特率19200
+  13   1              TL1 = 243;
+  14   1              PCON|=0x80;                     // 波特率倍增
+  15   1              SCON = 0x50;            // 设定串行口工作方式1,REN=1
+  16   1              TR1 = 1;                        // 启动定时器1
+  17   1              EA=1;
+  18   1      }
+  19          unsigned char rs232_getchar(void)
+  20          {
+  21   1              unsigned char b;
+  22   1              while(!RI);
+  23   1              RI=0;
+  24   1              b=SBUF;
+  25   1              return b;
+  26   1      }
+  27          void rs232_putchar(unsigned char txd)
+  28          {
+  29   1              SBUF = txd;
+  30   1              while(!TI);                             // 等特数据传送
+  31   1              TI = 0;                                 // 清除数据传送标志
+  32   1      }
+  33          void rs232_printstr(unsigned char *str)
+  34          {
+  35   1      
+  36   1              while(*str!= '\0')
+  37   1              {
+  38   2                      SBUF =*str++;
+  39   2                      while(!TI);                             // 等特数据传送
+  40   2                      TI = 0;                                 // 清除数据传送标志
+  41   2              }
+  42   1              
+  43   1      }
+  44          void rs232_printhex(unsigned char b)
+  45          {
+  46   1      
+  47   1              unsigned char hexvalue;
+  48   1      #if 1
+  49   1              rs232_printstr("0x");
+  50   1      #endif
+  51   1              hexvalue=(b&0xf0)>>4;
+  52   1              if(hexvalue<10)
+  53   1              {
+  54   2                      rs232_putchar(hexvalue+'0');
+  55   2              }
+C51 COMPILER V8.02   SERIAL                                                                02/01/2011 10:20:44 PAGE 2   
+
+  56   1              else
+  57   1              {
+  58   2                      rs232_putchar(hexvalue+55);
+  59   2              }
+  60   1              hexvalue=(b&0x0f);
+  61   1              if(hexvalue<10)
+  62   1              {
+  63   2                      rs232_putchar(hexvalue+'0');
+  64   2              }
+  65   1              else
+  66   1              {
+  67   2                      rs232_putchar(hexvalue+55);
+  68   2              }
+  69   1      #if 1
+  70   1              rs232_printstr(" ");
+  71   1      #endif
+  72   1      
+  73   1      }
+C51 COMPILER V8.02   SERIAL                                                                02/01/2011 10:20:44 PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION rs232_init (BEGIN)
+                                           ; SOURCE LINE # 8
+                                           ; SOURCE LINE # 9
+                                           ; SOURCE LINE # 10
+0000 53890F            ANL     TMOD,#0FH
+                                           ; SOURCE LINE # 11
+0003 438920            ORL     TMOD,#020H
+                                           ; SOURCE LINE # 12
+0006 758DF3            MOV     TH1,#0F3H
+                                           ; SOURCE LINE # 13
+0009 758BF3            MOV     TL1,#0F3H
+                                           ; SOURCE LINE # 14
+000C 438780            ORL     PCON,#080H
+                                           ; SOURCE LINE # 15
+000F 759850            MOV     SCON,#050H
+                                           ; SOURCE LINE # 16
+0012 D28E              SETB    TR1
+                                           ; SOURCE LINE # 17
+0014 D2AF              SETB    EA
+                                           ; SOURCE LINE # 18
+0016 22                RET     
+             ; FUNCTION rs232_init (END)
+
+             ; FUNCTION rs232_getchar (BEGIN)
+                                           ; SOURCE LINE # 19
+                                           ; SOURCE LINE # 20
+0000         ?C0002:
+                                           ; SOURCE LINE # 22
+0000 3098FD            JNB     RI,?C0002
+0003         ?C0003:
+                                           ; SOURCE LINE # 23
+0003 C298              CLR     RI
+                                           ; SOURCE LINE # 24
+;---- Variable 'b' assigned to Register 'R7' ----
+0005 AF99              MOV     R7,SBUF
+                                           ; SOURCE LINE # 25
+                                           ; SOURCE LINE # 26
+0007         ?C0004:
+0007 22                RET     
+             ; FUNCTION rs232_getchar (END)
+
+             ; FUNCTION _rs232_putchar (BEGIN)
+                                           ; SOURCE LINE # 27
+;---- Variable 'txd' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 28
+                                           ; SOURCE LINE # 29
+0000 8F99              MOV     SBUF,R7
+0002         ?C0005:
+                                           ; SOURCE LINE # 30
+0002 3099FD            JNB     TI,?C0005
+0005         ?C0006:
+                                           ; SOURCE LINE # 31
+0005 C299              CLR     TI
+                                           ; SOURCE LINE # 32
+0007 22                RET     
+             ; FUNCTION _rs232_putchar (END)
+
+             ; FUNCTION _rs232_printstr (BEGIN)
+                                           ; SOURCE LINE # 33
+C51 COMPILER V8.02   SERIAL                                                                02/01/2011 10:20:44 PAGE 4   
+
+0000 8B00        R     MOV     str,R3
+0002 8A00        R     MOV     str+01H,R2
+0004 8900        R     MOV     str+02H,R1
+                                           ; SOURCE LINE # 34
+0006         ?C0008:
+                                           ; SOURCE LINE # 36
+0006 AB00        R     MOV     R3,str
+0008 AA00        R     MOV     R2,str+01H
+000A A900        R     MOV     R1,str+02H
+000C 120000      E     LCALL   ?C?CLDPTR
+000F 6016              JZ      ?C0012
+                                           ; SOURCE LINE # 37
+                                           ; SOURCE LINE # 38
+0011 0500        R     INC     str+02H
+0013 E500        R     MOV     A,str+02H
+0015 7002              JNZ     ?C0018
+0017 0500        R     INC     str+01H
+0019         ?C0018:
+0019 14                DEC     A
+001A F9                MOV     R1,A
+001B 120000      E     LCALL   ?C?CLDPTR
+001E F599              MOV     SBUF,A
+0020         ?C0010:
+                                           ; SOURCE LINE # 39
+0020 3099FD            JNB     TI,?C0010
+0023         ?C0011:
+                                           ; SOURCE LINE # 40
+0023 C299              CLR     TI
+                                           ; SOURCE LINE # 41
+0025 80DF              SJMP    ?C0008
+                                           ; SOURCE LINE # 43
+0027         ?C0012:
+0027 22                RET     
+             ; FUNCTION _rs232_printstr (END)
+
+             ; FUNCTION _rs232_printhex (BEGIN)
+                                           ; SOURCE LINE # 44
+;---- Variable 'b' assigned to Register 'R6' ----
+0000 AE07              MOV     R6,AR7
+                                           ; SOURCE LINE # 45
+                                           ; SOURCE LINE # 49
+0002 7BFF              MOV     R3,#0FFH
+0004 7A00        R     MOV     R2,#HIGH ?SC_0
+0006 7900        R     MOV     R1,#LOW ?SC_0
+0008 120000      R     LCALL   _rs232_printstr
+                                           ; SOURCE LINE # 51
+000B EE                MOV     A,R6
+000C 54F0              ANL     A,#0F0H
+000E C4                SWAP    A
+000F 540F              ANL     A,#0FH
+;---- Variable 'hexvalue' assigned to Register 'R5' ----
+0011 FD                MOV     R5,A
+                                           ; SOURCE LINE # 52
+0012 C3                CLR     C
+0013 940A              SUBB    A,#0AH
+0015 ED                MOV     A,R5
+0016 5004              JNC     ?C0013
+                                           ; SOURCE LINE # 53
+                                           ; SOURCE LINE # 54
+0018 2430              ADD     A,#030H
+                                           ; SOURCE LINE # 55
+001A 8002              SJMP    ?C0019
+C51 COMPILER V8.02   SERIAL                                                                02/01/2011 10:20:44 PAGE 5   
+
+001C         ?C0013:
+                                           ; SOURCE LINE # 57
+                                           ; SOURCE LINE # 58
+001C 2437              ADD     A,#037H
+001E         ?C0019:
+001E FF                MOV     R7,A
+001F 120000      R     LCALL   _rs232_putchar
+                                           ; SOURCE LINE # 59
+0022         ?C0014:
+                                           ; SOURCE LINE # 60
+0022 EE                MOV     A,R6
+0023 540F              ANL     A,#0FH
+0025 FD                MOV     R5,A
+                                           ; SOURCE LINE # 61
+0026 C3                CLR     C
+0027 940A              SUBB    A,#0AH
+0029 ED                MOV     A,R5
+002A 5004              JNC     ?C0015
+                                           ; SOURCE LINE # 62
+                                           ; SOURCE LINE # 63
+002C 2430              ADD     A,#030H
+                                           ; SOURCE LINE # 64
+002E 8002              SJMP    ?C0020
+0030         ?C0015:
+                                           ; SOURCE LINE # 66
+                                           ; SOURCE LINE # 67
+0030 2437              ADD     A,#037H
+0032         ?C0020:
+0032 FF                MOV     R7,A
+0033 120000      R     LCALL   _rs232_putchar
+                                           ; SOURCE LINE # 68
+0036         ?C0016:
+                                           ; SOURCE LINE # 70
+0036 7BFF              MOV     R3,#0FFH
+0038 7A00        R     MOV     R2,#HIGH ?SC_3
+003A 7900        R     MOV     R1,#LOW ?SC_3
+003C 020000      R     LJMP    _rs232_printstr
+             ; FUNCTION _rs232_printhex (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    142    ----
+   CONSTANT SIZE    =      5    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

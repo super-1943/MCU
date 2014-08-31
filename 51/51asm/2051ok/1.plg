@@ -1,0 +1,28 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+D:\My Documents\51asm\2051ok\1.uv2
+Project File Date:  04/05/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling 1.asm...
+1.asm(1): error A9: SYNTAX ERROR
+1.asm(2): error A9: SYNTAX ERROR
+1.asm(37): error A45: UNDEFINED SYMBOL (PASS-2)
+1.asm(38): error A45: UNDEFINED SYMBOL (PASS-2)
+1.asm(42): error A45: UNDEFINED SYMBOL (PASS-2)
+1.asm(45): error A45: UNDEFINED SYMBOL (PASS-2)
+1.asm(46): error A45: UNDEFINED SYMBOL (PASS-2)
+Target not created
+Build target 'Target 1'
+assembling 1.asm...
+linking...
+Program Size: data=8.0 xdata=0 code=309
+creating hex file from "1"...
+"1" - 0 Error(s), 0 Warning(s).
+</pre>
+</body>
+</html>

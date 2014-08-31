@@ -1,0 +1,732 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+E:\program\51\2051_iic\111.uv2
+Project File Date:  12/12/2009
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling Text1.c...
+linking...
+Program Size: data=9.0 xdata=0 code=16
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY?TEXT1
+Program Size: data=9.0 xdata=0 code=35
+creating hex file from "111"...
+"111" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+Program Size: data=9.0 xdata=0 code=45
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=9.0 xdata=0 code=45
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=9.0 xdata=0 code=45
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=9.0 xdata=0 code=45
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=9.0 xdata=0 code=45
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=9.0 xdata=0 code=45
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=9.0 xdata=0 code=45
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=9.0 xdata=0 code=45
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(20): error C202: 'Fclk': undefined identifier
+TEXT1.C(21): error C202: 'Fclk': undefined identifier
+TEXT1.C(40): error C141: syntax error near 'd', expected ')'
+TEXT1.C(43): error C202: 'd': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(41): error C141: syntax error near 'd', expected ')'
+TEXT1.C(44): error C202: 'd': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INITUART?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_UARTPUTCHAR?TEXT1
+Program Size: data=9.0 xdata=0 code=101
+creating hex file from "111"...
+"111" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INITUART?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_UART_PUTCHAR?TEXT1
+Program Size: data=9.0 xdata=0 code=101
+creating hex file from "111"...
+"111" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(36): warning C206: 'uart_putchar': missing function-prototype
+TEXT1.C(36): error C267: 'uart_putchar': requires ANSI-style prototype
+TEXT1.C(44): error C231: '_uart_putchar': redefinition
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INITUART?TEXT1
+Program Size: data=9.0 xdata=0 code=118
+creating hex file from "111"...
+"111" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INITUART?TEXT1
+Program Size: data=9.0 xdata=0 code=118
+creating hex file from "111"...
+"111" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INITUART?TEXT1
+Program Size: data=9.0 xdata=0 code=118
+creating hex file from "111"...
+"111" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INITUART?TEXT1
+Program Size: data=9.0 xdata=0 code=118
+creating hex file from "111"...
+"111" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INITUART?TEXT1
+Program Size: data=9.0 xdata=0 code=118
+creating hex file from "111"...
+"111" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INITUART?TEXT1
+Program Size: data=9.0 xdata=0 code=118
+creating hex file from "111"...
+"111" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INITUART?TEXT1
+Program Size: data=9.0 xdata=0 code=118
+creating hex file from "111"...
+"111" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(43): warning C206: 'UartPutChar': missing function-prototype
+TEXT1.C(43): error C267: 'UartPutChar': requires ANSI-style prototype
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_PRINT_STR?TEXT1
+Program Size: data=9.0 xdata=0 code=165
+creating hex file from "111"...
+"111" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+Program Size: data=9.0 xdata=0 code=189
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+UART.H(10): error C202: 'Fclk': undefined identifier
+UART.H(11): error C202: 'Fclk': undefined identifier
+UART.H(18): error C141: syntax error near 'd', expected ')'
+UART.H(21): error C202: 'd': undefined identifier
+UART.H(26): error C141: syntax error near '*', expected ')'
+UART.H(28): error C202: 'pd': undefined identifier
+UART.H(30): error C202: 'pd': undefined identifier
+UART.H(31): error C202: 'pd': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+Program Size: data=9.0 xdata=0 code=189
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+compiling Text1.c...
+Text1.c - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=9.0 xdata=0 code=189
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+linking...
+Program Size: data=9.0 xdata=0 code=189
+creating hex file from "111"...
+"111" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+IIC.H(47): warning C206: '_NOP': missing function-prototype
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_START?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_STOP?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_IIC_SEND_BYTE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?TEXT1
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 0149H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 0156H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 006EH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 00E5H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 00EAH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 00EFH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 00F2H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 00FAH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 00FFH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 0104H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 0107H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 007FH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 0084H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 0038H
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _NOP
+    MODULE:  Text1.obj (TEXT1)
+    ADDRESS: 003DH
+Program Size: data=14.0 xdata=0 code=376
+creating hex file from "111"...
+"111" - 0 Error(s), 24 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+IIC.H(47): warning C206: 'asm': missing function-prototype
+IIC.H(47): error C267: 'asm': requires ANSI-style prototype
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(47): error C272: '__asm' requires src-control to be active
+TEXT1.C(55): error C272: '__asm' requires src-control to be active
+TEXT1.C(74): error C272: '__asm' requires src-control to be active
+TEXT1.C(81): error C272: '__asm' requires src-control to be active
+TEXT1.C(83): error C272: '__asm' requires src-control to be active
+TEXT1.C(85): error C272: '__asm' requires src-control to be active
+TEXT1.C(86): error C272: '__asm' requires src-control to be active
+TEXT1.C(92): error C272: '__asm' requires src-control to be active
+TEXT1.C(94): error C272: '__asm' requires src-control to be active
+TEXT1.C(96): error C272: '__asm' requires src-control to be active
+TEXT1.C(97): error C272: '__asm' requires src-control to be active
+TEXT1.C(104): error C272: '__asm' requires src-control to be active
+TEXT1.C(107): error C272: '__asm' requires src-control to be active
+TEXT1.C(133): error C272: '__asm' requires src-control to be active
+TEXT1.C(135): error C272: '__asm' requires src-control to be active
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+IIC.H(48): warning C206: 'asm': missing function-prototype
+IIC.H(48): error C267: 'asm': requires ANSI-style prototype
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+IIC.H(49): warning C206: 'asm': missing function-prototype
+IIC.H(49): error C267: 'asm': requires ANSI-style prototype
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(49): error C272: '__asm' requires src-control to be active
+TEXT1.C(57): error C272: '__asm' requires src-control to be active
+TEXT1.C(76): error C272: '__asm' requires src-control to be active
+TEXT1.C(83): error C272: '__asm' requires src-control to be active
+TEXT1.C(85): error C272: '__asm' requires src-control to be active
+TEXT1.C(87): error C272: '__asm' requires src-control to be active
+TEXT1.C(88): error C272: '__asm' requires src-control to be active
+TEXT1.C(94): error C272: '__asm' requires src-control to be active
+TEXT1.C(96): error C272: '__asm' requires src-control to be active
+TEXT1.C(98): error C272: '__asm' requires src-control to be active
+TEXT1.C(99): error C272: '__asm' requires src-control to be active
+TEXT1.C(106): error C272: '__asm' requires src-control to be active
+TEXT1.C(109): error C272: '__asm' requires src-control to be active
+TEXT1.C(135): error C272: '__asm' requires src-control to be active
+TEXT1.C(137): error C272: '__asm' requires src-control to be active
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_START?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_STOP?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_IIC_SEND_BYTE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?TEXT1
+Program Size: data=9.0 xdata=0 code=305
+creating hex file from "111"...
+"111" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_START?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_STOP?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_IIC_SEND_BYTE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?TEXT1
+Program Size: data=9.0 xdata=0 code=305
+creating hex file from "111"...
+"111" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_START?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_STOP?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_IIC_SEND_BYTE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?TEXT1
+Program Size: data=9.0 xdata=0 code=305
+creating hex file from "111"...
+"111" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_START?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_STOP?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_IIC_SEND_BYTE?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?TEXT1
+Program Size: data=9.0 xdata=0 code=308
+creating hex file from "111"...
+"111" - 0 Error(s), 7 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_READ_BYTE?TEXT1
+Program Size: data=9.0 xdata=0 code=319
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+IIC.H(150): error C202: 'ADDR_pca6107': undefined identifier
+IIC.H(162): error C202: 'ADDR_pca6107': undefined identifier
+IIC.H(167): error C202: 'ADDR_pca6107': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=408
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=408
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=411
+creating hex file from "111"...
+"111" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=385
+creating hex file from "111"...
+"111" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=385
+creating hex file from "111"...
+"111" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=385
+creating hex file from "111"...
+"111" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=385
+creating hex file from "111"...
+"111" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=385
+creating hex file from "111"...
+"111" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=385
+creating hex file from "111"...
+"111" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=385
+creating hex file from "111"...
+"111" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=385
+creating hex file from "111"...
+"111" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=9.0 xdata=0 code=385
+creating hex file from "111"...
+"111" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(34): error C202: 'TWSR': undefined identifier
+TEXT1.C(38): error C202: 'TWSR': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+TEXT1.C(59): error C141: syntax error near 'while'
+Target not created
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=20.0 xdata=0 code=745
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=20.0 xdata=0 code=745
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=20.0 xdata=0 code=745
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=20.0 xdata=0 code=745
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=20.0 xdata=0 code=745
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=20.0 xdata=0 code=753
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=20.0 xdata=0 code=753
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=20.0 xdata=0 code=753
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=20.0 xdata=0 code=753
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=20.0 xdata=0 code=753
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling Text1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_ACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_SEND_NACK?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SET_REG_6107?TEXT1
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GET_REG_6107?TEXT1
+Program Size: data=20.0 xdata=0 code=745
+creating hex file from "111"...
+"111" - 0 Error(s), 4 Warning(s).

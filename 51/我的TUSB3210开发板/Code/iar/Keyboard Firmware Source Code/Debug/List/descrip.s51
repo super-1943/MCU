@@ -1,0 +1,260 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V7.51A/W32 for 8051               28/May/2010  14:38:01 /
+// Copyright 2004-2009 IAR Systems AB.                                        /
+// Time limited license: 20 days left                                         /
+//                                                                            /
+//    Core               =  plain                                             /
+//    Code model         =  near                                              /
+//    Data model         =  large                                             /
+//    Calling convention =  xdata reentrant                                   /
+//    Constant location  =  data                                              /
+//    Dptr setup         =  1,16                                              /
+//    Source file        =  E:\AllProject\51\Keyboard Firmware Source         /
+//                          Code\descrip.c                                    /
+//    Command line       =  "E:\AllProject\51\Keyboard Firmware Source        /
+//                          Code\descrip.c" -lC "E:\AllProject\51\Keyboard    /
+//                          Firmware Source Code\Debug\List\" -lA             /
+//                          "E:\AllProject\51\Keyboard Firmware Source        /
+//                          Code\Debug\List\" -o "E:\AllProject\51\Keyboard   /
+//                          Firmware Source Code\Debug\Obj\" -e               /
+//                          --char_is_signed --no_cse --no_unroll             /
+//                          --no_inline --no_code_motion --no_tbaa --debug    /
+//                          --core=plain --dptr=16,1 --data_model=large       /
+//                          --code_model=near --calling_convention=xdata_reen /
+//                          trant --place_constants=data --nr_virtual_regs 8  /
+//                          -I "C:\Program Files\IAR Systems\Embedded         /
+//                          Workbench 5.3 Evaluation version\8051\INC\" -I    /
+//                          "C:\Program Files\IAR Systems\Embedded Workbench  /
+//                          5.3 Evaluation version\8051\INC\CLIB\" -Ol        /
+//    List file          =  E:\AllProject\51\Keyboard Firmware Source         /
+//                          Code\Debug\List\descrip.s51                       /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME descrip
+
+        RTMODEL "__calling_convention", "xdata_reentrant"
+        RTMODEL "__code_model", "near"
+        RTMODEL "__core", "plain"
+        RTMODEL "__data_model", "large"
+        RTMODEL "__dptr_size", "16"
+        RTMODEL "__extended_stack", "disabled"
+        RTMODEL "__location_for_constants", "data"
+        RTMODEL "__number_of_dptrs", "1"
+        RTMODEL "__rt_version", "1"
+
+        RSEG DOVERLAY:DATA:NOROOT(0)
+        RSEG IOVERLAY:IDATA:NOROOT(0)
+        RSEG ISTACK:IDATA:NOROOT(0)
+        RSEG PSTACK:XDATA:NOROOT(0)
+        RSEG XSTACK:XDATA:NOROOT(0)
+
+        PUBLIC abromConfigurationDescriptorGroup
+        PUBLIC abromDeviceDescriptor
+        PUBLIC abromReportDescriptor
+// E:\AllProject\51\Keyboard Firmware Source Code\descrip.c
+//    1 /******************************************************************************
+//    2  *                         VAULT INFORMATION SERVICES                         *
+//    3  *                          TEXAS INSTRUMENTS, INC.                           *
+//    4  *----------------------------------------------------------------------------*
+//    5  *                  "USB Descriptors for TUSB2136 Demo App"                   *
+//    6  *                                                                            * 
+//    7  * Programmed by: Craig Steiner, VIS (csteiner@vaultbbs.com)                  * 
+//    8  * Develop Date:  30/Sep/2000                                                 *  
+//    9  *----------------------------------------------------------------------------*
+//   10  * Description: This module is a component of the TUSB2136 Demo App.  It      *
+//   11  *   contains all the pre-defined descriptors used by the application.        *
+//   12  *                                                                            *
+//   13  * Modified by Jim Chen 2001/01/03:                                           *
+//   14  *   1. total 102 keys                                                        *
+//   15  *   2. can work in Mac                                                       *
+//   16  *   3. use scanline8, scanline9 and return 0x40 as suspend key               *
+//   17  *   4. added usbSetIdle(void), void usbSetProtocol(void) for Mac             *
+//   18  *                                                                            *
+//   19  ******************************************************************************/
+//   20 
+//   21 #include "types.h"
+//   22 #include "tusb2136.h"
+//   23 #include "usb.h"
+//   24 #define code __code const
+//   25 #define xdata __xdata 
+//   26 /***************************************************************************
+//   27  * Structure: Device Descriptor Structure                                  *
+//   28  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//   29  * Description: The abromDeviceDescriptor[] structure holds the 12h (18)   *
+//   30  *    bytes that make up the device descriptor for the keyboard device.    *
+//   31  *    Note that this is just a "template" and that a number of the fields  *
+//   32  *    in the structure (flagged with "Updated at Run-Time") are actually   *
+//   33  *    modified on-the-fly at runtime in the InitializeUsbData function     *
+//   34  *    based on the VID/PID that was selected on s0123.                     *
+//   35  ***************************************************************************/
+//   36 
+
+        RSEG CODE_C:CODE:REORDER:NOROOT(0)
+        DATA
+//   37 code BYTE abromDeviceDescriptor[SIZEOF_DEVICE_DESCRIPTOR] = 
+abromDeviceDescriptor:
+        DB 18, 1, 16, 1, 0, 0, 0, 8, 255, 255, 255, 255, 0, 1, 1, 2, 3, 1
+//   38 	{
+//   39     SIZEOF_DEVICE_DESCRIPTOR,       // Length of this descriptor (12h bytes)
+//   40     DESC_TYPE_DEVICE,               // Type code of this descriptor (01h)
+//   41     0x10,0x01,                      // Release of USB spec (Rev 1.1)
+//   42     0x00,                	    // Device's base class code
+//   43     0,                              // Device's sub class code
+//   44     0,                              // Device's protocol type code
+//   45     EP0_MAX_PACKET_SIZE,            // End point 0's max packet size = 8
+//   46     0xFF,0xFF,                      // Vendor ID, UPDATED AT RUN-TIME
+//   47     0xFF, 0xFF,  		    // Product ID, UPDATED AT RUN-TIME
+//   48     0x00,0x01,                      // Revision level of device, UPDATED AT RUN-TIME
+//   49     1,                              // Index of manufacturer name string desc, UPDATED AT RUN-TIME
+//   50     2,                              // Index of product name string desc, UPDATED AT RUN-TIME
+//   51     3,                              // Index of serial number string desc, UPDATED AT RUN-TIME
+//   52     1                               // Number of configurations supported
+//   53     };
+//   54 
+//   55 /***************************************************************************
+//   56  * Structure: Configuration Descriptor Structure                           *
+//   57  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//   58  * Description: The abromConfigurationDescriptorGroup structure holds the  *
+//   59  *    data that makes up the Configuration descriptor for the keyboard     *
+//   60  *    device.                                                              *
+//   61  ***************************************************************************/
+//   62 
+
+        RSEG CODE_C:CODE:REORDER:NOROOT(0)
+        DATA
+//   63 BYTE code abromConfigurationDescriptorGroup[SIZEOF_BOOTCODE_CONFIG_DESC_GROUP] =
+abromConfigurationDescriptorGroup:
+        DB 9, 2, 34, 0, 1, 1, 0, 160, 50, 9, 4, 0, 0, 1, 3, 1, 1, 1, 9, 33, 0
+        DB 1, 0, 1, 34, 63, 0, 7, 5, 129, 3, 8, 0, 10
+//   64 	{
+//   65     // CONFIGURATION DESCRIPTOR (9 bytes)
+//   66     SIZEOF_CONFIG_DESCRIPTOR,        // bLength
+//   67     DESC_TYPE_CONFIG,                // bDescriptorType
+//   68     SIZEOF_BOOTCODE_CONFIG_DESC_GROUP, 0x00, // wTotalLength
+//   69     0x01,                            // bNumInterfaces
+//   70     0x01,                            // bConfigurationValue
+//   71     0x00,                            // iConfiguration Description offset
+//   72     0xa0,                            // bmAttributes, bus power, support remote wakeup
+//   73     0x32,                            // Max. Power Consumption at 2mA unit
+//   74 
+//   75     // INTERFACE DESCRIPTOR (9 bytes)
+//   76     SIZEOF_INTERFACE_DESCRIPTOR,    // bLength
+//   77     DESC_TYPE_INTERFACE,            // bDescriptorType
+//   78     0x00,                           // bInterfaceNumber
+//   79     0x00,                           // bAlternateSetting
+//   80     1,                              // bNumEndpoints
+//   81     0x03,                           // bInterfaceClass: 3 = HID Device
+//   82     1,                              // bInterfaceSubClass: 1 = Boot Device
+//   83     1,                              // bInterfaceProtocol: 1 = Keyboard
+//   84     0x01,                           // iInterface
+//   85 
+//   86     // KEYBOARD HID DESCRIPTOR (9 bytes)
+//   87     0x09,     			    // bLength of HID descriptor
+//   88     0x21,             		    // HID Descriptor Type: 0x21 = Keyboard
+//   89     0x00,0x01,			    // HID Revision number 1.00
+//   90     0x00,			    // Target country, nothing specified (00h)
+//   91     0x01,			    // Number of HID classes to follow 
+//   92     0x22,			    // Report descriptor type
+//   93     SIZEOF_REPORT_DESCRIPTOR, 0x00, // Total length of report descriptor
+//   94 
+//   95     // ENDPOINT #1 INPUT DESCRIPTOR, (7 bytes)
+//   96     SIZEOF_ENDPOINT_DESCRIPTOR,     // bLength
+//   97     DESC_TYPE_ENDPOINT,             // bDescriptorType
+//   98     0x81,                           // bEndpointAddress; bit7=1 for IN, bits 3-0=1 for ep1
+//   99     EP_DESC_ATTR_TYPE_INT,          // bmAttributes, interrupt transfers
+//  100     0x08, 0x00,                     // wMaxPacketSize, 8 bytes
+//  101     0x0A,                           // Polling interval: Every 10 ms
+//  102 
+//  103 	};
+//  104 
+//  105 /***************************************************************************
+//  106  * Structure: Report Descriptor Structure                                  *
+//  107  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//  108  * Description: The abromConfigurationDescriptorGroup structure holds the  *
+//  109  *    data that makes up the Configuration descriptor for the keyboard     *
+//  110  *    device.                                                              *
+//  111  *                                                                         *
+//  112  * summary:                                                                *
+//  113  *   Report descriptor: 1. Main 2. Global 3. Local                         *
+//  114  *     Main: 1. Input 2. Output 3. Feature 4. Collection 5. End Collection *
+//  115  *     Global: influence all subsequent data field                         *
+//  116  *     Local : describe data fileds definded by next Main item             *
+//  117  *                                                                         *
+//  118  *   Collection: a meaningful grouping of Input, Output, Feature items     *
+//  119  *                                                                         *
+//  120  *   Application: A group of Main items that might be familiar to          *
+//  121  *   applications. It could also be used to identify item groups serving   *
+//  122  *   different purposes in a single device. Common examples are a          *
+//  123  *   keyboard or mouse. A keyboard with an integrated pointing device      *
+//  124  *   could be defined as two different application collections. Data       *
+//  125  *   reports are usually (but not necessarily) associated with             *
+//  126  *   application collections (one report ID per application).              *
+//  127  *                                                                         *
+//  128  *   Usage Page: Unsigned integer specifying the current Usage Page.       *
+//  129  *   Since a usage are 32 bit values, Usage Page items can be used to      *
+//  130  *   conserve space in a report descriptor by setting the high order       *
+//  131  *   16 bits of a subsequent usages. Any usage that follows which is       *
+//  132  *   defines 16 bits or less is interpreted as a Usage ID and              *
+//  133  *   concatenated with the Usage Page to form a 32 bit Usage.              *
+//  134  *                                                                         *
+//  135  ***************************************************************************/
+//  136 
+
+        RSEG CODE_C:CODE:REORDER:NOROOT(0)
+        DATA
+//  137 BYTE code abromReportDescriptor[SIZEOF_REPORT_DESCRIPTOR] =
+abromReportDescriptor:
+        DB 5, 1, 9, 6, 161, 1, 5, 7, 25, 224, 41, 231, 21, 0, 37, 1, 117, 1
+        DB 149, 8, 129, 2, 149, 1, 117, 8, 129, 3, 149, 5, 117, 1, 5, 8, 25, 1
+        DB 41, 5, 145, 2, 149, 1, 117, 3, 145, 3, 149, 6, 117, 8, 21, 0, 37
+        DB 102, 5, 7, 25, 0, 41, 102, 129, 0, 192
+
+        END
+//  138 	{
+//  139 	0x05, 0x01, 	        // Usage Page (Generic Desktop)
+//  140 	0x09, 0x06,		// Usage (Keyboard)
+//  141 	0xA1, 0x01,		// Collection (Application)
+//  142 
+//  143 	0x05, 0x07,		// Usage Page (Key Codes)
+//  144 	0x19, 0xE0,		// Usage Minimum (224)
+//  145 	0x29, 0xE7,		// Usage Maximum (231)
+//  146 	0x15, 0x00,		// Logical Minimum (0)
+//  147 	0x25, 0x01,		// Logical Maximum (1)
+//  148 	0x75, 0x01,		// Report Size (1)
+//  149 	0x95, 0x08,		// Report Count (8)
+//  150 	0x81, 0x02,		// Input (Data, Variable, Absolute) -- Modifier byte
+//  151 	0x95, 0x01,		// Report Count (1)
+//  152 	0x75, 0x08,		// Report Size (8)
+//  153 	0x81, 0x03,		// (81 01) Input (Constant) -- Reserved byte
+//  154 	
+//  155 	0x95, 0x05,		// Report Count (5)
+//  156 	0x75, 0x01,		// Report Size (1)
+//  157 	0x05, 0x08,		// Usage Page (Page# for LEDs)
+//  158 	0x19, 0x01,		// Usage Minimum (1)
+//  159 	0x29, 0x05,		// Usage Maximum (5)
+//  160 	0x91, 0x02,		// Output (Data, Variable, Absolute) -- LED report
+//  161 	0x95, 0x01,		// Report Count (1)
+//  162 	0x75, 0x03,		// Report Size (3)
+//  163 	0x91, 0x03,		// (91 03) Output (Constant) -- LED report padding
+//  164 	
+//  165 	0x95, 0x06,		// Report Count (6)
+//  166 	0x75, 0x08,		// Report Size (8)
+//  167 	0x15, 0x00,		// Logical Minimum (0)
+//  168 	0x25, 0x66,		// Logical Maximum(102)  // was 0x65
+//  169 
+//  170 	0x05, 0x07,		// Usage Page (Key Codes)
+//  171 	0x19, 0x00,		// Usage Minimum (0)
+//  172 	0x29, 0x66,		// Usage Maximum (102) // was 0x65
+//  173 	0x81, 0x00,		// Input (Data, Array) -- Key arrays (6 bytes)
+//  174 	0xC0			// End Collection
+//  175 	};
+// 
+// 115 bytes in segment CODE_C
+// 
+// 115 bytes of CODE memory
+//
+//Errors: none
+//Warnings: none

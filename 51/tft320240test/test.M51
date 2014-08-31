@@ -1,0 +1,492 @@
+BL51 BANKED LINKER/LOCATER V6.00                                                        05/03/2012  12:37:23  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.00, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, main.obj, tft320240.obj, ziku.obj TO test RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  main.obj (MAIN)
+  tft320240.obj (TFT320240)
+  ziku.obj (ZIKU)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (STRLEN)
+
+
+LINK MAP OF MODULE:  test (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0016H     UNIT         _DATA_GROUP_
+            DATA    001EH     0008H     UNIT         ?DT?_TFT320240_SHOW_COLORCHAR?TFT320240
+            DATA    0026H     0008H     UNIT         ?DT?_TFT320240_SHOW_HANZI?TFT320240
+            DATA    002EH     0006H     UNIT         ?DT?_TFT320240_SHOW_STRING?TFT320240
+            IDATA   0034H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0601H     UNIT         ?CO?ZIKU
+            CODE    0604H     028FH     UNIT         ?PR?TFT320240_INITIAL?TFT320240
+            CODE    0893H     0076H     UNIT         ?PR?_TFT320240_SHOW_STRING?TFT320240
+            CODE    0909H     0064H     UNIT         ?PR?_TFT320240_BLOCKWRITE?TFT320240
+            CODE    096DH     005BH     UNIT         ?PR?_TFT320240_SHOW?TFT320240
+            CODE    09C8H     0055H     UNIT         ?PR?_TFT320240_SHOW_COLORCHAR?TFT320240
+            CODE    0A1DH     004DH     UNIT         ?PR?_TFT320240_SHOW_HANZI?TFT320240
+            CODE    0A6AH     0027H     UNIT         ?PR?_TFT320240_W_COM?TFT320240
+            CODE    0A91H     0021H     UNIT         ?PR?_TFT320240_DELAY?TFT320240
+            CODE    0AB2H     0020H     UNIT         ?PR?_TFT320240_W_DATA?TFT320240
+            CODE    0AD2H     0019H     UNIT         ?PR?MAIN?MAIN
+            CODE    0AEBH     0019H     UNIT         ?C?LIB_CODE
+            CODE    0B04H     0015H     UNIT         ?PR?TFT320240_CLEAR?TFT320240
+            CODE    0B19H     0015H     UNIT         ?PR?_STRLEN?STRLEN
+            CODE    0B2EH     0014H     UNIT         ?PR?_DELAY?MAIN
+            CODE    0B42H     000CH     UNIT         ?C_C51STARTUP
+
+
+
+OVERLAY MAP OF MODULE:   test (?C_STARTUP)
+
+
+SEGMENT                                           DATA_GROUP 
+  +--> CALLED SEGMENT                           START    LENGTH
+---------------------------------------------------------------
+?C_C51STARTUP                                   -----    -----
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/03/2012  12:37:23  PAGE 2
+
+
+  +--> ?PR?MAIN?MAIN
+
+?PR?MAIN?MAIN                                   -----    -----
+  +--> ?PR?TFT320240_INITIAL?TFT320240
+  +--> ?PR?TFT320240_CLEAR?TFT320240
+  +--> ?PR?_TFT320240_BLOCKWRITE?TFT320240
+
+?PR?TFT320240_INITIAL?TFT320240                 -----    -----
+  +--> ?PR?_TFT320240_DELAY?TFT320240
+  +--> ?PR?_TFT320240_W_COM?TFT320240
+  +--> ?PR?_TFT320240_W_DATA?TFT320240
+
+?PR?_TFT320240_DELAY?TFT320240                  -----    -----
+  +--> ?PR?_TFT320240_W_DATA?TFT320240
+
+?PR?_TFT320240_W_DATA?TFT320240                 -----    -----
+  +--> ?PR?_TFT320240_W_COM?TFT320240
+
+?PR?TFT320240_CLEAR?TFT320240                   -----    -----
+  +--> ?PR?_TFT320240_SHOW?TFT320240
+
+?PR?_TFT320240_SHOW?TFT320240                   0008H    000EH
+  +--> ?PR?_TFT320240_BLOCKWRITE?TFT320240
+  +--> ?PR?_TFT320240_W_DATA?TFT320240
+
+?PR?_TFT320240_BLOCKWRITE?TFT320240             0016H    0008H
+  +--> ?PR?_TFT320240_W_COM?TFT320240
+  +--> ?PR?_TFT320240_W_DATA?TFT320240
+
+
+
+SYMBOL TABLE OF MODULE:  test (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:0B42H         SEGMENT       ?C_C51STARTUP
+  I:0034H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0B45H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:0B42H         SYMBOL        STARTUP1
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/03/2012  12:37:23  PAGE 3
+
+
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:0B42H         LINE#         133
+  C:0B44H         LINE#         134
+  C:0B45H         LINE#         135
+  C:0B46H         LINE#         136
+  C:0B48H         LINE#         185
+  C:0B4BH         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  D:00A8H         PUBLIC        IE
+  D:00B8H         PUBLIC        IP
+  C:0AD2H         PUBLIC        main
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  D:00C8H         PUBLIC        T2CON
+  C:0B2EH         PUBLIC        _delay
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        k
+  -------         DO            
+  D:0005H         SYMBOL        i
+  D:0004H         SYMBOL        j
+  -------         ENDDO         
+  C:0B2EH         LINE#         4
+  C:0B2EH         LINE#         5
+  C:0B2EH         LINE#         7
+  C:0B32H         LINE#         8
+  C:0B34H         LINE#         9
+  C:0B41H         LINE#         10
+  -------         ENDPROC       _DELAY
+  -------         PROC          MAIN
+  C:0AD2H         LINE#         13
+  C:0AD2H         LINE#         14
+  C:0AD2H         LINE#         15
+  C:0AD5H         LINE#         16
+  C:0AD8H         LINE#         17
+  C:0AE9H         LINE#         20
+  C:0AE9H         LINE#         21
+  C:0AE9H         LINE#         24
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        TFT320240
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:0A1DH         PUBLIC        _tft320240_show_hanzi
+  C:096DH         PUBLIC        _tft320240_show
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/03/2012  12:37:23  PAGE 4
+
+
+  D:00A8H         PUBLIC        IE
+  C:0AB9H         PUBLIC        _tft320240_W_DATA
+  D:00B8H         PUBLIC        IP
+  C:09C8H         PUBLIC        _tft320240_show_colorchar
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  C:0604H         PUBLIC        tft320240_initial
+  C:0A98H         PUBLIC        _tft320240_delay
+  C:0A78H         PUBLIC        _tft320240_W_COM
+  C:0B04H         PUBLIC        tft320240_clear
+  D:00C8H         PUBLIC        T2CON
+  C:091EH         PUBLIC        _tft320240_blockwrite
+  D:00D0H         PUBLIC        PSW
+  C:0893H         PUBLIC        _tft320240_show_string
+  -------         PROC          L?0049
+  -------         ENDPROC       L?0049
+  -------         PROC          _TFT320240_DELAY
+  D:0006H         SYMBOL        t
+  -------         DO            
+  D:0005H         SYMBOL        i
+  -------         ENDDO         
+  C:0A98H         LINE#         7
+  C:0A98H         LINE#         8
+  C:0A98H         LINE#         10
+  C:0AA1H         LINE#         11
+  C:0AA1H         LINE#         12
+  C:0AA6H         LINE#         13
+  C:0AB1H         LINE#         15
+  C:0AB1H         LINE#         16
+  -------         ENDPROC       _TFT320240_DELAY
+  -------         PROC          L?0048
+  -------         ENDPROC       L?0048
+  -------         PROC          _TFT320240_W_COM
+  D:0004H         SYMBOL        dat
+  C:0A78H         LINE#         18
+  C:0A7CH         LINE#         19
+  C:0A7CH         LINE#         20
+  C:0A7FH         LINE#         21
+  C:0A81H         LINE#         22
+  C:0A84H         LINE#         23
+  C:0A87H         LINE#         24
+  C:0A8AH         LINE#         25
+  C:0A8DH         LINE#         26
+  C:0A90H         LINE#         27
+  -------         ENDPROC       _TFT320240_W_COM
+  C:0AB2H         SYMBOL        L?0045
+  C:0AB4H         SYMBOL        L?0046
+  -------         PROC          L?0044
+  -------         ENDPROC       L?0044
+  C:0AB2H         SYMBOL        L?0045
+  C:0AB4H         SYMBOL        L?0046
+  -------         PROC          _TFT320240_W_DATA
+  D:0004H         SYMBOL        dat
+  C:0AB9H         LINE#         29
+  C:0ABDH         LINE#         30
+  C:0ABDH         LINE#         31
+  C:0AC0H         LINE#         32
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/03/2012  12:37:23  PAGE 5
+
+
+  C:0AC2H         LINE#         33
+  C:0AC5H         LINE#         34
+  C:0AC8H         LINE#         35
+  C:0ACBH         LINE#         36
+  C:0ACEH         LINE#         37
+  C:0AD1H         LINE#         38
+  -------         ENDPROC       _TFT320240_W_DATA
+  -------         PROC          L?0047
+  -------         ENDPROC       L?0047
+  -------         PROC          _TFT320240_BLOCKWRITE
+  D:0016H         SYMBOL        sx
+  D:0082H         SYMBOL        ex
+  D:0002H         SYMBOL        sy
+  D:001CH         SYMBOL        ey
+  C:091EH         LINE#         40
+  C:0926H         LINE#         41
+  C:0926H         LINE#         42
+  C:092DH         LINE#         43
+  C:0934H         LINE#         44
+  C:093BH         LINE#         45
+  C:0942H         LINE#         46
+  C:0949H         LINE#         47
+  C:0950H         LINE#         48
+  C:0957H         LINE#         49
+  C:095EH         LINE#         51
+  C:0960H         LINE#         52
+  C:0963H         LINE#         53
+  C:0965H         LINE#         54
+  C:0968H         LINE#         56
+  -------         ENDPROC       _TFT320240_BLOCKWRITE
+  -------         PROC          TFT320240_CLEAR
+  C:0B04H         LINE#         59
+  C:0B04H         LINE#         60
+  C:0B04H         LINE#         61
+  -------         ENDPROC       TFT320240_CLEAR
+  -------         PROC          TFT320240_INITIAL
+  C:0604H         LINE#         66
+  C:0604H         LINE#         67
+  C:0604H         LINE#         69
+  C:0607H         LINE#         71
+  C:060AH         LINE#         72
+  C:0610H         LINE#         73
+  C:0613H         LINE#         74
+  C:061AH         LINE#         75
+  C:061DH         LINE#         76
+  C:0624H         LINE#         79
+  C:062DH         LINE#         80
+  C:0636H         LINE#         81
+  C:0643H         LINE#         82
+  C:0651H         LINE#         84
+  C:0656H         LINE#         85
+  C:0661H         LINE#         86
+  C:0666H         LINE#         87
+  C:066BH         LINE#         88
+  C:0670H         LINE#         89
+  C:0675H         LINE#         90
+  C:067AH         LINE#         91
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/03/2012  12:37:23  PAGE 6
+
+
+  C:0682H         LINE#         92
+  C:0685H         LINE#         94
+  C:0693H         LINE#         95
+  C:069FH         LINE#         96
+  C:06A9H         LINE#         97
+  C:06B4H         LINE#         98
+  C:06C1H         LINE#         99
+  C:06CDH         LINE#         100
+  C:06D2H         LINE#         102
+  C:06DFH         LINE#         103
+  C:06ECH         LINE#         104
+  C:06FAH         LINE#         105
+  C:0708H         LINE#         106
+  C:0716H         LINE#         107
+  C:0724H         LINE#         108
+  C:0732H         LINE#         109
+  C:0740H         LINE#         110
+  C:074EH         LINE#         111
+  C:075CH         LINE#         112
+  C:076AH         LINE#         113
+  C:0778H         LINE#         114
+  C:0784H         LINE#         115
+  C:0790H         LINE#         116
+  C:079EH         LINE#         117
+  C:07ACH         LINE#         119
+  C:07B1H         LINE#         120
+  C:07BBH         LINE#         121
+  C:07C0H         LINE#         122
+  C:07C7H         LINE#         123
+  C:07CAH         LINE#         125
+  C:07D8H         LINE#         126
+  C:07E4H         LINE#         127
+  C:07E9H         LINE#         128
+  C:07EEH         LINE#         130
+  C:07F3H         LINE#         131
+  C:07F8H         LINE#         132
+  C:07FDH         LINE#         133
+  C:0802H         LINE#         134
+  C:0807H         LINE#         135
+  C:080CH         LINE#         137
+  C:0816H         LINE#         138
+  C:081BH         LINE#         139
+  C:0826H         LINE#         140
+  C:0833H         LINE#         141
+  C:0838H         LINE#         142
+  C:083DH         LINE#         144
+  C:0849H         LINE#         145
+  C:0855H         LINE#         146
+  C:085FH         LINE#         147
+  C:0869H         LINE#         148
+  C:0873H         LINE#         149
+  C:0878H         LINE#         151
+  C:087FH         LINE#         152
+  C:087FH         LINE#         153
+  C:0884H         LINE#         154
+  C:0884H         LINE#         155
+  C:088DH         LINE#         156
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/03/2012  12:37:23  PAGE 7
+
+
+  -------         ENDPROC       TFT320240_INITIAL
+  -------         PROC          _TFT320240_SHOW
+  D:0008H         SYMBOL        sx
+  D:000AH         SYMBOL        ex
+  D:000CH         SYMBOL        sy
+  D:000EH         SYMBOL        ey
+  D:0010H         SYMBOL        dat
+  -------         DO            
+  D:0012H         SYMBOL        x
+  D:0014H         SYMBOL        y
+  D:0002H         SYMBOL        i
+  D:0082H         SYMBOL        j
+  -------         ENDDO         
+  C:096DH         LINE#         158
+  C:0979H         LINE#         159
+  C:0979H         LINE#         161
+  C:0982H         LINE#         163
+  C:098FH         LINE#         164
+  C:099CH         LINE#         166
+  C:09A8H         LINE#         167
+  C:09B6H         LINE#         168
+  C:09C7H         LINE#         169
+  -------         ENDPROC       _TFT320240_SHOW
+  -------         PROC          _TFT320240_SHOW_COLORCHAR
+  D:0005H         SYMBOL        sx
+  D:0082H         SYMBOL        sy
+  D:0021H         SYMBOL        index
+  D:0022H         SYMBOL        CharColor
+  D:0024H         SYMBOL        BkColor
+  -------         DO            
+  D:0003H         SYMBOL        i
+  D:0002H         SYMBOL        j
+  D:0001H         SYMBOL        mask
+  -------         ENDDO         
+  C:09C8H         LINE#         171
+  C:09D0H         LINE#         172
+  C:09D0H         LINE#         176
+  C:09D7H         LINE#         179
+  C:09DEH         LINE#         180
+  C:09E0H         LINE#         181
+  C:09E0H         LINE#         182
+  C:09E2H         LINE#         183
+  C:09E4H         LINE#         184
+  C:09E4H         LINE#         185
+  C:0A10H         LINE#         186
+  C:0A14H         LINE#         187
+  C:0A18H         LINE#         188
+  C:0A1CH         LINE#         189
+  -------         ENDPROC       _TFT320240_SHOW_COLORCHAR
+  -------         PROC          _TFT320240_SHOW_STRING
+  D:002EH         SYMBOL        sx
+  D:002FH         SYMBOL        sy
+  D:0031H         SYMBOL        string
+  -------         DO            
+  D:0007H         SYMBOL        len
+  -------         ENDDO         
+  C:0893H         LINE#         191
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/03/2012  12:37:23  PAGE 8
+
+
+  C:089FH         LINE#         192
+  C:089FH         LINE#         195
+  C:08A2H         LINE#         196
+  C:08C9H         LINE#         197
+  C:08CBH         LINE#         198
+  C:08D3H         LINE#         199
+  C:08DEH         LINE#         200
+  C:08DEH         LINE#         201
+  C:08F5H         LINE#         202
+  C:08FBH         LINE#         203
+  C:0906H         LINE#         204
+  C:0908H         LINE#         205
+  -------         ENDPROC       _TFT320240_SHOW_STRING
+  -------         PROC          _TFT320240_SHOW_HANZI
+  D:0005H         SYMBOL        sx
+  D:0082H         SYMBOL        sy
+  D:0029H         SYMBOL        index
+  D:002AH         SYMBOL        CharColor
+  D:002CH         SYMBOL        BkColor
+  -------         DO            
+  D:0003H         SYMBOL        i
+  D:0002H         SYMBOL        j
+  D:0001H         SYMBOL        mask
+  -------         ENDDO         
+  C:0A1DH         LINE#         206
+  C:0A25H         LINE#         207
+  C:0A25H         LINE#         210
+  C:0A2BH         LINE#         211
+  C:0A2DH         LINE#         212
+  C:0A2DH         LINE#         213
+  C:0A2FH         LINE#         214
+  C:0A31H         LINE#         215
+  C:0A31H         LINE#         216
+  C:0A5DH         LINE#         217
+  C:0A61H         LINE#         218
+  C:0A65H         LINE#         219
+  C:0A69H         LINE#         220
+  -------         ENDPROC       _TFT320240_SHOW_HANZI
+  -------         ENDMOD        TFT320240
+
+  -------         MODULE        ZIKU
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:0003H         PUBLIC        ascii_font
+  C:0603H         PUBLIC        Hanzi
+  -------         ENDMOD        ZIKU
+
+  -------         MODULE        ?C?CLDPTR
+  C:0AEBH         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        STRLEN
+  C:0B19H         PUBLIC        _STRLEN
+  -------         ENDMOD        STRLEN
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY?MAIN
+
+BL51 BANKED LINKER/LOCATER V6.00                                                      05/03/2012  12:37:23  PAGE 9
+
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TFT320240_SHOW_STRING?TFT320240
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TFT320240_SHOW_HANZI?TFT320240
+
+Program Size: data=53.0 xdata=0 code=2894
+LINK/LOCATE RUN COMPLETE.  3 WARNING(S),  0 ERROR(S)

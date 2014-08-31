@@ -1,0 +1,210 @@
+C51 COMPILER V8.02   IIC                                                                   04/09/2010 00:11:27 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE IIC
+OBJECT MODULE PLACED IN iic.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE iic.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "reg51.h"
+   2          #include "intrins.h"
+   3          #define _NOP() 
+   4          
+   5          #define SDA_Mask (1<<5)
+   6          #define SCL_Mask (1<<4)
+   7          #define SDA_Dir  P3
+   8          #define SCL_Dir  P3
+   9          #define SDA_0 P3&=~SDA_Mask
+  10          #define SDA_1 P3|=SDA_Mask
+  11          #define SCL_0 P3&=~SCL_Mask
+  12          #define SCL_1 P3|=SCL_Mask
+  13          #define DataIn P3
+  14          typedef bit uint1;
+  15          typedef unsigned char uint8, uchar, UCHAR;
+  16          typedef unsigned int uint16, uint, UINT;
+  17          typedef unsigned long uint32, ulong, ULONG;
+  18          
+  19          void iic_init(void)
+  20          {
+  21   1        SDA_Dir|=SDA_Mask;
+  22   1        SCL_Dir|=SCL_Mask;
+  23   1        SDA_1;
+  24   1        SCL_1;
+  25   1      }
+  26          void iic_start(void)
+  27          {
+  28   1      //      iic_init();
+  29   1              SCL_1;
+  30   1              SDA_1;
+  31   1              _NOP();
+  32   1              SDA_0;
+  33   1      }
+  34          void iic_stop(void)
+  35          {
+  36   1      //      iic_init();
+  37   1              SDA_0;
+  38   1              _NOP();
+  39   1              SCL_1;
+  40   1              SDA_1;
+  41   1      }
+  42          void iic_send_byte(unsigned char d)
+  43          {
+  44   1        unsigned char i;
+  45   1        SCL_0;
+  46   1        for(i=0;i<8;i++)
+  47   1        {
+  48   2          if(d&0x80)
+  49   2          {
+  50   3            SDA_1;
+  51   3          }
+  52   2          else
+  53   2          {
+  54   3            SDA_0;
+  55   3          }
+C51 COMPILER V8.02   IIC                                                                   04/09/2010 00:11:27 PAGE 2   
+
+  56   2          SCL_1;
+  57   2          d<<=1;
+  58   2          _NOP();
+  59   2          SCL_0;
+  60   2        }
+  61   1      }
+  62          void iic_send_ack(void)
+  63          {
+  64   1        SCL_0;
+  65   1        _NOP();
+  66   1        SDA_0;
+  67   1        _NOP();
+  68   1        SCL_1;
+  69   1        _NOP();
+  70   1        _NOP();
+  71   1        SCL_0;
+  72   1      }
+  73          void iic_send_nack(void)
+  74          {
+  75   1        SCL_0;
+  76   1        _NOP();
+  77   1        SDA_1;
+  78   1        _NOP();
+  79   1        SCL_1;
+  80   1        _NOP();
+  81   1        _NOP();
+  82   1        SCL_0;  
+  83   1      }
+  84          unsigned char iic_read_ack(void)
+  85          {
+  86   1        unsigned char t;
+  87   1        SCL_0;
+  88   1        _NOP();
+  89   1        SDA_1;
+  90   1        _NOP();
+  91   1        SCL_1;
+  92   1        if(DataIn&SDA_Mask)//NACK
+  93   1        {
+  94   2          t=1;
+  95   2        }
+  96   1        else//ACK
+  97   1        {
+  98   2          t=0;
+  99   2        }
+ 100   1        SCL_0;
+ 101   1        return t;
+ 102   1      }
+ 103            
+ 104          unsigned char iic_read_byte(void)
+ 105          {
+ 106   1        unsigned char t=0,i;
+ 107   1        SCL_0;
+ 108   1        SDA_Dir&=~SDA_Mask;
+ 109   1        SDA_1;
+ 110   1        for(i=0;i<8;i++)
+ 111   1        {
+ 112   2          t<<=1;
+ 113   2          SDA_1;
+ 114   2          _NOP();
+ 115   2          SCL_1;
+ 116   2          _NOP();
+ 117   2          if(DataIn&SDA_Mask)
+C51 COMPILER V8.02   IIC                                                                   04/09/2010 00:11:27 PAGE 3   
+
+ 118   2          {
+ 119   3            t|=0x01;
+ 120   3          }
+ 121   2          SCL_0;
+ 122   2        }
+ 123   1        SDA_Dir|=SDA_Mask;
+ 124   1        return t;
+ 125   1      }
+ 126          
+ 127          void init_serial(void)
+ 128          {
+ 129   1              TMOD=0x20;
+ 130   1              TH1=0xf3;
+ 131   1              TL1=0xf3;
+ 132   1      //      PCON=0x80;//baud=19200@11059200Hz
+ 133   1              TR1=1;
+ 134   1              SM1=1;
+ 135   1              SM0=0;
+ 136   1              REN=1;
+ 137   1              EA=1;
+ 138   1      //      ES=1;
+ 139   1      }
+ 140          void send_byte(uint8 b)
+ 141          {
+ 142   1              EA=0;
+ 143   1              SBUF=b;
+ 144   1              while(!TI);
+ 145   1              TI=0;
+ 146   1              EA=1;
+ 147   1      }
+ 148          void print_str(uint8 * str)
+ 149          {
+ 150   1              while((*str)!=0)
+ 151   1              {
+ 152   2                      send_byte(*str);
+ 153   2                      str++;
+ 154   2              }
+ 155   1      }
+ 156          void delay_ms(uint16 t)
+ 157          {
+ 158   1              uint16 a;
+ 159   1              while(t--)
+ 160   1              {
+ 161   2                      for(a=0;a<255;a++);
+ 162   2              }
+ 163   1      }
+ 164          void main(void)
+ 165          {
+ 166   1              unsigned char i;
+ 167   1              iic_init();
+ 168   1              iic_start();
+ 169   1              iic_send_byte(0xd0);
+ 170   1              i=iic_read_ack();
+ 171   1              _NOP();
+ 172   1              iic_send_byte(0x00);
+ 173   1              _NOP();
+ 174   1              i=iic_read_ack();
+ 175   1              iic_stop();
+ 176   1              while(1)
+ 177   1              {
+ 178   2              
+ 179   2              }
+C51 COMPILER V8.02   IIC                                                                   04/09/2010 00:11:27 PAGE 4   
+
+ 180   1      
+ 181   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    264    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

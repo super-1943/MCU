@@ -1,0 +1,71 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+D:\My Documents\51asm\kkk.uv2
+Project File Date:  03/10/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling Text1.asm...
+linking...
+Program Size: data=8.0 xdata=0 code=9
+"kkk" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+assembling Text1.asm...
+Text1.asm(2): error A50: BIT-ADDRESS EXPECTED
+Target not created
+Build target 'Target 1'
+assembling Text1.asm...
+Text1.asm(2): error A50: BIT-ADDRESS EXPECTED
+Target not created
+Build target 'Target 1'
+assembling Text1.asm...
+Text1.asm(2): error A50: BIT-ADDRESS EXPECTED
+Target not created
+Build target 'Target 1'
+assembling Text1.asm...
+Text1.asm(2): error A50: BIT-ADDRESS EXPECTED
+Target not created
+Build target 'Target 1'
+assembling Text1.asm...
+linking...
+Program Size: data=8.0 xdata=0 code=9
+"kkk" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+assembling Text1.asm...
+Text1.asm(2): error A40: INVALID REGISTER
+Target not created
+Build target 'Target 1'
+assembling Text1.asm...
+linking...
+Program Size: data=8.0 xdata=0 code=9
+"kkk" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+assembling Text1.asm...
+linking...
+Program Size: data=8.0 xdata=0 code=9
+"kkk" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+assembling Text1.asm...
+Text1.asm(2): error A22: EXPRESSION TYPE DOES NOT MATCH INSTRUCTION
+Target not created
+Build target 'Target 1'
+assembling Text1.asm...
+Text1.asm(2): error A22: EXPRESSION TYPE DOES NOT MATCH INSTRUCTION
+Target not created
+Build target 'Target 1'
+assembling Text1.asm...
+Text1.asm(2): error A22: EXPRESSION TYPE DOES NOT MATCH INSTRUCTION
+Target not created
+Build target 'Target 1'
+assembling Text1.asm...
+linking...
+Program Size: data=8.0 xdata=0 code=9
+"kkk" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+assembling Text1.asm...
+linking...
+Program Size: data=8.0 xdata=0 code=12
+"kkk" - 0 Error(s), 0 Warning(s).

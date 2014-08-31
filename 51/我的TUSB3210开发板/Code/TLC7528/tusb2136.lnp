@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"Text1.obj" 
+TO "tusb2136" 
+RAMSIZE(256) 

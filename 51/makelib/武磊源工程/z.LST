@@ -1,0 +1,77 @@
+C51 COMPILER V8.02   Z                                                                     04/02/2011 21:57:14 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE Z
+OBJECT MODULE PLACED IN z.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE z.c DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /******************************************************************
+   2          
+   3          #include<reg52.h>       //包含单片机寄存器的头文件
+   4          #include<1602.h>
+   5          #include<1302.h>
+   6          #include<18b20.h>
+   7          #include<hongwai.h>
+   8          unsigned char code string[ ]= {"1602IR-CODE TEST"};
+   9          extern unsigned char keyflag;
+  10          void main()
+  11          {  unsigned char Hw_i;
+  12          Ds1302_Int();       //将1302初始化
+  13           Lcd_Int();                      //1602初始化
+  14           Hw_Int();
+  15           //hanying_show();
+  16           while(1)
+  17           {   if(!keyflag)                       //显示时间
+  18               {
+  19                   Ds1302_QLShow();        //在对应位置显示data——
+  20                time_get_show(); //获取时间
+  21                    }
+  22                    if(keyflag==1)
+  23                    {     if(DS18B20_Init()==1)     //在判断的同时又进行了初始化
+  24                    DS18B20_display_error();      
+  25                    else{DS18B20_display_explain();         //显示温度说明
+  26                     DS18B20_display_symbol();     //显示温度符号
+  27                 DS18B20_display_dot();       //显示温度的小数点
+  28                 DS18B20_display_cent();      //显示温度的单位
+  29                     Ds18B20_GetTemperture();             //读取温度值
+  30                     Ds18B20_TempConv();                  //将温度转换为适合LCD显示的数据
+  31                     Ds18B20_Display();     
+  32                        }
+  33                    }
+  34                    if(keyflag==2)
+  35                    {Lcd_WriteAddress(0x00);  // 设置显示位置为第一行的第1个字
+  36                    Hw_delay(5);
+  37                    Hw_i = 0;
+  38                          while(string[Hw_i] != '\0')    //'\0'是数组结束标志 
+  39                                  {                                               // 显示字符     WWW.RICHMCU.COM
+  40                                          Lcd_WriteData(string[Hw_i]);
+  41                                          Hw_i++;
+  42                                          Hw_delay(5);    
+  43                                  }
+  44                                  Hw_Disp();       
+  45                  }
+  46             }
+  47             }
+  48          
+  49           作者：武磊
+  50           时间：2011-3-30
+  51           功能：可以在时间，温度，解码界面之间切换。时间的调整既可以用按键也可以用遥控器
+  52          *****************************************************************/
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+C51 COMPILER V8.02   Z                                                                     04/02/2011 21:57:14 PAGE 2   
+
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

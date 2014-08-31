@@ -1,0 +1,116 @@
+C51 COMPILER V8.02   TEXT1                                                                 05/13/2009 19:39:33 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /*******************************************************
+   2          说明：数码管显示
+   3          一，二数码管显示AD输出（必须按下S4触发int0中断之后）
+   4          
+   5          *******************************************************/
+   6          #include <absacc.h>
+   7          #include <reg52.h>
+   8          #include <stdarg.h>
+   9          #include <stdio.h>
+  10          sbit key1=P1^0;
+  11          sbit key2=P1^1;
+  12          sbit buz=P1^3;
+  13          unsigned char tcount=0;
+  14          #define PORTA XBYTE[0x8fff]
+  15          #define PORTB XBYTE[0x9fff]
+  16          #define PORTC XBYTE[0xafff]
+  17          #define CADDR XBYTE[0xbfff]
+  18          #define ADREAD XBYTE[0x00ff]
+  19          unsigned char table[]={
+  20          0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00
+  21          };
+  22          unsigned char buffer[8]={0,0,0,0,0,0,0,0};
+  23          void delay(unsigned char j)
+  24          {
+  25   1              unsigned char i,k;
+  26   1              for(i=123;i;i--)
+  27   1              for(k=5;k;k--)
+  28   1              for(;j;j--);
+  29   1      }
+  30          void show(unsigned char *buf)
+  31          {
+  32   1              unsigned char i;
+  33   1              CADDR=0x80;
+  34   1              PORTC=0xff;
+  35   1              PORTB=0xfe;
+  36   1              PORTA=0x00;
+  37   1              for(i=0;i<8;i++)
+  38   1              {
+  39   2                      PORTA=table[buf[i]];
+  40   2                      delay(7);
+  41   2                      PORTB<<=1;
+  42   2                      PORTB+=1;
+  43   2              }
+  44   1      }
+  45          void int0(void)interrupt 0 using 1
+  46          {
+  47   1      
+  48   1      }
+  49          
+  50          void int1(void)interrupt 2 using 2
+  51          {
+  52   1      }
+  53          void t1(void)interrupt 3 using 2
+  54          {
+  55   1              TH1=0xff;
+C51 COMPILER V8.02   TEXT1                                                                 05/13/2009 19:39:33 PAGE 2   
+
+  56   1              TL1=0xff;
+  57   1              buffer[7]=0;
+  58   1      }
+  59          void shortdelay(void)
+  60          {
+  61   1              unsigned char i;
+  62   1              for(i=200;i;i--);
+  63   1      }
+  64          void buzzer(unsigned char i)
+  65          {
+  66   1              buz=0;
+  67   1              delay(i);
+  68   1              buz=1;
+  69   1              shortdelay();
+  70   1      }
+  71          void main(void)
+  72          {
+  73   1              unsigned char i;
+  74   1              EX0=1;
+  75   1              ET1=1;
+  76   1              TMOD=0x56;
+  77   1              TH1=0xff;
+  78   1              TL1=0xff;
+  79   1              TR1=1;
+  80   1      //      EA=1;
+  81   1      
+  82   1              for(i=0;i<8;i++)
+  83   1              {
+  84   2                      buffer[i]=1;
+  85   2              }
+  86   1              while(1)
+  87   1              {
+  88   2                      show(buffer);
+  89   2              }
+  90   1              
+  91   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    151    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     26       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

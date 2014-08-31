@@ -1,0 +1,289 @@
+C51 COMPILER V8.02   OS_CPU_C                                                              07/25/2010 11:06:15 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE OS_CPU_C
+OBJECT MODULE PLACED IN OS_CPU_C.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE OS_CPU_C.C LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /*
+   2          *********************************************************************************************************
+   3          *                                               uC/OS-II
+   4          *                                         The Real-Time Kernel
+   5          *
+   6          *                         (c) Copyright 1992-2002, Jean J. Labrosse, Weston, FL
+   7          *                                          All Rights Reserved
+   8          *
+   9          *
+  10          *                                       80x86/80x88 Specific code
+  11          *                                          LARGE MEMORY MODEL
+  12          *
+  13          *                                          Borland C/C++ V4.51
+  14          *
+  15          * File         : OS_CPU_C.C
+  16          * By           : Jean J. Labrosse
+  17          *********************************************************************************************************
+  18          */
+  19          
+  20          #define  OS_CPU_GLOBALS
+  21          #include "includes.h"
+*** WARNING C318 IN LINE 18 OF includes.h: can't open file '..\ucos_ii.h'
+  22          
+  23          /*
+  24          *********************************************************************************************************
+  25          *                                       OS INITIALIZATION HOOK
+  26          *                                            (BEGINNING)
+  27          *
+  28          * Description: This function is called by OSInit() at the beginning of OSInit().
+  29          *
+  30          * Arguments  : none
+  31          *
+  32          * Note(s)    : 1) Interrupts should be disabled during this call.
+  33          *********************************************************************************************************
+  34          */
+  35          #if OS_CPU_HOOKS_EN > 0 && OS_VERSION > 203
+*** WARNING C322 IN LINE 35 OF OS_CPU_C.C: unknown identifier
+              void  OSInitHookBegin (void) reentrant
+              {
+              }
+              #endif
+  40          
+  41          /*
+  42          *********************************************************************************************************
+  43          *                                       OS INITIALIZATION HOOK
+  44          *                                               (END)
+  45          *
+  46          * Description: This function is called by OSInit() at the end of OSInit().
+  47          *
+  48          * Arguments  : none
+  49          *
+  50          * Note(s)    : 1) Interrupts should be disabled during this call.
+  51          *********************************************************************************************************
+  52          */
+  53          #if OS_CPU_HOOKS_EN > 0 && OS_VERSION > 203
+C51 COMPILER V8.02   OS_CPU_C                                                              07/25/2010 11:06:15 PAGE 2   
+
+*** WARNING C322 IN LINE 53 OF OS_CPU_C.C: unknown identifier
+              void  OSInitHookEnd (void) reentrant
+              {
+              }
+              #endif
+  58          
+  59          /*$PAGE*/
+  60          /*
+  61          *********************************************************************************************************
+  62          *                                          TASK CREATION HOOK
+  63          *
+  64          * Description: This function is called when a task is created.
+  65          *
+  66          * Arguments  : ptcb   is a pointer to the task control block of the task being created.
+  67          *
+  68          * Note(s)    : 1) Interrupts are disabled during this call.
+  69          *********************************************************************************************************
+  70          */
+  71          #if OS_CPU_HOOKS_EN > 0 
+  72          void  OSTaskCreateHook (OS_TCB  xdata *pptcb) reentrant
+*** ERROR C141 IN LINE 72 OF OS_CPU_C.C: syntax error near 'xdata', expected ')'
+  73          {
+*** ERROR C267 IN LINE 73 OF OS_CPU_C.C: 'OSTaskCreateHook': requires ANSI-style prototype
+  74   1          pptcb = pptcb;                       /* Prevent compiler warning                                     *
+             -/
+*** ERROR C202 IN LINE 74 OF OS_CPU_C.C: 'pptcb': undefined identifier
+  75   1      }
+  76          #endif
+  77          
+  78          
+  79          /*
+  80          *********************************************************************************************************
+  81          *                                           TASK DELETION HOOK
+  82          *
+  83          * Description: This function is called when a task is deleted.
+  84          *
+  85          * Arguments  : ptcb   is a pointer to the task control block of the task being deleted.
+  86          *
+  87          * Note(s)    : 1) Interrupts are disabled during this call.
+  88          *********************************************************************************************************
+  89          */
+  90          /*#if OS_CPU_HOOKS_EN > 0 
+  91          void  OSTaskDelHook (OS_TCB  xdata *pptcb)reentrant
+  92          {
+  93              pptcb = pptcb;                      // Prevent compiler warning          
+  94          }
+  95          #endif
+  96          */
+  97          /*
+  98          *********************************************************************************************************
+  99          *                                             IDLE TASK HOOK
+ 100          *
+ 101          * Description: This function is called by the idle task.  This hook has been added to allow you to do  
+ 102          *              such things as STOP the CPU to conserve power.
+ 103          *
+ 104          * Arguments  : none
+ 105          *
+ 106          * Note(s)    : 1) Interrupts are enabled during this call.
+ 107          *********************************************************************************************************
+ 108          */
+ 109          #if OS_CPU_HOOKS_EN > 0 && OS_VERSION >= 251
+*** WARNING C322 IN LINE 109 OF OS_CPU_C.C: unknown identifier
+C51 COMPILER V8.02   OS_CPU_C                                                              07/25/2010 11:06:15 PAGE 3   
+
+              void  OSTaskIdleHook (void)reentrant
+              {
+              }
+              #endif
+ 114          
+ 115          /*
+ 116          *********************************************************************************************************
+ 117          *                                           STATISTIC TASK HOOK
+ 118          *
+ 119          * Description: This function is called every second by uC/OS-II's statistics task.  This allows your 
+ 120          *              application to add functionality to the statistics task.
+ 121          *
+ 122          * Arguments  : none
+ 123          *********************************************************************************************************
+ 124          */
+ 125          /*
+ 126          #if OS_CPU_HOOKS_EN > 0 
+ 127          void  OSTaskStatHook (void)reentrant
+ 128          {
+ 129          }
+ 130          #endif
+ 131          */
+ 132          /*$PAGE*/
+ 133          /*
+ 134          *********************************************************************************************************
+ 135          *                                        INITIALIZE A TASK'S STACK
+ 136          *
+ 137          * Description: This function is called by either OSTaskCreate() or OSTaskCreateExt() to initialize the
+ 138          *              stack frame of the task being created.  This function is highly processor specific.
+ 139          *
+ 140          * Arguments  : task          is a pointer to the task code
+ 141          *
+ 142          *              pdata         is a pointer to a user supplied data area that will be passed to the task
+ 143          *                            when the task first executes.
+ 144          *
+ 145          *              ptos          is a pointer to the top of stack.  It is assumed that 'ptos' points to
+ 146          *                            a 'free' entry on the task stack.  If OS_STK_GROWTH is set to 1 then 
+ 147          *                            'ptos' will contain the HIGHEST valid address of the stack.  Similarly, if
+ 148          *                            OS_STK_GROWTH is set to 0, the 'ptos' will contains the LOWEST valid address
+ 149          *                            of the stack.
+ 150          *
+ 151          *              opt           specifies options that can be used to alter the behavior of OSTaskStkInit().
+ 152          *                            (see uCOS_II.H for OS_TASK_OPT_???).
+ 153          *
+ 154          * Returns    : Always returns the location of the new top-of-stack' once the processor registers have
+ 155          *              been placed on the stack in the proper order.
+ 156          *
+ 157          * Note(s)    : Interrupts are enabled when your task starts executing. You can change this by setting the
+ 158          *              PSW to 0x0002 instead.  In this case, interrupts would be disabled upon task startup.  The
+ 159          *              application code would be responsible for enabling interrupts at the beginning of the task
+ 160          *              code.  You will need to modify OSTaskIdle() and OSTaskStat() so that they enable 
+ 161          *              interrupts.  Failure to do this will make your system crash!
+ 162          *********************************************************************************************************
+ 163          */
+ 164          
+ 165          OS_STK xdata *OSTaskStkInit (void (*task)(void *pd), void  xdata *ppdata, OS_STK  xdata *ptos, INT16U opt)
+             -reentrant
+ 166          {
+ 167   1          OS_STK xdata *stk;
+ 168   1      
+ 169   1          ppdata = ppdata;                                                    
+ 170   1          opt    = opt;                               
+C51 COMPILER V8.02   OS_CPU_C                                                              07/25/2010 11:06:15 PAGE 4   
+
+ 171   1      
+ 172   1          stk    = (OS_STK *)ptos;                    /* bottom of stack                              */
+ 173   1              *stk++ = 15;                                                    /* tow bytes of return address and 13 byte registers */
+ 174   1          *stk++ = (INT16U)task & 0xFF;               /* low byte of return address   */
+ 175   1              *stk++ = (INT16U)task >> 8;                 /* high byte of return address      */
+ 176   1          *stk++ = 0x0A;                              /* ACC          */
+ 177   1          *stk++ = 0x0B;                              /* B            */
+ 178   1          *stk++ = 0xD1;                              /* DPH          */
+ 179   1          *stk++ = 0xD0;                              /* DPL          */
+ 180   1              *stk++ = 0x00;                              /* PSW              */
+ 181   1          *stk++ = 0x00;                              /* R0           */
+ 182   1          *stk++ = 0x01;                              /* R1           */
+ 183   1          *stk++ = 0x02;                              /* R2           */
+ 184   1          *stk++ = 0x03;                              /* R3           */
+ 185   1          *stk++ = 0x04;                              /* R4           */
+ 186   1          *stk++ = 0x05;                              /* R5           */
+ 187   1          *stk++ = 0x06;                              /* R6           */
+ 188   1          *stk++ = 0x07;                              /* R7           */
+ 189   1          *stk++ = 0x80;
+ 190   1          *stk++ = 0x00;                              //reentrant function stack point
+ 191   1                                                      
+ 192   1          return ((void xdata *)ptos);                                /* note return ptos, not stk */
+ 193   1      }
+ 194          /*$PAGE*/
+ 195          /*
+ 196          *********************************************************************************************************
+ 197          *                                           TASK SWITCH HOOK
+ 198          *
+ 199          * Description: This function is called when a task switch is performed.  This allows you to perform other
+ 200          *              operations during a context switch.
+ 201          *
+ 202          * Arguments  : none
+ 203          *
+ 204          * Note(s)    : 1) Interrupts are disabled during this call.
+ 205          *              2) It is assumed that the global pointer 'OSTCBHighRdy' points to the TCB of the task that
+ 206          *                 will be 'switched in' (i.e. the highest priority task) and, 'OSTCBCur' points to the 
+ 207          *                 task being switched out (i.e. the preempted task).
+ 208          *********************************************************************************************************
+ 209          */
+ 210          #if OS_CPU_HOOKS_EN > 0 
+ 211          void  OSTaskSwHook (void)reentrant
+ 212          {
+ 213   1      }
+ 214          #endif
+ 215          
+ 216          /*
+ 217          *********************************************************************************************************
+ 218          *                                           OSTCBInit() HOOK
+ 219          *
+ 220          * Description: This function is called by OS_TCBInit() after setting up most of the TCB.
+ 221          *
+ 222          * Arguments  : ptcb    is a pointer to the TCB of the task being created.
+ 223          *
+ 224          * Note(s)    : 1) Interrupts may or may not be ENABLED during this call.
+ 225          *********************************************************************************************************
+ 226          */
+ 227          #if OS_CPU_HOOKS_EN > 0 && OS_VERSION > 203
+*** WARNING C322 IN LINE 227 OF OS_CPU_C.C: unknown identifier
+              void  OSTCBInitHook (OS_TCB  xdata *ptcb)reentrant
+              {
+                  ptcb = ptcb;                                           /* Prevent Compiler warning                 */
+              }
+C51 COMPILER V8.02   OS_CPU_C                                                              07/25/2010 11:06:15 PAGE 5   
+
+              #endif
+ 233          
+ 234          
+ 235          /*
+ 236          *********************************************************************************************************
+ 237          *                                               TICK HOOK
+ 238          *
+ 239          * Description: This function is called every tick.
+ 240          *
+ 241          * Arguments  : none
+ 242          *
+ 243          * Note(s)    : 1) Interrupts may or may not be ENABLED during this call.
+ 244          *********************************************************************************************************
+ 245          */
+ 246          #if OS_CPU_HOOKS_EN > 0 
+ 247          void  OSTimeTickHook (void)reentrant
+ 248          {
+ 249   1      }
+ 250          #endif
+ 251          /*******************************************************************************************/
+ 252          void OSTickISR()interrupt 1 using 0
+ 253              {
+ 254   1               TL0 = 0x70;
+ 255   1               TH0 = 0x00;
+ 256   1               OSIntEnter();
+ 257   1               OSTimeTick();
+ 258   1               OSIntExit();
+ 259   1                           }
+ 260          
+
+C51 COMPILATION COMPLETE.  5 WARNING(S),  3 ERROR(S)

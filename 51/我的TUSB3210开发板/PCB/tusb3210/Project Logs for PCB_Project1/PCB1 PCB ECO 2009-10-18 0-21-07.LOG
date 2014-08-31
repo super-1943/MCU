@@ -1,0 +1,23 @@
+Added Component: Designator=R1(AXIAL-0.4)
+Added Component: Designator=U1(Quad64)
+Added Component: Designator=Y1(R38)
+Added Pin To Net: NetName=NetC2_2 Pin=R1-1
+Added Pin To Net: NetName=NetC1_2 Pin=R1-2
+Added Pin To Net: NetName=GND Pin=U1-5
+Added Pin To Net: NetName=VCC3.3 Pin=U1-10
+Added Pin To Net: NetName=NetU1_18 Pin=U1-18
+Added Pin To Net: NetName=NetU1_19 Pin=U1-19
+Added Pin To Net: NetName=GND Pin=U1-21
+Added Pin To Net: NetName=GND Pin=U1-24
+Added Pin To Net: NetName=VCC3.3 Pin=U1-39
+Added Pin To Net: NetName=GND Pin=U1-42
+Added Pin To Net: NetName=GND Pin=U1-59
+Added Pin To Net: NetName=NetC1_2 Pin=U1-60
+Added Pin To Net: NetName=NetC2_2 Pin=U1-61
+Added Pin To Net: NetName=VCC3.3 Pin=U1-62
+Added Pin To Net: NetName=NetC1_2 Pin=Y1-1
+Added Pin To Net: NetName=NetC2_2 Pin=Y1-2
+Added Member To Class: ClassName=Sheet1 Member=Component R1 Res2
+Added Member To Class: ClassName=Sheet1 Member=Component U1 TUSB3210
+Added Member To Class: ClassName=Sheet1 Member=Component Y1 12M
+Added Room: Name=Sheet1

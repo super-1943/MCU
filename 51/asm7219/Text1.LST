@@ -1,0 +1,193 @@
+A51 MACRO ASSEMBLER  TEXT1                                                                05/27/2009 13:22:12 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.00
+OBJECT MODULE PLACED IN Text1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE Text1.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+  0090                 1     SO BIT P1.0
+  0091                 2     CS BIT P1.1
+  0092                 3     SCK BIT P1.2
+                       4     
+  0030                 5     DATAH  DATA 30H
+  0031                 6     DATAL  DATA 31H
+  0032                 7     TDATAH DATA 32H
+  0033                 8     TDATAL DATA 33H
+                       9     
+0000                  10      ORG 0000H
+0000 01A0             11      ajmp start
+00A0                  12      org 00a0h
+                      13      
+00A0 758150           14      start:MOV SP,#50H
+                      15      
+00A3 1200AB           16      LCALL MAX0;µ˜”√≥ı ºªØ7219∫Ø 
+                      17      
+00A6 1200C8           18      LOOP:LCALL DISP;µ˜”√œ‘ æ∫Ø 
+                      19      
+00A9 80FB             20      SJMP LOOP 
+                      21      
+00AB 740B             22      MAX0:MOV A,#0BH;…Ë÷√…®√ËŒª 
+                      23      
+00AD 7A03             24      MOV R2,#03H ;œ‘ æ4Œª
+                      25      
+00AF 1200D9           26      LCALL YW
+                      27      
+00B2 740A             28      MOV A,#0AH;…Ë÷√¡¡∂»
+                      29      
+00B4 7A05             30      MOV R2,#05H
+                      31      
+00B6 1200D9           32      LCALL YW
+                      33      
+00B9 7409             34      MOV A,#09H;…Ë÷√“Î¬Î∏Ò Ω
+                      35      
+00BB 7AFF             36      MOV R2,#0FFH ;…Ë÷√BCD¬Î
+                      37      
+00BD 1200D9           38      LCALL YW
+                      39      
+00C0 740C             40      MOV A,#0CH;…Ë÷√’≥£π§◊˜
+                      41      
+00C2 7A01             42      MOV R2,#01H
+                      43      
+00C4 1200D9           44      LCALL YW
+                      45      
+00C7 22               46      RET
+                      47      
+00C8 7840             48      DISP:MOV R0,#40H;“™œ‘ æµƒ æ›¥Ê¥¢µÿ÷∑
+                      49      
+00CA 7901             50      MOV R1,#01H; ¬Îπ‹µƒµÿ÷∑ºƒ¥Ê∆˜01h~08h
+                      51      
+00CC 7B08             52      MOV R3,#08H
+                      53      
+00CE E6               54      LOOP1:MOV A,@R0
+                      55      
+00CF FA               56      MOV R2,A
+                      57      
+00D0 E9               58      MOV A,R1
+A51 MACRO ASSEMBLER  TEXT1                                                                05/27/2009 13:22:12 PAGE     2
+
+                      59      
+00D1 1200D9           60      LCALL YW
+                      61      
+00D4 08               62      INC R0
+                      63      
+00D5 09               64      INC R1
+                      65      
+00D6 DBF6             66      DJNZ R3,LOOP1
+                      67      
+00D8 22               68      RET
+                      69      
+00D9 1200E7           70      YW:LCALL SEND;µ˜”√∑¢ÀÕ∫Ø £¨“ªŒª“ªŒªµƒ¥”dinÀÕ»Î7219
+                      71      
+00DC EA               72      MOV A,R2
+                      73      
+00DD 1200E7           74      LCALL SEND
+                      75      
+00E0 C294             76      CLR P1.4;load –≈∫≈…œ…—ÿ∂‘∆‰À¯¥Ê
+                      77      
+00E2 00               78      NOP
+                      79      
+00E3 00               80      NOP
+                      81      
+00E4 D2A2             82      SETB P2.2;∏¥Œª
+                      83      
+00E6 22               84      RET
+                      85      
+00E7 7C08             86      SEND:MOV R4,#08H;∂‘∆‰◊÷Ω⁄œÚ◊Û—≠ª∑“∆8Œª
+                      87      
+00E9 C2A1             88      LOOP2:CLR P2.1;clk…œ…—ÿ∂‘√ø“ªŒª æ›À¯¥Ê
+                      89      
+00EB 33               90      RLC A
+                      91      
+00EC 92A0             92      MOV P2.0,C
+                      93      
+00EE 00               94      NOP
+                      95      
+00EF 00               96      NOP
+                      97      
+00F0 00               98      NOP
+                      99      
+00F1 D2A1            100      SETB P2.1
+                     101      
+00F3 DCF4            102      DJNZ R4,LOOP2
+                     103      
+00F5 22              104      RET
+00F6 C291            105     READT: CLR CS
+00F8 C292            106             CLR SCK
+00FA 7A08            107             MOV R2,#08H
+00FC A290            108      READH: MOV C,SO
+00FE 33              109             RLC A
+00FF D292            110             SETB SCK
+0101 00              111             NOP
+0102 C292            112             CLR SCK
+0104 DAF6            113             DJNZ R2,READH
+0106 F530            114             MOV DATAH,A
+0108 7A08            115             MOV R2,#08H
+010A A290            116      READL: MOV C,SO
+010C 33              117             RLC A
+010D D292            118             SETB SCK
+010F 00              119             NOP
+0110 C292            120             CLR SCK
+0112 DAF6            121             DJNZ R2,READL
+0114 F531            122             MOV DATAL,A
+0116 D291            123             SETB CS
+0118 22              124             RET
+A51 MACRO ASSEMBLER  TEXT1                                                                05/27/2009 13:22:12 PAGE     3
+
+0119 E531            125      D16T12:MOV A,DATAL
+011B 33              126             RLC A
+011C F531            127             MOV DATAL,A
+011E E530            128             MOV A,DATAH
+0120 33              129             RLC A
+0121 C4              130             SWAP A
+0122 F5F0            131             MOV B,A
+0124 740F            132             MOV A,#0FH
+0126 F532            133             MOV TDATAH,A
+0128 E5F0            134             MOV A,B
+012A 54F0            135             ANL A,#0F0H
+012C F5F0            136             MOV B,A
+012E E531            137             MOV A,DATAL
+0130 54F0            138             ANL A,#0F0H
+0132 C4              139             SWAP A
+0133 45F0            140             ORL A,B
+0135 F533            141             MOV TDATAL,A
+0137 22              142                     RET
+                     143     end
+A51 MACRO ASSEMBLER  TEXT1                                                                05/27/2009 13:22:12 PAGE     4
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+B. . . . . . . . .  D ADDR   00F0H   A   
+CS . . . . . . . .  B ADDR   0090H.1 A   
+D16T12 . . . . . .  C ADDR   0119H   A   
+DATAH. . . . . . .  D ADDR   0030H   A   
+DATAL. . . . . . .  D ADDR   0031H   A   
+DISP . . . . . . .  C ADDR   00C8H   A   
+LOOP . . . . . . .  C ADDR   00A6H   A   
+LOOP1. . . . . . .  C ADDR   00CEH   A   
+LOOP2. . . . . . .  C ADDR   00E9H   A   
+MAX0 . . . . . . .  C ADDR   00ABH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+READH. . . . . . .  C ADDR   00FCH   A   
+READL. . . . . . .  C ADDR   010AH   A   
+READT. . . . . . .  C ADDR   00F6H   A   
+SCK. . . . . . . .  B ADDR   0090H.2 A   
+SEND . . . . . . .  C ADDR   00E7H   A   
+SO . . . . . . . .  B ADDR   0090H.0 A   
+SP . . . . . . . .  D ADDR   0081H   A   
+START. . . . . . .  C ADDR   00A0H   A   
+TDATAH . . . . . .  D ADDR   0032H   A   
+TDATAL . . . . . .  D ADDR   0033H   A   
+YW . . . . . . . .  C ADDR   00D9H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

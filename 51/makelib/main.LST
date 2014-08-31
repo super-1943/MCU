@@ -1,0 +1,70 @@
+C51 COMPILER V8.02   MAIN                                                                  04/02/2011 21:58:57 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg52.h>       //包含单片机寄存器的头文件
+   2          #include<1602.h>
+   3          #include<1302.h>
+   4          #include<18b20.h>
+   5          #include<hongwai.h>
+   6          unsigned char code string[ ]= {"1602IR-CODE TEST"};
+   7          extern unsigned char keyflag;
+   8          void main()
+   9          {  unsigned char Hw_i;
+  10   1      Ds1302_Int();       //将1302初始化
+  11   1       Lcd_Int();                      //1602初始化
+  12   1       Hw_Int();
+  13   1       //hanying_show();
+  14   1       while(1)
+  15   1       {   if(!keyflag)                       //显示时间
+  16   2           {
+  17   3               Ds1302_QLShow();        //在对应位置显示data——
+  18   3            time_get_show(); //获取时间
+  19   3                }
+  20   2                if(keyflag==1)
+  21   2                {     if(DS18B20_Init()==1)     //在判断的同时又进行了初始化
+  22   3                DS18B20_display_error();      
+  23   3                else{DS18B20_display_explain();         //显示温度说明
+  24   4                 DS18B20_display_symbol();     //显示温度符号
+  25   4             DS18B20_display_dot();       //显示温度的小数点
+  26   4             DS18B20_display_cent();      //显示温度的单位
+  27   4                 Ds18B20_GetTemperture();             //读取温度值
+  28   4                 Ds18B20_TempConv();                  //将温度转换为适合LCD显示的数据
+  29   4                 Ds18B20_Display();     
+  30   4                    }
+  31   3                }
+  32   2                if(keyflag==2)
+  33   2                {Lcd_WriteAddress(0x00);  // 设置显示位置为第一行的第1个字
+  34   3                Hw_delay(5);
+  35   3                Hw_i = 0;
+  36   3                      while(string[Hw_i] != '\0')    //'\0'是数组结束标志 
+  37   3                              {                                               // 显示字符     WWW.RICHMCU.COM
+  38   4                                      Lcd_WriteData(string[Hw_i]);
+  39   4                                      Hw_i++;
+  40   4                                      Hw_delay(5);    
+  41   4                              }
+  42   3                              Hw_Disp();       
+  43   3              }
+  44   2         }
+  45   1         }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     99    ----
+   CONSTANT SIZE    =     17    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V8.02   MAIN                                                                  04/02/2011 21:58:57 PAGE 2   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,19 @@
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling keiltest.c...
+linking...
+Program Size: data=9.0 xdata=0 code=20
+creating hex file from "TUSB2136"...
+User command #1: stkkk.bat
+C:\Documents and Settings\Master\×ÀÃæ\TUSB3210\keiltest>HEX2BIN TUSB2136.HEX TUSB2136.BIN 
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x00000003.      Status: Writing 5 bytes at address 0x0000000F.      
+Status: HEX to BIN conversion was successful.
+C:\DOCUME~1\Master\??\TUSB3210\keiltest>copy TUSB2136.BIN c:\windows\system32\drivers\ /Y 
+        1 file(s) copied.
+"TUSB2136" - 0 Error(s), 0 Warning(s).

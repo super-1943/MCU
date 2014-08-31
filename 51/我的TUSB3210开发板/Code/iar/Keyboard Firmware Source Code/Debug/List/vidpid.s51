@@ -1,0 +1,523 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V7.51A/W32 for 8051               28/May/2010  14:43:53 /
+// Copyright 2004-2009 IAR Systems AB.                                        /
+// Time limited license: 20 days left                                         /
+//                                                                            /
+//    Core               =  plain                                             /
+//    Code model         =  near                                              /
+//    Data model         =  large                                             /
+//    Calling convention =  xdata reentrant                                   /
+//    Constant location  =  data                                              /
+//    Dptr setup         =  1,16                                              /
+//    Source file        =  E:\AllProject\51\Keyboard Firmware Source         /
+//                          Code\vidpid.c                                     /
+//    Command line       =  "E:\AllProject\51\Keyboard Firmware Source        /
+//                          Code\vidpid.c" -lC "E:\AllProject\51\Keyboard     /
+//                          Firmware Source Code\Debug\List\" -lA             /
+//                          "E:\AllProject\51\Keyboard Firmware Source        /
+//                          Code\Debug\List\" -o "E:\AllProject\51\Keyboard   /
+//                          Firmware Source Code\Debug\Obj\" -e               /
+//                          --char_is_signed --no_cse --no_unroll             /
+//                          --no_inline --no_code_motion --no_tbaa --debug    /
+//                          --core=plain --dptr=16,1 --data_model=large       /
+//                          --code_model=near --calling_convention=xdata_reen /
+//                          trant --place_constants=data --nr_virtual_regs 8  /
+//                          -I "C:\Program Files\IAR Systems\Embedded         /
+//                          Workbench 5.3 Evaluation version\8051\INC\" -I    /
+//                          "C:\Program Files\IAR Systems\Embedded Workbench  /
+//                          5.3 Evaluation version\8051\INC\CLIB\" -Ol        /
+//    List file          =  E:\AllProject\51\Keyboard Firmware Source         /
+//                          Code\Debug\List\vidpid.s51                        /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME vidpid
+
+        RTMODEL "__calling_convention", "xdata_reentrant"
+        RTMODEL "__code_model", "near"
+        RTMODEL "__core", "plain"
+        RTMODEL "__data_model", "large"
+        RTMODEL "__dptr_size", "16"
+        RTMODEL "__extended_stack", "disabled"
+        RTMODEL "__location_for_constants", "data"
+        RTMODEL "__number_of_dptrs", "1"
+        RTMODEL "__rt_version", "1"
+
+        RSEG DOVERLAY:DATA:NOROOT(0)
+        RSEG IOVERLAY:IDATA:NOROOT(0)
+        RSEG ISTACK:IDATA:NOROOT(0)
+        RSEG PSTACK:XDATA:NOROOT(0)
+        RSEG XSTACK:XDATA:NOROOT(0)
+
+        EXTERN __INIT_XDATA_I
+        EXTERN __INIT_XDATA_Z
+
+        PUBLIC GetVidPidSetting
+        FUNCTION GetVidPidSetting,0203H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC fncOffset
+        PUBLIC funcDefs
+        PUBLIC s0123
+        
+        CFI Names cfiNames0
+        CFI StackFrame CFA_SP SP IDATA
+        CFI StackFrame CFA_PSP16 PSP16 XDATA
+        CFI StackFrame CFA_XSP16 XSP16 XDATA
+        CFI StaticOverlayFrame CFA_IOVERLAY IOVERLAY
+        CFI StaticOverlayFrame CFA_DOVERLAY DOVERLAY
+        CFI Resource `PSW.CY`:1, `B.BR0`:1, `B.BR1`:1, `B.BR2`:1, `B.BR3`:1
+        CFI Resource `B.BR4`:1, `B.BR5`:1, `B.BR6`:1, `B.BR7`:1, `VB.BR8`:1
+        CFI Resource `VB.BR9`:1, `VB.BR10`:1, `VB.BR11`:1, `VB.BR12`:1
+        CFI Resource `VB.BR13`:1, `VB.BR14`:1, `VB.BR15`:1, VB:8, B:8, A:8
+        CFI Resource PSW:8, DPL0:8, DPH0:8, R0:8, R1:8, R2:8, R3:8, R4:8, R5:8
+        CFI Resource R6:8, R7:8, V0:8, V1:8, V2:8, V3:8, V4:8, V5:8, V6:8, V7:8
+        CFI Resource SP:8, PSPH:8, PSPL:8, PSP16:16, XSPH:8, XSPL:8, XSP16:16
+        CFI VirtualResource ?RET:16, ?RET_HIGH:8, ?RET_LOW:8
+        CFI ResourceParts PSP16 PSPH, PSPL
+        CFI ResourceParts XSP16 XSPH, XSPL
+        CFI ResourceParts ?RET ?RET_HIGH, ?RET_LOW
+        CFI EndNames cfiNames0
+        
+        CFI Common cfiCommon0 Using cfiNames0
+        CFI CodeAlign 1
+        CFI DataAlign -1
+        CFI ReturnAddress ?RET CODE
+        CFI CFA_DOVERLAY Used
+        CFI CFA_IOVERLAY Used
+        CFI CFA_SP SP+-2
+        CFI CFA_PSP16 PSP16+0
+        CFI CFA_XSP16 XSP16+0
+        CFI `PSW.CY` SameValue
+        CFI `B.BR0` SameValue
+        CFI `B.BR1` SameValue
+        CFI `B.BR2` SameValue
+        CFI `B.BR3` SameValue
+        CFI `B.BR4` SameValue
+        CFI `B.BR5` SameValue
+        CFI `B.BR6` SameValue
+        CFI `B.BR7` SameValue
+        CFI `VB.BR8` SameValue
+        CFI `VB.BR9` SameValue
+        CFI `VB.BR10` SameValue
+        CFI `VB.BR11` SameValue
+        CFI `VB.BR12` SameValue
+        CFI `VB.BR13` SameValue
+        CFI `VB.BR14` SameValue
+        CFI `VB.BR15` SameValue
+        CFI VB SameValue
+        CFI B Undefined
+        CFI A Undefined
+        CFI PSW SameValue
+        CFI DPL0 SameValue
+        CFI DPH0 SameValue
+        CFI R0 Undefined
+        CFI R1 Undefined
+        CFI R2 Undefined
+        CFI R3 Undefined
+        CFI R4 Undefined
+        CFI R5 Undefined
+        CFI R6 SameValue
+        CFI R7 SameValue
+        CFI V0 SameValue
+        CFI V1 SameValue
+        CFI V2 SameValue
+        CFI V3 SameValue
+        CFI V4 SameValue
+        CFI V5 SameValue
+        CFI V6 SameValue
+        CFI V7 SameValue
+        CFI PSPH Undefined
+        CFI PSPL Undefined
+        CFI XSPH Undefined
+        CFI XSPL Undefined
+        CFI ?RET Concat
+        CFI ?RET_HIGH Frame(CFA_SP, 2)
+        CFI ?RET_LOW Frame(CFA_SP, 1)
+        CFI EndCommon cfiCommon0
+        
+// E:\AllProject\51\Keyboard Firmware Source Code\vidpid.c
+//    1 /******************************************************************************
+//    2  *                         VAULT INFORMATION SERVICES                         *
+//    3  *                          TEXAS INSTRUMENTS, INC.                           *
+//    4  *----------------------------------------------------------------------------*
+//    5  *     "VID/PID Selection Detection Module for TUSB2136 Keyboard Demo App"    *
+//    6  *                                                                            * 
+//    7  * Programmed by: Craig Steiner, VIS (csteiner@vaultbbs.com)                  * 
+//    8  * Develop Date:  30/Sep/2000                                                 *  
+//    9  *----------------------------------------------------------------------------*
+//   10  * Description: This module is a component of the TUSB2136 Demo App.  It      *
+//   11  *   detects the setting provided on the s0-s3 pins and chooses the product   *
+//   12  *   configuration base on that setting.                                      *
+//   13  *                                                                            * 
+//   14  * NOTE: The end user may easily modify the funcDefs[] structure defined below* 
+//   15  *       to support his/her product without requiring extensive modification  *  
+//   16  *       to the rest of the source code.                                      *   
+//   17  ******************************************************************************/
+//   18 
+//   19 #include <io51.h>
+//   20 #include "types.h"
+//   21 #include "tusb2136.h"
+//   22 
+//   23 /***************************************************************************
+//   24  * Structure: FUNCDEF Structure                                            *
+//   25  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//   26  * Description: The funcDefs[] structure contains the VID/PID settings for *
+//   27  *    each possible s0123 setting. The s0123 is read at boot-time from     *
+//   28  *    pins S0-S3 in order to obtain a given "personality" depending on the *
+//   29  *    way these pins are tied.  This allows a single firmware to handle a  * 
+//   30  *    variety of distinct manufacturer/products that essentially work the  *  
+//   31  *    same way.                                                            *   
+//   32  *                                                                         *    
+//   33  *    The last entry in the structure should use an s0123 setting of 0xFF  *    
+//   34  *    to indicate the "default" setting.  The parameters contained in this *    
+//   35  *    entry will be used if the value contained on s0123 is not found in   *     
+//   36  *    the structure.                                                       *      
+//   37  *                                                                         *     
+//   38  *    The structure definition for FUNCDEF_STRUCT is contained in the      *     
+//   39  *    types.h include file.                                                *      
+//   40  ***************************************************************************/
+//   41 
+
+        RSEG CODE_C:CODE:REORDER:NOROOT(0)
+        DATA
+//   42 struct FUNCDEF_STRUCT code funcDefs[17] = {
+funcDefs:
+        DB 0
+        DW 1105, 1, 1105, 16, 4369, `?<Constant "Texas Instruments">`
+        DW `?<Constant "Texas Instruments TUS...">`, 0H
+        DB 1
+        DW 1105, 2, 1105, 32, 8738, `?<Constant "Texas Instruments">`
+        DW `?<Constant "Texas Instruments TUS...">_1`, 0H
+        DB 2
+        DW 1105, 3, 1105, 48, 13107, `?<Constant "Texas Instruments">`
+        DW `?<Constant "Texas Instruments TUS...">_2`, 0H
+        DB 3
+        DW 1105, 4, 1105, 64, 17476, `?<Constant "Texas Instruments">`
+        DW `?<Constant "Texas Instruments TUS...">_3`, 0H
+        DB 255
+        DW 1105, 61166, 1105, 65535, 65535, `?<Constant "Texas Instruments">`
+        DW `?<Constant "Texas Instruments TUS...">_4`, 0H
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//   43 	// VID/PID Setting 0 *******************************
+//   44 	{0, // S0S1 value 
+//   45 	0x0451, 0x0001, // HUB VID/PID */
+//   46 	0x0451, 0x0010, // FNC VID/PID */
+//   47 	0x1111,	// FNC revision level
+//   48 	"Texas Instruments",
+//   49 	"Texas Instruments TUSB2136 Keyboard (Ver 0)",
+//   50 	NULL},
+//   51 
+//   52 	// VID/PID Setting 1 ********************************
+//   53 	{1, // S0S1 value 
+//   54 	0x0451, 0x0002, // HUB VID/PID */
+//   55 	0x0451, 0x0020, // FNC VID/PID */
+//   56 	0x2222,	// FNC revision level
+//   57 	"Texas Instruments",
+//   58 	"Texas Instruments TUSB2136 EVM DEMO 1 (Ver 1)",
+//   59 	NULL},
+//   60 	
+//   61 	// VID/PID Setting 2 ********************************
+//   62 	{2, // S0S1 value 
+//   63 	0x0451, 0x0003, // HUB VID/PID */
+//   64 	0x0451, 0x0030, // FNC VID/PID */
+//   65 	0x3333,	// FNC revision level
+//   66 	"Texas Instruments",
+//   67 	"Texas Instruments TUSB2136 EVM DEMO 2 (Ver 2)",
+//   68 	NULL},
+//   69 
+//   70 	// VID/PID Setting 3 ********************************
+//   71 	{3, // S0S1 value 
+//   72 	0x0451, 0x0004, // HUB VID/PID */
+//   73 	0x0451, 0x0040, // FNC VID/PID */
+//   74 	0x4444,	// FNC revision level
+//   75 	"Texas Instruments",
+//   76 //	"Texas Instruments TUSB2136 for NewMotion One-Key Keyboard (Ver 3)",
+//   77 	"Texas Instruments TUSB2136 for Flat Keyboard (Ver 3)",
+//   78 	NULL},
+//   79 
+//   80 	// VID/PID DEFAULT SETTING ***************************	
+//   81 	// ** WARNING: YOU MAY CHANGE THE DEFAULT PARAMETERS,
+//   82 	//             BUT DO NOT REMOVE THIS ENTRY.  THE CODE
+//   83 	//             MUST BE ABLE TO USE A DEFAULT VALUE TO
+//   84 	//             HAVE VALID PARAMETERS IF NONE OF THE
+//   85 	//             PREVIOUS ENTRIES HANDLE THE DETECTED
+//   86 	//             S0123 SETTING.
+//   87 	// ***************************************************
+//   88 	{0xFF, // S0S1 value (default value = 0xFF)
+//   89 	0x0451, 0xEEEE, // HUB VID/PID */
+//   90 	0x0451, 0xFFFF, // FNC VID/PID */
+//   91 	0xFFFF,	// FNC revision level
+//   92 	"Texas Instruments",
+//   93 	"Texas Instruments TUSB2136 Generic Setting",
+//   94 	NULL}
+//   95 	};
+//   96 
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//   97 unsigned char s0123; // The s0132 value read from VIDSTA at boot time
+s0123:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+//   98 unsigned char fncOffset; // The offset into the funcDefs structure, used in 
+fncOffset:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+//   99 						// other modules to directly access the information
+//  100 						// from the funcDefs[] structure.
+//  101 
+//  102 /***************************************************************************
+//  103  * Function:   GetVidPidSetting                                            *
+//  104  * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+//  105  * Description: Obtains the setting from S0-S3 (P3.0/P3.1).  This is then  *
+//  106  *    used to select the various VID/PID settings for the hub and function.*
+//  107  ***************************************************************************/
+//  108 
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
+//  109 void GetVidPidSetting(void)
+GetVidPidSetting:
+        CFI Block cfiBlock0 Using cfiCommon0
+        CFI Function GetVidPidSetting
+//  110 {
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        ; Saved register size: 2
+        ; Auto size: 0
+//  111 int i;
+//  112 	// Obtain the VID/PID setting from mapped memory.
+//  113 	for(i=0; i<50; i++); // wait for stable of s0-s3
+        MOV     R0,#0x0
+        MOV     R1,#0x0
+        SJMP    ??GetVidPidSetting_0
+??GetVidPidSetting_1:
+        MOV     A,R0
+        ADD     A,#0x1
+        MOV     R0,A
+        MOV     A,R1
+        ADDC    A,#0x0
+        MOV     R1,A
+??GetVidPidSetting_0:
+        CLR     C
+        MOV     A,R0
+        SUBB    A,#0x32
+        MOV     A,R1
+        SUBB    A,#0x0
+        MOV     C,0xD0 /* PSW */.2
+        XRL     A,PSW
+        RLC     A
+        JC      ??GetVidPidSetting_1
+//  114 	
+//  115 	s0123 = 1; // modified for TUSB3210 Keyboard EVM, Aug 7 2001
+        MOV     A,#0x1
+        MOV     DPTR,#s0123
+        MOVX    @DPTR,A
+//  116 	
+//  117 	// We now must search the funcDefs[] structure for the detected
+//  118 	// s0123 setting.  The variable used as the index in the for... loop
+//  119 	// is the global fncOffset variable.  Thus when the loop is complete
+//  120 	// the fncOffset variable will point to the entry in fncDefs[] that
+//  121 	// contains the selected configuration information.  We limit the
+//  122 	// loop at 17 so that a structure without a terminating 0xFF entry
+//  123 	// does not cause an infinite crash/loop.
+//  124 	
+//  125 	for(fncOffset = 0; fncOffset < 17; fncOffset++ )
+        MOV     A,#0x0
+        MOV     DPTR,#fncOffset
+        MOVX    @DPTR,A
+        SJMP    ??GetVidPidSetting_2
+??GetVidPidSetting_3:
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        ADD     A,#0x1
+        MOVX    @DPTR,A
+??GetVidPidSetting_2:
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        CLR     C
+        SUBB    A,#0x11
+        JNC     ??GetVidPidSetting_4
+//  126 		if(funcDefs[fncOffset].s0123 == s0123 || funcDefs[fncOffset].s0123 == 0xFF )
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#(funcDefs & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#((funcDefs >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        MOV     R2,A
+        MOV     DPTR,#s0123
+        MOVX    A,@DPTR
+        XRL     A,R2
+        JZ      ??GetVidPidSetting_4
+        MOV     DPTR,#fncOffset
+        MOVX    A,@DPTR
+        MOV     R0,A
+        MOV     R1,#0x0
+        MOV     A,R0
+        MOV     B,#0x11
+        MUL     AB
+        XCH     A,R0
+        MOV     R2,B
+        MOV     B,#0x0
+        MUL     AB
+        ADD     A,R2
+        MOV     R2,A
+        MOV     B,#0x11
+        MOV     A,R1
+        MUL     AB
+        ADD     A,R2
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#(funcDefs & 0xff)
+        MOV     DPL,A
+        MOV     A,R1
+        ADDC    A,#((funcDefs >> 8) & 0xff)
+        MOV     DPH,A
+        CLR     A
+        MOVC    A,@A+DPTR
+        XRL     A,#0xff
+        JNZ     ??GetVidPidSetting_3
+//  127 			break;
+//  128 }
+??GetVidPidSetting_4:
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-3
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-2
+        RET
+        CFI EndBlock cfiBlock0
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+        DATA
+`?<Initializer for <Constant "Texas Instruments`:
+        DB "Texas Instruments"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+        DATA
+`?<Initializer for <Constant "Texas Instruments_1`:
+        DB "Texas Instruments TUSB2136 Keyboard (Ver 0)"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+        DATA
+`?<Initializer for <Constant "Texas Instruments_2`:
+        DB "Texas Instruments TUSB2136 EVM DEMO 1 (Ver 1)"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+        DATA
+`?<Initializer for <Constant "Texas Instruments_3`:
+        DB "Texas Instruments TUSB2136 EVM DEMO 2 (Ver 2)"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+        DATA
+`?<Initializer for <Constant "Texas Instruments_4`:
+        DB 54H, 65H, 78H, 61H, 73H, 20H, 49H, 6EH
+        DB 73H, 74H, 72H, 75H, 6DH, 65H, 6EH, 74H
+        DB 73H, 20H, 54H, 55H, 53H, 42H, 32H, 31H
+        DB 33H, 36H, 20H, 66H, 6FH, 72H, 20H, 46H
+        DB 6CH, 61H, 74H, 20H, 4BH, 65H, 79H, 62H
+        DB 6FH, 61H, 72H, 64H, 20H, 28H, 56H, 65H
+        DB 72H, 20H, 33H, 29H, 0
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+        DATA
+`?<Initializer for <Constant "Texas Instruments_5`:
+        DB "Texas Instruments TUSB2136 Generic Setting"
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA
+`?<Constant "Texas Instruments">`:
+        DS 18
+        REQUIRE `?<Initializer for <Constant "Texas Instruments`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA
+`?<Constant "Texas Instruments TUS...">`:
+        DS 44
+        REQUIRE `?<Initializer for <Constant "Texas Instruments_1`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA
+`?<Constant "Texas Instruments TUS...">_1`:
+        DS 46
+        REQUIRE `?<Initializer for <Constant "Texas Instruments_2`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA
+`?<Constant "Texas Instruments TUS...">_2`:
+        DS 46
+        REQUIRE `?<Initializer for <Constant "Texas Instruments_3`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA
+`?<Constant "Texas Instruments TUS...">_3`:
+        DS 53
+        REQUIRE `?<Initializer for <Constant "Texas Instruments_4`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA
+`?<Constant "Texas Instruments TUS...">_4`:
+        DS 43
+        REQUIRE `?<Initializer for <Constant "Texas Instruments_5`
+        REQUIRE __INIT_XDATA_I
+
+        END
+//  129 
+// 
+// 289 bytes in segment CODE_C
+// 159 bytes in segment NEAR_CODE
+// 250 bytes in segment XDATA_I
+// 250 bytes in segment XDATA_ID
+//   2 bytes in segment XDATA_Z
+// 
+// 698 bytes of CODE  memory
+// 252 bytes of XDATA memory
+//
+//Errors: none
+//Warnings: none

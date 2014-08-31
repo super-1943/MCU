@@ -1,0 +1,80 @@
+C51 COMPILER V8.02   TEXT1                                                                 04/06/2010 13:18:43 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          //---------------------------------------------------------------------------
+   2          /**************************
+   3          KGM701A9: 16bit interface
+   4          VDD : 2.8~3.3V
+   5          DB7-DB0 : P1
+   6          DB15-DB8 : P2
+   7          RS : P3.2
+   8          WR: P3.3
+   9          RD  : P3.4
+  10          RESET : P3.5
+  11          CS : Connect to GND
+  12          FMARK : Not Connect
+  13          ***************************/
+  14          #include "reg52.h"
+  15          #include "font.h"
+  16          #include "string.h"
+  17          #include "tft.h"
+  18          void main(void)
+  19          {
+  20   1              SPFD5420A_CPT30W_Initial();
+  21   1              Clear();
+  22   1      //      juxing(0,0,239,40,0x07e0);
+  23   1      //      Blue(1,238,1,39);
+  24   1      //      ShowString(1,1,"Hello ,world!!!");
+  25   1      //      ShowString(1,17,"My name is KKK!!!");
+  26   1      //      Delay(1000);
+  27   1              Clear();
+  28   1              juxing(0,0,239,20,0x07e0);
+  29   1              Blue(1,238,1,19);
+  30   1              ShowString(1,1,"Now let's have a look!");
+  31   1              Delay(1000);
+  32   1      //      show_pic(pic_1,0,0,50,39);
+  33   1              while(1)
+  34   1              {
+  35   2      //              blue_dark_zong();
+  36   2      //              red_dark_heng();
+  37   2      //              green_dark_zong();
+  38   2      //              blue_dark_heng();
+  39   2      //              red_dark_zong();
+  40   2      //              green_dark_heng();      
+  41   2      //              Clear();
+  42   2      //              drawline(0,0x00ef,0,0x018f,0xffff);
+  43   2      //              drawline(0,0x00ef,0,0x018f,0xffff);
+  44   2      //              drawline(0,0,0,399,0xffff);
+  45   2      //              drawline(239,239,0,399,0xffff);
+  46   2      //              drawline(0,239,0,0,0xffff);
+  47   2      //              drawline(0,239,399,399,0xffff);
+  48   2      //              Delay(1000);
+  49   2      //              Clear();
+  50   2                      sin();
+  51   2                      Delay(1000);
+  52   2                      Clear();
+  53   2      //              show_pic(gImage_1,40,40,60,40);
+  54   2              }
+  55   1      }
+C51 COMPILER V8.02   TEXT1                                                                 04/06/2010 13:18:43 PAGE 2   
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2799    ----
+   CONSTANT SIZE    =   1659    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----     123
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

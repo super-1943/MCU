@@ -1,0 +1,434 @@
+C51 COMPILER V8.02   THIRD                                                                 04/15/2009 20:15:57 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE THIRD
+OBJECT MODULE PLACED IN third.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE third.c LARGE ROM(SMALL) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /*********************************************************************************/
+   2          /* LCM MGLS-240128TA （ ）显示程序   */
+   3          /* MCU 型号 : Winbond W78E58-24 */
+   4          /* 时钟频率 : 22.1184 MHz */
+   5          /* 接口方式 :  直接接口（挂总线） */
+   6          /* 开发环境 : Keil C51 V6.14 */
+   7          /* 开发日期 : 2001.06.12- */
+   8          /* 程序编写 : Youth */
+   9          /*********************************************************************************/
+  10          #include <absacc.h>
+  11          #include <reg52.h>
+  12          #include <stdarg.h>
+  13          #include <stdio.h>
+  14          #define ulong unsigned long
+  15          //Ascii data
+  16          #define STX 0x02
+  17          #define ETX 0x03
+  18          #define EOT 0x04
+  19          #define ENQ 0x05
+  20          #define BS 0x08
+  21          #define CR 0x0D
+  22          #define LF 0x0A
+  23          #define DLE 0x10
+  24          #define ETB 0x17
+  25          #define SPACE 0x20
+  26          #define COMMA 0x2C
+  27                          
+  28          #define TRUE 1
+  29          #define FALSE 0
+  30                          
+  31          #define HIGH 1
+  32          #define LOW 0
+  33          // T6963C 端口定义6
+  34          
+  35          #define LCMDW   XBYTE[0x9000] // 数据口
+  36          #define LCMCW   XBYTE[0x9001] // 命令口
+  37          // T6963C 命令定义
+  38          #define LC_CUR_POS      0x21 // 光标位置设置
+  39          #define LC_CGR_POS      0x22 // CGRAM偏置地址设置
+  40          #define LC_ADD_POS      0x24 // 地址指针位置
+  41          #define LC_TXT_STP      0x40 // 文本区首址
+  42          #define LC_TXT_WID      0x41 // 文本区宽度
+  43          #define LC_GRH_STP      0x42 // 图形区首址
+  44          #define LC_GRH_WID      0x43 // 图形区宽度
+  45          #define LC_MOD_OR       0x80 // 显示方式：逻辑“或”
+  46          #define LC_MOD_XOR  0x81 // 显示方式：逻辑“异或”
+  47          #define LC_MOD_AND  0x82 // 显示方式：逻辑“与”
+  48          #define LC_MOD_TCH      0x83 // 显示方式：文本特征
+  49          #define LC_DIS_SW       0x90    //  D0=1/0: /显示开关： 光标闪烁启用 禁用；
+  50                                                                          //  D1=1/0: /光标显示启用 禁用；
+  51                                                                          //  D2=1/0: /文本显示启用 禁用；
+  52                                                                          //  D3=1/0: /图形显示启用 禁用；
+  53          #define LC_CUR_SHP      0xA0 //  0xA0-0xA7光标形状选择： 表示光标占的行数
+  54          #define LC_AUT_WR       0xB0 // 自动写设置
+  55          #define LC_AUT_RD       0xB1 // 自动读设置
+C51 COMPILER V8.02   THIRD                                                                 04/15/2009 20:15:57 PAGE 2   
+
+  56          #define LC_AUT_OVR      0xB2 //  /自动读 写结束
+  57          #define LC_INC_WR       0xC0 //  1数据一次写，地址加
+  58          #define LC_INC_RD       0xC1 //  1数据一次读，地址加
+  59          #define LC_DEC_WR       0xC2 //  1数据一次写，地址减
+  60          #define LC_DEC_RD       0xC3 //  1数据一次读，地址减
+  61          #define LC_NOC_WR       0xC4 // 数据一次写，地址不变
+  62          #define LC_NOC_RD       0xC5 // 数据一次读，地址不变
+  63          
+  64          #define LC_SCN_RD       0xE0 // 屏读
+  65          #define LC_SCN_CP       0xE8 // 屏拷贝
+  66          #define LC_BIT_OP       0xF0 //  D0-D2 D0-D7 D3 1 0位操作： ：定义 位； ： 置位； ：清除
+  67          code unsigned char const uPowArr[]   = {0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80};
+  68          // ASCII 字模宽度及高度定义
+  69          #define ASC_CHR_WIDTH  8
+  70          #define ASC_CHR_HEIGHT 12
+  71          // ASCII  8*16字模，显示为
+  72          char code ASC_MSK[96*12] = {
+  73          // Terminal9;    x =8x12此字体下对应的点阵为：宽 高
+  74          0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xff,0xff,0xff, // < 0x20 ,时 打印此字
+  75          0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, // ' '
+  76          0x00,0x0C,0x1E,0x1E,0x1E,0x0C,0x0C,0x00,0x0C,0x0C,0x00,0x00,// '!'
+  77          0x00,0x66,0x66,0x66,0x24,0x00,0x00,0x00,0x00,0x00,0x00,0x00, // '"'
+  78          0x00,0x36,0x36,0x7F,0x36,0x36,0x36,0x7F,0x36,0x36,0x00,0x00, // '#'
+  79          
+  80          
+  81          0x00,0x63,0x63,0x67,0x6F,0x7F,0x7B,0x73,0x63,0x63,0x00,0x00, // 'N'
+  82          0x00,0x1C,0x36,0x63,0x63,0x63,0x63,0x63,0x36,0x1C,0x00,0x00, // 'O'
+  83          0x00,0x3F,0x66,0x66,0x66,0x3E,0x06,0x06,0x06,0x0F,0x00,0x00, // 'P'
+  84          0x00,0x1C,0x36,0x63,0x63,0x63,0x73,0x7B,0x3E,0x30,0x78,0x00, // 'Q'8
+  85          
+  86          0x00,0x3F,0x66,0x66,0x66,0x3E,0x36,0x66,0x66,0x67,0x00,0x00, // 'R'
+  87          0x00,0x1E,0x33,0x33,0x03,0x0E,0x18,0x33,0x33,0x1E,0x00,0x00, // 'S'
+  88          0x00,0x3F,0x2D,0x0C,0x0C,0x0C,0x0C,0x0C,0x0C,0x1E,0x00,0x00,// 'T'
+  89          0x00,0x33,0x33,0x33,0x33,0x33,0x33,0x33,0x33,0x1E,0x00,0x00, // 'U'
+  90          0x00,0x33,0x33,0x33,0x33,0x33,0x33,0x33,0x1E,0x0C,0x00,0x00, // 'V'
+  91          0x00,0x63,0x63,0x63,0x63,0x6B,0x6B,0x36,0x36,0x36,0x00,0x00, // 'W'
+  92          0x00,0x33,0x33,0x33,0x1E,0x0C,0x1E,0x33,0x33,0x33,0x00,0x00, // 'X'
+  93          0x00,0x33,0x33,0x33,0x33,0x1E,0x0C,0x0C,0x0C,0x1E,0x00,0x00, // 'Y'
+  94          0x00,0x7F,0x73,0x19,0x18,0x0C,0x06,0x46,0x63,0x7F,0x00,0x00, // 'Z'
+  95          0x00,0x3C,0x0C,0x0C,0x0C,0x0C,0x0C,0x0C,0x0C,0x3C,0x00,0x00,// '['
+  96          0x00,0x00,0x01,0x03,0x06,0x0C,0x18,0x30,0x60,0x40,0x00,0x00, // '\'
+  97          0x00,0x3C,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x3C,0x00,0x00, // ']'
+  98          0x08,0x1C,0x36,0x63,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, // '^'
+  99          0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00, // '_'
+ 100          0x0C,0x0C,0x18,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, // '`'
+ 101          0x00,0x00,0x00,0x00,0x1E,0x30,0x3E,0x33,0x33,0x6E,0x00,0x00, // 'a'
+ 102          0x00,0x07,0x06,0x06,0x3E,0x66,0x66,0x66,0x66,0x3B,0x00,0x00, // 'b'
+ 103          0x00,0x00,0x00,0x00,0x1E,0x33,0x03,0x03,0x33,0x1E,0x00,0x00, // 'c'
+ 104          0x00,0x38,0x30,0x30,0x3E,0x33,0x33,0x33,0x33,0x6E,0x00,0x00, // 'd'
+ 105          0x00,0x00,0x00,0x00,0x1E,0x33,0x3F,0x03,0x33,0x1E,0x00,0x00, // 'e'
+ 106          0x00,0x1C,0x36,0x06,0x06,0x1F,0x06,0x06,0x06,0x0F,0x00,0x00, // 'f'
+ 107          0x00,0x00,0x00,0x00,0x6E,0x33,0x33,0x33,0x3E,0x30,0x33,0x1E, // 'g'
+ 108          0x00,0x07,0x06,0x06,0x36,0x6E,0x66,0x66,0x66,0x67,0x00,0x00, // 'h'
+ 109          0x00,0x18,0x18,0x00,0x1E,0x18,0x18,0x18,0x18,0x7E,0x00,0x00, // 'i'
+ 110          0x00,0x30,0x30,0x00,0x3C,0x30,0x30,0x30,0x30,0x33,0x33,0x1E, // 'j'
+ 111          0x00,0x07,0x06,0x06,0x66,0x36,0x1E,0x36,0x66,0x67,0x00,0x00, // 'k'
+ 112          0x00,0x1E,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x7E,0x00,0x00, // 'l'
+ 113          0x00,0x00,0x00,0x00,0x3F,0x6B,0x6B,0x6B,0x6B,0x63,0x00,0x00, // 'm'
+ 114          0x00,0x00,0x00,0x00,0x1F,0x33,0x33,0x33,0x33,0x33,0x00,0x00, // 'n'
+ 115          0x00,0x00,0x00,0x00,0x1E,0x33,0x33,0x33,0x33,0x1E,0x00,0x00, // 'o'
+ 116          0x00,0x00,0x00,0x00,0x3B,0x66,0x66,0x66,0x66,0x3E,0x06,0x0F, // 'p'
+ 117          0x00,0x00,0x00,0x00,0x6E,0x33,0x33,0x33,0x33,0x3E,0x30,0x78, // 'q'
+C51 COMPILER V8.02   THIRD                                                                 04/15/2009 20:15:57 PAGE 3   
+
+ 118          0x00,0x00,0x00,0x00,0x37,0x76,0x6E,0x06,0x06,0x0F,0x00,0x00, // 'r'
+ 119          0x00,0x00,0x00,0x00,0x1E,0x33,0x06,0x18,0x33,0x1E,0x00,0x00, // 's'
+ 120          0x00,0x00,0x04,0x06,0x3F,0x06,0x06,0x06,0x36,0x1C,0x00,0x00, // 't'
+ 121          0x00,0x00,0x00,0x00,0x33,0x33,0x33,0x33,0x33,0x6E,0x00,0x00, // 'u'
+ 122          0x00,0x00,0x00,0x00,0x33,0x33,0x33,0x33,0x1E,0x0C,0x00,0x00, // 'v'
+ 123          0x00,0x00,0x00,0x00,0x63,0x63,0x6B,0x6B,0x36,0x36,0x00,0x00, // 'w'
+ 124          0x00,0x00,0x00,0x00,0x63,0x36,0x1C,0x1C,0x36,0x63,0x00,0x00, // 'x'
+ 125          0x00,0x00,0x00,0x00,0x66,0x66,0x66,0x66,0x3C,0x30,0x18,0x0F, // 'y'
+ 126          0x00,0x00,0x00,0x00,0x3F,0x31,0x18,0x06,0x23,0x3F,0x00,0x00, // 'z'
+ 127          0x00,0x38,0x0C,0x0C,0x06,0x03,0x06,0x0C,0x0C,0x38,0x00,0x00, // '{'
+ 128          0x00,0x18,0x18,0x18,0x18,0x00,0x18,0x18,0x18,0x18,0x00,0x00, // '|'
+ 129          0x00,0x07,0x0C,0x0C,0x18,0x30,0x18,0x0C,0x0C,0x07,0x00,0x00, // '}'
+ 130          0x00,0xCE,0x5B,0x73,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, // '~'
+ 131          };
+ 132          
+ 133          typedef struct typFNT_GB16 // 汉字字模显示数据结构
+ 134          {
+ 135          char Index[2];
+ 136          char Msk[32];
+ 137          };
+ 138          
+ 139          struct typFNT_GB16 xdata GB_16[] = { //  16*16显示为" 中 "," 文 "," 测 "," 试 "
+ 140                          0x01,0x00,0x01,0x00,0x21,0x08,0x3F,0xFC,0x21,0x08,0x21,0x08,0x21,0x08,0x21,0x08,
+ 141                          0x21,0x08,0x3F,0xF8,0x21,0x08,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,
+ 142                          0x02,0x00,0x01,0x00,0x01,0x00,0xFF,0xFE,0x08,0x20,0x08,0x20,0x08,0x20,0x04,0x40,
+ 143                          0x04,0x40,0x02,0x80,0x01,0x00,0x02,0x80,0x04,0x60,0x18,0x1E,0xE0,0x08,0x00,0x00,
+ 144                          0x40,0x02,0x27,0xC2,0x24,0x42,0x84,0x52,0x45,0x52,0x55,0x52,0x15,0x52,0x25,0x52,
+ 145                          0x25,0x52,0x25,0x52,0xC5,0x52,0x41,0x02,0x42,0x82,0x42,0x42,0x44,0x4A,0x48,0x04,
+ 146                          0x00,0x20,0x40,0x28,0x20,0x24,0x30,0x24,0x27,0xFE,0x00,0x20,0xE0,0x20,0x27,0xE0,
+ 147                          0x21,0x20,0x21,0x10,0x21,0x10,0x21,0x0A,0x29,0xCA,0x36,0x06,0x20,0x02,0x00,0x00,
+ 148          };
+ 149          unsigned char gCurRow,gCurCol; //  16 8当前行、列存储，行高 点，列宽 点
+ 150          unsigned char fnGetRow(void)
+ 151          {
+ 152   1              return gCurRow;
+ 153   1      }
+ 154          unsigned char fnGetCol(void)
+ 155          {
+ 156   1              return gCurCol;
+ 157   1      }
+ 158          unsigned char fnST01(void) //  STA1,STA0状态位 判断（读写指令和读写数据）
+ 159          {
+ 160   1              unsigned char i;
+ 161   1              for(i=10;i>0;i--)
+ 162   1              {
+ 163   2                      if((LCMCW & 0x03) == 0x03)
+ 164   2                      break;
+ 165   2              }
+ 166   1              return i; // 若返回零，说明错误
+ 167   1      }
+ 168          unsigned char fnST2(void) //  ST2状态位 判断（数据自动读状态）
+ 169          {
+ 170   1              unsigned char i;
+ 171   1              for(i=10;i>0;i--)
+ 172   1              {
+ 173   2                      if((LCMCW & 0x04) == 0x04)
+ 174   2                      break;
+ 175   2              }
+ 176   1              return i; // 若返回零，说明错误
+ 177   1      }
+ 178          unsigned char fnST3(void) //  ST3状态位 判断（数据自动写状态）
+ 179          {
+C51 COMPILER V8.02   THIRD                                                                 04/15/2009 20:15:57 PAGE 4   
+
+ 180   1              unsigned char i;
+ 181   1              for(i=10;i>0;i--)
+ 182   1              {
+ 183   2                      if((LCMCW & 0x08) == 0x08)
+ 184   2                      break;
+ 185   2              }
+ 186   1              return i; // 若返回零，说明错误
+ 187   1      }
+ 188          unsigned char fnST6(void) //  ST6 /状态位 判断（屏读 屏拷贝状态）
+ 189          {
+ 190   1              unsigned char i;
+ 191   1              for(i=10;i>0;i--)
+ 192   1              {
+ 193   2                      if((LCMCW & 0x40) == 0x40)
+ 194   2                      break;
+ 195   2              }
+ 196   1              return i; // 若返回零，说明错误
+ 197   1      }
+ 198          unsigned char fnPR1(unsigned char uCmd,unsigned char uPar1,unsigned char uPar2) // 写双参数的指令
+ 199          {
+ 200   1              if(fnST01() == 0)
+ 201   1                      return 1;
+ 202   1              LCMDW = uPar1;
+ 203   1              if(fnST01() == 0)
+ 204   1                      return 2;
+ 205   1              LCMDW = uPar2;
+ 206   1              if(fnST01() == 0)
+ 207   1                      return 3;
+ 208   1              LCMCW = uCmd;
+ 209   1              return 0; //  0返回 成功
+ 210   1      }
+ 211          unsigned char fnPR11(unsigned char uCmd,unsigned char uPar1) // 写单参数的指令
+ 212          {
+ 213   1              if(fnST01() == 0)
+ 214   1                      return 1;
+ 215   1              LCMDW = uCmd;
+ 216   1              if(fnST01() == 0)
+ 217   1                      return 2;
+ 218   1              LCMCW = uPar1;
+ 219   1              return 0; //  0返回 成功
+ 220   1      }
+ 221          unsigned char fnPR12(unsigned char uCmd) // 写无参数的指令
+ 222          {
+ 223   1              if(fnST01() == 0)
+ 224   1                      return 1;
+ 225   1              LCMCW = uCmd;
+ 226   1              return 0; //  0返回 成功
+ 227   1      }
+ 228          unsigned char fnPR13(unsigned char uData) // 写数据
+ 229          {
+ 230   1              if(fnST3() == 0)
+ 231   1                      return 1;
+ 232   1              LCMDW = uData;
+ 233   1              return 0; //  0返回 成功
+ 234   1      }
+ 235          unsigned char fnPR2(void) // 读数据
+ 236          {
+ 237   1              if(fnST01() == 0)
+ 238   1                      return 1;
+ 239   1              return LCMDW;
+ 240   1      }
+ 241          // 设置当前地址
+C51 COMPILER V8.02   THIRD                                                                 04/15/2009 20:15:57 PAGE 5   
+
+ 242          void fnSetPos(unsigned char urow, unsigned char ucol)
+ 243          {
+ 244   1              unsigned int  iPos;
+ 245   1              iPos = urow * 30 + ucol;
+ 246   1              fnPR1(LC_ADD_POS,iPos & 0xFF,iPos / 256);
+ 247   1              gCurRow = urow;
+ 248   1              gCurCol = ucol;
+ 249   1      }
+ 250          // 设置当前显示行、列
+ 251          void cursor(unsigned char uRow, unsigned char uCol)
+ 252          {
+ 253   1              fnSetPos(uRow * 16, uCol);
+ 254   1      }
+ 255          // 清屏
+ 256          void cls(void)
+ 257          {
+ 258   1              unsigned int  i;
+ 259   1              fnPR1(LC_ADD_POS,0x00,0x00); // 置地址指针
+ 260   1              fnPR12(LC_AUT_WR); // 自动写
+ 261   1              for(i=0;i<240*30;i++)
+ 262   1              {
+ 263   2                      fnST3();
+ 264   2                      fnPR13(0x00); // 写数据
+ 265   2              }
+ 266   1              fnPR12(LC_AUT_OVR); // 自动写结束
+ 267   1              fnPR1(LC_ADD_POS,0x00,0x00); // 重置地址指针
+ 268   1              gCurRow = 0; // 置地址指针存储变量
+ 269   1              gCurCol = 0;
+ 270   1      }
+ 271          // LCM 初始化
+ 272          char fnLCMInit(void)
+ 273          {
+ 274   1              if(fnPR1(LC_TXT_STP,0x00,0x00) != 0) // 文本显示区首地址
+ 275   1                      return -1;
+ 276   1              fnPR1(LC_TXT_WID,0x1E,0x00); // 文本显示区宽度
+ 277   1              fnPR1(LC_GRH_STP,0x00,0x00); // 图形显示区首地址
+ 278   1              fnPR1(LC_GRH_WID,0x1E,0x00); // 图形显示区宽度
+ 279   1              fnPR12(LC_CUR_SHP | 0x01); // 光标形状
+ 280   1              fnPR12(LC_MOD_OR); // 显示方式设置
+ 281   1              fnPR12(LC_DIS_SW | 0x08); // 显示开关设置
+ 282   1              return 0;
+ 283   1      }
+ 284          // ASCII(8*16)    (16*16) 及 汉字 显示函数
+ 285          unsigned char dprintf(char *fmt, ...)
+ 286          {
+ 287   1              va_list arg_ptr;
+ 288   1              char  c1,c2,cData;
+ 289   1              char tmpBuf[64]; // LCD显示数据缓冲区
+ 290   1              unsigned char i=0,j,uLen,uRow,uCol;
+ 291   1              unsigned int  k;
+ 292   1              va_start(arg_ptr, fmt);
+ 293   1              uLen = (unsigned char)vsprintf(tmpBuf, fmt, arg_ptr);
+ 294   1              va_end(arg_ptr);
+ 295   1              while(i<uLen)
+ 296   1              {
+ 297   2                      c1 = tmpBuf[i];
+ 298   2                      c2 = tmpBuf[i+1];
+ 299   2                      uRow = fnGetRow();
+ 300   2                      uCol = fnGetCol();
+ 301   2                      if(c1 >= 0)
+ 302   2                      { // ASCII
+ 303   3                              if(c1 < 0x20)
+C51 COMPILER V8.02   THIRD                                                                 04/15/2009 20:15:57 PAGE 6   
+
+ 304   3                              {
+ 305   4                                      switch(c1)
+ 306   4                                      {
+ 307   5                                              case CR:
+ 308   5                                              case LF: // 回车或换行
+ 309   5                                                      i++;
+ 310   5                                              if(uRow < 112)
+ 311   5                                                      fnSetPos(uRow+16,0);
+ 312   5                                              else
+ 313   5                                                      fnSetPos(0,0);
+ 314   5                                              continue;
+ 315   5                                              case BS: // 退格
+ 316   5                                                      if(uCol > 0)
+ 317   5                                                              uCol--;
+ 318   5                                                      fnSetPos(uRow,uCol);
+ 319   5                                                      cData = 0x00;
+ 320   5                                              break;
+ 321   5                                              default: // 其他
+ 322   5                                                      c1 = 0x1f;
+ 323   5                                      }
+ 324   4                              }
+ 325   3                              for(j=0;j<16;j++)
+ 326   3                              {
+ 327   4                                      fnPR12(LC_AUT_WR); // 写数据
+ 328   4                                      if(c1 >= 0x1f)
+ 329   4                                      {
+ 330   5                                              if(j < (16-ASC_CHR_HEIGHT))
+ 331   5                                                      fnPR13(0x00);
+ 332   5                                              else
+ 333   5                                                      fnPR13(ASC_MSK[(c1-0x1f)*ASC_CHR_HEIGHT+j-(16-ASC_CHR_HEIGHT)]);
+ 334   5                                      }
+ 335   4                                      else
+ 336   4                                              fnPR13(cData);
+ 337   4                                      fnPR12(LC_AUT_OVR);
+ 338   4                                      fnSetPos(uRow+j+1,uCol);
+ 339   4                              }
+ 340   3                              if(c1 != BS) // 非退格
+ 341   3                              uCol++;
+ 342   3                      }
+ 343   2                      else
+ 344   2                      { // 中文
+ 345   3                              for(j=0;j<sizeof(GB_16)/sizeof(GB_16[0]);j++)
+ 346   3                              {
+ 347   4                                      if(c1 == GB_16[j].Index[0] && c2 == GB_16[j].Index[1])
+ 348   4                                      break;
+ 349   4                              }
+ 350   3                              for(k=0;k<sizeof(GB_16[0].Msk)/2;k++)
+ 351   3                              {
+ 352   4                                      fnSetPos(uRow+k,uCol);
+ 353   4                                      fnPR12(LC_AUT_WR); // 写数据
+ 354   4                                      if(j < sizeof(GB_16)/sizeof(GB_16[0]))
+ 355   4                                      {
+ 356   5                                              fnPR13(GB_16[j].Msk[k*2]);
+ 357   5                                              fnPR13(GB_16[j].Msk[k*2+1]);
+ 358   5                                      }
+ 359   4                                      else // 未找到该字
+ 360   4                                      {
+ 361   5                                              if(k < sizeof(GB_16[0].Msk)/4)
+ 362   5                                              {
+ 363   6                                                      fnPR13(0x00);
+ 364   6                                                      fnPR13(0x00);
+ 365   6                                              }
+C51 COMPILER V8.02   THIRD                                                                 04/15/2009 20:15:57 PAGE 7   
+
+ 366   5                                              else
+ 367   5                                              {
+ 368   6                                                      fnPR13(0xff);
+ 369   6                                                      fnPR13(0xff);
+ 370   6                                              }
+ 371   5                                      }
+ 372   4                                      fnPR12(LC_AUT_OVR);
+ 373   4                              }
+ 374   3                              uCol += 2;
+ 375   3                              i++;
+ 376   3                      }
+ 377   2                      if(uCol >= 30) // 光标后移
+ 378   2                      {
+ 379   3                              uRow += 16;
+ 380   3                              if(uRow < 0x80)
+ 381   3                              uCol -= 30;
+ 382   3                              else
+ 383   3                              {
+ 384   4                                      uRow = 0;
+ 385   4                                      uCol = 0;
+ 386   4                              }
+ 387   3                      }
+ 388   2                      fnSetPos(uRow,uCol);
+ 389   2                      i++;
+ 390   2              }
+ 391   1              return uLen;
+ 392   1      }
+ 393          void main(void) // 测试用 ,中文测试
+ 394          {
+ 395   1              fnLCMInit();
+ 396   1              cls();
+ 397   1              cursor(0,0);
+ 398   1              dprintf("%s","This is a test: ");
+ 399   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1060    ----
+   CONSTANT SIZE    =   1180    ----
+   XDATA SIZE       =    138     122
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

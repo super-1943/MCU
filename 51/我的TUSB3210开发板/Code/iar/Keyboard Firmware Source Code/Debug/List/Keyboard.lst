@@ -1,0 +1,2309 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V7.51A/W32 for 8051                28/May/2010  14:43:46 #
+# Copyright 2004-2009 IAR Systems AB.                                         #
+# Time limited license: 20 days left                                          #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  near                                               #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data                                               #
+#    Dptr setup         =  1,16                                               #
+#    Source file        =  E:\AllProject\51\Keyboard Firmware Source          #
+#                          Code\Keyboard.c                                    #
+#    Command line       =  "E:\AllProject\51\Keyboard Firmware Source         #
+#                          Code\Keyboard.c" -lC "E:\AllProject\51\Keyboard    #
+#                          Firmware Source Code\Debug\List\" -lA              #
+#                          "E:\AllProject\51\Keyboard Firmware Source         #
+#                          Code\Debug\List\" -o "E:\AllProject\51\Keyboard    #
+#                          Firmware Source Code\Debug\Obj\" -e                #
+#                          --char_is_signed --no_cse --no_unroll --no_inline  #
+#                          --no_code_motion --no_tbaa --debug --core=plain    #
+#                          --dptr=16,1 --data_model=large --code_model=near   #
+#                          --calling_convention=xdata_reentrant               #
+#                          --place_constants=data --nr_virtual_regs 8 -I      #
+#                          "C:\Program Files\IAR Systems\Embedded Workbench   #
+#                          5.3 Evaluation version\8051\INC\" -I "C:\Program   #
+#                          Files\IAR Systems\Embedded Workbench 5.3           #
+#                          Evaluation version\8051\INC\CLIB\" -Ol             #
+#    List file          =  E:\AllProject\51\Keyboard Firmware Source          #
+#                          Code\Debug\List\Keyboard.lst                       #
+#    Object file        =  E:\AllProject\51\Keyboard Firmware Source          #
+#                          Code\Debug\Obj\Keyboard.r51                        #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+E:\AllProject\51\Keyboard Firmware Source Code\Keyboard.c
+      1           /*****************************************************************************
+      2           *                         VAULT INFORMATION SERVICES                         *
+      3           *                          TEXAS INSTRUMENTS, INC.                           *
+      4           *----------------------------------------------------------------------------*
+      5           *                  "TUSB2136 Generic Keyboard Demo Program"                  *
+      6           *                                                                            * 
+      7           * Programmed by: Craig Steiner, VIS (csteiner@vaultbbs.com)                  * 
+      8           * Develop Date:  30/Sep/2000                                                 *  
+      9           *----------------------------------------------------------------------------*
+     10           * Description: This software is a fully functional demonstration program that*
+     11           *   illustrates the use of the TUSB2136 to implement a USB 101-key keyboard. *
+     12           *                                                                            *
+     13           *   This module is the "main" module.  Also, pretty much everything that the *
+     14           *   end-user will need to modify to create a standard keyboard is contained  * 
+     15           *   in this module.                                                          * 
+     16           *                                                                            *
+     17           * Modified by Jim Chen 2001/01/03:                                           *
+     18           *   1. total 102 keys                                                        *
+     19           *   2. can work in Mac                                                       *
+     20           *   3. use scanline8, scanline9 and return 0x40 as suspend key               *
+     21           *   4. added usbSetIdle(void), void usbSetProtocol(void) for Mac             *
+     22           *                                                                            *
+     23           * Modified by Jim Chen 2001/01/19:                                           *
+     24           *   1. fixed bug in high speed Mac                                           *
+     25           *                                                                            *
+     26           * Modified by Jim Chen 2001/03/02:                                           *
+     27           *   1. merge 4 configurations into one binary code                           *
+     28           *   2. solve phantom key issue by Mike's solution                            *
+     29           *   3. version number started with Rev1.00                                   *
+     30           *                                                                            *
+     31           * Modified by Jim Chen 2001/06/01: Rev1.01                                   *
+     32           *   1. changed version 4 from NewMotion one-key to flat keypad               *
+     33           *                                                                            *
+     34           ******************************************************************************/
+     35          
+     36          #include <io51.h>
+
+   \                                 In  segment SFR_AN, at 0xa8
+   \   union <unnamed> volatile __sfr _A_IE
+   \                     _A_IE:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0x90
+   \   union <unnamed> volatile __sfr _A_P1
+   \                     _A_P1:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0x80
+   \   union <unnamed> volatile __sfr _A_P0
+   \                     _A_P0:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xb0
+   \   union <unnamed> volatile __sfr _A_P3
+   \                     _A_P3:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xa0
+   \   union <unnamed> volatile __sfr _A_P2
+   \                     _A_P2:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0x87
+   \   union <unnamed> volatile __sfr _A_PCON
+   \                     _A_PCON:
+   \   000000                DS 1
+     37          #include "types.h"
+     38          #include "delay.h"
+     39          #include "usb.h"
+     40          #include "tusb2136.h"
+     41          
+     42          // Maximum size of the Keypress buffer is 6 bytes, because that's what fits in
+     43          // a single HID standard keyboard response
+     44          
+     45          #define KEYPRESS_BUFFER_SIZE			0x06
+     46          
+     47          // The following definitions indicate which bit of the data byte sent from
+     48          // the host to the keyboard correspond to each of the given LEDs.
+     49          
+     50          #define BIT_NUMLOCK					0x01
+     51          #define BIT_CAPSLOCK				0x02
+     52          #define BIT_SCROLLLOCK				0x04
+     53          // The following definitions indicate which GPIO pin corresponds to each
+     54          // of the keyboard LEDs.
+     55          
+     56          #define PIN_NUMLOCK				P3_bit.T0
+     57          #define PIN_CAPSLOCK				P3_bit.INT1
+     58          #define PIN_SCROLLLOCK				P3_bit.INT0
+     59          
+     60          extern unsigned char s0123;
+     61          extern BYTE deviceReady;
+     62          extern BYTE bSuspended;
+     63          
+     64          extern void gpioInitialization(void);
+     65          extern void setLEDs(BYTE bData);
+     66          extern int readSwitches(void);
+     67          extern BYTE strlen(char *string);
+     68          void sendUartByte(BYTE bValue);void sendUartString(char *string, BYTE bCount);
+     69          void sendUartHex(BYTE bValue);
+     70          
+     71          extern BYTE memcmp(char *string1, char *string2, BYTE count);
+     72          extern void memcpy(char *string1, char *string2, BYTE count);
+     73          extern void InitializeUsbData(void);
+     74          extern void InitializeUsbHub(void);
+     75          extern void InitializeUsbFunction(void);
+     76          extern void GetVidPidSetting(void);
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     77          unsigned char intFlags = 0x00;
+   \                     intFlags:
+   \   000000                DS 1
+   \   000001                REQUIRE __INIT_XDATA_Z
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     78          unsigned char otherFlags = 0x00;
+   \                     otherFlags:
+   \   000000                DS 1
+   \   000001                REQUIRE __INIT_XDATA_Z
+     79          
+     80          void ClearKeyBoardBuffer(void);
+     81          void sendKeyData(int x);
+     82          void UpdateIEP1WithKeypress(void);
+     83          
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     84          BYTE bLED = 0;
+   \                     bLED:
+   \   000000                DS 1
+   \   000001                REQUIRE __INIT_XDATA_Z
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     85          BYTE modifierByte = 0x00;
+   \                     modifierByte:
+   \   000000                DS 1
+   \   000001                REQUIRE __INIT_XDATA_Z
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     86          BYTE keypressBuffer[KEYPRESS_BUFFER_SIZE + 1];
+   \                     keypressBuffer:
+   \   000000                DS 7
+   \   000007                REQUIRE __INIT_XDATA_Z
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     87          BYTE previousIEP1packet[8];
+   \                     previousIEP1packet:
+   \   000000                DS 8
+   \   000008                REQUIRE __INIT_XDATA_Z
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     88          PBYTE iep1Buffer = 0x00;
+   \                     iep1Buffer:
+   \   000000                DS 2
+   \   000002                REQUIRE __INIT_XDATA_Z
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     89          BYTE keypressDebounce[256];
+   \                     keypressDebounce:
+   \   000000                DS 256
+   \   000100                REQUIRE __INIT_XDATA_Z
+     90          
+     91          
+     92          
+     93          /***************************************************************************
+     94           * Structure: KEYDEFS Structure                                            *
+     95           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+     96           * Description: The keyDefs[] structure contains a list of all the keys    *
+     97           *    that are supported by the keyboard and information related to each   *
+     98           *    key.  Additional keys may be added to the program by adding          *
+     99           *    additional entries in this table.  The structure is defined in       * 
+    100           *    types.h.                                                             *
+    101           *                                                                         *
+    102           *    vidPidMask: The first column is a bit-mapped mask that indicates     *
+    103           *          whether the given key is supported by each VID/PID version.    *
+    104           *          For example, 0x0001 means that the given key is only supported *
+    105           *          by VIDSTA configuration #1.  0x0003 means it is supported only * 
+    106           *          by configuration #1 and #2.  0xFFFF means it is supported by   *
+    107           *          all 16 possible configurations of VIDSTA.  This allows a       * 
+    108           *          single firmware which includes specialized key definitions     *
+    109           *          that only apply to certain products.                           *
+    110           *    scanLine: The second column indicates which keyboard scan line must  *
+    111           *          be selected in order to detect the keypress.  The current      *
+    112           *          software supports 18 scan lines.  More scan lines may be       *
+    113           *          supported by modifying the "scan line selection" code in       *
+    114           *          the main() module.                                             *
+    115           *    keyPressMask: The third column is a bitmask which indicates which    *
+    116           *          bit will be brought low when the given key is pressed.         *
+    117           *    hidCode: The fourth column indicates the HID usage code for the      *
+    118           *          given keypress.  The constants are delcared in usb.h.  A       *
+    119           *          value of 0 in the hidCode coumn will cause the keypress to     *
+    120           *          be ignored.                                                    *
+    121           *    modBit: The fifth (optional) column indicates which bit, if any,     *
+    122           *          should be set in the keyboard modifier byte.  This is for      *
+    123           *          ALT, SHIFT, CTRL, and GUI keys.  This is implemented as a      *
+    124           *          field in the array so that additional keys can easily be       *
+    125           *          added that mimic the functionality of the keys above.  If the  *
+    126           *          value is omitted, it will be compiled to 0x00 which means the  *
+    127           *          key will NOT set any bit in the modifier byte of the report.   *
+    128           ***************************************************************************/
+    129          /* for reference only
+    130          struct KEYMAP_STRUCT
+    131          	{
+    132          	unsigned int	vidPidMask; // Each bit indicates whether this key is supported in given VID/PID setting
+    133          	unsigned long	scanLine; // Indicates the column to select
+    134          	BYTE			keyPressMask; // Indicates the value returned if the given key is pressed
+    135          	BYTE			hidCode; // The value that is returned via USB to computer for this keypress
+    136          	BYTE			modBit; // Holds the bit which should be turned on in the modifier byte if this key is pressed
+    137          	};
+    138          */
+    139          // 4 kinds of keyboard matrix mapping
+
+   \                                 In  segment CODE_C, align 1
+    140          struct KEYMAP_STRUCT code keyDefs[] = {
+   \                     keyDefs:
+   \   000000   0100         DW 1
+   \   000002   12000000     DD 18
+   \   000006   02E308       DB 2, 227, 8
+   \   000009   0200         DW 2
+   \   00000B   12000000     DD 18
+   \   00000F   801E00       DB 128, 30, 0
+   \   000012   0600         DW 6
+   \   000014   12000000     DD 18
+   \   000018   400400       DB 64, 4, 0
+   \   00001B   0600         DW 6
+   \   00001D   12000000     DD 18
+   \   000021   200D00       DB 32, 13, 0
+   \   000024   0600         DW 6
+   \   000026   12000000     DD 18
+   \   00002A   101600       DB 16, 22, 0
+   \   00002D   0400         DW 4
+   \   00002F   12000000     DD 18
+   \   000033   805300       DB 128, 83, 0
+   \   000036   0800         DW 8
+   \   000038   12000000     DD 18
+   \   00003C   801400       DB 128, 20, 0
+   \   00003F   0800         DW 8
+   \   000041   12000000     DD 18
+   \   000045   401A00       DB 64, 26, 0
+   \   000048   0800         DW 8
+   \   00004A   12000000     DD 18
+   \   00004E   200800       DB 32, 8, 0
+   \   000051   0800         DW 8
+   \   000053   12000000     DD 18
+   \   000057   101500       DB 16, 21, 0
+   \   00005A   0800         DW 8
+   \   00005C   12000000     DD 18
+   \   000060   081700       DB 8, 23, 0
+   \   000063   0800         DW 8
+   \   000065   12000000     DD 18
+   \   000069   041C00       DB 4, 28, 0
+   \   00006C   0800         DW 8
+   \   00006E   12000000     DD 18
+   \   000072   021800       DB 2, 24, 0
+   \   000075   0100         DW 1
+   \   000077   11000000     DD 17
+   \   00007B   80E640       DB 128, 230, 64
+   \   00007E   0100         DW 1
+   \   000080   11000000     DD 17
+   \   000084   20E204       DB 32, 226, 4
+   \   000087   0100         DW 1
+   \   000089   11000000     DD 17
+   \   00008D   084700       DB 8, 71, 0
+   \   000090   0100         DW 1
+   \   000092   11000000     DD 17
+   \   000096   044600       DB 4, 70, 0
+   \   000099   0200         DW 2
+   \   00009B   11000000     DD 17
+   \   00009F   801F00       DB 128, 31, 0
+   \   0000A2   0600         DW 6
+   \   0000A4   11000000     DD 17
+   \   0000A8   400500       DB 64, 5, 0
+   \   0000AB   0600         DW 6
+   \   0000AD   11000000     DD 17
+   \   0000B1   200E00       DB 32, 14, 0
+   \   0000B4   0600         DW 6
+   \   0000B6   11000000     DD 17
+   \   0000BA   101700       DB 16, 23, 0
+   \   0000BD   0400         DW 4
+   \   0000BF   11000000     DD 17
+   \   0000C3   803900       DB 128, 57, 0
+   \   0000C6   0800         DW 8
+   \   0000C8   11000000     DD 17
+   \   0000CC   802600       DB 128, 38, 0
+   \   0000CF   0800         DW 8
+   \   0000D1   11000000     DD 17
+   \   0000D5   402500       DB 64, 37, 0
+   \   0000D8   0800         DW 8
+   \   0000DA   11000000     DD 17
+   \   0000DE   202400       DB 32, 36, 0
+   \   0000E1   0800         DW 8
+   \   0000E3   11000000     DD 17
+   \   0000E7   102900       DB 16, 41, 0
+   \   0000EA   0800         DW 8
+   \   0000EC   11000000     DD 17
+   \   0000F0   08E102       DB 8, 225, 2
+   \   0000F3   0800         DW 8
+   \   0000F5   11000000     DD 17
+   \   0000F9   041300       DB 4, 19, 0
+   \   0000FC   0800         DW 8
+   \   0000FE   11000000     DD 17
+   \   000102   021200       DB 2, 18, 0
+   \   000105   0800         DW 8
+   \   000107   11000000     DD 17
+   \   00010B   010C00       DB 1, 12, 0
+   \   00010E   0100         DW 1
+   \   000110   10000000     DD 16
+   \   000114   802C00       DB 128, 44, 0
+   \   000117   0100         DW 1
+   \   000119   10000000     DD 16
+   \   00011D   402800       DB 64, 40, 0
+   \   000120   0100         DW 1
+   \   000122   10000000     DD 16
+   \   000126   203E00       DB 32, 62, 0
+   \   000129   0100         DW 1
+   \   00012B   10000000     DD 16
+   \   00012F   102A00       DB 16, 42, 0
+   \   000132   0100         DW 1
+   \   000134   10000000     DD 16
+   \   000138   044300       DB 4, 67, 0
+   \   00013B   0100         DW 1
+   \   00013D   10000000     DD 16
+   \   000141   024200       DB 2, 66, 0
+   \   000144   0100         DW 1
+   \   000146   10000000     DD 16
+   \   00014A   013100       DB 1, 49, 0
+   \   00014D   0200         DW 2
+   \   00014F   10000000     DD 16
+   \   000153   802000       DB 128, 32, 0
+   \   000156   0600         DW 6
+   \   000158   10000000     DD 16
+   \   00015C   400600       DB 64, 6, 0
+   \   00015F   0600         DW 6
+   \   000161   10000000     DD 16
+   \   000165   200F00       DB 32, 15, 0
+   \   000168   0600         DW 6
+   \   00016A   10000000     DD 16
+   \   00016E   101800       DB 16, 24, 0
+   \   000171   0400         DW 4
+   \   000173   10000000     DD 16
+   \   000177   804700       DB 128, 71, 0
+   \   00017A   0800         DW 8
+   \   00017C   10000000     DD 16
+   \   000180   800400       DB 128, 4, 0
+   \   000183   0800         DW 8
+   \   000185   10000000     DD 16
+   \   000189   401600       DB 64, 22, 0
+   \   00018C   0800         DW 8
+   \   00018E   10000000     DD 16
+   \   000192   200700       DB 32, 7, 0
+   \   000195   0800         DW 8
+   \   000197   10000000     DD 16
+   \   00019B   100900       DB 16, 9, 0
+   \   00019E   0800         DW 8
+   \   0001A0   10000000     DD 16
+   \   0001A4   080A00       DB 8, 10, 0
+   \   0001A7   0800         DW 8
+   \   0001A9   10000000     DD 16
+   \   0001AD   040B00       DB 4, 11, 0
+   \   0001B0   0800         DW 8
+   \   0001B2   10000000     DD 16
+   \   0001B6   020D00       DB 2, 13, 0
+   \   0001B9   0800         DW 8
+   \   0001BB   10000000     DD 16
+   \   0001BF   013600       DB 1, 54, 0
+   \   0001C2   0100         DW 1
+   \   0001C4   0F000000     DD 15
+   \   0001C8   803800       DB 128, 56, 0
+   \   0001CB   0100         DW 1
+   \   0001CD   0F000000     DD 15
+   \   0001D1   203400       DB 32, 52, 0
+   \   0001D4   0100         DW 1
+   \   0001D6   0F000000     DD 15
+   \   0001DA   102F00       DB 16, 47, 0
+   \   0001DD   0100         DW 1
+   \   0001DF   0F000000     DD 15
+   \   0001E3   081300       DB 8, 19, 0
+   \   0001E6   0100         DW 1
+   \   0001E8   0F000000     DD 15
+   \   0001EC   042700       DB 4, 39, 0
+   \   0001EF   0100         DW 1
+   \   0001F1   0F000000     DD 15
+   \   0001F5   022D00       DB 2, 45, 0
+   \   0001F8   0100         DW 1
+   \   0001FA   0F000000     DD 15
+   \   0001FE   013300       DB 1, 51, 0
+   \   000201   0600         DW 6
+   \   000203   0F000000     DD 15
+   \   000207   802100       DB 128, 33, 0
+   \   00020A   0600         DW 6
+   \   00020C   0F000000     DD 15
+   \   000210   400700       DB 64, 7, 0
+   \   000213   0600         DW 6
+   \   000215   0F000000     DD 15
+   \   000219   201000       DB 32, 16, 0
+   \   00021C   0600         DW 6
+   \   00021E   0F000000     DD 15
+   \   000222   101900       DB 16, 25, 0
+   \   000225   0800         DW 8
+   \   000227   0F000000     DD 15
+   \   00022B   802300       DB 128, 35, 0
+   \   00022E   0800         DW 8
+   \   000230   0F000000     DD 15
+   \   000234   402200       DB 64, 34, 0
+   \   000237   0800         DW 8
+   \   000239   0F000000     DD 15
+   \   00023D   202100       DB 32, 33, 0
+   \   000240   0800         DW 8
+   \   000242   0F000000     DD 15
+   \   000246   104A00       DB 16, 74, 0
+   \   000249   0800         DW 8
+   \   00024B   0F000000     DD 15
+   \   00024F   08E640       DB 8, 230, 64
+   \   000252   0800         DW 8
+   \   000254   0F000000     DD 15
+   \   000258   043400       DB 4, 52, 0
+   \   00025B   0800         DW 8
+   \   00025D   0F000000     DD 15
+   \   000261   020F00       DB 2, 15, 0
+   \   000264   0800         DW 8
+   \   000266   0F000000     DD 15
+   \   00026A   010E00       DB 1, 14, 0
+   \   00026D   0100         DW 1
+   \   00026F   0E000000     DD 14
+   \   000273   403700       DB 64, 55, 0
+   \   000276   0100         DW 1
+   \   000278   0E000000     DD 14
+   \   00027C   104000       DB 16, 64, 0
+   \   00027F   0100         DW 1
+   \   000281   0E000000     DD 14
+   \   000285   081200       DB 8, 18, 0
+   \   000288   0100         DW 1
+   \   00028A   0E000000     DD 14
+   \   00028E   042600       DB 4, 38, 0
+   \   000291   0100         DW 1
+   \   000293   0E000000     DD 14
+   \   000297   024100       DB 2, 65, 0
+   \   00029A   0100         DW 1
+   \   00029C   0E000000     DD 14
+   \   0002A0   010F00       DB 1, 15, 0
+   \   0002A3   0600         DW 6
+   \   0002A5   0E000000     DD 14
+   \   0002A9   802200       DB 128, 34, 0
+   \   0002AC   0600         DW 6
+   \   0002AE   0E000000     DD 14
+   \   0002B2   400800       DB 64, 8, 0
+   \   0002B5   0600         DW 6
+   \   0002B7   0E000000     DD 14
+   \   0002BB   201100       DB 32, 17, 0
+   \   0002BE   0600         DW 6
+   \   0002C0   0E000000     DD 14
+   \   0002C4   101A00       DB 16, 26, 0
+   \   0002C7   0800         DW 8
+   \   0002C9   0E000000     DD 14
+   \   0002CD   801D00       DB 128, 29, 0
+   \   0002D0   0800         DW 8
+   \   0002D2   0E000000     DD 14
+   \   0002D6   401B00       DB 64, 27, 0
+   \   0002D9   0800         DW 8
+   \   0002DB   0E000000     DD 14
+   \   0002DF   200600       DB 32, 6, 0
+   \   0002E2   0800         DW 8
+   \   0002E4   0E000000     DD 14
+   \   0002E8   101900       DB 16, 25, 0
+   \   0002EB   0800         DW 8
+   \   0002ED   0E000000     DD 14
+   \   0002F1   080500       DB 8, 5, 0
+   \   0002F4   0800         DW 8
+   \   0002F6   0E000000     DD 14
+   \   0002FA   041100       DB 4, 17, 0
+   \   0002FD   0800         DW 8
+   \   0002FF   0E000000     DD 14
+   \   000303   021000       DB 2, 16, 0
+   \   000306   0800         DW 8
+   \   000308   0E000000     DD 14
+   \   00030C   01E001       DB 1, 224, 1
+   \   00030F   0100         DW 1
+   \   000311   0D000000     DD 13
+   \   000315   403600       DB 64, 54, 0
+   \   000318   0100         DW 1
+   \   00031A   0D000000     DD 13
+   \   00031E   203F00       DB 32, 63, 0
+   \   000321   0100         DW 1
+   \   000323   0D000000     DD 13
+   \   000327   103000       DB 16, 48, 0
+   \   00032A   0100         DW 1
+   \   00032C   0D000000     DD 13
+   \   000330   080C00       DB 8, 12, 0
+   \   000333   0100         DW 1
+   \   000335   0D000000     DD 13
+   \   000339   042500       DB 4, 37, 0
+   \   00033C   0100         DW 1
+   \   00033E   0D000000     DD 13
+   \   000342   022E00       DB 2, 46, 0
+   \   000345   0100         DW 1
+   \   000347   0D000000     DD 13
+   \   00034B   010E00       DB 1, 14, 0
+   \   00034E   0600         DW 6
+   \   000350   0D000000     DD 13
+   \   000354   802300       DB 128, 35, 0
+   \   000357   0600         DW 6
+   \   000359   0D000000     DD 13
+   \   00035D   400900       DB 64, 9, 0
+   \   000360   0600         DW 6
+   \   000362   0D000000     DD 13
+   \   000366   201200       DB 32, 18, 0
+   \   000369   0600         DW 6
+   \   00036B   0D000000     DD 13
+   \   00036F   101B00       DB 16, 27, 0
+   \   000372   0800         DW 8
+   \   000374   0D000000     DD 13
+   \   000378   802000       DB 128, 32, 0
+   \   00037B   0800         DW 8
+   \   00037D   0D000000     DD 13
+   \   000381   401F00       DB 64, 31, 0
+   \   000384   0800         DW 8
+   \   000386   0D000000     DD 13
+   \   00038A   201E00       DB 32, 30, 0
+   \   00038D   0800         DW 8
+   \   00038F   0D000000     DD 13
+   \   000393   104D00       DB 16, 77, 0
+   \   000396   0800         DW 8
+   \   000398   0D000000     DD 13
+   \   00039C   082800       DB 8, 40, 0
+   \   00039F   0800         DW 8
+   \   0003A1   0D000000     DD 13
+   \   0003A5   045200       DB 4, 82, 0
+   \   0003A8   0800         DW 8
+   \   0003AA   0D000000     DD 13
+   \   0003AE   023100       DB 2, 49, 0
+   \   0003B1   0800         DW 8
+   \   0003B3   0D000000     DD 13
+   \   0003B7   013800       DB 1, 56, 0
+   \   0003BA   0100         DW 1
+   \   0003BC   0C000000     DD 12
+   \   0003C0   801100       DB 128, 17, 0
+   \   0003C3   0100         DW 1
+   \   0003C5   0C000000     DD 12
+   \   0003C9   401000       DB 64, 16, 0
+   \   0003CC   0100         DW 1
+   \   0003CE   0C000000     DD 12
+   \   0003D2   200B00       DB 32, 11, 0
+   \   0003D5   0100         DW 1
+   \   0003D7   0C000000     DD 12
+   \   0003DB   101C00       DB 16, 28, 0
+   \   0003DE   0100         DW 1
+   \   0003E0   0C000000     DD 12
+   \   0003E4   081800       DB 8, 24, 0
+   \   0003E7   0100         DW 1
+   \   0003E9   0C000000     DD 12
+   \   0003ED   042400       DB 4, 36, 0
+   \   0003F0   0100         DW 1
+   \   0003F2   0C000000     DD 12
+   \   0003F6   022300       DB 2, 35, 0
+   \   0003F9   0100         DW 1
+   \   0003FB   0C000000     DD 12
+   \   0003FF   010D00       DB 1, 13, 0
+   \   000402   0600         DW 6
+   \   000404   0C000000     DD 12
+   \   000408   802400       DB 128, 36, 0
+   \   00040B   0600         DW 6
+   \   00040D   0C000000     DD 12
+   \   000411   400A00       DB 64, 10, 0
+   \   000414   0600         DW 6
+   \   000416   0C000000     DD 12
+   \   00041A   201300       DB 32, 19, 0
+   \   00041D   0600         DW 6
+   \   00041F   0C000000     DD 12
+   \   000423   101C00       DB 16, 28, 0
+   \   000426   0800         DW 8
+   \   000428   0C000000     DD 12
+   \   00042C   804C00       DB 128, 76, 0
+   \   00042F   0800         DW 8
+   \   000431   0C000000     DD 12
+   \   000435   402700       DB 64, 39, 0
+   \   000438   0800         DW 8
+   \   00043A   0C000000     DD 12
+   \   00043E   204900       DB 32, 73, 0
+   \   000441   0800         DW 8
+   \   000443   0C000000     DD 12
+   \   000447   104F00       DB 16, 79, 0
+   \   00044A   0800         DW 8
+   \   00044C   0C000000     DD 12
+   \   000450   082C00       DB 8, 44, 0
+   \   000453   0800         DW 8
+   \   000455   0C000000     DD 12
+   \   000459   045100       DB 4, 81, 0
+   \   00045C   0800         DW 8
+   \   00045E   0C000000     DD 12
+   \   000462   025000       DB 2, 80, 0
+   \   000465   0800         DW 8
+   \   000467   0C000000     DD 12
+   \   00046B   013700       DB 1, 55, 0
+   \   00046E   0100         DW 1
+   \   000470   0B000000     DD 11
+   \   000474   800500       DB 128, 5, 0
+   \   000477   0100         DW 1
+   \   000479   0B000000     DD 11
+   \   00047D   401900       DB 64, 25, 0
+   \   000480   0100         DW 1
+   \   000482   0B000000     DD 11
+   \   000486   200A00       DB 32, 10, 0
+   \   000489   0100         DW 1
+   \   00048B   0B000000     DD 11
+   \   00048F   101700       DB 16, 23, 0
+   \   000492   0100         DW 1
+   \   000494   0B000000     DD 11
+   \   000498   081500       DB 8, 21, 0
+   \   00049B   0100         DW 1
+   \   00049D   0B000000     DD 11
+   \   0004A1   042100       DB 4, 33, 0
+   \   0004A4   0100         DW 1
+   \   0004A6   0B000000     DD 11
+   \   0004AA   022200       DB 2, 34, 0
+   \   0004AD   0100         DW 1
+   \   0004AF   0B000000     DD 11
+   \   0004B3   010900       DB 1, 9, 0
+   \   0004B6   0600         DW 6
+   \   0004B8   0B000000     DD 11
+   \   0004BC   802500       DB 128, 37, 0
+   \   0004BF   0600         DW 6
+   \   0004C1   0B000000     DD 11
+   \   0004C5   400B00       DB 64, 11, 0
+   \   0004C8   0600         DW 6
+   \   0004CA   0B000000     DD 11
+   \   0004CE   201400       DB 32, 20, 0
+   \   0004D1   0600         DW 6
+   \   0004D3   0B000000     DD 11
+   \   0004D7   101D00       DB 16, 29, 0
+   \   0004DA   0100         DW 1
+   \   0004DC   0A000000     DD 10
+   \   0004E0   400600       DB 64, 6, 0
+   \   0004E3   0100         DW 1
+   \   0004E5   0A000000     DD 10
+   \   0004E9   203D00       DB 32, 61, 0
+   \   0004EC   0100         DW 1
+   \   0004EE   0A000000     DD 10
+   \   0004F2   103C00       DB 16, 60, 0
+   \   0004F5   0100         DW 1
+   \   0004F7   0A000000     DD 10
+   \   0004FB   080800       DB 8, 8, 0
+   \   0004FE   0100         DW 1
+   \   000500   0A000000     DD 10
+   \   000504   042000       DB 4, 32, 0
+   \   000507   0100         DW 1
+   \   000509   0A000000     DD 10
+   \   00050D   023B00       DB 2, 59, 0
+   \   000510   0100         DW 1
+   \   000512   0A000000     DD 10
+   \   000516   010700       DB 1, 7, 0
+   \   000519   0600         DW 6
+   \   00051B   0A000000     DD 10
+   \   00051F   802600       DB 128, 38, 0
+   \   000522   0600         DW 6
+   \   000524   0A000000     DD 10
+   \   000528   400C00       DB 64, 12, 0
+   \   00052B   0600         DW 6
+   \   00052D   0A000000     DD 10
+   \   000531   201500       DB 32, 21, 0
+   \   000534   0600         DW 6
+   \   000536   0A000000     DD 10
+   \   00053A   103900       DB 16, 57, 0
+   \   00053D   0100         DW 1
+   \   00053F   09000000     DD 9
+   \   000543   401B00       DB 64, 27, 0
+   \   000546   0100         DW 1
+   \   000548   09000000     DD 9
+   \   00054C   103900       DB 16, 57, 0
+   \   00054F   0100         DW 1
+   \   000551   09000000     DD 9
+   \   000555   081A00       DB 8, 26, 0
+   \   000558   0100         DW 1
+   \   00055A   09000000     DD 9
+   \   00055E   041F00       DB 4, 31, 0
+   \   000561   0100         DW 1
+   \   000563   09000000     DD 9
+   \   000567   023A00       DB 2, 58, 0
+   \   00056A   0100         DW 1
+   \   00056C   09000000     DD 9
+   \   000570   011600       DB 1, 22, 0
+   \   000573   0800         DW 8
+   \   000575   09000000     DD 9
+   \   000579   803A00       DB 128, 58, 0
+   \   00057C   0800         DW 8
+   \   00057E   09000000     DD 9
+   \   000582   403B00       DB 64, 59, 0
+   \   000585   0800         DW 8
+   \   000587   09000000     DD 9
+   \   00058B   203C00       DB 32, 60, 0
+   \   00058E   0800         DW 8
+   \   000590   09000000     DD 9
+   \   000594   103D00       DB 16, 61, 0
+   \   000597   0800         DW 8
+   \   000599   09000000     DD 9
+   \   00059D   083E00       DB 8, 62, 0
+   \   0005A0   0800         DW 8
+   \   0005A2   09000000     DD 9
+   \   0005A6   043F00       DB 4, 63, 0
+   \   0005A9   0800         DW 8
+   \   0005AB   09000000     DD 9
+   \   0005AF   024000       DB 2, 64, 0
+   \   0005B2   0100         DW 1
+   \   0005B4   08000000     DD 8
+   \   0005B8   401D00       DB 64, 29, 0
+   \   0005BB   0100         DW 1
+   \   0005BD   08000000     DD 8
+   \   0005C1   202900       DB 32, 41, 0
+   \   0005C4   0100         DW 1
+   \   0005C6   08000000     DD 8
+   \   0005CA   102B00       DB 16, 43, 0
+   \   0005CD   0100         DW 1
+   \   0005CF   08000000     DD 8
+   \   0005D3   081400       DB 8, 20, 0
+   \   0005D6   0100         DW 1
+   \   0005D8   08000000     DD 8
+   \   0005DC   041E00       DB 4, 30, 0
+   \   0005DF   0100         DW 1
+   \   0005E1   08000000     DD 8
+   \   0005E5   023500       DB 2, 53, 0
+   \   0005E8   0100         DW 1
+   \   0005EA   08000000     DD 8
+   \   0005EE   010400       DB 1, 4, 0
+   \   0005F1   0800         DW 8
+   \   0005F3   08000000     DD 8
+   \   0005F7   044100       DB 4, 65, 0
+   \   0005FA   0800         DW 8
+   \   0005FC   08000000     DD 8
+   \   000600   024200       DB 2, 66, 0
+   \   000603   0800         DW 8
+   \   000605   08000000     DD 8
+   \   000609   014300       DB 1, 67, 0
+   \   00060C   0100         DW 1
+   \   00060E   07000000     DD 7
+   \   000612   805100       DB 128, 81, 0
+   \   000615   0100         DW 1
+   \   000617   07000000     DD 7
+   \   00061B   405300       DB 64, 83, 0
+   \   00061E   0100         DW 1
+   \   000620   07000000     DD 7
+   \   000624   105C00       DB 16, 92, 0
+   \   000627   0100         DW 1
+   \   000629   07000000     DD 7
+   \   00062D   085F00       DB 8, 95, 0
+   \   000630   0100         DW 1
+   \   000632   07000000     DD 7
+   \   000636   044400       DB 4, 68, 0
+   \   000639   0100         DW 1
+   \   00063B   07000000     DD 7
+   \   00063F   024C00       DB 2, 76, 0
+   \   000642   0100         DW 1
+   \   000644   07000000     DD 7
+   \   000648   015900       DB 1, 89, 0
+   \   00064B   0100         DW 1
+   \   00064D   06000000     DD 6
+   \   000651   804F00       DB 128, 79, 0
+   \   000654   0100         DW 1
+   \   000656   06000000     DD 6
+   \   00065A   405400       DB 64, 84, 0
+   \   00065D   0100         DW 1
+   \   00065F   06000000     DD 6
+   \   000663   206200       DB 32, 98, 0
+   \   000666   0100         DW 1
+   \   000668   06000000     DD 6
+   \   00066C   105D00       DB 16, 93, 0
+   \   00066F   0100         DW 1
+   \   000671   06000000     DD 6
+   \   000675   086000       DB 8, 96, 0
+   \   000678   0100         DW 1
+   \   00067A   06000000     DD 6
+   \   00067E   044500       DB 4, 69, 0
+   \   000681   0100         DW 1
+   \   000683   06000000     DD 6
+   \   000687   024900       DB 2, 73, 0
+   \   00068A   0100         DW 1
+   \   00068C   06000000     DD 6
+   \   000690   015A00       DB 1, 90, 0
+   \   000693   0100         DW 1
+   \   000695   05000000     DD 5
+   \   000699   40E520       DB 64, 229, 32
+   \   00069C   0100         DW 1
+   \   00069E   05000000     DD 5
+   \   0006A2   10E102       DB 16, 225, 2
+   \   0006A5   0100         DW 1
+   \   0006A7   04000000     DD 4
+   \   0006AB   086500       DB 8, 101, 0
+   \   0006AE   0100         DW 1
+   \   0006B0   04000000     DD 4
+   \   0006B4   01E780       DB 1, 231, 128
+   \   0006B7   0100         DW 1
+   \   0006B9   03000000     DD 3
+   \   0006BD   805600       DB 128, 86, 0
+   \   0006C0   0100         DW 1
+   \   0006C2   03000000     DD 3
+   \   0006C6   405500       DB 64, 85, 0
+   \   0006C9   0100         DW 1
+   \   0006CB   03000000     DD 3
+   \   0006CF   206300       DB 32, 99, 0
+   \   0006D2   0100         DW 1
+   \   0006D4   03000000     DD 3
+   \   0006D8   105E00       DB 16, 94, 0
+   \   0006DB   0100         DW 1
+   \   0006DD   03000000     DD 3
+   \   0006E1   086100       DB 8, 97, 0
+   \   0006E4   0100         DW 1
+   \   0006E6   03000000     DD 3
+   \   0006EA   044E00       DB 4, 78, 0
+   \   0006ED   0100         DW 1
+   \   0006EF   03000000     DD 3
+   \   0006F3   024B00       DB 2, 75, 0
+   \   0006F6   0100         DW 1
+   \   0006F8   03000000     DD 3
+   \   0006FC   015B00       DB 1, 91, 0
+   \   0006FF   0100         DW 1
+   \   000701   02000000     DD 2
+   \   000705   805000       DB 128, 80, 0
+   \   000708   0100         DW 1
+   \   00070A   02000000     DD 2
+   \   00070E   404800       DB 64, 72, 0
+   \   000711   0100         DW 1
+   \   000713   02000000     DD 2
+   \   000717   205200       DB 32, 82, 0
+   \   00071A   0100         DW 1
+   \   00071C   02000000     DD 2
+   \   000720   085700       DB 8, 87, 0
+   \   000723   0100         DW 1
+   \   000725   02000000     DD 2
+   \   000729   044D00       DB 4, 77, 0
+   \   00072C   0100         DW 1
+   \   00072E   02000000     DD 2
+   \   000732   024A00       DB 2, 74, 0
+   \   000735   0100         DW 1
+   \   000737   02000000     DD 2
+   \   00073B   015800       DB 1, 88, 0
+   \   00073E   0100         DW 1
+   \   000740   01000000     DD 1
+   \   000744   40E410       DB 64, 228, 16
+   \   000747   0100         DW 1
+   \   000749   01000000     DD 1
+   \   00074D   02E001       DB 2, 224, 1
+   \   000750   FFFF         DW 65535
+   \   000752   00000000     DD 0
+   \   000756   000000       DB 0, 0, 0
+    141              //VID, Col, Ret, USB, ModByteBit
+    142              {0x0001, 18, 0x02, usbUsageLeftGUI, 0x08},
+    143                  {0x0002, 18, 0x80, usbUsage1},
+    144          	    {0x0006, 18, 0x40, usbUsageA}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+    145          	    {0x0006, 18, 0x20, usbUsageJ},
+    146          	    {0x0006, 18, 0x10, usbUsageS},
+    147                      {0x0004, 18, 0x80, usbUsageKeypadNumlock},
+    148              	        {0x0008, 18,  0x80, usbUsageQ}, // for David's keypad
+    149              	        {0x0008, 18,  0x40, usbUsageW}, // for David's keypad
+    150              	        {0x0008, 18,  0x20, usbUsageE}, // for David's keypad
+    151              	        {0x0008, 18,  0x10, usbUsageR}, // for David's keypad
+    152              	        {0x0008, 18,  0x08, usbUsageT}, // for David's keypad
+    153              	        {0x0008, 18,  0x04, usbUsageY}, // for David's keypad
+    154              	        {0x0008, 18,  0x02, usbUsageU}, // for David's keypad
+    155          	    
+    156              {0x0001, 17, 0x80, usbUsageRightAlt, 0x40},
+    157              {0x0001, 17, 0x20, usbUsageLeftAlt, 0x04 },
+    158              {0x0001, 17, 0x08, usbUsageScrollLock},
+    159              {0x0001, 17, 0x04, usbUsagePrintScreen},
+    160                  {0x0002, 17, 0x80, usbUsage2},
+    161          	    {0x0006, 17, 0x40, usbUsageB}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+    162          	    {0x0006, 17, 0x20, usbUsageK},
+    163          	    {0x0006, 17, 0x10, usbUsageT},
+    164                      {0x0004, 17, 0x80, usbUsageCapsLock},
+    165              	        {0x0008, 17,  0x80, usbUsage9}, // for David's keypad
+    166              	        {0x0008, 17,  0x40, usbUsage8}, // for David's keypad
+    167              	        {0x0008, 17,  0x20, usbUsage7}, // for David's keypad
+    168              	        {0x0008, 17,  0x10, usbUsageEscape}, // for David's keypad
+    169          //    	        {0x0008, 17,  0x08, usbUsageOut}, // for David's keypad
+    170              	        {0x0008, 17,  0x08, usbUsageLeftShift, 0x02}, // for David's keypad
+    171              	        {0x0008, 17,  0x04, usbUsageP}, // for David's keypad
+    172              	        {0x0008, 17,  0x02, usbUsageO}, // for David's keypad
+    173              	        {0x0008, 17,  0x01, usbUsageI}, // for David's keypad
+    174          	    
+    175              {0x0001, 16, 0x80, usbUsageSpacebar}, 
+    176              {0x0001, 16, 0x40, usbUsageEnter}, 
+    177              {0x0001, 16, 0x20, usbUsageF5},
+    178              {0x0001, 16, 0x10, usbUsageBackspace},
+    179              {0x0001, 16, 0x04, usbUsageF10},
+    180              {0x0001, 16, 0x02, usbUsageF9},
+    181              {0x0001, 16, 0x01, usbUsageBackslash},
+    182              	{0x0002, 16, 0x80, usbUsage3},
+    183          	    {0x0006, 16, 0x40, usbUsageC}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+    184          	    {0x0006, 16, 0x20, usbUsageL},
+    185          	    {0x0006, 16, 0x10, usbUsageU},
+    186                      {0x0004, 16, 0x80, usbUsageScrollLock},
+    187              	        {0x0008, 16,  0x80, usbUsageA}, // for David's keypad
+    188              	        {0x0008, 16,  0x40, usbUsageS}, // for David's keypad
+    189              	        {0x0008, 16,  0x20, usbUsageD}, // for David's keypad
+    190              	        {0x0008, 16,  0x10, usbUsageF}, // for David's keypad
+    191              	        {0x0008, 16,  0x08, usbUsageG}, // for David's keypad
+    192              	        {0x0008, 16,  0x04, usbUsageH}, // for David's keypad
+    193              	        {0x0008, 16,  0x02, usbUsageJ}, // for David's keypad
+    194              	        {0x0008, 16,  0x01, usbUsageComma}, // for David's keypad
+    195              	
+    196              {0x0001, 15, 0x80, usbUsageSlash},
+    197              {0x0001, 15, 0x20, usbUsageApostrophe},
+    198              {0x0001, 15, 0x10, usbUsageLeftBracket},
+    199              {0x0001, 15, 0x08, usbUsageP},
+    200              {0x0001, 15, 0x04, usbUsage0},
+    201              {0x0001, 15, 0x02, usbUsageMinus},
+    202              {0x0001, 15, 0x01, usbUsageSemicolon},
+    203                  {0x0006, 15, 0x80, usbUsage4}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+    204          	    {0x0006, 15, 0x40, usbUsageD},
+    205          	    {0x0006, 15, 0x20, usbUsageM},
+    206          	    {0x0006, 15, 0x10, usbUsageV},
+    207              	        {0x0008, 15,  0x80, usbUsage6}, // for David's keypad
+    208              	        {0x0008, 15,  0x40, usbUsage5}, // for David's keypad
+    209              	        {0x0008, 15,  0x20, usbUsage4}, // for David's keypad
+    210              	        {0x0008, 15,  0x10, usbUsageHome}, // for David's keypad
+    211          //    	        {0x0008, 15,  0x08, usbUsageIn}, // for David's keypad
+    212              	        {0x0008, 15,  0x08, usbUsageRightAlt, 0x40}, // for David's keypad
+    213              	        {0x0008, 15,  0x04, usbUsageApostrophe}, // for David's keypad
+    214              	        {0x0008, 15,  0x02, usbUsageL}, // for David's keypad
+    215              	        {0x0008, 15,  0x01, usbUsageK}, // for David's keypad
+    216                  
+    217              {0x0001, 14, 0x40, usbUsagePeriod},
+    218              {0x0001, 14, 0x10, usbUsageF7},
+    219              {0x0001, 14, 0x08, usbUsageO},
+    220              {0x0001, 14, 0x04, usbUsage9},
+    221              {0x0001, 14, 0x02, usbUsageF8},
+    222              {0x0001, 14, 0x01, usbUsageL},
+    223              	{0x0006, 14, 0x80, usbUsage5}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+    224          	    {0x0006, 14, 0x40, usbUsageE},
+    225          	    {0x0006, 14, 0x20, usbUsageN},
+    226          	    {0x0006, 14, 0x10, usbUsageW},
+    227              	        {0x0008, 14,  0x80, usbUsageZ}, // for David's keypad
+    228              	        {0x0008, 14,  0x40, usbUsageX}, // for David's keypad
+    229              	        {0x0008, 14,  0x20, usbUsageC}, // for David's keypad
+    230              	        {0x0008, 14,  0x10, usbUsageV}, // for David's keypad
+    231              	        {0x0008, 14,  0x08, usbUsageB}, // for David's keypad
+    232              	        {0x0008, 14,  0x04, usbUsageN}, // for David's keypad
+    233              	        {0x0008, 14,  0x02, usbUsageM}, // for David's keypad
+    234              	        {0x0008, 14,  0x01, usbUsageLeftControl, 0x01}, // for David's keypad
+    235              	
+    236              {0x0001, 13, 0x40, usbUsageComma},
+    237              {0x0001, 13, 0x20, usbUsageF6},
+    238              {0x0001, 13, 0x10, usbUsageRightBracket},
+    239              {0x0001, 13, 0x08, usbUsageI}, 
+    240              {0x0001, 13, 0x04, usbUsage8},
+    241              {0x0001, 13, 0x02, usbUsageEqual},
+    242              {0x0001, 13, 0x01, usbUsageK},
+    243              	{0x0006, 13, 0x80, usbUsage6}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+    244          	    {0x0006, 13, 0x40, usbUsageF},
+    245          	    {0x0006, 13, 0x20, usbUsageO},
+    246          	    {0x0006, 13, 0x10, usbUsageX},
+    247              	        {0x0008, 13,  0x80, usbUsage3}, // for David's keypad
+    248              	        {0x0008, 13,  0x40, usbUsage2}, // for David's keypad
+    249              	        {0x0008, 13,  0x20, usbUsage1}, // for David's keypad
+    250              	        {0x0008, 13,  0x10, usbUsageEnd}, // for David's keypad
+    251              	        {0x0008, 13,  0x08, usbUsageEnter}, // for David's keypad
+    252              	        {0x0008, 13,  0x04, usbUsageUpArrow}, // for David's keypad
+    253              	        {0x0008, 13,  0x02, usbUsageBackslash}, // for David's keypad
+    254              	        {0x0008, 13,  0x01, usbUsageSlash}, // for David's keypad
+    255              	
+    256              {0x0001, 12, 0x80, usbUsageN},
+    257              {0x0001, 12, 0x40, usbUsageM},
+    258              {0x0001, 12, 0x20, usbUsageH},
+    259              {0x0001, 12, 0x10, usbUsageY},
+    260              {0x0001, 12, 0x08, usbUsageU},
+    261              {0x0001, 12, 0x04, usbUsage7},
+    262              {0x0001, 12, 0x02, usbUsage6},
+    263              {0x0001, 12, 0x01, usbUsageJ},
+    264              	{0x0006, 12, 0x80, usbUsage7}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+    265          	    {0x0006, 12, 0x40, usbUsageG},
+    266          	    {0x0006, 12, 0x20, usbUsageP},
+    267          	    {0x0006, 12, 0x10, usbUsageY},
+    268              	        {0x0008, 12,  0x80, usbUsageDeleteForward}, // for David's keypad
+    269              	        {0x0008, 12,  0x40, usbUsage0}, // for David's keypad
+    270              	        {0x0008, 12,  0x20, usbUsageInsert}, // for David's keypad
+    271              	        {0x0008, 12,  0x10, usbUsageRightArrow}, // for David's keypad
+    272              	        {0x0008, 12,  0x08, usbUsageSpacebar}, // for David's keypad
+    273              	        {0x0008, 12,  0x04, usbUsageDownArrow}, // for David's keypad
+    274              	        {0x0008, 12,  0x02, usbUsageLeftArrow}, // for David's keypad
+    275              	        {0x0008, 12,  0x01, usbUsagePeriod}, // for David's keypad
+    276              	
+    277              {0x0001, 11, 0x80, usbUsageB},
+    278              {0x0001, 11, 0x40, usbUsageV},
+    279              {0x0001, 11, 0x20, usbUsageG},
+    280              {0x0001, 11, 0x10, usbUsageT},
+    281              {0x0001, 11, 0x08, usbUsageR},
+    282              {0x0001, 11, 0x04, usbUsage4},
+    283              {0x0001, 11, 0x02, usbUsage5},
+    284              {0x0001, 11, 0x01, usbUsageF},
+    285              	{0x0006, 11, 0x80, usbUsage8}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+    286          	    {0x0006, 11, 0x40, usbUsageH},
+    287          	    {0x0006, 11, 0x20, usbUsageQ},
+    288          	    {0x0006, 11, 0x10, usbUsageZ},
+    289              	
+    290              {0x0001, 10, 0x40, usbUsageC},
+    291              {0x0001, 10, 0x20, usbUsageF4},
+    292              {0x0001, 10, 0x10, usbUsageF3},
+    293              {0x0001, 10, 0x08, usbUsageE},
+    294              {0x0001, 10, 0x04, usbUsage3},
+    295              {0x0001, 10, 0x02, usbUsageF2},
+    296              {0x0001, 10, 0x01, usbUsageD},
+    297              	{0x0006, 10, 0x80, usbUsage9}, // for S[3:0]=2 and S[3:0]=4, 6=2+4
+    298          	    {0x0006, 10, 0x40, usbUsageI},
+    299          	    {0x0006, 10, 0x20, usbUsageR},
+    300          	    {0x0006, 10, 0x10, usbUsageCapsLock},
+    301              	
+    302              {0x0001, 9,  0x40, usbUsageX},
+    303              {0x0001, 9,  0x10, usbUsageCapsLock},
+    304              {0x0001, 9,  0x08, usbUsageW},
+    305              {0x0001, 9,  0x04, usbUsage2},
+    306              {0x0001, 9,  0x02, usbUsageF1},
+    307              {0x0001, 9,  0x01, usbUsageS},
+    308          //    	        {0x0008, 9,  0x40, 0x66}, // for NewMotion one suspend-key keyboard 
+    309              	        {0x0008, 9,  0x80, usbUsageF1}, // for David's keypad
+    310              	        {0x0008, 9,  0x40, usbUsageF2}, // for David's keypad
+    311              	        {0x0008, 9,  0x20, usbUsageF3}, // for David's keypad
+    312              	        {0x0008, 9,  0x10, usbUsageF4}, // for David's keypad
+    313              	        {0x0008, 9,  0x08, usbUsageF5}, // for David's keypad
+    314              	        {0x0008, 9,  0x04, usbUsageF6}, // for David's keypad
+    315              	        {0x0008, 9,  0x02, usbUsageF7}, // for David's keypad
+    316              	        
+    317              {0x0001, 8,  0x40, usbUsageZ},
+    318              {0x0001, 8,  0x20, usbUsageEscape},
+    319              {0x0001, 8,  0x10, usbUsageTab},
+    320              {0x0001, 8,  0x08, usbUsageQ},
+    321              {0x0001, 8,  0x04, usbUsage1},
+    322              {0x0001, 8,  0x02, usbUsageTilde},
+    323              {0x0001, 8,  0x01, usbUsageA},
+    324              	        {0x0008, 8,  0x04, usbUsageF8}, // for David's keypad
+    325              	        {0x0008, 8,  0x02, usbUsageF9}, // for David's keypad
+    326              	        {0x0008, 8,  0x01, usbUsageF10}, // for David's keypad
+    327              
+    328              {0x0001, 7,  0x80, usbUsageDownArrow},
+    329              {0x0001, 7,  0x40, usbUsageKeypadNumlock},
+    330              {0x0001, 7,  0x10, usbUsageKeypad4},
+    331              {0x0001, 7,  0x08, usbUsageKeypad7},
+    332              {0x0001, 7,  0x04, usbUsageF11},
+    333              {0x0001, 7,  0x02, usbUsageDeleteForward},
+    334              {0x0001, 7,  0x01, usbUsageKeypad1},
+    335              
+    336              {0x0001, 6,  0x80, usbUsageRightArrow},
+    337              {0x0001, 6,  0x40, usbUsageKeypadSlash},
+    338              {0x0001, 6,  0x20, usbUsageKeypad0},
+    339              {0x0001, 6,  0x10, usbUsageKeypad5},
+    340              {0x0001, 6,  0x08, usbUsageKeypad8},
+    341              {0x0001, 6,  0x04, usbUsageF12},
+    342              {0x0001, 6,  0x02, usbUsageInsert},
+    343              {0x0001, 6,  0x01, usbUsageKeypad2},
+    344              
+    345              {0x0001, 5,  0x40, usbUsageRightShift, 0x20},
+    346              {0x0001, 5,  0x10, usbUsageLeftShift, 0x02},
+    347              
+    348              {0x0001, 4,  0x08, usbUsageWindowsKey},
+    349              {0x0001, 4,  0x01, usbUsageRightGUI, 0x80},
+    350              
+    351              {0x0001, 3,  0x80, usbUsageKeypadMinus},
+    352              {0x0001, 3,  0x40, usbUsageKeypadAsterisk},
+    353              {0x0001, 3,  0x20, usbUsageKeypadPeriod},
+    354              {0x0001, 3,  0x10, usbUsageKeypad6},
+    355              {0x0001, 3,  0x08, usbUsageKeypad9},
+    356              {0x0001, 3,  0x04, usbUsagePageDown},
+    357              {0x0001, 3,  0x02, usbUsagePageUp},
+    358              {0x0001, 3,  0x01, usbUsageKeypad3},
+    359              
+    360              {0x0001, 2,  0x80, usbUsageLeftArrow},
+    361              {0x0001, 2,  0x40, usbUsagePause},
+    362              {0x0001, 2,  0x20, usbUsageUpArrow},
+    363              {0x0001, 2,  0x08, usbUsageKeypadPlus},
+    364              {0x0001, 2,  0x04, usbUsageEnd},
+    365              {0x0001, 2,  0x02, usbUsageHome},
+    366          	{0x0001, 2,  0x01, usbUsageKeypadEnter}, 
+    367          	
+    368              {0x0001, 1,  0x40, usbUsageRightControl, 0x10},
+    369              {0x0001, 1,  0x02, usbUsageLeftControl, 0x01},
+    370              
+    371              {0xFFFF, 0,  0x00, 0x00} // End of table flag
+    372              };
+    373           
+    374          	
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+    375          void delay(int i)
+   \                     delay:
+    376          {
+   \   000000                ; Saved register size: 0
+   \   000000                ; Auto size: 0
+    377            while(i--);
+   \                     ??delay_0:
+   \   000000   EA           MOV     A,R2
+   \   000001   F8           MOV     R0,A
+   \   000002   EB           MOV     A,R3
+   \   000003   F9           MOV     R1,A
+   \   000004   74FF         MOV     A,#-0x1
+   \   000006   28           ADD     A,R0
+   \   000007   FA           MOV     R2,A
+   \   000008   74FF         MOV     A,#-0x1
+   \   00000A   39           ADDC    A,R1
+   \   00000B   FB           MOV     R3,A
+   \   00000C   7400         MOV     A,#0x0
+   \   00000E   68           XRL     A,R0
+   \   00000F   7003         JNZ     ??delay_1
+   \   000011   7400         MOV     A,#0x0
+   \   000013   69           XRL     A,R1
+   \                     ??delay_1:
+   \   000014   70EA         JNZ     ??delay_0
+    378          }
+   \   000016   22           RET
+    379          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+    380          void main(void)
+   \                     main:
+    381          {
+   \   000000                ; Auto size: 0
+    382          	int vidPidMask;
+    383          	int iTemp;
+    384          
+    385          #ifdef SERIALDEBUG
+    386          	// Enable serial port for debug at 9600 baud, using 48.000MHZ.
+    387          	SCON = 0x52;
+    388          	TH1 = -13;
+    389          	TMOD = 0x20;
+    390          	TR1 = 1;
+    391          #endif
+    392          
+    393          	bPUR0 = 0x00;   // enable internal pull-ups
+   \   000000   7400         MOV     A,#0x0
+   \   000002   90FF94       MOV     DPTR,#-0x6c
+   \   000005   F0           MOVX    @DPTR,A
+    394          	bPUR1 = 0x00;
+   \   000006   7400         MOV     A,#0x0
+   \   000008   90FF95       MOV     DPTR,#-0x6b
+   \   00000B   F0           MOVX    @DPTR,A
+    395          	bPUR2 = 0x00;
+   \   00000C   7400         MOV     A,#0x0
+   \   00000E   90FF96       MOV     DPTR,#-0x6a
+   \   000011   F0           MOVX    @DPTR,A
+    396          	bPUR3 = 0x00;
+   \   000012   7400         MOV     A,#0x0
+   \   000014   90FF97       MOV     DPTR,#-0x69
+   \   000017   F0           MOVX    @DPTR,A
+    397          	
+    398          	P3 = 0xff; // speed-up pull-ups
+   \   000018   75B0FF       MOV     0xb0,#-0x1
+    399          	P2 = 0xff;
+   \   00001B   75A0FF       MOV     0xa0,#-0x1
+    400          	P1 = 0xff;
+   \   00001E   7590FF       MOV     0x90,#-0x1
+    401          	P0 = 0xff;
+   \   000021   7580FF       MOV     0x80,#-0x1
+    402          	
+    403          	GetVidPidSetting(); // Obtain the S0-S3 setting to determine VID/PID
+   \   000024                ; Setup parameters for call to function GetVidPidSetting
+   \   000024   12....       LCALL   GetVidPidSetting
+    404          	InitializeUsbHub(); // Initialize the USB hub connecting it to upstream port
+   \   000027                ; Setup parameters for call to function InitializeUsbHub
+   \   000027   12....       LCALL   InitializeUsbHub
+    405          	InitializeUsbFunction(); // Initialize the USB embedded function
+   \   00002A                ; Setup parameters for call to function InitializeUsbFunction
+   \   00002A   12....       LCALL   InitializeUsbFunction
+    406          	ClearKeyBoardBuffer(); // Clear the keyboard buffer
+   \   00002D                ; Setup parameters for call to function ClearKeyBoardBuffer
+   \   00002D   12....       LCALL   ClearKeyBoardBuffer
+    407          	
+    408          	vidPidMask = 1 << s0123; // Prepares our VID/PID mask to decide whether a given key is valid
+   \   000030   75..01       MOV     ?V0 + 0,#0x1
+   \   000033   75..00       MOV     ?V0 + 1,#0x0
+   \   000036   90....       MOV     DPTR,#s0123
+   \   000039   E0           MOVX    A,@DPTR
+   \   00003A   78..         MOV     R0,#?V0 + 0
+   \   00003C   12....       LCALL   ?S_SHL
+   \   00003F   85....       MOV     ?V0 + 6,?V0 + 0
+   \   000042   85....       MOV     ?V0 + 7,?V0 + 1
+    409          	while(!deviceReady); // Wait for the setup packets to be exchanged, etc.
+   \                     ??main_0:
+   \   000045   90....       MOV     DPTR,#deviceReady
+   \   000048   E0           MOVX    A,@DPTR
+   \   000049   60FA         JZ      ??main_0
+    410          	
+    411          	for(iTemp = 0; iTemp < 256; iTemp++)
+   \   00004B   7800         MOV     R0,#0x0
+   \   00004D   7900         MOV     R1,#0x0
+   \   00004F   8019         SJMP    ??main_1
+    412          		keypressDebounce[iTemp] = 0x00;
+   \                     ??main_2:
+   \   000051   7400         MOV     A,#0x0
+   \   000053   C0E0         PUSH    A
+   \   000055   E8           MOV     A,R0
+   \   000056   24..         ADD     A,#(keypressDebounce & 0xff)
+   \   000058   F582         MOV     DPL,A
+   \   00005A   E9           MOV     A,R1
+   \   00005B   34..         ADDC    A,#((keypressDebounce >> 8) & 0xff)
+   \   00005D   F583         MOV     DPH,A
+   \   00005F   D0E0         POP     A
+   \   000061   F0           MOVX    @DPTR,A
+   \   000062   E8           MOV     A,R0
+   \   000063   2401         ADD     A,#0x1
+   \   000065   F8           MOV     R0,A
+   \   000066   E9           MOV     A,R1
+   \   000067   3400         ADDC    A,#0x0
+   \   000069   F9           MOV     R1,A
+   \                     ??main_1:
+   \   00006A   C3           CLR     C
+   \   00006B   E8           MOV     A,R0
+   \   00006C   9400         SUBB    A,#0x0
+   \   00006E   E9           MOV     A,R1
+   \   00006F   9401         SUBB    A,#0x1
+   \   000071   A2D2         MOV     C,0xD0 /* PSW */.2
+   \   000073   65D0         XRL     A,PSW
+   \   000075   33           RLC     A
+   \   000076   40D9         JC      ??main_2
+   \   000078   8003         SJMP    ??main_3
+    413          
+    414          	while(1) { // Indefinite loop to handle keyboard scanning
+    415          		
+    416          // for debug only
+    417          //		P3.2 = bVIDSTA&1;
+    418          //		P3.3 = (bVIDSTA>>1)&1;
+    419          //		P3.4 = (bVIDSTA>>2)&1;
+    420          //		P3.5 = (bVIDSTA>>3)&1;
+    421          		
+    422          		if(bSuspended) {
+    423          		
+    424          	        // disable P0, P1 and part of P3 internal pull-ups
+    425          			bPUR0 = 0xFF;
+    426          			bPUR1 = 0xFF;
+    427          			bPUR3 = 0xc3;  // disable P3.6, P3.7, P3.0, & P3.1 pull-ups 
+    428          			
+    429          			P0 = 0x00;
+    430          			P1 = 0x00;
+    431          			P3 = 0xff;     // turn LED off 
+    432          			P3_bit.WR = 0;
+    433          			P3_bit.RD = 0;                                                      
+    434          
+    435                      // TUSB3210 Base EVM needs follow codes, otherwise it will comsume more 100uA power
+    436                      P3_bit.RxD = 0;      // since dip switch may tie P3.0 & P3.1 to ground
+    437                      P3_bit.TxD = 0;      
+    438          			
+    439                      IE_bit.EX1 = ENABLE;  // enable P2 interrupt
+    440                                  
+    441          			// Set IDLE bit in PCON to bring MCU to suspend
+    442          			PCON |= 0x01;
+    443          
+    444                      // uC wakeups from suspend
+    445          			IE_bit.EX1 = DISABLE;
+    446          			bPUR0 = 0x00;
+    447          			bPUR1 = 0x00;
+    448          			bPUR3 = 0x00;
+    449          
+    450          			// Execution will stop until we wake back up, at which point
+    451          			// we then conitnue by indicating we're no longer in Suspend
+    452          			// mode.
+    453          			bSuspended = FALSE;
+    454          		} // end of if(bSuspended)
+    455          			
+    456          		if(!deviceReady)
+    457          			continue;
+    458          			
+    459          		// We only scan the keyboard if the keypressBuffer is currently empty.
+    460          		if(keypressBuffer[0] == 0x00) {
+    461          			BYTE scanLine, keypress, keyDefOffset = 0;
+    462          			modifierByte = 0x00; // We initialize the modifier byte to zero initially
+    463          
+    464          			// We now select each of the 18 scanlines (0-17) in sequence so that
+    465          			// we can detect any keys that have been pressed on the line.
+    466          			for(scanLine = 18; scanLine > 0; scanLine--) {
+    467          				// We start the loop by turning on all the bits of the 18 scanline select
+    468          				// lines.
+    469          				P0 = 0xFF;
+    470          				P1 = 0xFF;
+    471          				P3 |= 0xC0;
+    472          				
+    473          				// Now we turn off a single GPIO line to select the current scanline.
+    474          				switch(scanLine) {
+    475                              case 1: P1_bit.P10 = 0; break;
+    476                              case 2: P1_bit.P11 = 0; break;
+    477                              case 3: P1_bit.P12 = 0; break;
+    478                              case 4: P1_bit.P13 = 0; break;
+    479                              case 5: P1_bit.P14 = 0; break;
+    480                              case 6: P1_bit.P15 = 0; break;
+    481                              case 7: P1_bit.P16 = 0; break;
+    482                              case 8: P1_bit.P17 = 0; break;
+    483                              case 9: P3_bit.WR = 0; break;
+    484                              case 10: P0_bit.P00 = 0; break;
+    485                              case 11: P0_bit.P01 = 0; break;
+    486                              case 12: P0_bit.P02 = 0; break;
+    487                              case 13: P0_bit.P03 = 0; break;
+    488                              case 14: P0_bit.P04 = 0; break;
+    489                              case 15: P0_bit.P05 = 0; break;
+    490                              case 16: P0_bit.P06 = 0; break;
+    491                              case 17: P0_bit.P07 = 0; break;
+    492                              case 18: P0_bit.P07 = 0; break;				
+    493          					// Additional scan lines may be added by adding more case statements
+    494          					// here and increasing the range of the for() statement above.
+    495          					default: break;
+    496          				} // end of switch(scanLine)
+    497          				
+    498          				// Get the current of the current scanline.  We invert it so that any bit that
+    499          				// is set indicates a key that has been pressed.
+    500          				keypress = ~P2; 
+    501          
+    502                          if (keypress == 0x01 || keypress == 0x02 || keypress == 0x04 || keypress == 0x08 ||
+    503                              keypress == 0x10 || keypress == 0x20 || keypress == 0x40 || keypress == 0x80) {
+    504                              
+    505                              // We now search the keyDefs[] table starting at the offset that we're at.
+    506                              // We keep searching until the scanline indicated in the table is less than
+    507                              // the current scanline, which means there are no more options for the current
+    508                              // scanline.
+    509                              while(keyDefs[keyDefOffset].scanLine >= scanLine ) {
+    510                                  // If the scanline of the table at our current offset is equal to our
+    511                                  // current scanline then we can proceed to analyze it.
+    512                                  if(keyDefs[keyDefOffset].scanLine == scanLine) {
+    513                                      // If the detected keypress ANDed with the keypress Mask from the table
+    514                                      // results in a non-zero value, it means the given key has been pressed.
+    515                                      // We also make sure the given keypress is supported in our current
+    516                                      // VID/PID mode.
+    517                                      if( (keypress & keyDefs[keyDefOffset].keyPressMask) && (vidPidMask & keyDefs[keyDefOffset].vidPidMask)) {
+    518                                      //  keypressDebounce[keyDefs[keyDefOffset].hidCode]++;
+    519                                      //  if(keypressDebounce[keyDefs[keyDefOffset].hidCode] > 5)
+    520                                      //      {
+    521                                      //      keypressDebounce[keyDefs[keyDefOffset].hidCode] = 6;
+    522                                              // We check to see if the key that has been pressed is one of the
+    523                                              // keys that is sent back in the modifier byte.
+    524                                              if(keyDefs[keyDefOffset].modBit != 0x00 ) {
+    525                                                  modifierByte |= keyDefs[keyDefOffset].modBit;
+    526                                              }
+    527                                              else if(strlen(keypressBuffer) < KEYPRESS_BUFFER_SIZE ) {
+                                                                    ^
+Warning[Pe167]: argument of type "BYTE *" is incompatible with parameter of
+          type "char *"
+    528                                                  // If it was not a modifier byte key and there is still room in the
+    529                                                  // keypressBuffer, we will add this key to the buffer.
+    530                                                  keypressBuffer[strlen(keypressBuffer)] = keyDefs[keyDefOffset].hidCode;
+                                                                               ^
+Warning[Pe167]: argument of type "BYTE *" is incompatible with parameter of
+          type "char *"
+    531                                              }
+    532                                              //}
+    533                                      //  else
+    534                                      //      {
+    535                                      //      keypressDebounce[keyDefs[keyDefOffset].hidCode] = 0;
+    536                                      //      }
+    537                                      } // end of if( (keypress & keyDefs[keyDefOffset].keyPressMask) && (vidPidMask & keyDefs[keyDefOffset].vidPidMask))
+    538                                  } // end of if(keyDefs[keyDefOffset].scanLine == scanLine)
+    539                                  keyDefOffset++;
+    540                              } // end of while(keyDefs[keyDefOffset].scanLine >= scanLine )
+    541          
+    542                              // If we reach the end of the keypress table then there's nothing else we can
+    543                              // possibly find, so we exit our scanline loop even if we haven't checked every
+    544                              // scan line.  We also exit if the keypress buffer has been completely filled.
+    545                              // In this case, even if there are more valid keys waiting we won't be able to
+    546                              // store them anyway, so we exit.
+    547                              if(keyDefs[keyDefOffset].scanLine == 0 || strlen(keypressBuffer) >= KEYPRESS_BUFFER_SIZE)
+                                                                                      ^
+Warning[Pe167]: argument of type "BYTE *" is incompatible with parameter of
+          type "char *"
+    548                                  break;
+    549          					
+    550          				} // end of if (keypress == 0x01 ...
+    551          			} // end of for(scanLine = 18; scanLine > 0; scanLine--)
+    552          			
+    553          			// Send the current keyboard buffer to IEP1 to be sent to host
+    554          			UpdateIEP1WithKeypress();
+   \                     ??main_4:
+   \   00007A                ; Setup parameters for call to function UpdateIEP1WithKeypress
+   \   00007A   12....       LCALL   UpdateIEP1WithKeypress
+   \                     ??main_3:
+   \   00007D   90....       MOV     DPTR,#bSuspended
+   \   000080   E0           MOVX    A,@DPTR
+   \   000081   6042         JZ      ??main_5
+   \   000083   74FF         MOV     A,#-0x1
+   \   000085   90FF94       MOV     DPTR,#-0x6c
+   \   000088   F0           MOVX    @DPTR,A
+   \   000089   74FF         MOV     A,#-0x1
+   \   00008B   90FF95       MOV     DPTR,#-0x6b
+   \   00008E   F0           MOVX    @DPTR,A
+   \   00008F   74C3         MOV     A,#-0x3d
+   \   000091   90FF97       MOV     DPTR,#-0x69
+   \   000094   F0           MOVX    @DPTR,A
+   \   000095   758000       MOV     0x80,#0x0
+   \   000098   759000       MOV     0x90,#0x0
+   \   00009B   75B0FF       MOV     0xb0,#-0x1
+   \   00009E   C2B6         CLR     0xb0.6
+   \   0000A0   C2B7         CLR     0xb0.7
+   \   0000A2   C2B0         CLR     0xb0.0
+   \   0000A4   C2B1         CLR     0xb0.1
+   \   0000A6   D2AA         SETB    0xa8.2
+   \   0000A8   438701       ORL     0x87,#0x1
+   \   0000AB   C2AA         CLR     0xa8.2
+   \   0000AD   7400         MOV     A,#0x0
+   \   0000AF   90FF94       MOV     DPTR,#-0x6c
+   \   0000B2   F0           MOVX    @DPTR,A
+   \   0000B3   7400         MOV     A,#0x0
+   \   0000B5   90FF95       MOV     DPTR,#-0x6b
+   \   0000B8   F0           MOVX    @DPTR,A
+   \   0000B9   7400         MOV     A,#0x0
+   \   0000BB   90FF97       MOV     DPTR,#-0x69
+   \   0000BE   F0           MOVX    @DPTR,A
+   \   0000BF   7400         MOV     A,#0x0
+   \   0000C1   90....       MOV     DPTR,#bSuspended
+   \   0000C4   F0           MOVX    @DPTR,A
+   \                     ??main_5:
+   \   0000C5   90....       MOV     DPTR,#deviceReady
+   \   0000C8   E0           MOVX    A,@DPTR
+   \   0000C9   60B2         JZ      ??main_3
+   \   0000CB   90....       MOV     DPTR,#keypressBuffer
+   \   0000CE   E0           MOVX    A,@DPTR
+   \   0000CF   70AC         JNZ     ??main_3
+   \   0000D1   7E00         MOV     R6,#0x0
+   \   0000D3   7400         MOV     A,#0x0
+   \   0000D5   90....       MOV     DPTR,#modifierByte
+   \   0000D8   F0           MOVX    @DPTR,A
+   \   0000D9   75..12       MOV     ?V0 + 4,#0x12
+   \   0000DC   8002         SJMP    ??main_6
+   \                     ??main_7:
+   \   0000DE   15..         DEC     ?V0 + 4
+   \                     ??main_6:
+   \   0000E0   E5..         MOV     A,?V0 + 4
+   \   0000E2   C3           CLR     C
+   \   0000E3   9401         SUBB    A,#0x1
+   \   0000E5   4093         JC      ??main_4
+   \   0000E7   7580FF       MOV     0x80,#-0x1
+   \   0000EA   7590FF       MOV     0x90,#-0x1
+   \   0000ED   43B0C0       ORL     0xb0,#0xc0
+   \   0000F0   E5B0         MOV     A,0xb0
+   \   0000F2   E5..         MOV     A,?V0 + 4
+   \   0000F4   12....       LCALL   ?UC_SWITCH_DENSE
+   \                     `?<Jumptable for main>_0`:
+   \   0000F7   01           DB        1
+   \   0000F8   11           DB        17
+   \   0000F9   ....         DW        ??main_8
+   \   0000FB   ....         DW        ??main_9
+   \   0000FD   ....         DW        ??main_10
+   \   0000FF   ....         DW        ??main_11
+   \   000101   ....         DW        ??main_12
+   \   000103   ....         DW        ??main_13
+   \   000105   ....         DW        ??main_14
+   \   000107   ....         DW        ??main_15
+   \   000109   ....         DW        ??main_16
+   \   00010B   ....         DW        ??main_17
+   \   00010D   ....         DW        ??main_18
+   \   00010F   ....         DW        ??main_19
+   \   000111   ....         DW        ??main_20
+   \   000113   ....         DW        ??main_21
+   \   000115   ....         DW        ??main_22
+   \   000117   ....         DW        ??main_23
+   \   000119   ....         DW        ??main_24
+   \   00011B   ....         DW        ??main_25
+   \   00011D   ....         DW        ??main_26
+   \                     ??main_9:
+   \   00011F   C290         CLR     0x90.0
+   \   000121   8042         SJMP    ??main_8
+   \                     ??main_10:
+   \   000123   C291         CLR     0x90.1
+   \   000125   803E         SJMP    ??main_8
+   \                     ??main_11:
+   \   000127   C292         CLR     0x90.2
+   \   000129   803A         SJMP    ??main_8
+   \                     ??main_12:
+   \   00012B   C293         CLR     0x90.3
+   \   00012D   8036         SJMP    ??main_8
+   \                     ??main_13:
+   \   00012F   C294         CLR     0x90.4
+   \   000131   8032         SJMP    ??main_8
+   \                     ??main_14:
+   \   000133   C295         CLR     0x90.5
+   \   000135   802E         SJMP    ??main_8
+   \                     ??main_15:
+   \   000137   C296         CLR     0x90.6
+   \   000139   802A         SJMP    ??main_8
+   \                     ??main_16:
+   \   00013B   C297         CLR     0x90.7
+   \   00013D   8026         SJMP    ??main_8
+   \                     ??main_17:
+   \   00013F   C2B6         CLR     0xb0.6
+   \   000141   8022         SJMP    ??main_8
+   \                     ??main_18:
+   \   000143   C280         CLR     0x80.0
+   \   000145   801E         SJMP    ??main_8
+   \                     ??main_19:
+   \   000147   C281         CLR     0x80.1
+   \   000149   801A         SJMP    ??main_8
+   \                     ??main_20:
+   \   00014B   C282         CLR     0x80.2
+   \   00014D   8016         SJMP    ??main_8
+   \                     ??main_21:
+   \   00014F   C283         CLR     0x80.3
+   \   000151   8012         SJMP    ??main_8
+   \                     ??main_22:
+   \   000153   C284         CLR     0x80.4
+   \   000155   800E         SJMP    ??main_8
+   \                     ??main_23:
+   \   000157   C285         CLR     0x80.5
+   \   000159   800A         SJMP    ??main_8
+   \                     ??main_24:
+   \   00015B   C286         CLR     0x80.6
+   \   00015D   8006         SJMP    ??main_8
+   \                     ??main_25:
+   \   00015F   C287         CLR     0x80.7
+   \   000161   8002         SJMP    ??main_8
+   \                     ??main_26:
+   \   000163   C287         CLR     0x80.7
+   \                     ??main_8:
+   \   000165   E5A0         MOV     A,0xa0
+   \   000167   F4           CPL     A
+   \   000168   FF           MOV     R7,A
+   \   000169   7401         MOV     A,#0x1
+   \   00016B   6F           XRL     A,R7
+   \   00016C   6079         JZ      ??main_27
+   \   00016E   7402         MOV     A,#0x2
+   \   000170   6F           XRL     A,R7
+   \   000171   6074         JZ      ??main_27
+   \   000173   7404         MOV     A,#0x4
+   \   000175   6F           XRL     A,R7
+   \   000176   606F         JZ      ??main_27
+   \   000178   7408         MOV     A,#0x8
+   \   00017A   6F           XRL     A,R7
+   \   00017B   606A         JZ      ??main_27
+   \   00017D   7410         MOV     A,#0x10
+   \   00017F   6F           XRL     A,R7
+   \   000180   6065         JZ      ??main_27
+   \   000182   7420         MOV     A,#0x20
+   \   000184   6F           XRL     A,R7
+   \   000185   6060         JZ      ??main_27
+   \   000187   7440         MOV     A,#0x40
+   \   000189   6F           XRL     A,R7
+   \   00018A   605B         JZ      ??main_27
+   \   00018C   7480         MOV     A,#-0x80
+   \   00018E   6F           XRL     A,R7
+   \   00018F   6003         JZ      $+5
+   \   000191   02....       LJMP    ??main_7
+   \   000194   8051         SJMP    ??main_27
+   \                     ??main_28:
+   \   000196                ; Setup parameters for call to function strlen
+   \   000196   7A..         MOV     R2,#(keypressBuffer & 0xff)
+   \   000198   7B..         MOV     R3,#((keypressBuffer >> 8) & 0xff)
+   \   00019A   12....       LCALL   strlen
+   \   00019D   E9           MOV     A,R1
+   \   00019E   C3           CLR     C
+   \   00019F   9406         SUBB    A,#0x6
+   \   0001A1   5043         JNC     ??main_29
+   \   0001A3                ; Setup parameters for call to function strlen
+   \   0001A3   7A..         MOV     R2,#(keypressBuffer & 0xff)
+   \   0001A5   7B..         MOV     R3,#((keypressBuffer >> 8) & 0xff)
+   \   0001A7   12....       LCALL   strlen
+   \   0001AA   E9           MOV     A,R1
+   \   0001AB   F5..         MOV     ?V0 + 0,A
+   \   0001AD   EE           MOV     A,R6
+   \   0001AE   F8           MOV     R0,A
+   \   0001AF   7900         MOV     R1,#0x0
+   \   0001B1   E8           MOV     A,R0
+   \   0001B2   75F009       MOV     B,#0x9
+   \   0001B5   A4           MUL     AB
+   \   0001B6   C8           XCH     A,R0
+   \   0001B7   AAF0         MOV     R2,B
+   \   0001B9   75F000       MOV     B,#0x0
+   \   0001BC   A4           MUL     AB
+   \   0001BD   2A           ADD     A,R2
+   \   0001BE   FA           MOV     R2,A
+   \   0001BF   75F009       MOV     B,#0x9
+   \   0001C2   E9           MOV     A,R1
+   \   0001C3   A4           MUL     AB
+   \   0001C4   2A           ADD     A,R2
+   \   0001C5   F9           MOV     R1,A
+   \   0001C6   E8           MOV     A,R0
+   \   0001C7   24..         ADD     A,#((keyDefs + 7) & 0xff)
+   \   0001C9   F582         MOV     DPL,A
+   \   0001CB   E9           MOV     A,R1
+   \   0001CC   34..         ADDC    A,#(((keyDefs + 7) >> 8) & 0xff)
+   \   0001CE   F583         MOV     DPH,A
+   \   0001D0   E4           CLR     A
+   \   0001D1   93           MOVC    A,@A+DPTR
+   \   0001D2   C0E0         PUSH    A
+   \   0001D4   75..00       MOV     ?V0 + 1,#0x0
+   \   0001D7   E5..         MOV     A,?V0 + 0
+   \   0001D9   24..         ADD     A,#(keypressBuffer & 0xff)
+   \   0001DB   F582         MOV     DPL,A
+   \   0001DD   E5..         MOV     A,?V0 + 1
+   \   0001DF   34..         ADDC    A,#((keypressBuffer >> 8) & 0xff)
+   \   0001E1   F583         MOV     DPH,A
+   \   0001E3   D0E0         POP     A
+   \   0001E5   F0           MOVX    @DPTR,A
+   \                     ??main_29:
+   \   0001E6   0E           INC     R6
+   \                     ??main_27:
+   \   0001E7   EE           MOV     A,R6
+   \   0001E8   F8           MOV     R0,A
+   \   0001E9   7900         MOV     R1,#0x0
+   \   0001EB   E8           MOV     A,R0
+   \   0001EC   75F009       MOV     B,#0x9
+   \   0001EF   A4           MUL     AB
+   \   0001F0   C8           XCH     A,R0
+   \   0001F1   AAF0         MOV     R2,B
+   \   0001F3   75F000       MOV     B,#0x0
+   \   0001F6   A4           MUL     AB
+   \   0001F7   2A           ADD     A,R2
+   \   0001F8   FA           MOV     R2,A
+   \   0001F9   75F009       MOV     B,#0x9
+   \   0001FC   E9           MOV     A,R1
+   \   0001FD   A4           MUL     AB
+   \   0001FE   2A           ADD     A,R2
+   \   0001FF   F9           MOV     R1,A
+   \   000200   E8           MOV     A,R0
+   \   000201   24..         ADD     A,#((keyDefs + 2) & 0xff)
+   \   000203   F582         MOV     DPL,A
+   \   000205   E9           MOV     A,R1
+   \   000206   34..         ADDC    A,#(((keyDefs + 2) >> 8) & 0xff)
+   \   000208   F583         MOV     DPH,A
+   \   00020A   85....       MOV     ?V0 + 0,?V0 + 4
+   \   00020D   E4           CLR     A
+   \   00020E   F5..         MOV     ?V0 + 1,A
+   \   000210   F5..         MOV     ?V0 + 2,A
+   \   000212   F5..         MOV     ?V0 + 3,A
+   \   000214   78..         MOV     R0,#?V0 + 0
+   \   000216   12....       LCALL   ?UL_GT_C
+   \   000219   5003         JNC     $+5
+   \   00021B   02....       LJMP    ??main_30
+   \   00021E   EE           MOV     A,R6
+   \   00021F   F8           MOV     R0,A
+   \   000220   7900         MOV     R1,#0x0
+   \   000222   E8           MOV     A,R0
+   \   000223   75F009       MOV     B,#0x9
+   \   000226   A4           MUL     AB
+   \   000227   C8           XCH     A,R0
+   \   000228   AAF0         MOV     R2,B
+   \   00022A   75F000       MOV     B,#0x0
+   \   00022D   A4           MUL     AB
+   \   00022E   2A           ADD     A,R2
+   \   00022F   FA           MOV     R2,A
+   \   000230   75F009       MOV     B,#0x9
+   \   000233   E9           MOV     A,R1
+   \   000234   A4           MUL     AB
+   \   000235   2A           ADD     A,R2
+   \   000236   F9           MOV     R1,A
+   \   000237   E8           MOV     A,R0
+   \   000238   24..         ADD     A,#((keyDefs + 2) & 0xff)
+   \   00023A   F582         MOV     DPL,A
+   \   00023C   E9           MOV     A,R1
+   \   00023D   34..         ADDC    A,#(((keyDefs + 2) >> 8) & 0xff)
+   \   00023F   F583         MOV     DPH,A
+   \   000241   85....       MOV     ?V0 + 0,?V0 + 4
+   \   000244   E4           CLR     A
+   \   000245   F5..         MOV     ?V0 + 1,A
+   \   000247   F5..         MOV     ?V0 + 2,A
+   \   000249   F5..         MOV     ?V0 + 3,A
+   \   00024B   78..         MOV     R0,#?V0 + 0
+   \   00024D   12....       LCALL   ?L_EQ_C
+   \   000250   7094         JNZ     ??main_29
+   \   000252   EE           MOV     A,R6
+   \   000253   F8           MOV     R0,A
+   \   000254   7900         MOV     R1,#0x0
+   \   000256   E8           MOV     A,R0
+   \   000257   75F009       MOV     B,#0x9
+   \   00025A   A4           MUL     AB
+   \   00025B   C8           XCH     A,R0
+   \   00025C   AAF0         MOV     R2,B
+   \   00025E   75F000       MOV     B,#0x0
+   \   000261   A4           MUL     AB
+   \   000262   2A           ADD     A,R2
+   \   000263   FA           MOV     R2,A
+   \   000264   75F009       MOV     B,#0x9
+   \   000267   E9           MOV     A,R1
+   \   000268   A4           MUL     AB
+   \   000269   2A           ADD     A,R2
+   \   00026A   F9           MOV     R1,A
+   \   00026B   E8           MOV     A,R0
+   \   00026C   24..         ADD     A,#((keyDefs + 6) & 0xff)
+   \   00026E   F582         MOV     DPL,A
+   \   000270   E9           MOV     A,R1
+   \   000271   34..         ADDC    A,#(((keyDefs + 6) >> 8) & 0xff)
+   \   000273   F583         MOV     DPH,A
+   \   000275   E4           CLR     A
+   \   000276   93           MOVC    A,@A+DPTR
+   \   000277   5F           ANL     A,R7
+   \   000278   7003         JNZ     $+5
+   \   00027A   02....       LJMP    ??main_29
+   \   00027D   EE           MOV     A,R6
+   \   00027E   F8           MOV     R0,A
+   \   00027F   7900         MOV     R1,#0x0
+   \   000281   E8           MOV     A,R0
+   \   000282   75F009       MOV     B,#0x9
+   \   000285   A4           MUL     AB
+   \   000286   C8           XCH     A,R0
+   \   000287   AAF0         MOV     R2,B
+   \   000289   75F000       MOV     B,#0x0
+   \   00028C   A4           MUL     AB
+   \   00028D   2A           ADD     A,R2
+   \   00028E   FA           MOV     R2,A
+   \   00028F   75F009       MOV     B,#0x9
+   \   000292   E9           MOV     A,R1
+   \   000293   A4           MUL     AB
+   \   000294   2A           ADD     A,R2
+   \   000295   F9           MOV     R1,A
+   \   000296   E8           MOV     A,R0
+   \   000297   24..         ADD     A,#(keyDefs & 0xff)
+   \   000299   F582         MOV     DPL,A
+   \   00029B   E9           MOV     A,R1
+   \   00029C   34..         ADDC    A,#((keyDefs >> 8) & 0xff)
+   \   00029E   F583         MOV     DPH,A
+   \   0002A0   E4           CLR     A
+   \   0002A1   93           MOVC    A,@A+DPTR
+   \   0002A2   55..         ANL     A,?V0 + 6
+   \   0002A4   F8           MOV     R0,A
+   \   0002A5   A3           INC     DPTR
+   \   0002A6   E4           CLR     A
+   \   0002A7   93           MOVC    A,@A+DPTR
+   \   0002A8   55..         ANL     A,?V0 + 7
+   \   0002AA   F9           MOV     R1,A
+   \   0002AB   7400         MOV     A,#0x0
+   \   0002AD   68           XRL     A,R0
+   \   0002AE   7003         JNZ     ??main_31
+   \   0002B0   7400         MOV     A,#0x0
+   \   0002B2   69           XRL     A,R1
+   \                     ??main_31:
+   \   0002B3   7003         JNZ     $+5
+   \   0002B5   02....       LJMP    ??main_29
+   \   0002B8   EE           MOV     A,R6
+   \   0002B9   F8           MOV     R0,A
+   \   0002BA   7900         MOV     R1,#0x0
+   \   0002BC   E8           MOV     A,R0
+   \   0002BD   75F009       MOV     B,#0x9
+   \   0002C0   A4           MUL     AB
+   \   0002C1   C8           XCH     A,R0
+   \   0002C2   AAF0         MOV     R2,B
+   \   0002C4   75F000       MOV     B,#0x0
+   \   0002C7   A4           MUL     AB
+   \   0002C8   2A           ADD     A,R2
+   \   0002C9   FA           MOV     R2,A
+   \   0002CA   75F009       MOV     B,#0x9
+   \   0002CD   E9           MOV     A,R1
+   \   0002CE   A4           MUL     AB
+   \   0002CF   2A           ADD     A,R2
+   \   0002D0   F9           MOV     R1,A
+   \   0002D1   E8           MOV     A,R0
+   \   0002D2   24..         ADD     A,#((keyDefs + 8) & 0xff)
+   \   0002D4   F582         MOV     DPL,A
+   \   0002D6   E9           MOV     A,R1
+   \   0002D7   34..         ADDC    A,#(((keyDefs + 8) >> 8) & 0xff)
+   \   0002D9   F583         MOV     DPH,A
+   \   0002DB   E4           CLR     A
+   \   0002DC   93           MOVC    A,@A+DPTR
+   \   0002DD   7003         JNZ     $+5
+   \   0002DF   02....       LJMP    ??main_28
+   \   0002E2   EE           MOV     A,R6
+   \   0002E3   F8           MOV     R0,A
+   \   0002E4   7900         MOV     R1,#0x0
+   \   0002E6   E8           MOV     A,R0
+   \   0002E7   75F009       MOV     B,#0x9
+   \   0002EA   A4           MUL     AB
+   \   0002EB   C8           XCH     A,R0
+   \   0002EC   AAF0         MOV     R2,B
+   \   0002EE   75F000       MOV     B,#0x0
+   \   0002F1   A4           MUL     AB
+   \   0002F2   2A           ADD     A,R2
+   \   0002F3   FA           MOV     R2,A
+   \   0002F4   75F009       MOV     B,#0x9
+   \   0002F7   E9           MOV     A,R1
+   \   0002F8   A4           MUL     AB
+   \   0002F9   2A           ADD     A,R2
+   \   0002FA   F9           MOV     R1,A
+   \   0002FB   E8           MOV     A,R0
+   \   0002FC   24..         ADD     A,#((keyDefs + 8) & 0xff)
+   \   0002FE   F582         MOV     DPL,A
+   \   000300   E9           MOV     A,R1
+   \   000301   34..         ADDC    A,#(((keyDefs + 8) >> 8) & 0xff)
+   \   000303   F583         MOV     DPH,A
+   \   000305   E4           CLR     A
+   \   000306   93           MOVC    A,@A+DPTR
+   \   000307   FA           MOV     R2,A
+   \   000308   90....       MOV     DPTR,#modifierByte
+   \   00030B   E0           MOVX    A,@DPTR
+   \   00030C   4A           ORL     A,R2
+   \   00030D   F0           MOVX    @DPTR,A
+   \   00030E   02....       LJMP    ??main_29
+   \                     ??main_30:
+   \   000311   EE           MOV     A,R6
+   \   000312   F8           MOV     R0,A
+   \   000313   7900         MOV     R1,#0x0
+   \   000315   E8           MOV     A,R0
+   \   000316   75F009       MOV     B,#0x9
+   \   000319   A4           MUL     AB
+   \   00031A   C8           XCH     A,R0
+   \   00031B   AAF0         MOV     R2,B
+   \   00031D   75F000       MOV     B,#0x0
+   \   000320   A4           MUL     AB
+   \   000321   2A           ADD     A,R2
+   \   000322   FA           MOV     R2,A
+   \   000323   75F009       MOV     B,#0x9
+   \   000326   E9           MOV     A,R1
+   \   000327   A4           MUL     AB
+   \   000328   2A           ADD     A,R2
+   \   000329   F9           MOV     R1,A
+   \   00032A   E8           MOV     A,R0
+   \   00032B   24..         ADD     A,#((keyDefs + 2) & 0xff)
+   \   00032D   F582         MOV     DPL,A
+   \   00032F   E9           MOV     A,R1
+   \   000330   34..         ADDC    A,#(((keyDefs + 2) >> 8) & 0xff)
+   \   000332   F583         MOV     DPH,A
+   \   000334   C082         PUSH    DPL
+   \   000336   C083         PUSH    DPH
+   \   000338   90....       MOV     DPTR,#__Constant_0
+   \   00033B   78..         MOV     R0,#?V0 + 0
+   \   00033D   12....       LCALL   ?L_MOV_X
+   \   000340   D083         POP     DPH
+   \   000342   D082         POP     DPL
+   \   000344   78..         MOV     R0,#?V0 + 0
+   \   000346   12....       LCALL   ?L_EQ_C
+   \   000349   6010         JZ      ??main_32
+   \   00034B                ; Setup parameters for call to function strlen
+   \   00034B   7A..         MOV     R2,#(keypressBuffer & 0xff)
+   \   00034D   7B..         MOV     R3,#((keypressBuffer >> 8) & 0xff)
+   \   00034F   12....       LCALL   strlen
+   \   000352   E9           MOV     A,R1
+   \   000353   C3           CLR     C
+   \   000354   9406         SUBB    A,#0x6
+   \   000356   5003         JNC     $+5
+   \   000358   02....       LJMP    ??main_7
+   \                     ??main_32:
+   \   00035B   02....       LJMP    ??main_4
+   \   00035E                REQUIRE _A_IE
+   \   00035E                REQUIRE _A_P1
+   \   00035E                REQUIRE _A_P0
+   \   00035E                REQUIRE _A_P3
+   \   00035E                REQUIRE _A_P2
+   \   00035E                REQUIRE _A_PCON
+    555          		} // end of if(keypressBuffer[0] == 0x00)
+    556          	} // end of while(1)
+    557          }
+    558          
+    559          /***************************************************************************
+    560           * Function:   ClearKeyBoardBuffer                                         *
+    561           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+    562           * Description: Clears the keyboard's internal keypress buffer.  The       *
+    563           *    keypress buffer is 6 bytes which represent a maximum of 6 keypresses *
+    564           *    that can be returned via USB.  Once the keypresses are sent via USB, *
+    565           *    this routine may be called to clear the buffer.                      * 
+    566           ***************************************************************************/
+    567          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+    568          void ClearKeyBoardBuffer(void)
+   \                     ClearKeyBoardBuffer:
+    569          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?FUNC_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+    570          	BYTE bTemp;
+    571          
+    572          	for(bTemp = 0; bTemp < KEYPRESS_BUFFER_SIZE; bTemp++)
+   \   000005   7A00         MOV     R2,#0x0
+   \   000007   8019         SJMP    ??ClearKeyBoardBuffer_0
+    573          		keypressBuffer[bTemp] = 0x00;
+   \                     ??ClearKeyBoardBuffer_1:
+   \   000009   7400         MOV     A,#0x0
+   \   00000B   C0E0         PUSH    A
+   \   00000D   8A..         MOV     ?V0 + 0,R2
+   \   00000F   75..00       MOV     ?V0 + 1,#0x0
+   \   000012   E5..         MOV     A,?V0 + 0
+   \   000014   24..         ADD     A,#(keypressBuffer & 0xff)
+   \   000016   F582         MOV     DPL,A
+   \   000018   E5..         MOV     A,?V0 + 1
+   \   00001A   34..         ADDC    A,#((keypressBuffer >> 8) & 0xff)
+   \   00001C   F583         MOV     DPH,A
+   \   00001E   D0E0         POP     A
+   \   000020   F0           MOVX    @DPTR,A
+   \   000021   0A           INC     R2
+   \                     ??ClearKeyBoardBuffer_0:
+   \   000022   EA           MOV     A,R2
+   \   000023   C3           CLR     C
+   \   000024   9406         SUBB    A,#0x6
+   \   000026   40E1         JC      ??ClearKeyBoardBuffer_1
+    574          }
+   \   000028   7F02         MOV     R7,#0x2
+   \   00002A   02....       LJMP    ?FUNC_LEAVE_XDATA
+    575          
+    576          /***************************************************************************
+    577           * Function:   UpdateIEP1WithKeypress                                      *
+    578           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+    579           * Description: Is called by the main() program in order to send the       *
+    580           *    contents of the keypressBuffer[] to the host via USB.  The function  *
+    581           *    does the following:                                                  *
+    582           *                                                                         * 
+    583           *    1. Makes sure the current IEP1 Byte Counter is "NAK", which means    * 
+    584           *       there is nothing pending to send.  Any other value means the last * 
+    585           *       packet sent to the host hasn't been sent yet, so we don't send    * 
+    586           *       anything else until the previous packet is sent.                  * 
+    587           *    2. If nothing is pending to send, the routine constructs the output  * 
+    588           *       data packet in the IEP1 Output buffer, copying the modifier byte, * 
+    589           *       the constant 0x00 byte, and the 6 bytes of keypressBufferp[] data.*   
+    590           *    3. Compares to see if the current packet that is ready to send is    * 
+    591           *       the same as the last packet that was sent.  If it is, it exits    * 
+    592           *       since only *changes* in the keyboard state need to be reported.   *   
+    593           *    4. If all of the above tests are successful, the routine sets the    * 
+    594           *       Byte Counter to 8 which will cause the 8-byte packet to be        * 
+    595           *       sent when the next IEP1 poll is received from the host.           *   
+    596           ***************************************************************************/
+    597          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+    598          void UpdateIEP1WithKeypress(void)
+   \                     UpdateIEP1WithKeypress:
+    599          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?FUNC_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+    600          	BYTE bTemp;
+    601          
+    602          	// We first check to see if the character count is NAK.  If it's not
+    603          	// NAK that means we still have some output pending, so we leave it
+    604          	// alone for now.
+    605          	
+    606          	if(bIEPDCTX_1 != EPBCT_NAK)
+                 	              ^
+Warning[Pa084]: pointless integer comparison, the result is always true
+   \   000005   90FF4A       MOV     DPTR,#-0xb6
+   \   000008   E0           MOVX    A,@DPTR
+   \   000009   F8           MOV     R0,A
+   \   00000A   33           RLC     A
+   \   00000B   95E0         SUBB    A,0xE0 /* A   */
+   \   00000D   F9           MOV     R1,A
+   \   00000E   7480         MOV     A,#-0x80
+   \   000010   68           XRL     A,R0
+   \   000011   7003         JNZ     ??UpdateIEP1WithKeypress_0
+   \   000013   7400         MOV     A,#0x0
+   \   000015   69           XRL     A,R1
+   \                     ??UpdateIEP1WithKeypress_0:
+   \   000016   6005         JZ      ??UpdateIEP1WithKeypress_1
+    607          		{
+    608          		ClearKeyBoardBuffer();
+   \   000018                ; Setup parameters for call to function ClearKeyBoardBuffer
+   \   000018   12....       LCALL   ClearKeyBoardBuffer
+    609          		return;
+   \   00001B   807B         SJMP    ??UpdateIEP1WithKeypress_2
+    610          		}
+    611          
+    612          	// Start by initialization the HID Keyboard report header
+    613          	iep1Buffer[0] = modifierByte; // Holds shift, alt, etc.
+   \                     ??UpdateIEP1WithKeypress_1:
+   \   00001D   90....       MOV     DPTR,#modifierByte
+   \   000020   E0           MOVX    A,@DPTR
+   \   000021   C0E0         PUSH    A
+   \   000023   90....       MOV     DPTR,#iep1Buffer
+   \   000026   E0           MOVX    A,@DPTR
+   \   000027   F8           MOV     R0,A
+   \   000028   A3           INC     DPTR
+   \   000029   E0           MOVX    A,@DPTR
+   \   00002A   F583         MOV     DPH,A
+   \   00002C   8882         MOV     DPL,R0
+   \   00002E   D0E0         POP     A
+   \   000030   F0           MOVX    @DPTR,A
+    614          	iep1Buffer[1] = 0x00; // Second byte is always 0x00
+   \   000031   7400         MOV     A,#0x0
+   \   000033   C0E0         PUSH    A
+   \   000035   90....       MOV     DPTR,#iep1Buffer
+   \   000038   E0           MOVX    A,@DPTR
+   \   000039   F8           MOV     R0,A
+   \   00003A   A3           INC     DPTR
+   \   00003B   E0           MOVX    A,@DPTR
+   \   00003C   F583         MOV     DPH,A
+   \   00003E   8882         MOV     DPL,R0
+   \   000040   A3           INC     DPTR
+   \   000041   D0E0         POP     A
+   \   000043   F0           MOVX    @DPTR,A
+    615          	
+    616          	// We now copy the keypress buffer into the rest of the iep1Buffer.
+    617          	for(bTemp = 0; bTemp < 6; bTemp++)
+   \   000044   7B00         MOV     R3,#0x0
+   \   000046   802B         SJMP    ??UpdateIEP1WithKeypress_3
+    618          		iep1Buffer[2 + bTemp] = keypressBuffer[bTemp];
+   \                     ??UpdateIEP1WithKeypress_4:
+   \   000048   8B..         MOV     ?V0 + 0,R3
+   \   00004A   75..00       MOV     ?V0 + 1,#0x0
+   \   00004D   E5..         MOV     A,?V0 + 0
+   \   00004F   24..         ADD     A,#(keypressBuffer & 0xff)
+   \   000051   F582         MOV     DPL,A
+   \   000053   E5..         MOV     A,?V0 + 1
+   \   000055   34..         ADDC    A,#((keypressBuffer >> 8) & 0xff)
+   \   000057   F583         MOV     DPH,A
+   \   000059   E0           MOVX    A,@DPTR
+   \   00005A   C0E0         PUSH    A
+   \   00005C   EB           MOV     A,R3
+   \   00005D   F8           MOV     R0,A
+   \   00005E   7900         MOV     R1,#0x0
+   \   000060   90....       MOV     DPTR,#iep1Buffer
+   \   000063   E0           MOVX    A,@DPTR
+   \   000064   28           ADD     A,R0
+   \   000065   FA           MOV     R2,A
+   \   000066   A3           INC     DPTR
+   \   000067   E0           MOVX    A,@DPTR
+   \   000068   39           ADDC    A,R1
+   \   000069   8A82         MOV     DPL,R2
+   \   00006B   F583         MOV     DPH,A
+   \   00006D   A3           INC     DPTR
+   \   00006E   A3           INC     DPTR
+   \   00006F   D0E0         POP     A
+   \   000071   F0           MOVX    @DPTR,A
+   \   000072   0B           INC     R3
+   \                     ??UpdateIEP1WithKeypress_3:
+   \   000073   EB           MOV     A,R3
+   \   000074   C3           CLR     C
+   \   000075   9406         SUBB    A,#0x6
+   \   000077   40CF         JC      ??UpdateIEP1WithKeypress_4
+    619          
+    620          	// We now compare the currently prepared IEP1 output buffer with the last
+    621          	// packet that was sent, which is held in the variable previousIEP1packet.
+    622          	// If the current packet is the same as the previous packet sent, we 
+    623          	// don't need to do anything since the host will assume the previous state
+    624          	// is still current until we report a different state.
+    625          	if( memcmp(iep1Buffer, previousIEP1packet, 8) == 0)
+                 	           ^
+Warning[Pe167]: argument of type "unsigned char *" is incompatible with
+          parameter of type "char *"
+
+  	if( memcmp(iep1Buffer, previousIEP1packet, 8) == 0)
+  	                       ^
+"E:\AllProject\51\Keyboard Firmware Source Code\Keyboard.c",625  Warning[Pe167]: 
+          argument of type "BYTE *" is incompatible with parameter of type
+          "char *"
+   \   000079                ; Setup parameters for call to function memcmp
+   \   000079   7908         MOV     R1,#0x8
+   \   00007B   7C..         MOV     R4,#(previousIEP1packet & 0xff)
+   \   00007D   7D..         MOV     R5,#((previousIEP1packet >> 8) & 0xff)
+   \   00007F   90....       MOV     DPTR,#iep1Buffer
+   \   000082   E0           MOVX    A,@DPTR
+   \   000083   FA           MOV     R2,A
+   \   000084   A3           INC     DPTR
+   \   000085   E0           MOVX    A,@DPTR
+   \   000086   FB           MOV     R3,A
+   \   000087   12....       LCALL   memcmp
+   \   00008A   E9           MOV     A,R1
+   \   00008B   7005         JNZ     ??UpdateIEP1WithKeypress_5
+    626          		{
+    627          		ClearKeyBoardBuffer();
+   \   00008D                ; Setup parameters for call to function ClearKeyBoardBuffer
+   \   00008D   12....       LCALL   ClearKeyBoardBuffer
+    628          		return;
+   \   000090   8006         SJMP    ??UpdateIEP1WithKeypress_2
+    629          		}
+    630          
+    631          	// We now check to see if the device is currently suspended.  If it is,
+    632          	// the keypress should wake the system up--so we generate a Wakeup
+    633          	// pulse so things come back to life.
+    634          #ifdef XXX
+    635          	if(bSuspended)
+    636          		bUSBCTL |= USBCTL_RWUP;
+    637          #endif
+    638          	// We finally the set the CTX_1 to the number of bytes in the IEP1 output
+    639          	// buffer (8).  Thus, the next time the host issues an IN1 poll to the
+    640          	// TUSB2136, the data will be sent out immediately.  We will know that
+    641          	// the transfer has taken place when the IEP1InterruptHandler() interrupt
+    642          	// handler is called.
+    643          	bIEPDCTX_1 = 8;
+   \                     ??UpdateIEP1WithKeypress_5:
+   \   000092   7408         MOV     A,#0x8
+   \   000094   90FF4A       MOV     DPTR,#-0xb6
+   \   000097   F0           MOVX    @DPTR,A
+    644          }
+   \                     ??UpdateIEP1WithKeypress_2:
+   \   000098   7F02         MOV     R7,#0x2
+   \   00009A   02....       LJMP    ?FUNC_LEAVE_XDATA
+    645          
+    646          /***************************************************************************
+    647           * Function:   IEP1InterruptHandler                                        *
+    648           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+    649           * Description: This function is the IEP1 interrupt handler.  It is called *
+    650           *    whenever a packet of data has been transmitted from the device to the*
+    651           *    host.  The routine performs the following tasks:                     *
+    652           *                                                                         * 
+    653           *    1. Makes a copy of the data packet that was just sent in the         * 
+    654           *       variable previousIEP1packet.  This is used by the                 *
+    655           *       UpdateIEP1WithKeypress function to determine whether or not there *
+    656           *       has been a change in the keyboard state.                          *   
+    657           *    2. Clears the keypressBuffer to allow the main program loop to       *  
+    658           *       scan the keyboard and generate a new packet.                      *  
+    659           *                                                                         *     
+    660           ***************************************************************************/
+    661          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+    662          void IEP1InterruptHandler(void)
+   \                     IEP1InterruptHandler:
+    663          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+    664          	// This interrupt is triggered when we've finished sending a block of data
+    665          	// to the host.  At that point we copy the current IEP1 buffer to the
+    666          	// "previousIEP1packet" buffer.  This holds a copy of the last data that
+    667          	// was sent to the host.  This is used later to see if a subsequent packet
+    668          	// is the same as a new packet.  If it is, we won't have to resend it.
+    669          	memcpy(previousIEP1packet,iep1Buffer, 8);
+                 	       ^
+Warning[Pe167]: argument of type "BYTE *" is incompatible with parameter of
+          type "char *"
+
+  	memcpy(previousIEP1packet,iep1Buffer, 8);
+  	                          ^
+"E:\AllProject\51\Keyboard Firmware Source Code\Keyboard.c",669  Warning[Pe167]: 
+          argument of type "unsigned char *" is incompatible with parameter of
+          type "char *"
+   \   000004                ; Setup parameters for call to function memcpy
+   \   000004   7908         MOV     R1,#0x8
+   \   000006   90....       MOV     DPTR,#iep1Buffer
+   \   000009   E0           MOVX    A,@DPTR
+   \   00000A   FC           MOV     R4,A
+   \   00000B   A3           INC     DPTR
+   \   00000C   E0           MOVX    A,@DPTR
+   \   00000D   FD           MOV     R5,A
+   \   00000E   7A..         MOV     R2,#(previousIEP1packet & 0xff)
+   \   000010   7B..         MOV     R3,#((previousIEP1packet >> 8) & 0xff)
+   \   000012   12....       LCALL   memcpy
+    670          //	BYTE str;
+    671          //
+    672          //	for(str = 0; str < 8; str++)
+    673          //		previousIEP1packet[str] = iep1Buffer[str];
+    674          	
+    675          	// We clear the keypressBuffer.  The keyboard scan process will only begin
+    676          	// if the keypressBuffer is clear.
+    677          	ClearKeyBoardBuffer();
+   \   000015                ; Setup parameters for call to function ClearKeyBoardBuffer
+   \   000015   12....       LCALL   ClearKeyBoardBuffer
+    678          }
+   \   000018   D083         POP     DPH
+   \   00001A   D082         POP     DPL
+   \   00001C   22           RET
+    679          
+    680          /***************************************************************************
+    681           * Function:   OEP0SetLEDs                                                 *
+    682           * Programmer: Craig Steiner (csteiner@vaultbbs.com)                       *
+    683           * Description: This function is called by the usbReceiveNextPacketOnOEP0  *
+    684           *    routine when the data packet of a LED SetReport transaction is       *
+    685           *    received.  This routine sets/clears the keyboard LEDs based on the   *
+    686           *    data received from the host.                                         * 
+    687           *                                                                         *     
+    688           ***************************************************************************/
+    689          
+
+   \                                 In  segment NEAR_CODE, align 1, keep-with-next
+    690          void OEP0SetLEDs(void)
+   \                     OEP0SetLEDs:
+    691          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+    692          // This code is only enabled if this is a "real" keyboard, not the
+    693          // demo version selected by DIPSWITCHES.  If it is the demo version,
+    694          // changing the values of the P3.2-P3.4 pins seems to cause problems.
+    695          
+    696          	if(bLED & BIT_NUMLOCK)
+   \   000004   90....       MOV     DPTR,#bLED
+   \   000007   E0           MOVX    A,@DPTR
+   \   000008   A2E0         MOV     C,0xE0 /* A   */.0
+   \   00000A   5004         JNC     ??OEP0SetLEDs_0
+    697          		PIN_NUMLOCK = 0;
+   \   00000C   C2B4         CLR     0xb0.4
+   \   00000E   8002         SJMP    ??OEP0SetLEDs_1
+    698          	else
+    699          		PIN_NUMLOCK = 1;
+   \                     ??OEP0SetLEDs_0:
+   \   000010   D2B4         SETB    0xb0.4
+    700          
+    701          	if(bLED & BIT_CAPSLOCK)
+   \                     ??OEP0SetLEDs_1:
+   \   000012   90....       MOV     DPTR,#bLED
+   \   000015   E0           MOVX    A,@DPTR
+   \   000016   A2E1         MOV     C,0xE0 /* A   */.1
+   \   000018   5004         JNC     ??OEP0SetLEDs_2
+    702          		PIN_CAPSLOCK = 0;
+   \   00001A   C2B3         CLR     0xb0.3
+   \   00001C   8002         SJMP    ??OEP0SetLEDs_3
+    703          	else
+    704          		PIN_CAPSLOCK = 1;
+   \                     ??OEP0SetLEDs_2:
+   \   00001E   D2B3         SETB    0xb0.3
+    705          
+    706          	if(bLED & BIT_SCROLLLOCK)
+   \                     ??OEP0SetLEDs_3:
+   \   000020   90....       MOV     DPTR,#bLED
+   \   000023   E0           MOVX    A,@DPTR
+   \   000024   A2E2         MOV     C,0xE0 /* A   */.2
+   \   000026   5004         JNC     ??OEP0SetLEDs_4
+    707          		PIN_SCROLLLOCK = 0;
+   \   000028   C2B2         CLR     0xb0.2
+   \   00002A   8002         SJMP    ??OEP0SetLEDs_5
+    708          	else
+    709          		PIN_SCROLLLOCK = 1;
+   \                     ??OEP0SetLEDs_4:
+   \   00002C   D2B2         SETB    0xb0.2
+    710          }
+   \                     ??OEP0SetLEDs_5:
+   \   00002E   D083         POP     DPH
+   \   000030   D082         POP     DPL
+   \   000032   22           RET
+   \   000033                REQUIRE _A_P3
+
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_0:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_0>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_0>`:
+   \   000000   00000000     DD 0
+
+   Maximum stack usage in bytes:
+
+     Function                    ISTACK PSTACK XSTACK
+     --------                    ------ ------ ------
+     ClearKeyBoardBuffer             1      0     18
+     IEP1InterruptHandler            2      0      0
+       -> memcpy                     4      0      0
+       -> ClearKeyBoardBuffer        4      0      0
+     OEP0SetLEDs                     2      0      0
+     UpdateIEP1WithKeypress          1      0      9
+       -> ClearKeyBoardBuffer        0      0     18
+       -> memcmp                     0      0     18
+       -> ClearKeyBoardBuffer        0      0     18
+     delay                           0      0      0
+     main                            2      0      0
+       -> GetVidPidSetting           0      0      0
+       -> InitializeUsbHub           0      0      0
+       -> InitializeUsbFunction      0      0      0
+       -> ClearKeyBoardBuffer        0      0      0
+       -> UpdateIEP1WithKeypress     0      0      0
+       -> strlen                     0      0      0
+       -> strlen                     0      0      0
+       -> strlen                     0      0      0
+
+
+   Segment part sizes:
+
+     Function/Label                  Bytes
+     --------------                  -----
+     _A_IE                              1
+     _A_P1                              1
+     _A_P0                              1
+     _A_P3                              1
+     _A_P2                              1
+     _A_PCON                            1
+     intFlags                           1
+     otherFlags                         1
+     bLED                               1
+     modifierByte                       1
+     keypressBuffer                     7
+     previousIEP1packet                 8
+     iep1Buffer                         2
+     keypressDebounce                 256
+     keyDefs                         1881
+     delay                             23
+     main                             862
+     ClearKeyBoardBuffer               45
+     UpdateIEP1WithKeypress           157
+     IEP1InterruptHandler              29
+     OEP0SetLEDs                       51
+     __Constant_0                       4
+     ?<Initializer for __Constant_0>    4
+
+ 
+ 1 881 bytes in segment CODE_C
+ 1 167 bytes in segment NEAR_CODE
+     6 bytes in segment SFR_AN
+     4 bytes in segment XDATA_I
+     4 bytes in segment XDATA_ID
+   277 bytes in segment XDATA_Z
+ 
+ 3 048 bytes of CODE  memory (+ 4 bytes shared)
+     0 bytes of DATA  memory (+ 6 bytes shared)
+   277 bytes of XDATA memory (+ 4 bytes shared)
+
+Errors: none
+Warnings: 8

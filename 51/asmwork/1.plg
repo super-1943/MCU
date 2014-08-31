@@ -1,0 +1,14 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+F:\myproject\51\asmwork\1.uv2
+Project File Date:  06/04/2009
+
+<h2>Output:</h2>
+Build target 'Target 1'
+linking...
+Program Size: data=8.0 xdata=0 code=418
+creating hex file from "1"...
+"1" - 0 Error(s), 0 Warning(s).

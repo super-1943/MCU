@@ -1,0 +1,28 @@
+<html>
+<body>
+<pre>
+<h1>礦ision3 Build Log</h1>
+<h2>Project:</h2>
+E:\AllProject\51\standardproject\standard.uv2
+Project File Date:  06/19/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+MAIN.C(42): warning C280: 'i': unreferenced local variable
+linking...
+Program Size: data=10.0 xdata=0 code=73
+creating hex file from "TUSB2136"...
+User command #1: hex2bin TUSB2136.hex TUSB2136.bin
+Invalid keyboard code specified
+HEX2BIN Version 1.06
+Copyright (c) 1995 Programix Corp.
+Portions copyright (c) 1993-1995 BITWARE.
+All rights reserved.
+Status: Creating binary file.
+Status: Writing 3 bytes at address 0x00000000.      Status: Writing 12 bytes at address 0x0000002C.      Status: Writing 7 bytes at address 0x00000042.      Status: Writing 16 bytes at address 0x00000003.      Status: Writing 16 bytes at address 0x00000013.      Status: Writing 8 bytes at address 0x00000023.      Status: Writing 1 bytes at address 0x0000002B.      Status: Writing 10 bytes at address 0x00000038.      
+Status: HEX to BIN conversion was successful.
+User command #2: stkkk.bat
+E:\AllProject\51\standardproject>copy tusb2136.bin c:\windows\system32\drivers\ /Y 
+已复制         1 个文件。
+"TUSB2136" - 0 Error(s), 1 Warning(s).

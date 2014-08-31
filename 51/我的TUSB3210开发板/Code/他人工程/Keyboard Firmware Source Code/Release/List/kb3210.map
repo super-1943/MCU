@@ -1,0 +1,959 @@
+Warning[39]: The function "delay" in module keyboard ( w:\projects\tusb3210\firmware\c\kb3210\release\obj\keyboard.r03 ) does not appear to be called. No static overlay area will be allocated for its parameters and locals.
+Warning[39]: The function "sendUartByte" in module support ( w:\projects\tusb3210\firmware\c\kb3210\release\obj\support.r03 ) does not appear to be called. No static overlay area will be allocated for its parameters and locals.
+Warning[39]: The function "sendUartHex" in module support ( w:\projects\tusb3210\firmware\c\kb3210\release\obj\support.r03 ) does not appear to be called. No static overlay area will be allocated for its parameters and locals.
+Warning[39]: The function "sendUartString" in module support ( w:\projects\tusb3210\firmware\c\kb3210\release\obj\support.r03 ) does not appear to be called. No static overlay area will be allocated for its parameters and locals.
+Warning[16]: Function "ClearKeyBoardBuffer" in module keyboard ( w:\projects\tusb3210\firmware\c\kb3210\release\obj\keyboard.r03 ) is called from two function trees ( with roots main and USBInterrupt )
+Warning[16]: Function "UsbReset" in module usbinit ( w:\projects\tusb3210\firmware\c\kb3210\release\obj\usbinit.r03 ) is called from two function trees ( with roots USBInterrupt and main )
+################################################################################
+#                                                                              #
+#      IAR Universal Linker V4.51J/WIN                                         #
+#                                                                              #
+#           Link time     =  27/Sep/2001  15:39:47                             #
+#           Target CPU    =  8051                                              #
+#           List file     =  w:\projects\tusb3210\firmware\c\kb3210\release\list\kb3210.map#
+#           Output file 1 =  w:\projects\tusb3210\firmware\c\kb3210\release\exe\kb3210.bin#
+#                            Format: mpds-code                                 #
+#           Command line  =  W:\Projects\TUSB3210\Firmware\C\Kb3210\Release\Ob #
+#                            j\descrip.r03                                     #
+#                            W:\Projects\TUSB3210\Firmware\C\Kb3210\Release\Ob #
+#                            j\Keyboard.r03                                    #
+#                            W:\Projects\TUSB3210\Firmware\C\Kb3210\Release\Ob #
+#                            j\support.r03                                     #
+#                            W:\Projects\TUSB3210\Firmware\C\Kb3210\Release\Ob #
+#                            j\usb.r03                                         #
+#                            W:\Projects\TUSB3210\Firmware\C\Kb3210\Release\Ob #
+#                            j\usbinit.r03                                     #
+#                            W:\Projects\TUSB3210\Firmware\C\Kb3210\Release\Ob #
+#                            j\vidpid.r03                                      #
+#                            -o                                                #
+#                            W:\Projects\TUSB3210\Firmware\C\Kb3210\Release\Ex #
+#                            e\kb3210.bin                                      #
+#                            -Fmpds-code -l                                    #
+#                            W:\Projects\TUSB3210\Firmware\C\Kb3210\Release\Li #
+#                            st\kb3210.map                                     #
+#                            -xms -IC:\IAR\EW23\8051\LIB\ -f Keyboard.xcl      #
+#                            (-c8051 -D_R=0 -Z(BIT)C_ARGB,BITVARS=0            #
+#                            -Z(DATA)B_UDATA,B_IDATA,C_ARGD,D_UDATA,D_IDATA=20 #
+#                            -Z(IDATA)C_ARGI,I_UDATA,I_IDATA,CSTACK            #
+#                            -Z(XDATA)P_UDATA,P_IDATA,C_ARGX,X_UDATA,X_IDATA,E #
+#                            CSTR,RF_XDATA,XSTACK=1                            #
+#                            -Z(CODE)INTVEC=0                                  #
+#                            -Z(CODE)RCODE,D_CDATA,B_CDATA,I_CDATA,P_CDATA,X_C #
+#                            DATA,C_ICALL,C_RECFN,CSTR,CCSTR,CODE,CONST        #
+#                            -e_small_write=_formatted_write                   #
+#                            -e_medium_read=_formatted_read                    #
+#                            -Z(XDATA)TUSB2136_SETUPPACKET_SEG=ff00            #
+#                            -Z(XDATA)TUSB2136_EP0_EDB_SEG=ff80                #
+#                            -Z(XDATA)TUSB2136_IEP_EDB_SEG=ff48                #
+#                            -Z(XDATA)TUSB2136_OEP_EDB_SEG=ff08                #
+#                            -Z(XDATA)TUSB2136_IEP0BUFFER_SEG=fef8             #
+#                            -Z(XDATA)TUSB2136_OEP0BUFFER_SEG=fef0             #
+#                            -Z(XDATA)TUSB2136_DESC_SEG=fe80                   #
+#                            -Z(XDATA)TUSB2136_OEP1_X_BUFFER_SEG=fed8          #
+#                            -Z(XDATA)TUSB2136_OEP1_Y_BUFFER_SEG=fee0          #
+#                            -Z(XDATA)TUSB2136_IEP1_X_BUFFER_SEG=fee8          #
+#                            -Z(XDATA)TUSB2136_DEBOUNCE_SEG=fd80               #
+#                            -Z(XDATA)TUSB2136_EXTERNAL_RAM_SEG=0000           #
+#                            -Z(XDATA)TUSB5152_IO_SEG=c000) cl8051s.r03        #
+#                                                                              #
+#                        Copyright 1987-1999 IAR Systems. All rights reserved. #
+################################################################################
+
+
+
+
+
+                ****************************************
+                *                                      *
+                *           CROSS REFERENCE            *
+                *                                      *
+                ****************************************
+
+       Program entry at : CODE      0000  Relocatable, from module : CSTARTUP
+
+
+
+
+
+                ****************************************
+                *                                      *
+                *              MODULE MAP              *
+                *                                      *
+                ****************************************
+
+
+  DEFINED ABSOLUTE ENTRIES
+  PROGRAM MODULE, NAME : ?ABS_ENTRY_MOD
+
+Absolute parts
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           _R                      0000            CSTARTUP
+  SEGMENTS IN THE MODULE
+  ======================
+    -------------------------------------------------------------------------
+C_ICALL
+  Relative segment, address: CODE 0376 - 03D1
+    -------------------------------------------------------------------------
+C_ARGI
+  Relative segment, address: DATA 0020 - 0040
+
+    *************************************************************************
+
+  FILE NAME : w:\projects\tusb3210\firmware\c\kb3210\release\obj\descrip.r03
+  PROGRAM MODULE, NAME : descrip
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 04CC 
+    -------------------------------------------------------------------------
+CONST
+  Relative segment, address: CODE 137F - 13F1
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           abromConfigurationDescriptorGroup
+                                   1391            usb
+           abromDeviceDescriptor   137F            usb
+           abromReportDescriptor   13B3            usb
+
+    *************************************************************************
+
+  FILE NAME : w:\projects\tusb3210\firmware\c\kb3210\release\obj\keyboard.r03
+  PROGRAM MODULE, NAME : keyboard
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 04CC - 084B
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ClearKeyBoardBuffer     0796            Not referred to
+               C_ARGI = 0029 ( 0001 , 0000 )
+           IEP1InterruptHandler    080E            usb
+               calls direct
+           OEP0SetLEDs             0827            usb
+           UpdateIEP1WithKeypress
+                                   07A2            Not referred to
+               calls direct
+               C_ARGI = 0039 ( 0001 , 0000 )
+           delay                   04CC            Not referred to
+               is not allocated
+           main                    04E9            CSTARTUP
+               calls direct
+               C_ARGI = 003A ( 0007 , 0000 )
+    -------------------------------------------------------------------------
+CONST
+  Relative segment, address: CODE 13F2 - 1B4A
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           keyDefs                 13F2            Not referred to
+    -------------------------------------------------------------------------
+I_UDATA
+  Relative segment, address: DATA 0041 - 004F
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           keypressBuffer          0041            Not referred to
+           previousIEP1packet      0048            Not referred to
+    -------------------------------------------------------------------------
+I_IDATA
+  Relative segment, address: DATA 0062 - 0068
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           bLED                    0064            usb
+           iep1Buffer              0066            usbinit
+           intFlags                0062            Not referred to
+           modifierByte            0065            Not referred to
+           otherFlags              0063            Not referred to
+    -------------------------------------------------------------------------
+I_CDATA
+  Relative segment, address: CODE 0368 - 036E
+    -------------------------------------------------------------------------
+TUSB2136_DEBOUNCE_SEG
+  Relative segment, address: XDATA FD80 - FE7F
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           keypressDebounce        FD80            Not referred to
+
+    *************************************************************************
+
+  FILE NAME : w:\projects\tusb3210\firmware\c\kb3210\release\obj\support.r03
+  PROGRAM MODULE, NAME : support
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 084C - 0907
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           memcmp                  08B4            keyboard
+               C_ARGI = 0031 ( 0001 , 0007 )
+           memcpy                  087A            keyboard
+               C_ARGI = 0029 ( 0001 , 0007 )
+           sendUartByte            08F5            Not referred to
+               is not allocated
+           sendUartHex             0903            Not referred to
+               is not allocated
+           sendUartString          08FA            Not referred to
+               is not allocated
+           strlen                  084C            keyboard
+                                                   usb
+               C_ARGI = 0020 ( 0001 , 0003 )
+
+    *************************************************************************
+
+  FILE NAME : w:\projects\tusb3210\firmware\c\kb3210\release\obj\usb.r03
+  PROGRAM MODULE, NAME : usb
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 0908 - 1205
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           IEP0InterruptHandler    10E1            Not referred to
+               calls direct
+           OEP0InterruptHandler    10C9            Not referred to
+               calls direct
+           P33Interrupt            11E8            Not referred to
+               interrupt, non_banked function
+           SetupPacketInterruptHandler
+                                   1099            Not referred to
+               calls direct
+           USBInterrupt            1108            Not referred to
+               interrupt, non_banked function
+               calls direct
+           usbClearEndpointHalt    0E16            Not referred to
+               calls direct, is indirectly called
+           usbClearRemoteWakeup    0DB6            Not referred to
+               calls direct, is indirectly called
+           usbDecodeAndProcessUsbRequest
+                                   0E46            Not referred to
+               calls indirect
+               C_ARGI = 0029 ( 0006 , 0000 )
+           usbGetConfiguration     0908            Not referred to
+               calls direct, is indirectly called
+           usbGetConfigurationDescriptor
+                                   0A9C            Not referred to
+               calls direct, is indirectly called
+               C_ARGI = 0027 ( 0001 , 0000 )
+           usbGetDeviceDescriptor
+                                   0937            Not referred to
+               calls direct, is indirectly called
+               C_ARGI = 0027 ( 0001 , 0000 )
+           usbGetDeviceStatus      0D90            Not referred to
+               calls direct, is indirectly called
+           usbGetEndpointStatus    0E20            Not referred to
+               calls direct, is indirectly called
+               C_ARGI = 0027 ( 0002 , 0000 )
+           usbGetHIDDescriptor     0A64            Not referred to
+               calls direct, is indirectly called
+               C_ARGI = 0027 ( 0001 , 0000 )
+           usbGetIdle              0D48            Not referred to
+               calls direct, is indirectly called
+           usbGetInterface         0D70            Not referred to
+               calls direct, is indirectly called
+           usbGetInterfaceStatus   0DCD            Not referred to
+               calls direct, is indirectly called
+               C_ARGI = 0027 ( 0002 , 0000 )
+           usbGetProtocol          0D61            Not referred to
+               calls direct, is indirectly called
+           usbGetReportDescriptor
+                                   0D22            Not referred to
+               calls direct, is indirectly called
+           usbGetStringDescriptor
+                                   0AD1            Not referred to
+               calls direct, is indirectly called
+               C_ARGI = 0027 ( 0002 , 0000 )
+           usbNonStandardRequest   0E43            Not referred to
+               calls direct, is indirectly called
+           usbReceiveDataPacketOnEP0
+                                   0EF3            Not referred to
+               C_ARGI = 0020 ( 0000 , 0003 )
+           usbReceiveNextPacketOnOEP0
+                                   0F19            Not referred to
+               calls direct
+               C_ARGI = 0029 ( 0002 , 0000 )
+           usbSendDataPacketOnEP0
+                                   0FA8            Not referred to
+               calls direct
+               C_ARGI = 0022 ( 0002 , 0003 )
+           usbSendNextPacketOnIEP0
+                                   0FF1            Not referred to
+               C_ARGI = 0020 ( 0002 , 0000 )
+           usbSendZeroLengthPacketOnIEP0
+                                   0F97            Not referred to
+           usbSetAddress           0DE9            Not referred to
+               calls direct, is indirectly called
+           usbSetConfiguration     0917            Not referred to
+               calls direct, is indirectly called
+           usbSetEndpointHalt      0E0C            Not referred to
+               calls direct, is indirectly called
+           usbSetIdle              0D37            Not referred to
+               calls direct, is indirectly called
+           usbSetInterface         0D7F            Not referred to
+               calls direct, is indirectly called
+           usbSetProtocol          0D57            Not referred to
+               calls direct, is indirectly called
+           usbSetRemoteWakeup      0D9F            Not referred to
+               calls direct, is indirectly called
+           usbSetReport            0928            Not referred to
+               calls direct, is indirectly called
+           usbStallEndpoint0       0EE4            Not referred to
+    -------------------------------------------------------------------------
+CONST
+  Relative segment, address: CODE 1B4B - 1C47
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           tUsbRequestList         1B4B            Not referred to
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: CODE 0000 - 0015
+    -------------------------------------------------------------------------
+I_UDATA
+  Relative segment, address: DATA 0050 - 005F
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           bHostAskMoreDataThanAvailable
+                                   0054            Not referred to
+           bStatusAction           0050            usbinit
+           bUsbDeviceAddress       0051            Not referred to
+           gbIdleRateH             005F            Not referred to
+           gbIdleRateL             005E            Not referred to
+           pbIEP0Buffer            0056            usbinit
+           pbOEP0Buffer            005B            usbinit
+           wBytesRemainingOnIEP0   0052            usbinit
+           wBytesRemainingOnOEP0   0059            usbinit
+    -------------------------------------------------------------------------
+I_IDATA
+  Relative segment, address: DATA 0069 - 006F
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           bConfigurationNumber    006B            usbinit
+           bInterfaceNumber        006C            usbinit
+           bSuspended              006A            keyboard
+           deviceReady             0069            keyboard
+                                                   usbinit
+           gbProtocol              006F            Not referred to
+           wDeviceFeatures         006D            Not referred to
+    -------------------------------------------------------------------------
+I_CDATA
+  Relative segment, address: CODE 036F - 0375
+    -------------------------------------------------------------------------
+TUSB2136_SETUPPACKET_SEG
+  Relative segment, address: XDATA FF00 - FF07
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           tSetupPacket            FF00            Not referred to
+    -------------------------------------------------------------------------
+TUSB2136_EP0_EDB_SEG
+  Relative segment, address: XDATA FF80 - FF83
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           tEndPoint0DescriptorBlock
+                                   FF80            usbinit
+    -------------------------------------------------------------------------
+TUSB2136_IEP_EDB_SEG
+  Relative segment, address: XDATA FF48 - FF5F
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           tInputEndPointDescriptorBlock
+                                   FF48            usbinit
+    -------------------------------------------------------------------------
+TUSB2136_OEP_EDB_SEG
+  Relative segment, address: XDATA FF08 - FF1F
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           tOutputEndPointDescriptorBlock
+                                   FF08            Not referred to
+    -------------------------------------------------------------------------
+TUSB2136_IEP0BUFFER_SEG
+  Relative segment, address: XDATA FEF8 - FEFF
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           abIEP0Buffer            FEF8            Not referred to
+    -------------------------------------------------------------------------
+TUSB2136_OEP0BUFFER_SEG
+  Relative segment, address: XDATA FEF0 - FEF7
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           abOEP0Buffer            FEF0            Not referred to
+    -------------------------------------------------------------------------
+TUSB2136_DESC_SEG
+  Relative segment, address: XDATA FE80 - FE91
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           abDescriptor            FE80            Not referred to
+    -------------------------------------------------------------------------
+TUSB2136_OEP1_X_BUFFER_SEG
+  Relative segment, address: XDATA FF84 - FFC3
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           pbXBufferAddress        FF84            Not referred to
+    -------------------------------------------------------------------------
+TUSB2136_OEP1_Y_BUFFER_SEG
+  Relative segment, address: XDATA FFC4 - 10003
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           pbYBufferAddress        FFC4            Not referred to
+
+    *************************************************************************
+
+  FILE NAME : w:\projects\tusb3210\firmware\c\kb3210\release\obj\usbinit.r03
+  PROGRAM MODULE, NAME : usbinit
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 1206 - 1318
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           InitializeUsbData       12F4            Not referred to
+               C_ARGI = 0029 ( 0001 , 0000 )
+           InitializeUsbFunction   12E3            keyboard
+               calls direct
+           InitializeUsbHub        1206            keyboard
+           UsbReset                1272            usb
+               calls direct
+    -------------------------------------------------------------------------
+TUSB2136_IEP1_X_BUFFER_SEG
+  Relative segment, address: XDATA FEE8 - FEEF
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           bufIEP1Buffer           FEE8            Not referred to
+
+    *************************************************************************
+
+  FILE NAME : w:\projects\tusb3210\firmware\c\kb3210\release\obj\vidpid.r03
+  PROGRAM MODULE, NAME : vidpid
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 1319 - 1379
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           GetVidPidSetting        1319            keyboard
+               C_ARGI = 0031 ( 0002 , 0000 )
+    -------------------------------------------------------------------------
+CSTR
+  Relative segment, address: CODE 03D2 - 04CB
+    -------------------------------------------------------------------------
+CONST
+  Relative segment, address: CODE 1C48 - 1D9B
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           funcDefs                1C48            usb
+                                                   usbinit
+    -------------------------------------------------------------------------
+I_UDATA
+  Relative segment, address: DATA 0060 - 0061
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           fncOffset               0061            usb
+                                                   usbinit
+           s0123                   0060            keyboard
+
+    *************************************************************************
+
+  FILE NAME : c:\iar\ew23\8051\lib\cl8051s.r03
+  PROGRAM MODULE, NAME : CSTARTUP
+
+  SEGMENTS IN THE MODULE
+  ======================
+B_UDATA
+  Relative segment, address: DATA 0020 
+    -------------------------------------------------------------------------
+B_CDATA
+  Relative segment, address: CODE 0368 
+    -------------------------------------------------------------------------
+B_IDATA
+  Relative segment, address: DATA 0020 
+    -------------------------------------------------------------------------
+D_UDATA
+  Relative segment, address: DATA 0020 
+    -------------------------------------------------------------------------
+D_CDATA
+  Relative segment, address: CODE 0368 
+    -------------------------------------------------------------------------
+D_IDATA
+  Relative segment, address: DATA 0020 
+    -------------------------------------------------------------------------
+I_UDATA
+  Relative segment, address: DATA 0062 
+    -------------------------------------------------------------------------
+I_CDATA
+  Relative segment, address: CODE 0376 
+    -------------------------------------------------------------------------
+I_IDATA
+  Relative segment, address: DATA 0070 
+    -------------------------------------------------------------------------
+P_UDATA
+  Relative segment, address: XDATA 0001 
+    -------------------------------------------------------------------------
+P_CDATA
+  Relative segment, address: CODE 0376 
+    -------------------------------------------------------------------------
+P_IDATA
+  Relative segment, address: XDATA 0001 
+    -------------------------------------------------------------------------
+X_UDATA
+  Relative segment, address: XDATA 0001 
+    -------------------------------------------------------------------------
+X_CDATA
+  Relative segment, address: CODE 0376 
+    -------------------------------------------------------------------------
+X_IDATA
+  Relative segment, address: XDATA 0001 
+    -------------------------------------------------------------------------
+ECSTR
+  Relative segment, address: XDATA 0001 
+    -------------------------------------------------------------------------
+CCSTR
+  Relative segment, address: CODE 04CC 
+    -------------------------------------------------------------------------
+CSTACK
+  Relative segment, address: DATA 0070 - 008D
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: CODE 0000 - 0002
+    -------------------------------------------------------------------------
+RCODE
+  Relative segment, address: CODE 0016 - 0114
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           init_C                  0016            Not referred to
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : exit
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0115 - 0116
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           exit                    0115            CSTARTUP
+           ?C_EXIT                 0115            Not referred to
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : lowinit
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 137A - 137E
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           __low_level_init        137A            CSTARTUP
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?L_CMP_L01
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0117 - 014F
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?L_CMP_L01              0117            keyboard
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?C_SWITCH_L05
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0150 - 0185
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?A_S_SWITCH_L05         0150            keyboard
+           ?C_SWITCH               0160            Not referred to
+           ?C_SWITCH_D             017C            Not referred to
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?VC_SWITCH_L05
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0186 - 01AE
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?A_V_SWITCH_L05         0186            usb
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LOAD_A_R567_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 01AF - 01B4
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LD_A_R567_L17          01AF            usb
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LOAD_A_R567_DISP_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 01B5 - 01BA
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LD_A_R567_DISP_L17     01B5            support
+                                                   usb
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LOAD_A_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 01BB - 01D6
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LOAD_A_L17             01BB            ?LOAD_A_R567_L17
+                                                   ?LOAD_A_R567_DISP_L17
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LD_AR3_R567_DISP_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 01D7 - 01DC
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LD_AR3_R567_DISP_L17   01D7            usb
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LOAD_AR3_R567_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 01DD - 01E6
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LOAD_AR3_R567_L17      01DD            ?LD_AR3_R567_DISP_L17
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LOAD_AB_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 01E7 - 021D
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LOAD_AB_L17            01E7            ?LOAD_AR3_R567_L17
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?SETUP_R123_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 021E - 023D
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?SETUP_R123_L17         021E            ?STORE_A_R123_L17
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?SETUP_R123_DISP_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 023E - 0271
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?SETUP_R123_DISP_L17    023E            ?SETUP_R123_L17
+                                                   ?STORE_A_R123_DISP_L17
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?SETUP_R567_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0272 - 0295
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?SETUP_R567_L17         0272            ?LOAD_A_R567_L17
+                                                   ?SETUP_R123_DISP_L17
+                                                   ?STORE_A_R567_L17
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?SETUP_R567_DISP_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0296 - 02C9
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?SETUP_R567_DISP_L17    0296            ?LOAD_A_R567_DISP_L17
+                                                   ?LD_AR3_R567_DISP_L17
+                                                   ?SETUP_R567_L17
+                                                   ?STORE_A_R567_DISP_L17
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?STORE_A_R123_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 02CA - 02D1
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?ST_A_R123_L17          02CA            ?SETUP_R567_DISP_L17
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?STORE_A_R123_DISP_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 02D2 - 02D9
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?ST_A_R123_DISP_L17     02D2            keyboard
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?STORE_A_R567_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 02DA - 02E1
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?ST_A_R567_L17          02DA            keyboard
+                                                   usb
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?STORE_A_R567_DISP_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 02E2 - 02E9
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?ST_A_R567_DISP_L17     02E2            keyboard
+                                                   support
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?STORE_A_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 02EA - 0309
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?STORE_A_L17            02EA            ?STORE_A_R123_L17
+                                                   ?STORE_A_R123_DISP_L17
+                                                   ?STORE_A_R567_L17
+                                                   ?STORE_A_R567_DISP_L17
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : LD_R567_POST_INC_R0_L17
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 030A - 0318
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LD_R567_POST_INC_R0_L17
+                                   030A            usb
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?VERSION_L17
+
+Absolute parts
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?CL8051S_5_50_L17       C893            descrip
+                                                   keyboard
+                                                   support
+                                                   usb
+                                                   usbinit
+                                                   vidpid
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?STO_R567_IR0_L20
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0319 - 0321
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?STO_R567_IR0_L20       0319            support
+                                                   usb
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?STO_R567_IR1_L20
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0322 - 032A
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?STO_R567_IR1_L20       0322            keyboard
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LD_R567_IR0_L20
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 032B - 0333
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LD_R567_IR0_L20        032B            keyboard
+                                                   support
+                                                   usb
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LD_R123_IR0_L20
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0334 - 033C
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LD_R123_IR0_L20        0334            keyboard
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LD_R567_CDPTR_L20
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 033D - 0348
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LD_R567_CDPTR_L20      033D            usb
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LD_R4567_CDPTR_L20
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0349 - 0358
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LD_R4567_CDPTR_L20     0349            keyboard
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LOAD_IND_DPTR2_L20
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0359 - 0365
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LOAD_IND_DPTR2_L20     0359            usb
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?LCALL_IND_L20
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 0366 - 0367
+           ENTRIES                ADDRESS          REF BY MODULE
+           =======                =======          =============
+           ?LCALL_IND_L20          0366            usb
+
+
+
+
+                ****************************************
+                *                                      *
+                *      SEGMENTS IN ADDRESS ORDER       *
+                *                                      *
+                ****************************************
+
+
+SEGMENT              SPACE   START ADDRESS    END ADDRESS      SIZE  TYPE  ALIGN
+=======              =====   =============    ===========      ====  ====  =====
+INTVEC               CODE             0000 - 0015                16   com    0
+RCODE                CODE             0016 - 0367               352   rel    0
+B_CDATA              CODE                0368                         rel    0
+D_CDATA              CODE                0368                         rel    0
+I_CDATA              CODE             0368 - 0375                 E   rel    0
+P_CDATA              CODE                0376                         rel    0
+X_CDATA              CODE                0376                         rel    0
+C_ICALL              CODE             0376 - 03D1                5C   rel    0
+C_RECFN              CODE                03D2                         dse    0
+CSTR                 CODE             03D2 - 04CB                FA   rel    0
+CCSTR                CODE                04CC                         rel    0
+CODE                 CODE             04CC - 137E               EB3   rel    0
+CONST                CODE             137F - 1D9B               A1D   rel    0
+D_IDATA              DATA                0020                         rel    0
+BITVARS              DATA                0020.0                       dse    0
+B_IDATA              DATA                0020                         rel    0
+C_ARGD               DATA                0020                         dse    0
+C_ARGB               DATA                0020.0                       dse    0
+D_UDATA              DATA                0020                         rel    0
+B_UDATA              DATA                0020                         rel    0
+C_ARGI               DATA             0020 - 0040                21   rel    0
+I_UDATA              DATA             0041 - 0061                21   rel    0
+I_IDATA              DATA             0062 - 006F                 E   rel    0
+CSTACK               DATA             0070 - 008D                1E   rel    0
+TUSB2136_EXTERNAL_RAM_SEG
+                     XDATA               0000                         dse    0
+RF_XDATA             XDATA               0001                         dse    0
+C_ARGX               XDATA               0001                         dse    0
+X_UDATA              XDATA               0001                         rel    0
+P_UDATA              XDATA               0001                         rel    0
+X_IDATA              XDATA               0001                         rel    0
+P_IDATA              XDATA               0001                         rel    0
+ECSTR                XDATA               0001                         rel    0
+XSTACK               XDATA               0001                         dse    0
+TUSB5152_IO_SEG      XDATA               C000                         dse    0
+TUSB2136_DEBOUNCE_SEG
+                     XDATA            FD80 - FE7F               100   rel    0
+TUSB2136_DESC_SEG    XDATA            FE80 - FE91                12   rel    0
+TUSB2136_IEP1_X_BUFFER_SEG
+                     XDATA            FEE8 - FEEF                 8   rel    0
+TUSB2136_OEP0BUFFER_SEG
+                     XDATA            FEF0 - FEF7                 8   rel    0
+TUSB2136_IEP0BUFFER_SEG
+                     XDATA            FEF8 - FEFF                 8   rel    0
+TUSB2136_SETUPPACKET_SEG
+                     XDATA            FF00 - FF07                 8   rel    0
+TUSB2136_OEP_EDB_SEG
+                     XDATA            FF08 - FF1F                18   rel    0
+TUSB2136_IEP_EDB_SEG
+                     XDATA            FF48 - FF5F                18   rel    0
+TUSB2136_EP0_EDB_SEG
+                     XDATA            FF80 - FF83                 4   rel    0
+TUSB2136_OEP1_X_BUFFER_SEG
+                     XDATA            FF84 - FFC3                40   rel    0
+TUSB2136_OEP1_Y_BUFFER_SEG
+                     XDATA            FFC4 - 10003               40   rel    0
+
+                ****************************************
+                *                                      *
+                *        END OF CROSS REFERENCE        *
+                *                                      *
+                ****************************************
+
+  7580 bytes of CODE memory
+   486 bytes of XDATA memory
+   110 bytes of IDATA memory
+
+Errors: none
+Warnings: 6
+
