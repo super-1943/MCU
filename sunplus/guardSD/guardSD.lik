@@ -1,0 +1,78 @@
+Version: 3.0
+Options: m37
+Obj: "D:\Program Files\Sunplus\unSP IDE 2.0.0\startupD.obj"
+Obj: "F:\abc\guardSD\Debug\Resource.obj"
+Obj: "F:\abc\guardSD\Debug\main.obj"
+Obj: "F:\abc\guardSD\Debug\initIO.obj"
+Obj: "F:\abc\guardSD\Debug\fiq.obj"
+Obj: "F:\abc\guardSD\Debug\hardware.obj"
+Obj: "F:\abc\guardSD\Debug\1_48k.res"
+Obj: "F:\abc\guardSD\Debug\12_48k.res"
+Obj: "F:\abc\guardSD\Debug\15_48k.res"
+Obj: "F:\abc\guardSD\Debug\2_48k.res"
+Obj: "F:\abc\guardSD\Debug\3_48k.res"
+Obj: "F:\abc\guardSD\Debug\7_48k.res"
+Obj: "F:\abc\guardSD\Debug\6_48k.res"
+Obj: "F:\abc\guardSD\Debug\5_48k.res"
+Obj: "F:\abc\guardSD\Debug\18_48k.res"
+Obj: "F:\abc\guardSD\Debug\17_48k.res"
+Obj: "F:\abc\guardSD\Debug\16_48k.res"
+Obj: "F:\abc\guardSD\Debug\4_48k.res"
+Obj: "F:\abc\guardSD\Debug\4com_48k.res"
+Obj: "F:\abc\guardSD\Debug\3Com_48k.res"
+Lib: "F:\abc\guardSD\.\bsrv222SDL.lib"
+Lib: "F:\abc\guardSD\.\sacmv26e.lib"
+Output: "F:\abc\guardSD\Debug\guardSD.S37"
+;Locate: TEXT in "BSRSDCON" of "bsrv222SDL.lib"  at 8009 
+;Align: TEXT in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: BSR_IRAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  at B78C  linkat 47D 
+;Align: BSR_IRAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: IRAM in "hardware.obj" at B798  linkat 489 
+;Align: IRAM in "hardware.obj" with 0 
+;Locate: BSR_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  at 39D 
+;Align: BSR_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: BSR_RAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  at 467 
+;Align: BSR_RAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: OVERLAP_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  at 1 
+;Align: OVERLAP_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: OVERLAP_SRAM_BLOCK in "A2000" of "sacmv26e.lib"  at 362 
+;Align: OVERLAP_SRAM_BLOCK in "A2000" of "sacmv26e.lib"  with 0 
+;Locate: __sn_section_RES_12_48K in "12_48k.res" at E9C3 
+;Align: __sn_section_RES_12_48K in "12_48k.res" with 0 
+;Locate: __sn_section_RES_15_48K in "15_48k.res" at E07D 
+;Align: __sn_section_RES_15_48K in "15_48k.res" with 0 
+;Locate: __sn_section_RES_16_48K in "16_48k.res" at DCCA 
+;Align: __sn_section_RES_16_48K in "16_48k.res" with 0 
+;Locate: __sn_section_RES_17_48K in "17_48k.res" at E3B2 
+;Align: __sn_section_RES_17_48K in "17_48k.res" with 0 
+;Locate: __sn_section_RES_18_48K in "18_48k.res" at B80C 
+;Align: __sn_section_RES_18_48K in "18_48k.res" with 0 
+;Locate: __sn_section_RES_1_48K in "1_48k.res" at D51C 
+;Align: __sn_section_RES_1_48K in "1_48k.res" with 0 
+;Locate: __sn_section_RES_2_48K in "2_48k.res" at BC4F 
+;Align: __sn_section_RES_2_48K in "2_48k.res" with 0 
+;Locate: __sn_section_RES_3_48K in "3_48k.res" at D121 
+;Align: __sn_section_RES_3_48K in "3_48k.res" with 0 
+;Locate: __sn_section_RES_3COM_48K in "3Com_48k.res" at E6CC 
+;Align: __sn_section_RES_3COM_48K in "3Com_48k.res" with 0 
+;Locate: __sn_section_RES_4_48K in "4_48k.res" at D8F3 
+;Align: __sn_section_RES_4_48K in "4_48k.res" with 0 
+;Locate: __sn_section_RES_4COM_48K in "4com_48k.res" at C4C3 
+;Align: __sn_section_RES_4COM_48K in "4com_48k.res" with 0 
+;Locate: __sn_section_RES_5_48K in "5_48k.res" at C092 
+;Align: __sn_section_RES_5_48K in "5_48k.res" with 0 
+;Locate: __sn_section_RES_6_48K in "6_48k.res" at C8E3 
+;Align: __sn_section_RES_6_48K in "6_48k.res" with 0 
+;Locate: __sn_section_RES_7_48K in "7_48k.res" at CD02 
+;Align: __sn_section_RES_7_48K in "7_48k.res" with 0 
+;Locate: CODE in "S480" of "sacmv26e.lib"  at A695 
+;Align: CODE in "S480" of "sacmv26e.lib"  with 0 
+;Locate: CODE in "A2000" of "sacmv26e.lib"  at AD9E 
+;Align: CODE in "A2000" of "sacmv26e.lib"  with 0 
+;Locate: CODE in "hardware.obj" at B393 
+;Align: CODE in "hardware.obj" with 0 
+;Locate: CODE in "main.obj" at B572 
+;Align: CODE in "main.obj" with 0 
+;Locate: CODE in "initIO.obj" at B74F 
+;Align: CODE in "initIO.obj" with 0 
+;Locate: __sn_init_table at 8000 

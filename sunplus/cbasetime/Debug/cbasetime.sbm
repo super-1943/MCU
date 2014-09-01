@@ -1,0 +1,65 @@
+.stabs "startup_code.",0x3c,0,0,0
+.stabs "__sn_main:F15",36,0,0,     32836
+.stabs "__sn_end:F15",36,0,0,     32834
+.stabs "__sn_exception:F15",36,0,0,     32835
+.stabs "F:\abc\cbasetime/", 0x64,0,0,0
+.stabs "F:\abc\cbasetime\Resource.asm", 0x64,0,0,0
+.stabs "unsigned int:t1=r1;0;65535;",128,0,0,0
+.stabs "long long int:t2=r1;-2147483648;2147483647;",128,0,0,0
+.stabs "float:t3=r1;2;0;",128,0,0,0
+.stabs "double:t4=r1;4;0;",128,0,0,0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabs "F:/abc/cbasetime/",0x64,0,3,     32836
+.stabs "F:/abc/cbasetime/main.c",0x64,0,3,     32836
+.stabs "int:t1=r1;-32768;32767;",128,0,0,0
+.stabs "char:t2=r2;0;127;",128,0,0,0
+.stabs "long int:t3=r3;-2147483648;2147483647;",128,0,0,0
+.stabs "unsigned int:t4=r4;0;65535;",128,0,0,0
+.stabs "long unsigned int:t5=r5;0;4294967295;",128,0,0,0
+.stabs "long long int:t6=r6;-2147483648;2147483647;",128,0,0,0
+.stabs "long long unsigned int:t7=r7;0;4294967295;",128,0,0,0
+.stabs "short int:t8=r8;-32768;32767;",128,0,0,0
+.stabs "short unsigned int:t9=r9;0;65535;",128,0,0,0
+.stabs "signed char:t10=r10;-32768;32767;",128,0,0,0
+.stabs "unsigned char:t11=r11;0;65535;",128,0,0,0
+.stabs "float:t12=r1;2;0;",128,0,0,0
+.stabs "double:t13=r1;2;0;",128,0,0,0
+.stabs "long double:t14=r1;2;0;",128,0,0,0
+.stabs "complex int:t15=s2real:1,0,16;imag:1,16,16;;",128,0,0,0
+.stabs "complex float:t16=r16;2;0;",128,0,0,0
+.stabs "complex double:t17=r17;2;0;",128,0,0,0
+.stabs "complex long double:t18=r18;2;0;",128,0,0,0
+.stabs "void:t19=19",128,0,0,0
+.stabs "Flag:G4",32,0,0,         1
+.stabs "IRQ5:F19",36,0,0,     32777
+.stabn 0x44,0,5,         0
+.stabn 0x44,0,6,         5
+.stabn 0x44,0,7,         8
+.stabn 0x44,0,9,        14
+.stabn 0x44,0,10,        17
+.stabn 0x44,0,11,        20
+.stabn 0x44,0,14,        22
+.stabn 0x44,0,15,        25
+.stabn 0x44,0,17,        28
+.stabn 0x44,0,17,        28
+.stabf         30
+.stabs "main:F1",36,0,0,     32836
+.stabn 0x44,0,20,         0
+.stabn 0x44,0,21,         5
+.stabn 0x44,0,22,         8
+.stabn 0x44,0,23,        11
+.stabn 0x44,0,24,        14
+.stabn 0x44,0,25,        17
+.stabn 0x44,0,26,        20
+.stabn 0x44,0,27,        23
+.stabn 0x44,0,28,        26
+.stabn 0x44,0,30,        29
+.stabn 0x44,0,33,        30
+.stabn 0x44,0,35,        34
+.stabn 0x44,0,36,        37
+.stabn 0x44,0,37,        39
+.stabn 0x44,0,37,        39
+.stabf         41

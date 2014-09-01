@@ -1,0 +1,25 @@
+# Begin Project
+# Begin SubItem "yejing  Resources"
+# Begin Source File
+SOURCE=..\who.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_WHO_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\comein.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_COMEIN_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=..\sorry.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_SORRY_16K
+EXPORT=3
+# End Source File
+# End SubItem
+# End Project

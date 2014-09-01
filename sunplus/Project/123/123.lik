@@ -1,0 +1,11 @@
+Version: 3.0
+Options: m37
+Obj: "C:\Program Files\Sunplus\unSP IDE 2.0.0\startupD.obj"
+Obj: "F:\Temp\123\Debug\Resource.obj"
+Obj: "F:\Temp\123\Debug\main.obj"
+Output: "F:\Temp\123\Debug\123.S37"
+;Locate: unSP_StartUp in "startupD.obj" at 8009 
+;Align: unSP_StartUp in "startupD.obj" with 0 
+;Locate: CODE in "main.obj" at 8026 
+;Align: CODE in "main.obj" with 0 
+;Locate: __sn_init_table at 8000 

@@ -1,0 +1,13 @@
+Sunplus u'nSP Assembler - Ver. 1.14.3.1
+              Listing File Has Been Relocated
+                            	.external _fun1,_fun2
+00008009                    	.text
+                            	.public _BREAK
+                            	
+                            	_BREAK:
+                            		
+                            		
+00008009 98 9A              		RETI
+                            	
+0 error(s), 0 warning(s).
+

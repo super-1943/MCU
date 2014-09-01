@@ -1,0 +1,22 @@
+Version: 3.0
+Options: m37
+Obj: "D:\PROGRA~1\Sunplus\startupD.obj"
+Obj: "C:\Documents and Settings\gao debang\桌面\个人工程文件夹\gao\shuma\Debug\Resource.obj"
+Obj: "C:\Documents and Settings\gao debang\桌面\个人工程文件夹\gao\shuma\Debug\led.obj"
+Lib: "D:\Program Files\Sunplus\library\CMacro\CMacro1016.lib"
+Output: "C:\Documents and Settings\gao debang\桌面\个人工程文件夹\gao\shuma\Debug\shuma.S37"
+;Locate: unSP_StartUp in "startupD.obj" at 8009 
+;Align: unSP_StartUp in "startupD.obj" with 0 
+;Locate: IRAM in "led.obj" at 8314  linkat 1 
+;Align: IRAM in "led.obj" with 0 
+;Locate: CODE in "led.obj" at 8026 
+;Align: CODE in "led.obj" with 0 
+;Locate: CODE in "divu1" of "CMacro1016.lib"  at 8276 
+;Align: CODE in "divu1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "divi1" of "CMacro1016.lib"  at 82AA 
+;Align: CODE in "divi1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "modi1" of "CMacro1016.lib"  at 82DB 
+;Align: CODE in "modi1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "lshiu1" of "CMacro1016.lib"  at 82FF 
+;Align: CODE in "lshiu1" of "CMacro1016.lib"  with 0 
+;Locate: __sn_init_table at 8000 

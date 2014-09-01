@@ -1,0 +1,32 @@
+Sunplus u'nSP Assembler - Ver. 1.14.3.1
+              Listing File Has Been Relocated
+00008009                    	.TEXT
+                            	.external _fun
+                            	.public _BREAK,_FIQ,_IRQ0,_IRQ1,_IRQ2,_IRQ3,_IRQ4,_IRQ5,_IRQ6,_IRQ7
+                            	_BREAK:
+00008009 90 90              		pop r1,r2 from [sp];
+0000800A 40 92              		R1=0x0000;//PC 'S  VALUE
+0000800B 0A 95 35 80        		R2=_fun;
+0000800D 90 D4              		push r1,r2 to [sp];
+0000800E 98 9A              		reti;
+                            	_FIQ:
+0000800F 98 9A              		RETI
+                            	_IRQ0:
+00008010 98 9A              		RETI;
+                            	_IRQ1:
+00008011 98 9A              		RETI;
+                            	_IRQ2:
+00008012 98 9A              		RETI;
+                            	_IRQ3:
+00008013 98 9A              		RETI;
+                            	_IRQ4:
+00008014 98 9A              		RETI;
+                            	_IRQ5:
+00008015 98 9A              		RETI;
+                            	_IRQ6:
+00008016 98 9A              		RETI;
+                            	_IRQ7:
+00008017 98 9A              		RETI;
+                            		
+0 error(s), 0 warning(s).
+

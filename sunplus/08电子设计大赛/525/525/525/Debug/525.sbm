@@ -1,0 +1,119 @@
+.stabs "startup_code.",0x3c,0,0,0
+.stabs "__sn_main:F15",36,0,0,     33042
+.stabs "__sn_end:F15",36,0,0,     32804
+.stabs "__sn_exception:F15",36,0,0,     32805
+.stabs "D:\¸öÈË¹¤³ÌÎÄ¼ş¼Ğ\kkkProject\MyProject\SunPlusProgram\525/", 0x64,0,0,0
+.stabs "D:\¸öÈË¹¤³ÌÎÄ¼ş¼Ğ\kkkProject\MyProject\SunPlusProgram\525\Resource.asm", 0x64,0,0,0
+.stabs "unsigned int:t1=r1;0;65535;",128,0,0,0
+.stabs "long long int:t2=r1;-2147483648;2147483647;",128,0,0,0
+.stabs "float:t3=r1;2;0;",128,0,0,0
+.stabs "double:t4=r1;4;0;",128,0,0,0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabs "D:/¸öÈË¹¤³ÌÎÄ¼ş¼Ğ/kkkProject/MyProject/SunPlusProgram/525/",0x64,0,3,     32806
+.stabs "D:/¸/366È/313¹/244³/314Î/304¼/376¼/320/kkkProject/MyProject/SunPlusProgram/525/my525.c",0x64,0,3,     32806
+.stabs "int:t1=r1;-32768;32767;",128,0,0,0
+.stabs "char:t2=r2;0;127;",128,0,0,0
+.stabs "long int:t3=r3;-2147483648;2147483647;",128,0,0,0
+.stabs "unsigned int:t4=r4;0;65535;",128,0,0,0
+.stabs "long unsigned int:t5=r5;0;4294967295;",128,0,0,0
+.stabs "long long int:t6=r6;-2147483648;2147483647;",128,0,0,0
+.stabs "long long unsigned int:t7=r7;0;4294967295;",128,0,0,0
+.stabs "short int:t8=r8;-32768;32767;",128,0,0,0
+.stabs "short unsigned int:t9=r9;0;65535;",128,0,0,0
+.stabs "signed char:t10=r10;-32768;32767;",128,0,0,0
+.stabs "unsigned char:t11=r11;0;65535;",128,0,0,0
+.stabs "float:t12=r1;2;0;",128,0,0,0
+.stabs "double:t13=r1;2;0;",128,0,0,0
+.stabs "long double:t14=r1;2;0;",128,0,0,0
+.stabs "complex int:t15=s2real:1,0,16;imag:1,16,16;;",128,0,0,0
+.stabs "complex float:t16=r16;2;0;",128,0,0,0
+.stabs "complex double:t17=r17;2;0;",128,0,0,0
+.stabs "complex long double:t18=r18;2;0;",128,0,0,0
+.stabs "void:t19=19",128,0,0,0
+.stabs "send525:F19",36,0,0,     32806
+.stabn 0x44,0,28,         0
+.stabn 0x44,0,29,         6
+.stabn 0x44,0,30,         6
+.stabn 0x44,0,31,        12
+.stabn 0x44,0,32,        18
+.stabn 0x44,0,33,        23
+.stabn 0x44,0,34,        28
+.stabn 0x44,0,35,        31
+.stabn 0x44,0,37,        48
+.stabn 0x44,0,38,        53
+.stabn 0x44,0,39,        58
+.stabn 0x44,0,41,        63
+.stabn 0x44,0,42,        69
+.stabn 0x44,0,43,        75
+.stabn 0x44,0,44,        81
+.stabn 0x44,0,47,        83
+.stabn 0x44,0,48,        89
+.stabn 0x44,0,49,        95
+.stabn 0x44,0,35,       101
+.stabn 0x44,0,52,       119
+.stabn 0x44,0,53,       125
+.stabn 0x44,0,53,       125
+.stabs "data:p1",160,0,0,6
+.stabn 0xc0,0,0,         6
+.stabs "temp:1",128,0,0,0
+.stabs "i:1",128,0,0,1
+.stabn 0xe0,0,0,       125
+.stabf        128
+.stabs "init525:F19",36,0,0,     32934
+.stabn 0x44,0,57,         0
+.stabn 0x44,0,58,         7
+.stabn 0x44,0,59,        13
+.stabn 0x44,0,60,        19
+.stabn 0x44,0,61,        25
+.stabn 0x44,0,62,        31
+.stabn 0x44,0,63,        37
+.stabn 0x44,0,64,        43
+.stabn 0x44,0,64,        43
+.stabf         46
+.stabs "delay:F19",36,0,0,     32980
+.stabn 0x44,0,67,         0
+.stabn 0x44,0,68,         6
+.stabn 0x44,0,69,         6
+.stabn 0x44,0,70,        15
+.stabn 0x44,0,71,        32
+.stabn 0x44,0,70,        35
+.stabn 0x44,0,69,        53
+.stabn 0x44,0,72,        59
+.stabn 0x44,0,72,        59
+.stabn 0xc0,0,0,         6
+.stabs "i:1",128,0,0,0
+.stabs "j:1",128,0,0,1
+.stabn 0xe0,0,0,        59
+.stabf         62
+.stabs "main:F1",36,0,0,     33042
+.stabn 0x44,0,74,         0
+.stabn 0x44,0,75,         7
+.stabn 0x44,0,76,         7
+.stabn 0x44,0,77,         9
+.stabn 0x44,0,79,        13
+.stabn 0x44,0,81,        23
+.stabn 0x44,0,83,        30
+.stabn 0x44,0,79,        33
+.stabn 0x44,0,85,        39
+.stabn 0x44,0,87,        49
+.stabn 0x44,0,88,        56
+.stabn 0x44,0,85,        59
+.stabn 0x44,0,90,        65
+.stabn 0x44,0,92,        75
+.stabn 0x44,0,94,        82
+.stabn 0x44,0,90,        85
+.stabn 0x44,0,96,        91
+.stabn 0x44,0,98,       101
+.stabn 0x44,0,99,       108
+.stabn 0x44,0,96,       111
+.stabn 0x44,0,102,       117
+.stabn 0x44,0,103,       120
+.stabn 0x44,0,104,       122
+.stabn 0x44,0,104,       122
+.stabn 0xc0,0,0,         7
+.stabs "i:1",128,0,0,0
+.stabn 0xe0,0,0,       122
+.stabf        125

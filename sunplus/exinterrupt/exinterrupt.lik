@@ -1,0 +1,11 @@
+Version: 3.0
+Options: m37
+Obj: "D:\Program Files\Sunplus\unSP IDE 2.0.0\startupD.obj"
+Obj: "F:\abc\exinterrupt\Debug\Resource.obj"
+Obj: "F:\abc\exinterrupt\Debug\main.obj"
+Output: "F:\abc\exinterrupt\Debug\exinterrupt.S37"
+;Locate: TEXT in "main.obj" at 8009 
+;Align: TEXT in "main.obj" with 0 
+;Locate: CODE in "main.obj" at 8053 
+;Align: CODE in "main.obj" with 0 
+;Locate: __sn_init_table at 8000 

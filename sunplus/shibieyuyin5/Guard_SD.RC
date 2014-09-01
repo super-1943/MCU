@@ -1,0 +1,116 @@
+# Begin Project
+# Begin SubItem "Guard_SD  Resources"
+# Begin Source File
+SOURCE=voice\S12.24K
+USEPARAM=FALSE
+PARAM=
+ID=RES_S12_24K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\1.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_1_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\2.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_2_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\3.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_3_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\4.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_4_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\5.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_5_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\6.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_6_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\7.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_7_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\18.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_18_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\10.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_10_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\11.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_11_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\12.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_12_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\17.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_17_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\16.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_16_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\15.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_15_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\9.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_9_48K
+EXPORT=3
+# End Source File
+# End SubItem
+# End Project

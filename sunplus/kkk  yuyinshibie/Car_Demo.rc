@@ -1,0 +1,81 @@
+# Begin Project
+# Begin SubItem "Car_Demo  Resources"
+# Begin Source File
+SOURCE=sn\mz.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_MZ_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=sn\qj.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_QJ_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=sn\dc.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_DC_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=sn\zg.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_ZG_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=sn\yg.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_YG_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=sn\ye.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_YE_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=sn\yb.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_YB_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=sn\my.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_MY_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=sn\ay.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_AY_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=sn\jx.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_JX_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=sn\gjg.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_GJG_48K
+EXPORT=3
+# End Source File
+# End SubItem
+# End Project

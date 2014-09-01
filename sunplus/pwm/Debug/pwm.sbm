@@ -1,0 +1,43 @@
+.stabs "startup_code.",0x3c,0,0,0
+.stabs "__sn_main:F15",36,0,0,     32806
+.stabs "__sn_end:F15",36,0,0,     32804
+.stabs "__sn_exception:F15",36,0,0,     32805
+.stabs "F:\abc\pwm/", 0x64,0,0,0
+.stabs "F:\abc\pwm\Resource.asm", 0x64,0,0,0
+.stabs "unsigned int:t1=r1;0;65535;",128,0,0,0
+.stabs "long long int:t2=r1;-2147483648;2147483647;",128,0,0,0
+.stabs "float:t3=r1;2;0;",128,0,0,0
+.stabs "double:t4=r1;4;0;",128,0,0,0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabs "F:\abc\pwm/", 0x64,0,0,0
+.stabs "F:\abc\pwm\main.asm", 0x64,0,0,0
+.stabs "unsigned int:t1=r1;0;65535;",128,0,0,0
+.stabs "long long int:t2=r1;-2147483648;2147483647;",128,0,0,0
+.stabs "float:t3=r1;2;0;",128,0,0,0
+.stabs "double:t4=r1;4;0;",128,0,0,0
+.stabn 0xc0,0,0,     32806
+.stabn 0xe0,0,0,     32806
+.stabn 0xc0,0,0,     32806
+.stabn 0x44,0,52,     32806
+.stabn 0x44,0,53,     32808
+.stabn 0x44,0,54,     32810
+.stabn 0x44,0,55,     32812
+.stabn 0x44,0,56,     32814
+.stabn 0x44,0,57,     32816
+.stabn 0x44,0,58,     32818
+.stabn 0x44,0,59,     32820
+.stabn 0x44,0,60,     32821
+.stabn 0x44,0,61,     32823
+.stabn 0x44,0,63,     32824
+.stabn 0x44,0,64,     32826
+.stabn 0x44,0,65,     32828
+.stabn 0x44,0,66,     32830
+.stabn 0x44,0,67,     32832
+.stabn 0x44,0,69,     32834
+.stabn 0x44,0,70,     32835
+.stabn 0x44,0,71,     32836
+.stabn 0x44,0,72,     32838
+.stabn 0xe0,0,0,     32839

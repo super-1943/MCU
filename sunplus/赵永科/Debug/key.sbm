@@ -1,0 +1,327 @@
+.stabs "startup_code.",0x3c,0,0,0
+.stabs "__sn_main:F15",36,0,0,     34164
+.stabs "__sn_end:F15",36,0,0,     32804
+.stabs "__sn_exception:F15",36,0,0,     32805
+.stabs "G:\yangsong\key\key/", 0x64,0,0,0
+.stabs "G:\yangsong\key\key\Resource.asm", 0x64,0,0,0
+.stabs "unsigned int:t1=r1;0;65535;",128,0,0,0
+.stabs "long long int:t2=r1;-2147483648;2147483647;",128,0,0,0
+.stabs "float:t3=r1;2;0;",128,0,0,0
+.stabs "double:t4=r1;4;0;",128,0,0,0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabs "G:/yangsong/key/key/",0x64,0,3,     32806
+.stabs "G:/yangsong/key/key/main.c",0x64,0,3,     32806
+.stabs "int:t1=r1;-32768;32767;",128,0,0,0
+.stabs "char:t2=r2;0;127;",128,0,0,0
+.stabs "long int:t3=r3;-2147483648;2147483647;",128,0,0,0
+.stabs "unsigned int:t4=r4;0;65535;",128,0,0,0
+.stabs "long unsigned int:t5=r5;0;4294967295;",128,0,0,0
+.stabs "long long int:t6=r6;-2147483648;2147483647;",128,0,0,0
+.stabs "long long unsigned int:t7=r7;0;4294967295;",128,0,0,0
+.stabs "short int:t8=r8;-32768;32767;",128,0,0,0
+.stabs "short unsigned int:t9=r9;0;65535;",128,0,0,0
+.stabs "signed char:t10=r10;-32768;32767;",128,0,0,0
+.stabs "unsigned char:t11=r11;0;65535;",128,0,0,0
+.stabs "float:t12=r1;2;0;",128,0,0,0
+.stabs "double:t13=r1;2;0;",128,0,0,0
+.stabs "long double:t14=r1;2;0;",128,0,0,0
+.stabs "complex int:t15=s2real:1,0,16;imag:1,16,16;;",128,0,0,0
+.stabs "complex float:t16=r16;2;0;",128,0,0,0
+.stabs "complex double:t17=r17;2;0;",128,0,0,0
+.stabs "complex long double:t18=r18;2;0;",128,0,0,0
+.stabs "void:t19=19",128,0,0,0
+.stabs "delay:F19",36,0,0,     32806
+.stabs "G:/yangsong/key/key/mykey.h",0x84,0,0,     32806
+.stabn 0x44,0,25,         0
+.stabn 0x44,0,26,         6
+.stabn 0x44,0,28,         6
+.stabn 0x44,0,30,        20
+.stabn 0x44,0,31,        29
+.stabn 0x44,0,30,        32
+.stabn 0x44,0,32,        38
+.stabn 0x44,0,33,        40
+.stabn 0x44,0,33,        40
+.stabs "x:p1",160,0,0,4
+.stabn 0xc0,0,0,         6
+.stabs "i:1",128,0,0,0
+.stabn 0xe0,0,0,        40
+.stabf         43
+.stabs "storemem:F19",36,0,0,     32849
+.stabn 0x44,0,35,         0
+.stabn 0x44,0,36,         6
+.stabn 0x44,0,37,         6
+.stabn 0x44,0,38,        10
+.stabn 0x44,0,39,        14
+.stabn 0x44,0,41,        20
+.stabn 0x44,0,43,        30
+.stabn 0x44,0,44,        33
+.stabn 0x44,0,41,        59
+.stabn 0x44,0,47,        65
+.stabn 0x44,0,49,        71
+.stabn 0x44,0,51,        81
+.stabn 0x44,0,52,        84
+.stabn 0x44,0,49,       110
+.stabn 0x44,0,55,       116
+.stabn 0x44,0,57,       122
+.stabn 0x44,0,59,       132
+.stabn 0x44,0,60,       135
+.stabn 0x44,0,57,       161
+.stabn 0x44,0,63,       167
+.stabn 0x44,0,65,       173
+.stabn 0x44,0,67,       183
+.stabn 0x44,0,68,       186
+.stabn 0x44,0,65,       201
+.stabn 0x44,0,71,       207
+.stabn 0x44,0,71,       207
+.stabn 0xc0,0,0,         6
+.stabs "i:1",128,0,0,0
+.stabn 0xe0,0,0,       207
+.stabf        210
+.stabs "clearmem:F19",36,0,0,     33059
+.stabn 0x44,0,73,         0
+.stabn 0x44,0,74,         6
+.stabn 0x44,0,75,         6
+.stabn 0x44,0,76,         9
+.stabn 0x44,0,77,        12
+.stabn 0x44,0,79,        22
+.stabn 0x44,0,80,        25
+.stabn 0x44,0,77,        32
+.stabn 0x44,0,82,        38
+.stabn 0x44,0,82,        38
+.stabn 0xc0,0,0,         6
+.stabs "i:1",128,0,0,0
+.stabn 0xe0,0,0,        38
+.stabf         41
+.stabs "initkey:F19",36,0,0,     33100
+.stabn 0x44,0,84,         0
+.stabn 0x44,0,85,         5
+.stabn 0x44,0,86,        11
+.stabn 0x44,0,87,        17
+.stabn 0x44,0,88,        23
+.stabn 0x44,0,88,        23
+.stabf         25
+.stabs "KeyScan:F19",36,0,0,     33125
+.stabn 0x44,0,90,         0
+.stabn 0x44,0,92,         7
+.stabn 0x44,0,93,         7
+.stabn 0x44,0,94,        16
+.stabn 0x44,0,95,        26
+.stabn 0x44,0,96,        28
+.stabn 0x44,0,97,        35
+.stabn 0x44,0,100,        90
+.stabn 0x44,0,101,        96
+.stabn 0x44,0,103,        98
+.stabn 0x44,0,104,       104
+.stabn 0x44,0,106,       111
+.stabn 0x44,0,108,       115
+.stabn 0x44,0,109,       121
+.stabn 0x44,0,111,       123
+.stabn 0x44,0,112,       129
+.stabn 0x44,0,114,       135
+.stabn 0x44,0,116,       139
+.stabn 0x44,0,117,       145
+.stabn 0x44,0,119,       147
+.stabn 0x44,0,121,       153
+.stabn 0x44,0,122,       156
+.stabn 0x44,0,124,       158
+.stabn 0x44,0,125,       164
+.stabn 0x44,0,126,       169
+.stabn 0x44,0,128,       171
+.stabn 0x44,0,130,       177
+.stabn 0x44,0,131,       180
+.stabn 0x44,0,133,       182
+.stabn 0x44,0,134,       187
+.stabn 0x44,0,135,       193
+.stabn 0x44,0,137,       195
+.stabn 0x44,0,138,       197
+.stabn 0x44,0,139,       203
+.stabn 0x44,0,141,       205
+.stabn 0x44,0,142,       207
+.stabn 0x44,0,143,       213
+.stabn 0x44,0,145,       215
+.stabn 0x44,0,146,       220
+.stabn 0x44,0,148,       226
+.stabn 0x44,0,150,       229
+.stabn 0x44,0,151,       234
+.stabn 0x44,0,153,       236
+.stabn 0x44,0,155,       238
+.stabn 0x44,0,156,       250
+.stabn 0x44,0,156,       250
+.stabn 0xc0,0,0,         7
+.stabs "temp:1",128,0,0,0
+.stabs "value:1",128,0,0,1
+.stabn 0xe0,0,0,       250
+.stabf        253
+.stabs "sendword:F19",36,0,0,     33378
+.stabs "G:/yangsong/key/key/my7219.h",0x84,0,0,     33378
+.stabn 0x44,0,36,         0
+.stabn 0x44,0,37,         6
+.stabn 0x44,0,38,         6
+.stabn 0x44,0,39,        12
+.stabn 0x44,0,41,        21
+.stabn 0x44,0,42,        24
+.stabn 0x44,0,43,        33
+.stabn 0x44,0,44,        38
+.stabn 0x44,0,46,        47
+.stabn 0x44,0,47,        53
+.stabn 0x44,0,48,        59
+.stabn 0x44,0,49,        65
+.stabn 0x44,0,52,        67
+.stabn 0x44,0,53,        73
+.stabn 0x44,0,54,        79
+.stabn 0x44,0,39,        85
+.stabn 0x44,0,57,        91
+.stabn 0x44,0,58,        97
+.stabn 0x44,0,59,       100
+.stabn 0x44,0,59,       100
+.stabs "word:p4",160,0,0,5
+.stabn 0xc0,0,0,         6
+.stabs "i:1",128,0,0,0
+.stabs "temp:1",128,0,0,1
+.stabn 0xe0,0,0,       100
+.stabf        103
+.stabs "init7219:F19",36,0,0,     33481
+.stabn 0x44,0,61,         0
+.stabn 0x44,0,62,         7
+.stabn 0x44,0,63,        13
+.stabn 0x44,0,64,        19
+.stabn 0x44,0,65,        25
+.stabn 0x44,0,66,        31
+.stabn 0x44,0,67,        37
+.stabn 0x44,0,68,        43
+.stabn 0x44,0,69,        49
+.stabn 0x44,0,70,        55
+.stabn 0x44,0,71,        61
+.stabn 0x44,0,71,        61
+.stabf         64
+.stabs "show:F19",36,0,0,     33545
+.stabn 0x44,0,80,         0
+.stabn 0x44,0,81,         7
+.stabn 0x44,0,83,         7
+.stabn 0x44,0,84,        13
+.stabn 0x44,0,85,        19
+.stabn 0x44,0,86,        25
+.stabn 0x44,0,87,        31
+.stabn 0x44,0,88,        37
+.stabn 0x44,0,89,        43
+.stabn 0x44,0,91,        49
+.stabn 0x44,0,92,        52
+.stabn 0x44,0,93,        71
+.stabn 0x44,0,94,        97
+.stabn 0x44,0,95,       109
+.stabn 0x44,0,96,       134
+.stabn 0x44,0,97,       154
+.stabn 0x44,0,98,       172
+.stabn 0x44,0,99,       175
+.stabn 0x44,0,100,       182
+.stabn 0x44,0,101,       188
+.stabn 0x44,0,102,       199
+.stabn 0x44,0,103,       210
+.stabn 0x44,0,104,       221
+.stabn 0x44,0,105,       227
+.stabn 0x44,0,106,       238
+.stabn 0x44,0,107,       249
+.stabn 0x44,0,107,       249
+.stabs "mode:p1",160,0,0,17
+.stabs "freq:p1",160,0,0,18
+.stabs "mvol:p1",160,0,0,19
+.stabn 0xc0,0,0,         7
+.stabs "tmp:20=ar1;0;7;1",128,0,0,0
+.stabn 0xe0,0,0,       249
+.stabf        252
+.stabs "delay_wave:F19",36,0,0,     33797
+.stabs "G:/yangsong/key/key/wave.h",0x84,0,0,     33797
+.stabn 0x44,0,10,         0
+.stabn 0x44,0,11,         5
+.stabn 0x44,0,13,        19
+.stabn 0x44,0,14,        22
+.stabn 0x44,0,15,        24
+.stabn 0x44,0,15,        24
+.stabs "x:p1",160,0,0,3
+.stabf         26
+.stabs "initwave:F19",36,0,0,     33823
+.stabn 0x44,0,17,         0
+.stabn 0x44,0,18,         7
+.stabn 0x44,0,19,         7
+.stabn 0x44,0,20,        10
+.stabn 0x44,0,22,        20
+.stabn 0x44,0,23,        34
+.stabn 0x44,0,24,        56
+.stabn 0x44,0,25,        78
+.stabn 0x44,0,26,       100
+.stabn 0x44,0,20,       103
+.stabn 0x44,0,28,       109
+.stabn 0x44,0,28,       109
+.stabn 0xc0,0,0,         7
+.stabs "i:1",128,0,0,0
+.stabn 0xe0,0,0,       109
+.stabf        112
+.stabs "wave:F19",36,0,0,     33935
+.stabn 0x44,0,30,         0
+.stabn 0x44,0,31,         7
+.stabn 0x44,0,32,         7
+.stabn 0x44,0,34,        13
+.stabn 0x44,0,36,        23
+.stabn 0x44,0,37,        34
+.stabn 0x44,0,38,        51
+.stabn 0x44,0,34,        54
+.stabn 0x44,0,40,        60
+.stabn 0x44,0,42,        62
+.stabn 0x44,0,44,        68
+.stabn 0x44,0,46,        78
+.stabn 0x44,0,47,        89
+.stabn 0x44,0,48,       106
+.stabn 0x44,0,44,       109
+.stabn 0x44,0,50,       115
+.stabn 0x44,0,52,       117
+.stabn 0x44,0,54,       123
+.stabn 0x44,0,56,       133
+.stabn 0x44,0,57,       144
+.stabn 0x44,0,58,       161
+.stabn 0x44,0,54,       164
+.stabn 0x44,0,60,       170
+.stabn 0x44,0,62,       172
+.stabn 0x44,0,64,       178
+.stabn 0x44,0,66,       188
+.stabn 0x44,0,67,       198
+.stabn 0x44,0,68,       215
+.stabn 0x44,0,64,       218
+.stabn 0x44,0,70,       224
+.stabn 0x44,0,72,       226
+.stabn 0x44,0,72,       226
+.stabn 0xc0,0,0,         7
+.stabs "i:1",128,0,0,0
+.stabn 0xe0,0,0,       226
+.stabf        229
+.stabs "mode:G4",32,0,0,       769
+.stabs "freq:G4",32,0,0,       770
+.stabs "vol:G4",32,0,0,       771
+.stabs "index:G4",32,0,0,      1030
+.stabs "mem_freq:G4",32,0,0,       772
+.stabs "mem_vol:G4",32,0,0,       773
+.stabs "SQUR:G21=ar1;0;255;4",32,0,0,         1
+.stabs "TRIG:G21",32,0,0,       257
+.stabs "SINE:G22=ar1;0;255;4",32,0,0,       513
+.stabs "mem_table:G21",32,0,0,       774
+.stabs "main:F1",36,0,0,     34164
+.stabs "G:/yangsong/key/key/main.c",0x84,0,0,     34164
+.stabn 0x44,0,77,         0
+.stabn 0x44,0,78,         7
+.stabn 0x44,0,79,        10
+.stabn 0x44,0,80,        14
+.stabn 0x44,0,81,        17
+.stabn 0x44,0,82,        19
+.stabn 0x44,0,83,        21
+.stabn 0x44,0,84,        23
+.stabn 0x44,0,85,        27
+.stabn 0x44,0,86,        39
+.stabn 0x44,0,88,        43
+.stabn 0x44,0,89,        45
+.stabn 0x44,0,90,        47
+.stabn 0x44,0,91,        50
+.stabn 0x44,0,92,        52
+.stabn 0x44,0,92,        52
+.stabf         55

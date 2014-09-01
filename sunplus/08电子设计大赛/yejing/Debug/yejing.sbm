@@ -1,0 +1,170 @@
+.stabs "startup_code.",0x3c,0,0,0
+.stabs "__sn_main:F15",36,0,0,     33193
+.stabs "__sn_end:F15",36,0,0,     32816
+.stabs "__sn_exception:F15",36,0,0,     32817
+.stabs "F:\abc\kkk\yejing/", 0x64,0,0,0
+.stabs "F:\abc\kkk\yejing\Resource.asm", 0x64,0,0,0
+.stabs "unsigned int:t1=r1;0;65535;",128,0,0,0
+.stabs "long long int:t2=r1;-2147483648;2147483647;",128,0,0,0
+.stabs "float:t3=r1;2;0;",128,0,0,0
+.stabs "double:t4=r1;4;0;",128,0,0,0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabs "F:/abc/kkk/yejing/",0x64,0,3,     32818
+.stabs "F:/abc/kkk/yejing/23.c",0x64,0,3,     32818
+.stabs "int:t1=r1;-32768;32767;",128,0,0,0
+.stabs "char:t2=r2;0;127;",128,0,0,0
+.stabs "long int:t3=r3;-2147483648;2147483647;",128,0,0,0
+.stabs "unsigned int:t4=r4;0;65535;",128,0,0,0
+.stabs "long unsigned int:t5=r5;0;4294967295;",128,0,0,0
+.stabs "long long int:t6=r6;-2147483648;2147483647;",128,0,0,0
+.stabs "long long unsigned int:t7=r7;0;4294967295;",128,0,0,0
+.stabs "short int:t8=r8;-32768;32767;",128,0,0,0
+.stabs "short unsigned int:t9=r9;0;65535;",128,0,0,0
+.stabs "signed char:t10=r10;-32768;32767;",128,0,0,0
+.stabs "unsigned char:t11=r11;0;65535;",128,0,0,0
+.stabs "float:t12=r1;2;0;",128,0,0,0
+.stabs "double:t13=r1;2;0;",128,0,0,0
+.stabs "long double:t14=r1;2;0;",128,0,0,0
+.stabs "complex int:t15=s2real:1,0,16;imag:1,16,16;;",128,0,0,0
+.stabs "complex float:t16=r16;2;0;",128,0,0,0
+.stabs "complex double:t17=r17;2;0;",128,0,0,0
+.stabs "complex long double:t18=r18;2;0;",128,0,0,0
+.stabs "void:t19=19",128,0,0,0
+.stabs "delay:F19",36,0,0,     32818
+.stabn 0x44,0,10,         0
+.stabn 0x44,0,11,         6
+.stabn 0x44,0,12,         6
+.stabn 0x44,0,14,        20
+.stabn 0x44,0,15,        30
+.stabn 0x44,0,14,        33
+.stabn 0x44,0,16,        39
+.stabn 0x44,0,17,        41
+.stabn 0x44,0,17,        41
+.stabs "t:p4",160,0,0,4
+.stabn 0xc0,0,0,         6
+.stabs "i:11",128,0,0,0
+.stabn 0xe0,0,0,        41
+.stabf         44
+.stabs "busy:F1",36,0,0,     32862
+.stabn 0x44,0,21,         0
+.stabn 0x44,0,22,         5
+.stabn 0x44,0,23,        11
+.stabn 0x44,0,24,        17
+.stabn 0x44,0,25,        18
+.stabn 0x44,0,26,        24
+.stabn 0x44,0,27,        25
+.stabn 0x44,0,28,        31
+.stabn 0x44,0,29,        38
+.stabn 0x44,0,29,        38
+.stabf         40
+.stabs "write_cmd:F19",36,0,0,     32902
+.stabn 0x44,0,31,         0
+.stabn 0x44,0,32,         7
+.stabn 0x44,0,33,        13
+.stabn 0x44,0,34,        14
+.stabn 0x44,0,35,        20
+.stabn 0x44,0,36,        21
+.stabn 0x44,0,37,        27
+.stabn 0x44,0,38,        28
+.stabn 0x44,0,39,        34
+.stabn 0x44,0,40,        45
+.stabn 0x44,0,41,        46
+.stabn 0x44,0,42,        52
+.stabn 0x44,0,43,        53
+.stabn 0x44,0,44,        59
+.stabn 0x44,0,45,        60
+.stabn 0x44,0,46,        62
+.stabn 0x44,0,46,        62
+.stabs "cmd:p1",160,0,0,4
+.stabf         65
+.stabs "write_dat:F19",36,0,0,     32967
+.stabn 0x44,0,49,         0
+.stabn 0x44,0,50,         7
+.stabn 0x44,0,51,        13
+.stabn 0x44,0,52,        14
+.stabn 0x44,0,53,        20
+.stabn 0x44,0,54,        21
+.stabn 0x44,0,55,        27
+.stabn 0x44,0,56,        28
+.stabn 0x44,0,57,        34
+.stabn 0x44,0,58,        45
+.stabn 0x44,0,59,        46
+.stabn 0x44,0,60,        52
+.stabn 0x44,0,61,        53
+.stabn 0x44,0,62,        59
+.stabn 0x44,0,63,        60
+.stabn 0x44,0,64,        62
+.stabn 0x44,0,64,        62
+.stabs "dat:p1",160,0,0,4
+.stabf         65
+.stabs "show:F19",36,0,0,     33032
+.stabn 0x44,0,67,         0
+.stabn 0x44,0,68,         7
+.stabn 0x44,0,70,        17
+.stabn 0x44,0,71,        20
+.stabn 0x44,0,72,        28
+.stabn 0x44,0,73,        34
+.stabn 0x44,0,74,        36
+.stabn 0x44,0,74,        36
+.stabs "str:p20=*2",160,0,0,4
+.stabf         39
+.stabs "goxy:F19",36,0,0,     33071
+.stabn 0x44,0,76,         0
+.stabn 0x44,0,77,         7
+.stabn 0x44,0,78,        13
+.stabn 0x44,0,79,        25
+.stabn 0x44,0,80,        31
+.stabn 0x44,0,81,        43
+.stabn 0x44,0,81,        43
+.stabs "y:p1",160,0,0,4
+.stabs "x:p1",160,0,0,5
+.stabf         46
+.stabs "init_1602:F19",36,0,0,     33117
+.stabn 0x44,0,83,         0
+.stabn 0x44,0,84,         7
+.stabn 0x44,0,85,        13
+.stabn 0x44,0,86,        18
+.stabn 0x44,0,87,        23
+.stabn 0x44,0,88,        28
+.stabn 0x44,0,89,        33
+.stabn 0x44,0,90,        38
+.stabn 0x44,0,91,        43
+.stabn 0x44,0,92,        48
+.stabn 0x44,0,93,        49
+.stabn 0x44,0,94,        54
+.stabn 0x44,0,95,        55
+.stabn 0x44,0,96,        60
+.stabn 0x44,0,97,        61
+.stabn 0x44,0,98,        66
+.stabn 0x44,0,99,        67
+.stabn 0x44,0,100,        72
+.stabn 0x44,0,101,        73
+.stabn 0x44,0,101,        73
+.stabf         76
+.stabs "main:F1",36,0,0,     33193
+.stabn 0x44,0,104,         0
+.stabn 0x44,0,105,         7
+.stabn 0x44,0,106,         9
+.stabn 0x44,0,107,        12
+.stabn 0x44,0,108,        15
+.stabn 0x44,0,109,        18
+.stabn 0x44,0,110,        20
+.stabn 0x44,0,111,        26
+.stabn 0x44,0,112,        31
+.stabn 0x44,0,113,        38
+.stabn 0x44,0,114,        44
+.stabn 0x44,0,115,        50
+.stabn 0x44,0,116,        57
+.stabn 0x44,0,117,        63
+.stabn 0x44,0,118,        69
+.stabn 0x44,0,121,        73
+.stabn 0x44,0,122,        76
+.stabn 0x44,0,123,        78
+.stabn 0x44,0,123,        78
+.stabn 0xc0,0,0,         7
+.stabs "i:1",128,0,0,0
+.stabn 0xe0,0,0,        78
+.stabf         81

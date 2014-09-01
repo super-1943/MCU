@@ -1,0 +1,11 @@
+Version: 3.0
+Options: m37
+Obj: "D:\Program Files\Sunplus\unSP IDE 2.0.0\startupD.obj"
+Obj: "F:\abc\kkk\yejing\Debug\Resource.obj"
+Obj: "F:\abc\kkk\yejing\Debug\23.obj"
+Output: "F:\abc\kkk\yejing\Debug\yejing.S37"
+;Locate: TEXT in "23.obj" at 8009 
+;Align: TEXT in "23.obj" with 0 
+;Locate: CODE in "23.obj" at 8032 
+;Align: CODE in "23.obj" with 0 
+;Locate: __sn_init_table at 8000 

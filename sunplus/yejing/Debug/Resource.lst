@@ -1,0 +1,48 @@
+Sunplus u'nSP Assembler - Ver. 1.14.3.1
+              Listing File Has Been Relocated
+                            	
+                            	// Resource Table
+                            	// Created by IDE, Do not modify this table
+                            	
+00008084                    	.TEXT
+                            	.public _RES_Table;
+                            	.external __RES_WHO_16K_sa
+                            	.public _RES_WHO_16K_SA;
+                            	.external __RES_WHO_16K_ea;
+                            	.public _RES_WHO_16K_EA;
+                            	.external __RES_COMEIN_16K_sa
+                            	.public _RES_COMEIN_16K_SA;
+                            	.external __RES_COMEIN_16K_ea;
+                            	.public _RES_COMEIN_16K_EA;
+                            	.external __RES_SORRY_16K_sa
+                            	.public _RES_SORRY_16K_SA;
+                            	.external __RES_SORRY_16K_ea;
+                            	.public _RES_SORRY_16K_EA;
+                            	
+                            	
+                            	_RES_Table:
+                            	
+                            	_RES_WHO_16K_SA:
+00008084 8E A8 00 00        		.DW offset __RES_WHO_16K_sa,seg __RES_WHO_16K_sa;
+                            	_RES_WHO_16K_EA:
+00008086 A1 B0 00 00        		.DW offset __RES_WHO_16K_ea,seg __RES_WHO_16K_ea;
+                            	
+                            	_RES_COMEIN_16K_SA:
+00008088 4B A0 00 00        		.DW offset __RES_COMEIN_16K_sa,seg __RES_COMEIN_16K_sa;
+                            	_RES_COMEIN_16K_EA:
+0000808A 8E A8 00 00        		.DW offset __RES_COMEIN_16K_ea,seg __RES_COMEIN_16K_ea;
+                            	
+                            	_RES_SORRY_16K_SA:
+0000808C B8 96 00 00        		.DW offset __RES_SORRY_16K_sa,seg __RES_SORRY_16K_sa;
+                            	_RES_SORRY_16K_EA:
+0000808E 4B A0 00 00        		.DW offset __RES_SORRY_16K_ea,seg __RES_SORRY_16K_ea;
+                            	
+                            	
+                            	// End Table
+                            	.public T_SACM_A2000_SpeechTable
+                            	T_SACM_A2000_SpeechTable:
+00008090 88 80              		.dw _RES_COMEIN_16K_SA;
+00008091 8C 80              		.dw _RES_SORRY_16K_SA;
+00008092 84 80              		.dw _RES_WHO_16K_SA;
+0 error(s), 0 warning(s).
+

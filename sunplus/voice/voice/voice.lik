@@ -1,0 +1,113 @@
+Version: 3.0
+Options: m37
+Obj: "D:\PROGRA~1\Sunplus\UNSPID~1.0\startupD.obj"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\Resource.obj"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\hardware.obj"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\isr.obj"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\main.obj"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\playsound.obj"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\system.obj"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\disp.obj"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\ADConv.obj"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\0_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\1_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\2_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\3_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\4_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\5_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\6_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\7_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\8_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\9_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\10_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\11_72k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\hjwd_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\shd_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\T064_48k.res"
+Obj: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\GX_48k.res"
+Lib: "C:\Documents and Settings\Administrator\桌面\voice\voice\.\sacmv26e.lib"
+Lib: "d:\Program Files\Sunplus\unSP IDE 2.0.0\library\CMacro\CMacro1016.lib"
+Output: "C:\Documents and Settings\Administrator\桌面\voice\voice\Debug\voice.S37"
+;Locate: TEXT in "isr.obj" at 8009 
+;Align: TEXT in "isr.obj" with 0 
+;Locate: IRAM in "hardware.obj" at 9ABA  linkat 1A4 
+;Align: IRAM in "hardware.obj" with 0 
+;Locate: OVERLAP_RAM_BLOCK in "S480" of "sacmv26e.lib"  at 1 
+;Align: OVERLAP_RAM_BLOCK in "S480" of "sacmv26e.lib"  with 0 
+;Locate: __sn_section_RES_0_48K in "0_48k.res" at A336 
+;Align: __sn_section_RES_0_48K in "0_48k.res" with 0 
+;Locate: __sn_section_RES_10_48K in "10_48k.res" at A2AC 
+;Align: __sn_section_RES_10_48K in "10_48k.res" with 0 
+;Locate: __sn_section_RES_11_72K in "11_72k.res" at 9D7B 
+;Align: __sn_section_RES_11_72K in "11_72k.res" with 0 
+;Locate: __sn_section_RES_1_48K in "1_48k.res" at A222 
+;Align: __sn_section_RES_1_48K in "1_48k.res" with 0 
+;Locate: __sn_section_RES_2_48K in "2_48k.res" at A3C0 
+;Align: __sn_section_RES_2_48K in "2_48k.res" with 0 
+;Locate: __sn_section_RES_3_48K in "3_48k.res" at 9FBB 
+;Align: __sn_section_RES_3_48K in "3_48k.res" with 0 
+;Locate: __sn_section_RES_4_48K in "4_48k.res" at 9F16 
+;Align: __sn_section_RES_4_48K in "4_48k.res" with 0 
+;Locate: __sn_section_RES_5_48K in "5_48k.res" at A441 
+;Align: __sn_section_RES_5_48K in "5_48k.res" with 0 
+;Locate: __sn_section_RES_6_48K in "6_48k.res" at A0FC 
+;Align: __sn_section_RES_6_48K in "6_48k.res" with 0 
+;Locate: __sn_section_RES_7_48K in "7_48k.res" at A18F 
+;Align: __sn_section_RES_7_48K in "7_48k.res" with 0 
+;Locate: __sn_section_RES_8_48K in "8_48k.res" at A4C2 
+;Align: __sn_section_RES_8_48K in "8_48k.res" with 0 
+;Locate: __sn_section_RES_9_48K in "9_48k.res" at A060 
+;Align: __sn_section_RES_9_48K in "9_48k.res" with 0 
+;Locate: __sn_section_RES_GX_48K in "GX_48k.res" at 9E4D 
+;Align: __sn_section_RES_GX_48K in "GX_48k.res" with 0 
+;Locate: __sn_section_RES_HJWD_48K in "hjwd_48k.res" at 9B62 
+;Align: __sn_section_RES_HJWD_48K in "hjwd_48k.res" with 0 
+;Locate: __sn_section_RES_SHD_48K in "shd_48k.res" at 9C85 
+;Align: __sn_section_RES_SHD_48K in "shd_48k.res" with 0 
+;Locate: __sn_section_RES_T064_48K in "T064_48k.res" at A53A 
+;Align: __sn_section_RES_T064_48K in "T064_48k.res" with 0 
+;Locate: CODE in "S480" of "sacmv26e.lib"  at 80EC 
+;Align: CODE in "S480" of "sacmv26e.lib"  with 0 
+;Locate: CODE in "disp.obj" at 8AE6 
+;Align: CODE in "disp.obj" with 0 
+;Locate: CODE in "system.obj" at 8EC3 
+;Align: CODE in "system.obj" with 0 
+;Locate: CODE in "hardware.obj" at 9183 
+;Align: CODE in "hardware.obj" with 0 
+;Locate: CODE in "playsound.obj" at 9361 
+;Align: CODE in "playsound.obj" with 0 
+;Locate: CODE in "ADConv.obj" at 94F1 
+;Align: CODE in "ADConv.obj" with 0 
+;Locate: CODE in "main.obj" at 95F9 
+;Align: CODE in "main.obj" with 0 
+;Locate: CODE in "mulf2" of "CMacro1016.lib"  at 96CF 
+;Align: CODE in "mulf2" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "addf2" of "CMacro1016.lib"  at 97A0 
+;Align: CODE in "addf2" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "divf2" of "CMacro1016.lib"  at 986F 
+;Align: CODE in "divf2" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "cvi1f2" of "CMacro1016.lib"  at 992F 
+;Align: CODE in "cvi1f2" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "divu1" of "CMacro1016.lib"  at 9970 
+;Align: CODE in "divu1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "divi1" of "CMacro1016.lib"  at 99A4 
+;Align: CODE in "divi1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "cvf2i1" of "CMacro1016.lib"  at 99D5 
+;Align: CODE in "cvf2i1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "modi1" of "CMacro1016.lib"  at 99FB 
+;Align: CODE in "modi1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "rshu2" of "CMacro1016.lib"  at 9A1F 
+;Align: CODE in "rshu2" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "mulu1" of "CMacro1016.lib"  at 9A3D 
+;Align: CODE in "mulu1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "lshiu2" of "CMacro1016.lib"  at 9A5B 
+;Align: CODE in "lshiu2" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "cvi2f2" of "CMacro1016.lib"  at 9A79 
+;Align: CODE in "cvi2f2" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "modu1" of "CMacro1016.lib"  at 9A90 
+;Align: CODE in "modu1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "blockcopy" of "CMacro1016.lib"  at 9A9F 
+;Align: CODE in "blockcopy" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "subf2" of "CMacro1016.lib"  at 9AAE 
+;Align: CODE in "subf2" of "CMacro1016.lib"  with 0 
+;Locate: __sn_init_table at 8000 

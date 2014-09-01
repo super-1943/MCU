@@ -1,0 +1,75 @@
+# Begin Project
+# Begin SubItem "Guard_SD  files"
+# Begin Group "Source Files"
+USEPARAM=FALSE
+PARAM=
+EXPORT=32
+# Begin Source File
+SOURCE=InitIO.asm
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=hardware.asm
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=FIQ.asm
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Resource.asm
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=main.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=0
+# End Source File
+# End Group
+# Begin Group "Head Files"
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+# Begin Source File
+SOURCE=Guard_SD.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Resource.inc
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# End Group
+# Begin Group "External Dependencies"
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+# Begin Source File
+SOURCE=Makefile
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+# End Source File
+# End Group
+# End SubItem
+# End Project

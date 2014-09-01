@@ -1,0 +1,930 @@
+.stabs "startup_code.",0x3c,0,0,0
+.stabs "__sn_main:F15",36,0,0,     38488
+.stabs "__sn_end:F15",36,0,0,     33002
+.stabs "__sn_exception:F15",36,0,0,     33003
+.stabs "C:\Documents and Settings\Administrator\×ÀÃæ\voice\voice/", 0x64,0,0,0
+.stabs "C:\Documents and Settings\Administrator\×ÀÃæ\voice\voice\Resource.asm", 0x64,0,0,0
+.stabs "unsigned int:t1=r1;0;65535;",128,0,0,0
+.stabs "long long int:t2=r1;-2147483648;2147483647;",128,0,0,0
+.stabs "float:t3=r1;2;0;",128,0,0,0
+.stabs "double:t4=r1;4;0;",128,0,0,0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabn 0xc0,0,0,     32875
+.stabn 0xe0,0,0,     32955
+.stabs "C:\Documents and Settings\Administrator\×ÀÃæ\voice\voice/", 0x64,0,0,0
+.stabs "C:\Documents and Settings\Administrator\×ÀÃæ\voice\voice\hardware.asm", 0x64,0,0,0
+.stabs "unsigned int:t1=r1;0;65535;",128,0,0,0
+.stabs "long long int:t2=r1;-2147483648;2147483647;",128,0,0,0
+.stabs "float:t3=r1;2;0;",128,0,0,0
+.stabs "double:t4=r1;4;0;",128,0,0,0
+.stabn 0xc0,0,0,     37251
+.stabn 0xe0,0,0,     37251
+.stabn 0xc0,0,0,       420
+.stabs "R_InterruptStatus:G1",32,0,0,       420
+.stabs "R_Queue:S1",38,0,0,       421
+.stabs "R_ReadIndex:S1",38,0,0,       565
+.stabs "R_WriteIndex:S1",38,0,0,       566
+.stabn 0xe0,0,0,       567
+.stabn 0xc0,0,0,     37251
+.stabn 0x44,0,300,     37251
+.stabn 0x44,0,301,     37253
+.stabn 0x44,0,303,     37254
+.stabn 0x44,0,304,     37255
+.stabn 0x44,0,305,     37257
+.stabn 0x44,0,307,     37258
+.stabn 0x44,0,308,     37259
+.stabn 0x44,0,309,     37261
+.stabn 0x44,0,311,     37263
+.stabn 0x44,0,326,     37264
+.stabn 0x44,0,327,     37266
+.stabn 0x44,0,328,     37268
+.stabn 0x44,0,330,     37269
+.stabn 0x44,0,331,     37271
+.stabn 0x44,0,333,     37272
+.stabn 0x44,0,334,     37274
+.stabn 0x44,0,335,     37275
+.stabn 0x44,0,336,     37277
+.stabn 0x44,0,337,     37278
+.stabn 0x44,0,339,     37279
+.stabn 0x44,0,341,     37281
+.stabn 0x44,0,344,     37282
+.stabn 0x44,0,358,     37283
+.stabn 0x44,0,359,     37285
+.stabn 0x44,0,360,     37287
+.stabn 0x44,0,362,     37288
+.stabn 0x44,0,363,     37290
+.stabn 0x44,0,365,     37291
+.stabn 0x44,0,378,     37292
+.stabn 0x44,0,379,     37294
+.stabn 0x44,0,380,     37296
+.stabn 0x44,0,382,     37297
+.stabn 0x44,0,383,     37299
+.stabn 0x44,0,384,     37300
+.stabn 0x44,0,385,     37302
+.stabn 0x44,0,386,     37303
+.stabn 0x44,0,388,     37304
+.stabn 0x44,0,389,     37306
+.stabn 0x44,0,404,     37307
+.stabn 0x44,0,405,     37309
+.stabn 0x44,0,406,     37311
+.stabn 0x44,0,409,     37312
+.stabn 0x44,0,410,     37314
+.stabn 0x44,0,411,     37315
+.stabn 0x44,0,412,     37317
+.stabn 0x44,0,413,     37319
+.stabn 0x44,0,415,     37320
+.stabn 0x44,0,416,     37322
+.stabn 0x44,0,417,     37323
+.stabn 0x44,0,418,     37325
+.stabn 0x44,0,420,     37326
+.stabn 0x44,0,421,     37327
+.stabn 0x44,0,423,     37328
+.stabn 0x44,0,424,     37329
+.stabn 0x44,0,426,     37330
+.stabn 0x44,0,427,     37331
+.stabn 0x44,0,446,     37332
+.stabn 0x44,0,447,     37333
+.stabn 0x44,0,448,     37335
+.stabn 0x44,0,449,     37336
+.stabn 0x44,0,450,     37338
+.stabn 0x44,0,451,     37340
+.stabn 0x44,0,452,     37342
+.stabn 0x44,0,453,     37344
+.stabn 0x44,0,454,     37346
+.stabn 0x44,0,456,     37348
+.stabn 0x44,0,457,     37350
+.stabn 0x44,0,460,     37351
+.stabn 0x44,0,461,     37353
+.stabn 0x44,0,463,     37355
+.stabn 0x44,0,464,     37357
+.stabn 0x44,0,466,     37359
+.stabn 0x44,0,474,     37360
+.stabn 0x44,0,475,     37361
+.stabn 0x44,0,476,     37363
+.stabn 0x44,0,477,     37364
+.stabn 0x44,0,479,     37366
+.stabn 0x44,0,480,     37368
+.stabn 0x44,0,481,     37370
+.stabn 0x44,0,482,     37372
+.stabn 0x44,0,484,     37374
+.stabn 0x44,0,485,     37376
+.stabn 0x44,0,487,     37378
+.stabn 0x44,0,488,     37380
+.stabn 0x44,0,490,     37382
+.stabn 0x44,0,491,     37384
+.stabn 0x44,0,493,     37386
+.stabn 0x44,0,500,     37387
+.stabn 0x44,0,501,     37388
+.stabn 0x44,0,502,     37390
+.stabn 0x44,0,503,     37392
+.stabn 0x44,0,504,     37394
+.stabn 0x44,0,505,     37395
+.stabn 0x44,0,506,     37397
+.stabn 0x44,0,507,     37399
+.stabn 0x44,0,508,     37401
+.stabn 0x44,0,509,     37403
+.stabn 0x44,0,511,     37405
+.stabn 0x44,0,512,     37407
+.stabn 0x44,0,513,     37409
+.stabn 0x44,0,514,     37411
+.stabn 0x44,0,515,     37413
+.stabn 0x44,0,529,     37414
+.stabn 0x44,0,530,     37415
+.stabn 0x44,0,531,     37417
+.stabn 0x44,0,532,     37418
+.stabn 0x44,0,535,     37420
+.stabn 0x44,0,536,     37421
+.stabn 0x44,0,539,     37423
+.stabn 0x44,0,540,     37425
+.stabn 0x44,0,542,     37427
+.stabn 0x44,0,543,     37429
+.stabn 0x44,0,544,     37431
+.stabn 0x44,0,548,     37432
+.stabn 0x44,0,549,     37433
+.stabn 0x44,0,550,     37435
+.stabn 0x44,0,551,     37437
+.stabn 0x44,0,552,     37439
+.stabn 0x44,0,553,     37441
+.stabn 0x44,0,554,     37443
+.stabn 0x44,0,555,     37445
+.stabn 0x44,0,556,     37447
+.stabn 0x44,0,559,     37448
+.stabn 0x44,0,560,     37450
+.stabn 0x44,0,561,     37452
+.stabn 0x44,0,562,     37454
+.stabn 0x44,0,563,     37456
+.stabn 0x44,0,564,     37458
+.stabn 0x44,0,565,     37460
+.stabn 0x44,0,566,     37462
+.stabn 0x44,0,567,     37464
+.stabn 0x44,0,571,     37465
+.stabn 0x44,0,572,     37467
+.stabn 0x44,0,573,     37469
+.stabn 0x44,0,574,     37471
+.stabn 0x44,0,575,     37473
+.stabn 0x44,0,576,     37475
+.stabn 0x44,0,577,     37477
+.stabn 0x44,0,578,     37479
+.stabn 0x44,0,579,     37481
+.stabn 0x44,0,583,     37482
+.stabn 0x44,0,584,     37484
+.stabn 0x44,0,585,     37486
+.stabn 0x44,0,586,     37488
+.stabn 0x44,0,587,     37490
+.stabn 0x44,0,588,     37492
+.stabn 0x44,0,589,     37494
+.stabn 0x44,0,590,     37496
+.stabn 0x44,0,591,     37498
+.stabn 0x44,0,617,     37499
+.stabn 0x44,0,618,     37500
+.stabn 0x44,0,619,     37502
+.stabn 0x44,0,620,     37503
+.stabn 0x44,0,621,     37505
+.stabn 0x44,0,623,     37507
+.stabn 0x44,0,624,     37509
+.stabn 0x44,0,625,     37510
+.stabn 0x44,0,626,     37512
+.stabn 0x44,0,627,     37514
+.stabn 0x44,0,629,     37516
+.stabn 0x44,0,630,     37518
+.stabn 0x44,0,632,     37520
+.stabn 0x44,0,633,     37522
+.stabn 0x44,0,634,     37524
+.stabn 0x44,0,635,     37526
+.stabn 0x44,0,637,     37528
+.stabn 0x44,0,642,     37529
+.stabn 0x44,0,644,     37530
+.stabn 0x44,0,646,     37532
+.stabn 0x44,0,647,     37534
+.stabn 0x44,0,648,     37536
+.stabn 0x44,0,651,     37537
+.stabn 0x44,0,652,     37538
+.stabn 0x44,0,654,     37540
+.stabn 0x44,0,655,     37542
+.stabn 0x44,0,656,     37544
+.stabn 0x44,0,677,     37545
+.stabn 0x44,0,678,     37546
+.stabn 0x44,0,679,     37548
+.stabn 0x44,0,680,     37550
+.stabn 0x44,0,681,     37552
+.stabn 0x44,0,682,     37553
+.stabn 0x44,0,685,     37554
+.stabn 0x44,0,686,     37556
+.stabn 0x44,0,687,     37557
+.stabn 0x44,0,688,     37559
+.stabn 0x44,0,689,     37561
+.stabn 0x44,0,690,     37563
+.stabn 0x44,0,691,     37565
+.stabn 0x44,0,693,     37566
+.stabn 0x44,0,697,     37567
+.stabn 0x44,0,698,     37569
+.stabn 0x44,0,699,     37570
+.stabn 0x44,0,700,     37572
+.stabn 0x44,0,701,     37574
+.stabn 0x44,0,702,     37576
+.stabn 0x44,0,703,     37578
+.stabn 0x44,0,705,     37579
+.stabn 0x44,0,706,     37580
+.stabn 0x44,0,712,     37581
+.stabn 0x44,0,714,     37582
+.stabn 0x44,0,715,     37584
+.stabn 0x44,0,716,     37586
+.stabn 0x44,0,718,     37587
+.stabn 0x44,0,719,     37589
+.stabn 0x44,0,720,     37590
+.stabn 0x44,0,721,     37592
+.stabn 0x44,0,722,     37594
+.stabn 0x44,0,723,     37596
+.stabn 0x44,0,726,     37597
+.stabn 0x44,0,727,     37598
+.stabn 0x44,0,733,     37599
+.stabn 0x44,0,734,     37600
+.stabn 0x44,0,735,     37602
+.stabn 0x44,0,736,     37604
+.stabn 0x44,0,737,     37606
+.stabn 0x44,0,738,     37607
+.stabn 0x44,0,741,     37608
+.stabn 0x44,0,742,     37610
+.stabn 0x44,0,743,     37611
+.stabn 0x44,0,744,     37613
+.stabn 0x44,0,745,     37615
+.stabn 0x44,0,746,     37617
+.stabn 0x44,0,747,     37619
+.stabn 0x44,0,749,     37620
+.stabn 0x44,0,753,     37621
+.stabn 0x44,0,754,     37623
+.stabn 0x44,0,755,     37624
+.stabn 0x44,0,756,     37626
+.stabn 0x44,0,757,     37628
+.stabn 0x44,0,758,     37630
+.stabn 0x44,0,759,     37632
+.stabn 0x44,0,761,     37633
+.stabn 0x44,0,762,     37634
+.stabn 0x44,0,768,     37635
+.stabn 0x44,0,770,     37636
+.stabn 0x44,0,771,     37638
+.stabn 0x44,0,772,     37640
+.stabn 0x44,0,774,     37641
+.stabn 0x44,0,775,     37643
+.stabn 0x44,0,776,     37644
+.stabn 0x44,0,777,     37646
+.stabn 0x44,0,778,     37648
+.stabn 0x44,0,779,     37650
+.stabn 0x44,0,781,     37651
+.stabn 0x44,0,782,     37652
+.stabn 0x44,0,787,     37653
+.stabn 0x44,0,788,     37654
+.stabn 0x44,0,790,     37655
+.stabn 0x44,0,791,     37656
+.stabn 0x44,0,792,     37657
+.stabn 0x44,0,793,     37658
+.stabn 0x44,0,802,     37659
+.stabn 0x44,0,803,     37660
+.stabn 0x44,0,804,     37662
+.stabn 0x44,0,805,     37663
+.stabn 0x44,0,806,     37664
+.stabn 0x44,0,807,     37666
+.stabn 0x44,0,808,     37667
+.stabn 0x44,0,809,     37669
+.stabn 0x44,0,810,     37670
+.stabn 0x44,0,812,     37672
+.stabn 0x44,0,813,     37673
+.stabn 0x44,0,814,     37674
+.stabn 0x44,0,822,     37675
+.stabn 0x44,0,823,     37676
+.stabn 0x44,0,824,     37678
+.stabn 0x44,0,825,     37679
+.stabn 0x44,0,826,     37680
+.stabn 0x44,0,827,     37682
+.stabn 0x44,0,828,     37683
+.stabn 0x44,0,829,     37685
+.stabn 0x44,0,830,     37686
+.stabn 0x44,0,832,     37688
+.stabn 0x44,0,833,     37689
+.stabn 0x44,0,834,     37690
+.stabn 0x44,0,842,     37691
+.stabn 0x44,0,843,     37692
+.stabn 0x44,0,845,     37694
+.stabn 0x44,0,846,     37695
+.stabn 0x44,0,848,     37696
+.stabn 0x44,0,849,     37697
+.stabn 0x44,0,853,     37698
+.stabn 0x44,0,854,     37699
+.stabn 0x44,0,855,     37700
+.stabn 0x44,0,856,     37701
+.stabn 0x44,0,857,     37702
+.stabn 0x44,0,858,     37703
+.stabn 0x44,0,859,     37704
+.stabn 0x44,0,860,     37705
+.stabn 0x44,0,861,     37706
+.stabn 0x44,0,870,     37707
+.stabn 0x44,0,871,     37708
+.stabn 0x44,0,873,     37710
+.stabn 0x44,0,874,     37711
+.stabn 0x44,0,876,     37712
+.stabn 0x44,0,877,     37713
+.stabn 0x44,0,878,     37714
+.stabn 0x44,0,880,     37715
+.stabn 0x44,0,881,     37716
+.stabn 0x44,0,882,     37717
+.stabn 0x44,0,884,     37718
+.stabn 0x44,0,886,     37719
+.stabn 0x44,0,887,     37720
+.stabn 0x44,0,891,     37721
+.stabn 0x44,0,892,     37722
+.stabn 0x44,0,893,     37723
+.stabn 0x44,0,895,     37724
+.stabn 0x44,0,896,     37725
+.stabn 0x44,0,897,     37726
+.stabn 0x44,0,899,     37727
+.stabn 0x44,0,900,     37728
+.stabn 0xe0,0,0,     37729
+.stabs "C:/Documents and Settings/Administrator/×ÀÃæ/voice/voice/",0x64,0,3,         0
+.stabs "C:/Documents and Settings/Administrator/×/300Ã/346/voice/voice/isr.c",0x64,0,3,         0
+.stabs "int:t1=r1;-32768;32767;",128,0,0,0
+.stabs "char:t2=r2;0;127;",128,0,0,0
+.stabs "long int:t3=r3;-2147483648;2147483647;",128,0,0,0
+.stabs "unsigned int:t4=r4;0;65535;",128,0,0,0
+.stabs "long unsigned int:t5=r5;0;4294967295;",128,0,0,0
+.stabs "long long int:t6=r6;-2147483648;2147483647;",128,0,0,0
+.stabs "long long unsigned int:t7=r7;0;4294967295;",128,0,0,0
+.stabs "short int:t8=r8;-32768;32767;",128,0,0,0
+.stabs "short unsigned int:t9=r9;0;65535;",128,0,0,0
+.stabs "signed char:t10=r10;-32768;32767;",128,0,0,0
+.stabs "unsigned char:t11=r11;0;65535;",128,0,0,0
+.stabs "float:t12=r1;2;0;",128,0,0,0
+.stabs "double:t13=r1;2;0;",128,0,0,0
+.stabs "long double:t14=r1;2;0;",128,0,0,0
+.stabs "complex int:t15=s2real:1,0,16;imag:1,16,16;;",128,0,0,0
+.stabs "complex float:t16=r16;2;0;",128,0,0,0
+.stabs "complex double:t17=r17;2;0;",128,0,0,0
+.stabs "complex long double:t18=r18;2;0;",128,0,0,0
+.stabs "void:t19=19",128,0,0,0
+.stabs "FIQ:F19",36,0,0,     32777
+.stabn 0x44,0,17,         0
+.stabn 0x44,0,18,         5
+.stabn 0x44,0,20,        13
+.stabn 0x44,0,21,        17
+.stabn 0x44,0,22,        19
+.stabn 0x44,0,23,        21
+.stabn 0x44,0,24,        29
+.stabn 0x44,0,26,        35
+.stabn 0x44,0,27,        39
+.stabn 0x44,0,27,        39
+.stabf         41
+.stabs "IRQ5:F19",36,0,0,     32818
+.stabn 0x44,0,32,         0
+.stabn 0x44,0,33,         5
+.stabn 0x44,0,35,        13
+.stabn 0x44,0,36,        18
+.stabn 0x44,0,37,        24
+.stabn 0x44,0,38,        27
+.stabn 0x44,0,39,        33
+.stabn 0x44,0,40,        38
+.stabn 0x44,0,41,        44
+.stabn 0x44,0,42,        47
+.stabn 0x44,0,43,        50
+.stabn 0x44,0,46,        52
+.stabn 0x44,0,48,        55
+.stabn 0x44,0,48,        55
+.stabf         57
+.stabs "C:/Documents and Settings/Administrator/×ÀÃæ/voice/voice/",0x64,0,3,     38393
+.stabs "C:/Documents and Settings/Administrator/×/300Ã/346/voice/voice/main.c",0x64,0,3,     38393
+.stabs "int:t1=r1;-32768;32767;",128,0,0,0
+.stabs "char:t2=r2;0;127;",128,0,0,0
+.stabs "long int:t3=r3;-2147483648;2147483647;",128,0,0,0
+.stabs "unsigned int:t4=r4;0;65535;",128,0,0,0
+.stabs "long unsigned int:t5=r5;0;4294967295;",128,0,0,0
+.stabs "long long int:t6=r6;-2147483648;2147483647;",128,0,0,0
+.stabs "long long unsigned int:t7=r7;0;4294967295;",128,0,0,0
+.stabs "short int:t8=r8;-32768;32767;",128,0,0,0
+.stabs "short unsigned int:t9=r9;0;65535;",128,0,0,0
+.stabs "signed char:t10=r10;-32768;32767;",128,0,0,0
+.stabs "unsigned char:t11=r11;0;65535;",128,0,0,0
+.stabs "float:t12=r1;2;0;",128,0,0,0
+.stabs "double:t13=r1;2;0;",128,0,0,0
+.stabs "long double:t14=r1;2;0;",128,0,0,0
+.stabs "complex int:t15=s2real:1,0,16;imag:1,16,16;;",128,0,0,0
+.stabs "complex float:t16=r16;2;0;",128,0,0,0
+.stabs "complex double:t17=r17;2;0;",128,0,0,0
+.stabs "complex long double:t18=r18;2;0;",128,0,0,0
+.stabs "void:t19=19",128,0,0,0
+.stabs "hour:G4",32,0,0,       567
+.stabs "min:G1",32,0,0,       568
+.stabs "sec:G4",32,0,0,       569
+.stabs "nhour:G4",32,0,0,       570
+.stabs "nmin:G1",32,0,0,       571
+.stabs "is_nao:G11",32,0,0,       572
+.stabs "tep:G1",32,0,0,       573
+.stabs "temperatureflag:G11",32,0,0,       574
+.stabs "isrInit:F19",36,0,0,     38393
+.stabn 0x44,0,21,         0
+.stabn 0x44,0,22,         5
+.stabn 0x44,0,23,         6
+.stabn 0x44,0,25,        12
+.stabn 0x44,0,26,        13
+.stabn 0x44,0,26,        13
+.stabf         15
+.stabs "MeatureTemp:F19",36,0,0,     38408
+.stabn 0x44,0,29,         0
+.stabn 0x44,0,30,         7
+.stabn 0x44,0,32,        13
+.stabn 0x44,0,33,        17
+.stabn 0x44,0,34,        23
+.stabn 0x44,0,35,        26
+.stabn 0x44,0,36,        30
+.stabn 0x44,0,37,        42
+.stabn 0x44,0,38,        70
+.stabn 0x44,0,39,        77
+.stabn 0x44,0,40,        77
+.stabn 0x44,0,40,        77
+.stabn 0xc0,0,0,         7
+.stabn 0xc0,0,0,        13
+.stabs "temperature:12",128,0,0,0
+.stabs "shownum:1",128,0,0,2
+.stabn 0xe0,0,0,        77
+.stabn 0xe0,0,0,        77
+.stabf         80
+.stabs "main:F19",36,0,0,     38488
+.stabn 0x44,0,42,         0
+.stabn 0x44,0,43,         7
+.stabn 0x44,0,44,        11
+.stabn 0x44,0,46,        17
+.stabn 0x44,0,47,        19
+.stabn 0x44,0,48,        21
+.stabn 0x44,0,49,        23
+.stabn 0x44,0,51,        33
+.stabn 0x44,0,52,        35
+.stabn 0x44,0,53,        38
+.stabn 0x44,0,54,        40
+.stabn 0x44,0,55,        46
+.stabn 0x44,0,56,        56
+.stabn 0x44,0,57,        61
+.stabn 0x44,0,59,        65
+.stabn 0x44,0,60,        67
+.stabn 0x44,0,61,        69
+.stabn 0x44,0,62,        71
+.stabn 0x44,0,63,        77
+.stabn 0x44,0,66,        94
+.stabn 0x44,0,68,       109
+.stabn 0x44,0,69,       111
+.stabn 0x44,0,70,       114
+.stabn 0x44,0,73,       116
+.stabn 0x44,0,73,       116
+.stabf        119
+.stabs "C:/Documents and Settings/Administrator/×ÀÃæ/voice/voice/",0x64,0,3,     37729
+.stabs "C:/Documents and Settings/Administrator/×/300Ã/346/voice/voice/playsound.c",0x64,0,3,     37729
+.stabs "int:t1=r1;-32768;32767;",128,0,0,0
+.stabs "char:t2=r2;0;127;",128,0,0,0
+.stabs "long int:t3=r3;-2147483648;2147483647;",128,0,0,0
+.stabs "unsigned int:t4=r4;0;65535;",128,0,0,0
+.stabs "long unsigned int:t5=r5;0;4294967295;",128,0,0,0
+.stabs "long long int:t6=r6;-2147483648;2147483647;",128,0,0,0
+.stabs "long long unsigned int:t7=r7;0;4294967295;",128,0,0,0
+.stabs "short int:t8=r8;-32768;32767;",128,0,0,0
+.stabs "short unsigned int:t9=r9;0;65535;",128,0,0,0
+.stabs "signed char:t10=r10;-32768;32767;",128,0,0,0
+.stabs "unsigned char:t11=r11;0;65535;",128,0,0,0
+.stabs "float:t12=r1;2;0;",128,0,0,0
+.stabs "double:t13=r1;2;0;",128,0,0,0
+.stabs "long double:t14=r1;2;0;",128,0,0,0
+.stabs "complex int:t15=s2real:1,0,16;imag:1,16,16;;",128,0,0,0
+.stabs "complex float:t16=r16;2;0;",128,0,0,0
+.stabs "complex double:t17=r17;2;0;",128,0,0,0
+.stabs "complex long double:t18=r18;2;0;",128,0,0,0
+.stabs "void:t19=19",128,0,0,0
+.stabs "PlaySnd_Auto:F19",36,0,0,     37729
+.stabn 0x44,0,5,         0
+.stabn 0x44,0,7,         7
+.stabn 0x44,0,8,        12
+.stabn 0x44,0,9,        27
+.stabn 0x44,0,11,        37
+.stabn 0x44,0,12,        39
+.stabn 0x44,0,13,        42
+.stabn 0x44,0,14,        44
+.stabn 0x44,0,15,        46
+.stabn 0x44,0,17,        47
+.stabn 0x44,0,17,        47
+.stabs "uiSndIndex:p4",160,0,0,4
+.stabs "uiDAC_Chanl:p4",160,0,0,5
+.stabf         50
+.stabs "PlayClock:F19",36,0,0,     37779
+.stabn 0x44,0,21,         0
+.stabn 0x44,0,22,         7
+.stabn 0x44,0,23,        16
+.stabn 0x44,0,24,        30
+.stabn 0x44,0,25,        48
+.stabn 0x44,0,27,        66
+.stabn 0x44,0,28,        72
+.stabn 0x44,0,29,        82
+.stabn 0x44,0,31,        91
+.stabn 0x44,0,32,        98
+.stabn 0x44,0,33,       105
+.stabn 0x44,0,36,       107
+.stabn 0x44,0,37,       114
+.stabn 0x44,0,38,       121
+.stabn 0x44,0,41,       132
+.stabn 0x44,0,43,       139
+.stabn 0x44,0,45,       149
+.stabn 0x44,0,46,       152
+.stabn 0x44,0,47,       154
+.stabn 0x44,0,49,       163
+.stabn 0x44,0,50,       174
+.stabn 0x44,0,51,       181
+.stabn 0x44,0,52,       183
+.stabn 0x44,0,54,       192
+.stabn 0x44,0,55,       203
+.stabn 0x44,0,58,       205
+.stabn 0x44,0,59,       216
+.stabn 0x44,0,60,       223
+.stabn 0x44,0,62,       234
+.stabn 0x44,0,62,       234
+.stabs "h:p11",160,0,0,11
+.stabs "m:p11",160,0,0,12
+.stabn 0xc0,0,0,         7
+.stabs "hhour:11",128,0,0,0
+.stabs "lhour:11",128,0,0,1
+.stabs "hmin:11",128,0,0,2
+.stabs "lmin:11",128,0,0,3
+.stabn 0xe0,0,0,       234
+.stabf        237
+.stabs "Playtemp:F19",36,0,0,     38016
+.stabn 0x44,0,65,         0
+.stabn 0x44,0,66,         7
+.stabn 0x44,0,67,        16
+.stabn 0x44,0,68,        30
+.stabn 0x44,0,69,        37
+.stabn 0x44,0,71,        43
+.stabn 0x44,0,72,        51
+.stabn 0x44,0,73,        53
+.stabn 0x44,0,75,        62
+.stabn 0x44,0,76,        69
+.stabn 0x44,0,77,        76
+.stabn 0x44,0,80,        78
+.stabn 0x44,0,81,        85
+.stabn 0x44,0,82,        92
+.stabn 0x44,0,84,       103
+.stabn 0x44,0,86,       110
+.stabn 0x44,0,86,       110
+.stabs "temperature:p11",160,0,0,7
+.stabn 0xc0,0,0,         7
+.stabs "htemp:11",128,0,0,0
+.stabs "ltemp:11",128,0,0,1
+.stabn 0xe0,0,0,       110
+.stabf        113
+.stabs "C:/Documents and Settings/Administrator/×ÀÃæ/voice/voice/",0x64,0,3,     36547
+.stabs "C:/Documents and Settings/Administrator/×/300Ã/346/voice/voice/system.c",0x64,0,3,     36547
+.stabs "int:t1=r1;-32768;32767;",128,0,0,0
+.stabs "char:t2=r2;0;127;",128,0,0,0
+.stabs "long int:t3=r3;-2147483648;2147483647;",128,0,0,0
+.stabs "unsigned int:t4=r4;0;65535;",128,0,0,0
+.stabs "long unsigned int:t5=r5;0;4294967295;",128,0,0,0
+.stabs "long long int:t6=r6;-2147483648;2147483647;",128,0,0,0
+.stabs "long long unsigned int:t7=r7;0;4294967295;",128,0,0,0
+.stabs "short int:t8=r8;-32768;32767;",128,0,0,0
+.stabs "short unsigned int:t9=r9;0;65535;",128,0,0,0
+.stabs "signed char:t10=r10;-32768;32767;",128,0,0,0
+.stabs "unsigned char:t11=r11;0;65535;",128,0,0,0
+.stabs "float:t12=r1;2;0;",128,0,0,0
+.stabs "double:t13=r1;2;0;",128,0,0,0
+.stabs "long double:t14=r1;2;0;",128,0,0,0
+.stabs "complex int:t15=s2real:1,0,16;imag:1,16,16;;",128,0,0,0
+.stabs "complex float:t16=r16;2;0;",128,0,0,0
+.stabs "complex double:t17=r17;2;0;",128,0,0,0
+.stabs "complex long double:t18=r18;2;0;",128,0,0,0
+.stabs "void:t19=19",128,0,0,0
+.stabs "num:G4",32,0,0,       583
+.stabs "adjustflag:G11",32,0,0,       584
+.stabs "nflag:G11",32,0,0,       585
+.stabs "DelayTime:F19",36,0,0,     36547
+.stabn 0x44,0,18,         0
+.stabn 0x44,0,19,         6
+.stabn 0x44,0,20,         6
+.stabn 0x44,0,21,        16
+.stabn 0x44,0,22,        33
+.stabn 0x44,0,21,        36
+.stabn 0x44,0,20,        54
+.stabn 0x44,0,23,        60
+.stabn 0x44,0,23,        60
+.stabs "ii:p1",160,0,0,6
+.stabn 0xc0,0,0,         6
+.stabs "aa:4",128,0,0,0
+.stabs "bb:4",128,0,0,1
+.stabn 0xe0,0,0,        60
+.stabf         63
+.stabs "clock:F19",36,0,0,     36610
+.stabn 0x44,0,25,         0
+.stabn 0x44,0,26,         5
+.stabn 0x44,0,28,        11
+.stabn 0x44,0,29,        14
+.stabn 0x44,0,30,        23
+.stabn 0x44,0,31,        41
+.stabn 0x44,0,33,        47
+.stabn 0x44,0,35,        53
+.stabn 0x44,0,36,        56
+.stabn 0x44,0,38,        65
+.stabn 0x44,0,40,        71
+.stabn 0x44,0,41,        74
+.stabn 0x44,0,43,        83
+.stabn 0x44,0,45,        89
+.stabn 0x44,0,46,        92
+.stabn 0x44,0,49,        98
+.stabn 0x44,0,49,        98
+.stabf        100
+.stabs "AdjustInit:F19",36,0,0,     36710
+.stabn 0x44,0,53,         0
+.stabn 0x44,0,54,         5
+.stabn 0x44,0,55,        11
+.stabn 0x44,0,56,        17
+.stabn 0x44,0,57,        23
+.stabn 0x44,0,57,        23
+.stabf         25
+.stabs "ModeSel:F19",36,0,0,     36735
+.stabn 0x44,0,64,         0
+.stabn 0x44,0,65,         7
+.stabn 0x44,0,67,        15
+.stabn 0x44,0,68,        21
+.stabn 0x44,0,70,        27
+.stabn 0x44,0,71,        37
+.stabn 0x44,0,72,        42
+.stabn 0x44,0,73,        54
+.stabn 0x44,0,76,        66
+.stabn 0x44,0,78,        74
+.stabn 0x44,0,80,        80
+.stabn 0x44,0,83,        86
+.stabn 0x44,0,84,        92
+.stabn 0x44,0,85,       102
+.stabn 0x44,0,90,       107
+.stabn 0x44,0,91,       119
+.stabn 0x44,0,92,       131
+.stabn 0x44,0,94,       137
+.stabn 0x44,0,96,       140
+.stabn 0x44,0,98,       143
+.stabn 0x44,0,99,       149
+.stabn 0x44,0,100,       159
+.stabn 0x44,0,105,       164
+.stabn 0x44,0,107,       172
+.stabn 0x44,0,108,       178
+.stabn 0x44,0,111,       190
+.stabn 0x44,0,113,       199
+.stabn 0x44,0,114,       205
+.stabn 0x44,0,115,       210
+.stabn 0x44,0,116,       216
+.stabn 0x44,0,118,       221
+.stabn 0x44,0,119,       227
+.stabn 0x44,0,120,       232
+.stabn 0x44,0,121,       238
+.stabn 0x44,0,123,       243
+.stabn 0x44,0,125,       251
+.stabn 0x44,0,126,       257
+.stabn 0x44,0,129,       269
+.stabn 0x44,0,131,       275
+.stabn 0x44,0,132,       281
+.stabn 0x44,0,133,       286
+.stabn 0x44,0,134,       292
+.stabn 0x44,0,135,       297
+.stabn 0x44,0,137,       303
+.stabn 0x44,0,139,       308
+.stabn 0x44,0,141,       314
+.stabn 0x44,0,145,       319
+.stabn 0x44,0,147,       325
+.stabn 0x44,0,148,       328
+.stabn 0x44,0,150,       337
+.stabn 0x44,0,152,       344
+.stabn 0x44,0,154,       347
+.stabn 0x44,0,156,       353
+.stabn 0x44,0,157,       356
+.stabn 0x44,0,159,       362
+.stabn 0x44,0,161,       368
+.stabn 0x44,0,162,       371
+.stabn 0x44,0,165,       377
+.stabn 0x44,0,167,       383
+.stabn 0x44,0,168,       386
+.stabn 0x44,0,170,       395
+.stabn 0x44,0,172,       402
+.stabn 0x44,0,174,       405
+.stabn 0x44,0,176,       411
+.stabn 0x44,0,177,       414
+.stabn 0x44,0,179,       420
+.stabn 0x44,0,181,       426
+.stabn 0x44,0,182,       429
+.stabn 0x44,0,184,       435
+.stabn 0x44,0,185,       445
+.stabn 0x44,0,186,       450
+.stabn 0x44,0,186,       450
+.stabf        453
+.stabs "nclock:F19",36,0,0,     37188
+.stabn 0x44,0,189,         0
+.stabn 0x44,0,190,         7
+.stabn 0x44,0,192,        27
+.stabn 0x44,0,194,        37
+.stabn 0x44,0,195,        46
+.stabn 0x44,0,196,        49
+.stabn 0x44,0,197,        55
+.stabn 0x44,0,198,        57
+.stabn 0x44,0,200,        60
+.stabn 0x44,0,200,        60
+.stabf         63
+.stabs "C:/Documents and Settings/Administrator/×ÀÃæ/voice/voice/",0x64,0,3,     35558
+.stabs "C:/Documents and Settings/Administrator/×/300Ã/346/voice/voice/disp.c",0x64,0,3,     35558
+.stabs "int:t1=r1;-32768;32767;",128,0,0,0
+.stabs "char:t2=r2;0;127;",128,0,0,0
+.stabs "long int:t3=r3;-2147483648;2147483647;",128,0,0,0
+.stabs "unsigned int:t4=r4;0;65535;",128,0,0,0
+.stabs "long unsigned int:t5=r5;0;4294967295;",128,0,0,0
+.stabs "long long int:t6=r6;-2147483648;2147483647;",128,0,0,0
+.stabs "long long unsigned int:t7=r7;0;4294967295;",128,0,0,0
+.stabs "short int:t8=r8;-32768;32767;",128,0,0,0
+.stabs "short unsigned int:t9=r9;0;65535;",128,0,0,0
+.stabs "signed char:t10=r10;-32768;32767;",128,0,0,0
+.stabs "unsigned char:t11=r11;0;65535;",128,0,0,0
+.stabs "float:t12=r1;2;0;",128,0,0,0
+.stabs "double:t13=r1;2;0;",128,0,0,0
+.stabs "long double:t14=r1;2;0;",128,0,0,0
+.stabs "complex int:t15=s2real:1,0,16;imag:1,16,16;;",128,0,0,0
+.stabs "complex float:t16=r16;2;0;",128,0,0,0
+.stabs "complex double:t17=r17;2;0;",128,0,0,0
+.stabs "complex long double:t18=r18;2;0;",128,0,0,0
+.stabs "void:t19=19",128,0,0,0
+.stabs "apm:G4",32,0,0,       582
+.stabs "dian:G4",32,0,0,       580
+.stabs "shan_flag:G11",32,0,0,       581
+.stabs "disp_Init:F19",36,0,0,     35558
+.stabn 0x44,0,8,         0
+.stabn 0x44,0,9,         5
+.stabn 0x44,0,10,        11
+.stabn 0x44,0,11,        17
+.stabn 0x44,0,12,        21
+.stabn 0x44,0,13,        27
+.stabn 0x44,0,14,        33
+.stabn 0x44,0,15,        37
+.stabn 0x44,0,15,        37
+.stabf         39
+.stabs "disp:F19",36,0,0,     35597
+.stabn 0x44,0,17,         0
+.stabn 0x44,0,18,         7
+.stabn 0x44,0,19,        17
+.stabn 0x44,0,20,        30
+.stabn 0x44,0,23,        42
+.stabn 0x44,0,24,        64
+.stabn 0x44,0,25,        86
+.stabn 0x44,0,26,       112
+.stabn 0x44,0,27,       138
+.stabn 0x44,0,28,       164
+.stabn 0x44,0,29,       190
+.stabn 0x44,0,30,       216
+.stabn 0x44,0,32,       239
+.stabn 0x44,0,34,       245
+.stabn 0x44,0,36,       251
+.stabn 0x44,0,38,       268
+.stabn 0x44,0,39,       281
+.stabn 0x44,0,40,       305
+.stabn 0x44,0,41,       316
+.stabn 0x44,0,36,       321
+.stabn 0x44,0,44,       338
+.stabn 0x44,0,46,       355
+.stabn 0x44,0,47,       368
+.stabn 0x44,0,48,       392
+.stabn 0x44,0,49,       403
+.stabn 0x44,0,44,       408
+.stabn 0x44,0,51,       425
+.stabn 0x44,0,52,       427
+.stabn 0x44,0,55,       433
+.stabn 0x44,0,57,       450
+.stabn 0x44,0,58,       463
+.stabn 0x44,0,59,       487
+.stabn 0x44,0,60,       498
+.stabn 0x44,0,55,       503
+.stabn 0x44,0,62,       520
+.stabn 0x44,0,64,       526
+.stabn 0x44,0,66,       543
+.stabn 0x44,0,67,       556
+.stabn 0x44,0,68,       580
+.stabn 0x44,0,69,       591
+.stabn 0x44,0,64,       596
+.stabn 0x44,0,72,       613
+.stabn 0x44,0,74,       615
+.stabn 0x44,0,76,       632
+.stabn 0x44,0,77,       645
+.stabn 0x44,0,78,       669
+.stabn 0x44,0,79,       680
+.stabn 0x44,0,74,       685
+.stabn 0x44,0,81,       702
+.stabn 0x44,0,83,       719
+.stabn 0x44,0,84,       732
+.stabn 0x44,0,85,       756
+.stabn 0x44,0,86,       767
+.stabn 0x44,0,81,       772
+.stabn 0x44,0,88,       789
+.stabn 0x44,0,89,       795
+.stabn 0x44,0,91,       804
+.stabn 0x44,0,92,       811
+.stabn 0x44,0,93,       816
+.stabn 0x44,0,95,       822
+.stabn 0x44,0,96,       826
+.stabn 0x44,0,97,       830
+.stabn 0x44,0,98,       835
+.stabn 0x44,0,99,       839
+.stabn 0x44,0,100,       843
+.stabn 0x44,0,102,       848
+.stabn 0x44,0,103,       851
+.stabn 0x44,0,104,       854
+.stabn 0x44,0,104,       854
+.stabs "t:p1",160,0,0,56
+.stabs "h:p1",160,0,0,57
+.stabs "m:p1",160,0,0,58
+.stabs "s:p1",160,0,0,59
+.stabn 0xc0,0,0,         7
+.stabs "d:20=ar1;0;11;1",128,0,0,0
+.stabs "dig:21=ar1;0;7;1",128,0,0,12
+.stabs "i:1",128,0,0,20
+.stabs "mm:1",128,0,0,21
+.stabs "dis:22=ar1;0;7;12",128,0,0,22
+.stabn 0xe0,0,0,       854
+.stabf        857
+.stabs "disp_delay:F19",36,0,0,     36454
+.stabn 0x44,0,106,         0
+.stabn 0x44,0,107,         6
+.stabn 0x44,0,108,        14
+.stabn 0x44,0,110,        24
+.stabn 0x44,0,111,        42
+.stabn 0x44,0,110,        45
+.stabn 0x44,0,108,        63
+.stabn 0x44,0,113,        69
+.stabn 0x44,0,113,        69
+.stabs "j:p1",160,0,0,6
+.stabn 0xc0,0,0,         6
+.stabs "DelayValuel:1",128,0,0,0
+.stabs "DelayValue2:1",128,0,0,1
+.stabn 0xe0,0,0,        69
+.stabf         72
+.stabs "disp_ID:F19",36,0,0,     36526
+.stabn 0x44,0,116,         0
+.stabn 0x44,0,117,         7
+.stabn 0x44,0,118,        18
+.stabn 0x44,0,118,        18
+.stabf         21
+.stabs "C:/Documents and Settings/Administrator/×ÀÃæ/voice/voice/",0x64,0,3,     38129
+.stabs "C:/Documents and Settings/Administrator/×/300Ã/346/voice/voice/ADConv.c",0x64,0,3,     38129
+.stabs "int:t1=r1;-32768;32767;",128,0,0,0
+.stabs "char:t2=r2;0;127;",128,0,0,0
+.stabs "long int:t3=r3;-2147483648;2147483647;",128,0,0,0
+.stabs "unsigned int:t4=r4;0;65535;",128,0,0,0
+.stabs "long unsigned int:t5=r5;0;4294967295;",128,0,0,0
+.stabs "long long int:t6=r6;-2147483648;2147483647;",128,0,0,0
+.stabs "long long unsigned int:t7=r7;0;4294967295;",128,0,0,0
+.stabs "short int:t8=r8;-32768;32767;",128,0,0,0
+.stabs "short unsigned int:t9=r9;0;65535;",128,0,0,0
+.stabs "signed char:t10=r10;-32768;32767;",128,0,0,0
+.stabs "unsigned char:t11=r11;0;65535;",128,0,0,0
+.stabs "float:t12=r1;2;0;",128,0,0,0
+.stabs "double:t13=r1;2;0;",128,0,0,0
+.stabs "long double:t14=r1;2;0;",128,0,0,0
+.stabs "complex int:t15=s2real:1,0,16;imag:1,16,16;;",128,0,0,0
+.stabs "complex float:t16=r16;2;0;",128,0,0,0
+.stabs "complex double:t17=r17;2;0;",128,0,0,0
+.stabs "complex long double:t18=r18;2;0;",128,0,0,0
+.stabs "void:t19=19",128,0,0,0
+.stabs "uiData:G5",32,0,0,       575
+.stabs "i:G4",32,0,0,       577
+.stabs "fVoltage:G12",32,0,0,       578
+.stabs "ADInit:F19",36,0,0,     38129
+.stabn 0x44,0,8,         0
+.stabn 0x44,0,9,         5
+.stabn 0x44,0,10,         8
+.stabn 0x44,0,11,        11
+.stabn 0x44,0,12,        19
+.stabn 0x44,0,13,        25
+.stabn 0x44,0,14,        31
+.stabn 0x44,0,14,        31
+.stabf         33
+.stabs "AD:F4",36,0,0,     38162
+.stabn 0x44,0,16,         0
+.stabn 0x44,0,17,         6
+.stabn 0x44,0,18,         6
+.stabn 0x44,0,20,        16
+.stabn 0x44,0,21,        19
+.stabn 0x44,0,22,        21
+.stabn 0x44,0,23,        24
+.stabn 0x44,0,24,        30
+.stabn 0x44,0,24,        30
+.stabn 0xc0,0,0,         6
+.stabs "uiData:4",128,0,0,0
+.stabn 0xe0,0,0,        30
+.stabf         33
+.stabs "ADtoVoltage:F12",36,0,0,     38195
+.stabn 0x44,0,26,         0
+.stabn 0x44,0,27,         7
+.stabn 0x44,0,28,         9
+.stabn 0x44,0,30,        20
+.stabn 0x44,0,31,        23
+.stabn 0x44,0,28,        64
+.stabn 0x44,0,33,        71
+.stabn 0x44,0,34,        85
+.stabn 0x44,0,35,       168
+.stabn 0x44,0,36,       184
+.stabn 0x44,0,37,       187
+.stabn 0x44,0,38,       195
+.stabn 0x44,0,38,       195
+.stabf        198

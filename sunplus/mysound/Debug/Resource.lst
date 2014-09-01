@@ -1,0 +1,28 @@
+Sunplus u'nSP Assembler - Ver. 1.14.3.1
+              Listing File Has Been Relocated
+                            	
+                            	// Resource Table
+                            	// Created by IDE, Do not modify this table
+                            	
+00008024                    	.TEXT
+                            	.public _RES_Table;
+                            	.external __RES_2_16K_sa
+                            	.public _RES_2_16K_SA;
+                            	.external __RES_2_16K_ea;
+                            	.public _RES_2_16K_EA;
+                            	
+                            	
+                            	_RES_Table:
+                            	
+                            	_RES_2_16K_SA:
+00008024 D0 8F 00 00        		.DW offset __RES_2_16K_sa,seg __RES_2_16K_sa;
+                            	_RES_2_16K_EA:
+00008026 B3 E2 00 00        		.DW offset __RES_2_16K_ea,seg __RES_2_16K_ea;
+                            	
+                            	
+                            	// End Table
+                            	.public T_SACM_A2000_SpeechTable
+                            	T_SACM_A2000_SpeechTable:
+00008028 24 80              		.dw _RES_2_16K_SA;
+0 error(s), 0 warning(s).
+

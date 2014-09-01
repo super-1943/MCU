@@ -1,0 +1,165 @@
+# Begin Project
+# Begin SubItem "ex3_S480_Auto  Resources"
+# Begin Source File
+SOURCE=voice\0.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_0_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\1.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_1_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\2.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_2_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\3.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_3_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\4.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_4_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\5.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_5_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\6.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_6_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\7.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_7_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\8.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_8_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\9.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_9_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\10.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_10_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\dian.72k
+USEPARAM=FALSE
+PARAM=
+ID=RES_DIAN_72K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\fen.72k
+USEPARAM=FALSE
+PARAM=
+ID=RES_FEN_72K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\WD.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_WD_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\ssd.72k
+USEPARAM=FALSE
+PARAM=
+ID=RES_SSD_72K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\GX.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_GX_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\TR.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_TR_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\RUH.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_RUH_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\TQ.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_TQ_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\XZ.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_XZ_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\shoot1.48k
+USEPARAM=FALSE
+PARAM=
+ID=RES_SHOOT1_48K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\music2.72k
+USEPARAM=FALSE
+PARAM=
+ID=RES_MUSIC2_72K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=voice\music1.72k
+USEPARAM=FALSE
+PARAM=
+ID=RES_MUSIC1_72K
+EXPORT=3
+# End Source File
+# End SubItem
+# End Project

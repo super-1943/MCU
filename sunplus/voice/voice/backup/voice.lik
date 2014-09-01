@@ -1,0 +1,114 @@
+Version: 3.0
+Options: m37
+Obj: "D:\Program Files\Sunplus\unSP IDE 2.6.2D\startupcode\startupD.obj"
+Obj: "D:\sunplus\voice\Debug\Resource.obj"
+Obj: "D:\sunplus\voice\Debug\hardware.obj"
+Obj: "D:\sunplus\voice\Debug\isr.obj"
+Obj: "D:\sunplus\voice\Debug\main.obj"
+Obj: "D:\sunplus\voice\Debug\playsound.obj"
+Obj: "D:\sunplus\voice\Debug\system.obj"
+Obj: "D:\sunplus\voice\Debug\disp.obj"
+Obj: "D:\sunplus\voice\Debug\0_48k.res"
+Obj: "D:\sunplus\voice\Debug\1_48k.res"
+Obj: "D:\sunplus\voice\Debug\2_48k.res"
+Obj: "D:\sunplus\voice\Debug\3_48k.res"
+Obj: "D:\sunplus\voice\Debug\4_48k.res"
+Obj: "D:\sunplus\voice\Debug\5_48k.res"
+Obj: "D:\sunplus\voice\Debug\6_48k.res"
+Obj: "D:\sunplus\voice\Debug\7_48k.res"
+Obj: "D:\sunplus\voice\Debug\8_48k.res"
+Obj: "D:\sunplus\voice\Debug\9_48k.res"
+Obj: "D:\sunplus\voice\Debug\10_48k.res"
+Obj: "D:\sunplus\voice\Debug\11_72k.res"
+Obj: "D:\sunplus\voice\Debug\hjwd_48k.res"
+Obj: "D:\sunplus\voice\Debug\shd_48k.res"
+Obj: "D:\sunplus\voice\Debug\T064_48k.res"
+Obj: "D:\sunplus\voice\Debug\GX_48k.res"
+Lib: "D:\sunplus\voice\.\sacmv26e.lib"
+Lib: "D:\Program Files\Sunplus\unSP IDE 2.6.2D\library\CMacro\CMacro1016.lib"
+Output: "D:\sunplus\voice\Debug\voice.S37"
+;Locate: unSP_StartUp in "startupD.obj" at 8009 
+;Align: unSP_StartUp in "startupD.obj" with 0 
+;Locate: IRAM in "hardware.obj" at 9427  linkat 1A4 
+;Align: IRAM in "hardware.obj" with 0 
+;Locate: IRAM in "isr.obj" at 94BA  linkat 237 
+;Align: IRAM in "isr.obj" with 0 
+;Locate: IRAM in "main.obj" at 94BB  linkat 238 
+;Align: IRAM in "main.obj" with 0 
+;Locate: IRAM in "system.obj" at 94BE  linkat 23B 
+;Align: IRAM in "system.obj" with 0 
+;Locate: IRAM in "disp.obj" at 94C0  linkat 23D 
+;Align: IRAM in "disp.obj" with 0 
+;Locate: IRAM in "S480" of "sacmv26e.lib"  at 94C2  linkat 23F 
+;Align: IRAM in "S480" of "sacmv26e.lib"  with 0 
+;Locate: OVERLAP_RAM_BLOCK in "S480" of "sacmv26e.lib"  at 1 
+;Align: OVERLAP_RAM_BLOCK in "S480" of "sacmv26e.lib"  with 0 
+;Locate: CODE in "hardware.obj" at 8D5C 
+;Align: CODE in "hardware.obj" with 0 
+;Locate: CODE in "main.obj" at 9207 
+;Align: CODE in "main.obj" with 0 
+;Locate: CODE in "playsound.obj" at 9254 
+;Align: CODE in "playsound.obj" with 0 
+;Locate: CODE in "system.obj" at 8F3A 
+;Align: CODE in "system.obj" with 0 
+;Locate: CODE in "disp.obj" at 8AD8 
+;Align: CODE in "disp.obj" with 0 
+;Locate: __sn_section_RES_0_48K in "0_48k.res" at 9B84 
+;Align: __sn_section_RES_0_48K in "0_48k.res" with 0 
+;Locate: __sn_section_RES_1_48K in "1_48k.res" at 9C98 
+;Align: __sn_section_RES_1_48K in "1_48k.res" with 0 
+;Locate: __sn_section_RES_2_48K in "2_48k.res" at 9D22 
+;Align: __sn_section_RES_2_48K in "2_48k.res" with 0 
+;Locate: __sn_section_RES_3_48K in "3_48k.res" at 9878 
+;Align: __sn_section_RES_3_48K in "3_48k.res" with 0 
+;Locate: __sn_section_RES_4_48K in "4_48k.res" at 991D 
+;Align: __sn_section_RES_4_48K in "4_48k.res" with 0 
+;Locate: __sn_section_RES_5_48K in "5_48k.res" at 9DA3 
+;Align: __sn_section_RES_5_48K in "5_48k.res" with 0 
+;Locate: __sn_section_RES_6_48K in "6_48k.res" at 9AF1 
+;Align: __sn_section_RES_6_48K in "6_48k.res" with 0 
+;Locate: __sn_section_RES_7_48K in "7_48k.res" at 9A5E 
+;Align: __sn_section_RES_7_48K in "7_48k.res" with 0 
+;Locate: __sn_section_RES_8_48K in "8_48k.res" at 9E9C 
+;Align: __sn_section_RES_8_48K in "8_48k.res" with 0 
+;Locate: __sn_section_RES_9_48K in "9_48k.res" at 99C2 
+;Align: __sn_section_RES_9_48K in "9_48k.res" with 0 
+;Locate: __sn_section_RES_10_48K in "10_48k.res" at 9C0E 
+;Align: __sn_section_RES_10_48K in "10_48k.res" with 0 
+;Locate: __sn_section_RES_11_72K in "11_72k.res" at 96DD 
+;Align: __sn_section_RES_11_72K in "11_72k.res" with 0 
+;Locate: __sn_section_RES_HJWD_48K in "hjwd_48k.res" at 94C4 
+;Align: __sn_section_RES_HJWD_48K in "hjwd_48k.res" with 0 
+;Locate: __sn_section_RES_SHD_48K in "shd_48k.res" at 95E7 
+;Align: __sn_section_RES_SHD_48K in "shd_48k.res" with 0 
+;Locate: __sn_section_RES_T064_48K in "T064_48k.res" at 9E24 
+;Align: __sn_section_RES_T064_48K in "T064_48k.res" with 0 
+;Locate: __sn_section_RES_GX_48K in "GX_48k.res" at 97AF 
+;Align: __sn_section_RES_GX_48K in "GX_48k.res" with 0 
+;Locate: CODE in "S480" of "sacmv26e.lib"  at 80DE 
+;Align: CODE in "S480" of "sacmv26e.lib"  with 0 
+;Locate: CODE in "./modu1" of "CMacro1016.lib"  at 91AA 
+;Align: CODE in "./modu1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "./blockcopy" of "CMacro1016.lib"  at 9411 
+;Align: CODE in "./blockcopy" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "./cvf2i1" of "CMacro1016.lib"  at 92E9 
+;Align: CODE in "./cvf2i1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "./lshiu2" of "CMacro1016.lib"  at 9328 
+;Align: CODE in "./lshiu2" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "./cvi1f2" of "CMacro1016.lib"  at 9362 
+;Align: CODE in "./cvi1f2" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "./divi1" of "CMacro1016.lib"  at 913B 
+;Align: CODE in "./divi1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "./modi1" of "CMacro1016.lib"  at 90C6 
+;Align: CODE in "./modi1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "./clz" of "CMacro1016.lib"  at 92A0 
+;Align: CODE in "./clz" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "./__divi16_n" of "CMacro1016.lib"  at 941D 
+;Align: CODE in "./__divi16_n" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "./lshiu1" of "CMacro1016.lib"  at 93EF 
+;Align: CODE in "./lshiu1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "./rshu1" of "CMacro1016.lib"  at 93CD 
+;Align: CODE in "./rshu1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "./rshu2" of "CMacro1016.lib"  at 939A 
+;Align: CODE in "./rshu2" of "CMacro1016.lib"  with 0 
+;Locate: __sn_init_table at 8000 

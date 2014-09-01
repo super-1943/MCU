@@ -1,0 +1,12 @@
+Version: 3.0
+Options: m37
+Obj: "D:\Program Files\Sunplus\unSP IDE 2.0.0\startupD.obj"
+Obj: "D:\My Documents\MyProject\sunplus\break\Debug\Resource.obj"
+Obj: "D:\My Documents\MyProject\sunplus\break\Debug\main.obj"
+Obj: "D:\My Documents\MyProject\sunplus\break\Debug\int.obj"
+Output: "D:\My Documents\MyProject\sunplus\break\Debug\break.S37"
+;Locate: TEXT in "int.obj" at 8009 
+;Align: TEXT in "int.obj" with 0 
+;Locate: CODE in "main.obj" at 8035 
+;Align: CODE in "main.obj" with 0 
+;Locate: __sn_init_table at 8000 

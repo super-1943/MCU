@@ -1,0 +1,25 @@
+# Begin Project
+# Begin SubItem "Receive  Resources"
+# Begin Source File
+SOURCE=Sound\1.A24
+USEPARAM=FALSE
+PARAM=
+ID=RES_1_A24
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Sound\2.A24
+USEPARAM=FALSE
+PARAM=
+ID=RES_2_A24
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Sound\3.A24
+USEPARAM=FALSE
+PARAM=
+ID=RES_3_A24
+EXPORT=3
+# End Source File
+# End SubItem
+# End Project

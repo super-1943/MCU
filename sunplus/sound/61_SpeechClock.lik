@@ -1,0 +1,127 @@
+Version: 3.0
+Options: m37
+Obj: "C:\Program Files\Sunplus\unSP IDE 2.0.0\startupD.obj"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\main.obj"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\isr.obj"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Resource.obj"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\hardware.obj"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Key.obj"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Clock.obj"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Sound.obj"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Clock_Speech.obj"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Clock_Adjust.obj"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\0_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\1_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\2_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\3_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\4_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\5_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\6_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\7_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\8_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\9_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\10_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\11_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\12_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Liang_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\DING_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\XianZaiShiKe_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\LingChen_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\ShangWu_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\XiaWu_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\WanShang_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Nian_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Yue_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Ri_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Dian_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Fen_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Miao_16k.res"
+Obj: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\Zheng_16k.res"
+Lib: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\.\sacmv26e.lib"
+Lib: "C:\Program Files\Sunplus\unSP IDE 2.0.0\library\CMacro\CMacro1016.lib"
+Output: "C:\Program Files\Sunplus\unSP IDE Common\Example\SPCE061A\example\61_Exa\61_SpeechClock\Debug\61_SpeechClock.S37"
+;Locate: TEXT in "A2000" of "sacmv26e.lib"  at 8009 
+;Align: TEXT in "A2000" of "sacmv26e.lib"  with 0 
+;Locate: IRAM in "hardware.obj" at 9807  linkat 2F8 
+;Align: IRAM in "hardware.obj" with 0 
+;Locate: RAM in "Key.obj" at 2F5 
+;Align: RAM in "Key.obj" with 0 
+;Locate: OVERLAP_RAM_BLOCK in "A2000" of "sacmv26e.lib"  at 1 
+;Align: OVERLAP_RAM_BLOCK in "A2000" of "sacmv26e.lib"  with 0 
+;Locate: OVERLAP_SRAM_BLOCK in "A2000" of "sacmv26e.lib"  at 2BA 
+;Align: OVERLAP_SRAM_BLOCK in "A2000" of "sacmv26e.lib"  with 0 
+;Locate: __sn_section_RES_0_16K in "0_16k.res" at B08F 
+;Align: __sn_section_RES_0_16K in "0_16k.res" with 0 
+;Locate: __sn_section_RES_10_16K in "10_16k.res" at C91C 
+;Align: __sn_section_RES_10_16K in "10_16k.res" with 0 
+;Locate: __sn_section_RES_11_16K in "11_16k.res" at AC69 
+;Align: __sn_section_RES_11_16K in "11_16k.res" with 0 
+;Locate: __sn_section_RES_12_16K in "12_16k.res" at AE7C 
+;Align: __sn_section_RES_12_16K in "12_16k.res" with 0 
+;Locate: __sn_section_RES_1_16K in "1_16k.res" at B7EB 
+;Align: __sn_section_RES_1_16K in "1_16k.res" with 0 
+;Locate: __sn_section_RES_2_16K in "2_16k.res" at C7C9 
+;Align: __sn_section_RES_2_16K in "2_16k.res" with 0 
+;Locate: __sn_section_RES_3_16K in "3_16k.res" at B99E 
+;Align: __sn_section_RES_3_16K in "3_16k.res" with 0 
+;Locate: __sn_section_RES_4_16K in "4_16k.res" at C1ED 
+;Align: __sn_section_RES_4_16K in "4_16k.res" with 0 
+;Locate: __sn_section_RES_5_16K in "5_16k.res" at BD04 
+;Align: __sn_section_RES_5_16K in "5_16k.res" with 0 
+;Locate: __sn_section_RES_6_16K in "6_16k.res" at CA6F 
+;Align: __sn_section_RES_6_16K in "6_16k.res" with 0 
+;Locate: __sn_section_RES_7_16K in "7_16k.res" at C676 
+;Align: __sn_section_RES_7_16K in "7_16k.res" with 0 
+;Locate: __sn_section_RES_8_16K in "8_16k.res" at CBC2 
+;Align: __sn_section_RES_8_16K in "8_16k.res" with 0 
+;Locate: __sn_section_RES_9_16K in "9_16k.res" at B638 
+;Align: __sn_section_RES_9_16K in "9_16k.res" with 0 
+;Locate: __sn_section_RES_DIAN_16K in "Dian_16k.res" at C370 
+;Align: __sn_section_RES_DIAN_16K in "Dian_16k.res" with 0 
+;Locate: __sn_section_RES_DING_16K in "DING_16k.res" at B2A2 
+;Align: __sn_section_RES_DING_16K in "DING_16k.res" with 0 
+;Locate: __sn_section_RES_FEN_16K in "Fen_16k.res" at AA26 
+;Align: __sn_section_RES_FEN_16K in "Fen_16k.res" with 0 
+;Locate: __sn_section_RES_LIANG_16K in "Liang_16k.res" at BB51 
+;Align: __sn_section_RES_LIANG_16K in "Liang_16k.res" with 0 
+;Locate: __sn_section_RES_LINGCHEN_16K in "LingChen_16k.res" at 9D27 
+;Align: __sn_section_RES_LINGCHEN_16K in "LingChen_16k.res" with 0 
+;Locate: __sn_section_RES_MIAO_16K in "Miao_16k.res" at B485 
+;Align: __sn_section_RES_MIAO_16K in "Miao_16k.res" with 0 
+;Locate: __sn_section_RES_NIAN_16K in "Nian_16k.res" at A540 
+;Align: __sn_section_RES_NIAN_16K in "Nian_16k.res" with 0 
+;Locate: __sn_section_RES_RI_16K in "Ri_16k.res" at C06A 
+;Align: __sn_section_RES_RI_16K in "Ri_16k.res" with 0 
+;Locate: __sn_section_RES_SHANGWU_16K in "ShangWu_16k.res" at A7B3 
+;Align: __sn_section_RES_SHANGWU_16K in "ShangWu_16k.res" with 0 
+;Locate: __sn_section_RES_WANSHANG_16K in "WanShang_16k.res" at A2CD 
+;Align: __sn_section_RES_WANSHANG_16K in "WanShang_16k.res" with 0 
+;Locate: __sn_section_RES_XIANZAISHIKE_16K in "XianZaiShiKe_16k.res" at 98A4 
+;Align: __sn_section_RES_XIANZAISHIKE_16K in "XianZaiShiKe_16k.res" with 0 
+;Locate: __sn_section_RES_XIAWU_16K in "XiaWu_16k.res" at A02A 
+;Align: __sn_section_RES_XIAWU_16K in "XiaWu_16k.res" with 0 
+;Locate: __sn_section_RES_YUE_16K in "Yue_16k.res" at BEB7 
+;Align: __sn_section_RES_YUE_16K in "Yue_16k.res" with 0 
+;Locate: __sn_section_RES_ZHENG_16K in "Zheng_16k.res" at C4F3 
+;Align: __sn_section_RES_ZHENG_16K in "Zheng_16k.res" with 0 
+;Locate: CODE in "A2000" of "sacmv26e.lib"  at 8782 
+;Align: CODE in "A2000" of "sacmv26e.lib"  with 0 
+;Locate: CODE in "Clock_Adjust.obj" at 8D77 
+;Align: CODE in "Clock_Adjust.obj" with 0 
+;Locate: CODE in "hardware.obj" at 922E 
+;Align: CODE in "hardware.obj" with 0 
+;Locate: CODE in "Clock_Speech.obj" at 940B 
+;Align: CODE in "Clock_Speech.obj" with 0 
+;Locate: CODE in "Clock.obj" at 95C9 
+;Align: CODE in "Clock.obj" with 0 
+;Locate: CODE in "Key.obj" at 96E6 
+;Align: CODE in "Key.obj" with 0 
+;Locate: CODE in "main.obj" at 9746 
+;Align: CODE in "main.obj" with 0 
+;Locate: CODE in "divu1" of "CMacro1016.lib"  at 9798 
+;Align: CODE in "divu1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "Sound.obj" at 97CC 
+;Align: CODE in "Sound.obj" with 0 
+;Locate: CODE in "modu1" of "CMacro1016.lib"  at 97F8 
+;Align: CODE in "modu1" of "CMacro1016.lib"  with 0 
+;Locate: __sn_init_table at 8000 

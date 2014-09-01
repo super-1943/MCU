@@ -1,0 +1,20 @@
+Version: 3.0
+Options: m37
+Obj: "D:\PROGRA~1\Sunplus\startupD.obj"
+Obj: "F:\gao\dingshiqi\Debug\Resource.obj"
+Obj: "F:\gao\dingshiqi\Debug\mian.obj"
+Lib: "D:\Program Files\Sunplus\library\CMacro\CMacro1016.lib"
+Output: "F:\gao\dingshiqi\Debug\diyici.S37"
+;Locate: TEXT in "mian.obj" at 8009 
+;Align: TEXT in "mian.obj" with 0 
+;Locate: IRAM in "mian.obj" at 852B  linkat 1 
+;Align: IRAM in "mian.obj" with 0 
+;Locate: CODE in "mian.obj" at 80E6 
+;Align: CODE in "mian.obj" with 0 
+;Locate: CODE in "divu1" of "CMacro1016.lib"  at 84A2 
+;Align: CODE in "divu1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "divi1" of "CMacro1016.lib"  at 84D6 
+;Align: CODE in "divi1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "modi1" of "CMacro1016.lib"  at 8507 
+;Align: CODE in "modi1" of "CMacro1016.lib"  with 0 
+;Locate: __sn_init_table at 8000 

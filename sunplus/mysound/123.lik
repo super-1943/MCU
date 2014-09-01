@@ -1,0 +1,27 @@
+Version: 3.0
+Options: m37
+Obj: "C:\PROGRA~1\Sunplus\UNSPID~1.0\startupD.obj"
+Obj: "E:\AllProject\sunplus\mysound\Debug\Resource.obj"
+Obj: "E:\AllProject\sunplus\mysound\Debug\123.obj"
+Obj: "E:\AllProject\sunplus\mysound\Debug\hardware.obj"
+Obj: "E:\AllProject\sunplus\mysound\Debug\isr.obj"
+Obj: "E:\AllProject\sunplus\mysound\Debug\2_16k.res"
+Lib: "E:\AllProject\sunplus\mysound\.\sacmv26e.lib"
+Output: "E:\AllProject\sunplus\mysound\Debug\123.S37"
+;Locate: TEXT in "isr.obj" at 8009 
+;Align: TEXT in "isr.obj" with 0 
+;Locate: IRAM in "hardware.obj" at 8F3A  linkat 2F5 
+;Align: IRAM in "hardware.obj" with 0 
+;Locate: OVERLAP_RAM_BLOCK in "A2000" of "sacmv26e.lib"  at 1 
+;Align: OVERLAP_RAM_BLOCK in "A2000" of "sacmv26e.lib"  with 0 
+;Locate: OVERLAP_SRAM_BLOCK in "A2000" of "sacmv26e.lib"  at 2BA 
+;Align: OVERLAP_SRAM_BLOCK in "A2000" of "sacmv26e.lib"  with 0 
+;Locate: __sn_section_RES_2_16K in "2_16k.res" at 8FD0 
+;Align: __sn_section_RES_2_16K in "2_16k.res" with 0 
+;Locate: CODE in "A2000" of "sacmv26e.lib"  at 8046 
+;Align: CODE in "A2000" of "sacmv26e.lib"  with 0 
+;Locate: CODE in "hardware.obj" at 8CEB 
+;Align: CODE in "hardware.obj" with 0 
+;Locate: CODE in "123.obj" at 8EC8 
+;Align: CODE in "123.obj" with 0 
+;Locate: __sn_init_table at 8000 

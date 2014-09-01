@@ -1,0 +1,16 @@
+Version: 3.0
+Options: m37
+Obj: "C:\Program Files\Sunplus\unSP IDE 2.0.0\startupD.obj"
+Obj: "G:\hellosystem\Debug\Resource.obj"
+Obj: "G:\hellosystem\Debug\nzj.obj"
+Obj: "G:\hellosystem\Debug\jk.obj"
+Output: "G:\hellosystem\Debug\hellosystem.S37"
+;Locate: TEXT in "jk.obj" at 8009 
+;Align: TEXT in "jk.obj" with 0 
+;Locate: IRAM in "nzj.obj" at 808D  linkat 1 
+;Align: IRAM in "nzj.obj" with 0 
+;Locate: CODE in "nzj.obj" at 8029 
+;Align: CODE in "nzj.obj" with 0 
+;Locate: fun1_ptsec in "nzj.obj" at 8027 
+;Align: fun1_ptsec in "nzj.obj" with 0 
+;Locate: __sn_init_table at 8000 

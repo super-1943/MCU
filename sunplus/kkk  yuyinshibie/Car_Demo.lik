@@ -1,0 +1,67 @@
+Version: 3.0
+Options: m37
+Obj: "C:\PROGRA~1\Sunplus\UNSPID~1.2D\startupcode\startupD.obj"
+Obj: "E:\kkk  yuyinshibie\Debug\Resource.obj"
+Obj: "E:\kkk  yuyinshibie\Debug\main.obj"
+Obj: "E:\kkk  yuyinshibie\Debug\Flash.obj"
+Obj: "E:\kkk  yuyinshibie\Debug\hardware.obj"
+Obj: "E:\kkk  yuyinshibie\Debug\ISR.obj"
+Obj: "E:\kkk  yuyinshibie\Debug\mz_48k.res"
+Obj: "E:\kkk  yuyinshibie\Debug\qj_48k.res"
+Obj: "E:\kkk  yuyinshibie\Debug\dc_48k.res"
+Obj: "E:\kkk  yuyinshibie\Debug\zg_48k.res"
+Obj: "E:\kkk  yuyinshibie\Debug\yg_48k.res"
+Obj: "E:\kkk  yuyinshibie\Debug\ye_48k.res"
+Obj: "E:\kkk  yuyinshibie\Debug\yb_48k.res"
+Obj: "E:\kkk  yuyinshibie\Debug\my_48k.res"
+Obj: "E:\kkk  yuyinshibie\Debug\ay_48k.res"
+Obj: "E:\kkk  yuyinshibie\Debug\jx_48k.res"
+Obj: "E:\kkk  yuyinshibie\Debug\gjg_48k.res"
+Lib: "E:\kkk  yuyinshibie\.\bsrv222SDL.lib"
+Lib: "E:\kkk  yuyinshibie\.\sacmv26e.lib"
+Output: "E:\kkk  yuyinshibie\Debug\Car_Demo.S37"
+;Locate: unSP_StartUp in "startupD.obj" at 8009 
+;Align: unSP_StartUp in "startupD.obj" with 0 
+;Locate: IRAM in "hardware.obj" at AC79  linkat 442 
+;Align: IRAM in "hardware.obj" with 0 
+;Locate: BSR_IRAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  at ACE0  linkat 4A9 
+;Align: BSR_IRAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: IRAM in "S480" of "sacmv26e.lib"  at ACEC  linkat 4B5 
+;Align: IRAM in "S480" of "sacmv26e.lib"  with 0 
+;Locate: BSR_RAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  at 362 
+;Align: BSR_RAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: BSR_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  at 378 
+;Align: BSR_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: OVERLAP_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  at 1 
+;Align: OVERLAP_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: CODE in "main.obj" at A6C9 
+;Align: CODE in "main.obj" with 0 
+;Locate: CODE in "Flash.obj" at AC44 
+;Align: CODE in "Flash.obj" with 0 
+;Locate: CODE in "hardware.obj" at AA65 
+;Align: CODE in "hardware.obj" with 0 
+;Locate: __sn_section_RES_MZ_48K in "mz_48k.res" at B55E 
+;Align: __sn_section_RES_MZ_48K in "mz_48k.res" with 0 
+;Locate: __sn_section_RES_QJ_48K in "qj_48k.res" at BC2A 
+;Align: __sn_section_RES_QJ_48K in "qj_48k.res" with 0 
+;Locate: __sn_section_RES_DC_48K in "dc_48k.res" at B939 
+;Align: __sn_section_RES_DC_48K in "dc_48k.res" with 0 
+;Locate: __sn_section_RES_ZG_48K in "zg_48k.res" at BDFB 
+;Align: __sn_section_RES_ZG_48K in "zg_48k.res" with 0 
+;Locate: __sn_section_RES_YG_48K in "yg_48k.res" at BD17 
+;Align: __sn_section_RES_YG_48K in "yg_48k.res" with 0 
+;Locate: __sn_section_RES_YE_48K in "ye_48k.res" at BED6 
+;Align: __sn_section_RES_YE_48K in "ye_48k.res" with 0 
+;Locate: __sn_section_RES_YB_48K in "yb_48k.res" at B750 
+;Align: __sn_section_RES_YB_48K in "yb_48k.res" with 0 
+;Locate: __sn_section_RES_MY_48K in "my_48k.res" at B0C6 
+;Align: __sn_section_RES_MY_48K in "my_48k.res" with 0 
+;Locate: __sn_section_RES_AY_48K in "ay_48k.res" at B36C 
+;Align: __sn_section_RES_AY_48K in "ay_48k.res" with 0 
+;Locate: __sn_section_RES_JX_48K in "jx_48k.res" at ACEE 
+;Align: __sn_section_RES_JX_48K in "jx_48k.res" with 0 
+;Locate: __sn_section_RES_GJG_48K in "gjg_48k.res" at BB22 
+;Align: __sn_section_RES_GJG_48K in "gjg_48k.res" with 0 
+;Locate: CODE in "S480" of "sacmv26e.lib"  at 9FC0 
+;Align: CODE in "S480" of "sacmv26e.lib"  with 0 
+;Locate: __sn_init_table at 8000 

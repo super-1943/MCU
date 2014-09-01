@@ -1,0 +1,13 @@
+Version: 3.0
+Options: m37
+Obj: "D:\Program Files\Sunplus\unSP IDE 2.0.0\startupD.obj"
+Obj: "F:\abc\0830\Debug\Resource.obj"
+Obj: "F:\abc\0830\Debug\ddd.obj"
+Output: "F:\abc\0830\Debug\kkk.S37"
+;Locate: unSP_StartUp in "startupD.obj" at 8009 
+;Align: unSP_StartUp in "startupD.obj" with 0 
+;Locate: IRAM in "ddd.obj" at 80CB  linkat 1 
+;Align: IRAM in "ddd.obj" with 0 
+;Locate: CODE in "ddd.obj" at 8026 
+;Align: CODE in "ddd.obj" with 0 
+;Locate: __sn_init_table at 8000 

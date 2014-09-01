@@ -1,0 +1,11 @@
+# Begin Project
+# Begin SubItem "123  Resources"
+# Begin Source File
+SOURCE=s1.24k
+USEPARAM=FALSE
+PARAM=
+ID=RES_S1_24K
+EXPORT=3
+# End Source File
+# End SubItem
+# End Project

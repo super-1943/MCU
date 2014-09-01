@@ -1,0 +1,60 @@
+Version: 3.0
+Options: m37
+Obj: "C:\Program Files\Sunplus\unSP IDE 2.0.0\startupD.obj"
+Obj: "E:\zhaoyongke\Demo\Receive\Debug\Resource.obj"
+Obj: "E:\zhaoyongke\Demo\Receive\Debug\main.obj"
+Obj: "E:\zhaoyongke\Demo\Receive\Debug\nRF2401.obj"
+Obj: "E:\zhaoyongke\Demo\Receive\Debug\SACM_A1600.obj"
+Obj: "E:\zhaoyongke\Demo\Receive\Debug\SACM_A1600_User_C.obj"
+Obj: "E:\zhaoyongke\Demo\Receive\Debug\Snd.obj"
+Obj: "E:\zhaoyongke\Demo\Receive\Debug\led.obj"
+Obj: "E:\zhaoyongke\Demo\Receive\Debug\key.obj"
+Obj: "E:\zhaoyongke\Demo\Receive\Debug\1_A24.res"
+Obj: "E:\zhaoyongke\Demo\Receive\Debug\2_A24.res"
+Obj: "E:\zhaoyongke\Demo\Receive\Debug\3_A24.res"
+Lib: "E:\zhaoyongke\Demo\Receive\.\SACMv41dx_061A.LIB"
+Lib: "C:\Program Files\Sunplus\unSP IDE 2.0.0\library\CMacro\CMacro1016.lib"
+Output: "E:\zhaoyongke\Demo\Receive\Debug\Receive.S37"
+;Locate: TEXT in "Kernel" of "SACMv41dx_061A.LIB"  at 8009 
+;Align: TEXT in "Kernel" of "SACMv41dx_061A.LIB"  with 0 
+;Locate: IRAM in "main.obj" at 9675  linkat 1C4 
+;Align: IRAM in "main.obj" with 0 
+;Locate: OVERLAP_A1600_API_BLOCK in "API" of "SACMv41dx_061A.LIB"  at 1 
+;Align: OVERLAP_A1600_API_BLOCK in "API" of "SACMv41dx_061A.LIB"  with 0 
+;Locate: OVERLAP_A1600_DM_BLOCKL in "Kernel" of "SACMv41dx_061A.LIB"  at 18 
+;Align: OVERLAP_A1600_DM_BLOCKL in "Kernel" of "SACMv41dx_061A.LIB"  with 0 
+;Locate: OVERLAP_A1600_RAM_BLOCK in "Decode" of "SACMv41dx_061A.LIB"  at A0 
+;Align: OVERLAP_A1600_RAM_BLOCK in "Decode" of "SACMv41dx_061A.LIB"  with 0 
+;Locate: __sn_section_RES_1_A24 in "1_A24.res" at 99B0 
+;Align: __sn_section_RES_1_A24 in "1_A24.res" with 0 
+;Locate: __sn_section_RES_2_A24 in "2_A24.res" at 9BAB 
+;Align: __sn_section_RES_2_A24 in "2_A24.res" with 0 
+;Locate: __sn_section_RES_3_A24 in "3_A24.res" at 9695 
+;Align: __sn_section_RES_3_A24 in "3_A24.res" with 0 
+;Locate: CODE in "Kernel" of "SACMv41dx_061A.LIB"  at 85C9 
+;Align: CODE in "Kernel" of "SACMv41dx_061A.LIB"  with 0 
+;Locate: CODE in "nRF2401.obj" at 8BA0 
+;Align: CODE in "nRF2401.obj" with 0 
+;Locate: CODE in "fft64" of "SACMv41dx_061A.LIB"  at 8FE8 
+;Align: CODE in "fft64" of "SACMv41dx_061A.LIB"  with 0 
+;Locate: CODE in "SACM_A1600.obj" at 9402 
+;Align: CODE in "SACM_A1600.obj" with 0 
+;Locate: CODE in "led.obj" at 9494 
+;Align: CODE in "led.obj" with 0 
+;Locate: CODE in "main.obj" at 9520 
+;Align: CODE in "main.obj" with 0 
+;Locate: CODE in "SACM_A1600_User_C.obj" at 959B 
+;Align: CODE in "SACM_A1600_User_C.obj" with 0 
+;Locate: CODE in "key.obj" at 95EC 
+;Align: CODE in "key.obj" with 0 
+;Locate: CODE in "Snd.obj" at 962A 
+;Align: CODE in "Snd.obj" with 0 
+;Locate: CODE in "lshiu1" of "CMacro1016.lib"  at 9651 
+;Align: CODE in "lshiu1" of "CMacro1016.lib"  with 0 
+;Locate: CODE in "blockcopy" of "CMacro1016.lib"  at 9666 
+;Align: CODE in "blockcopy" of "CMacro1016.lib"  with 0 
+;Locate: SACM_A1600_DECODE_ROM_BLOCK in "Decode" of "SACMv41dx_061A.LIB"  at 9362 
+;Align: SACM_A1600_DECODE_ROM_BLOCK in "Decode" of "SACMv41dx_061A.LIB"  with 0 
+;Locate: SACM_A1600_ROM_BLOCK in "API" of "SACMv41dx_061A.LIB"  at 91BF 
+;Align: SACM_A1600_ROM_BLOCK in "API" of "SACMv41dx_061A.LIB"  with 0 
+;Locate: __sn_init_table at 8000 

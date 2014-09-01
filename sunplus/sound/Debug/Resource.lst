@@ -1,0 +1,292 @@
+Sunplus u'nSP Assembler - Ver. 1.14.3.1
+              Listing File Has Been Relocated
+                            	
+                            	// Resource Table
+                            	// Created by IDE, Do not modify this table
+                            	
+000086B9                    	.TEXT
+                            	.public _RES_Table;
+                            	.public _Snd_Table;
+                            	.external __RES_0_16K_sa
+                            	.public _RES_0_16K_SA;
+                            	.external __RES_0_16K_ea;
+                            	.public _RES_0_16K_EA;
+                            	.external __RES_1_16K_sa
+                            	.public _RES_1_16K_SA;
+                            	.external __RES_1_16K_ea;
+                            	.public _RES_1_16K_EA;
+                            	.external __RES_2_16K_sa
+                            	.public _RES_2_16K_SA;
+                            	.external __RES_2_16K_ea;
+                            	.public _RES_2_16K_EA;
+                            	.external __RES_3_16K_sa
+                            	.public _RES_3_16K_SA;
+                            	.external __RES_3_16K_ea;
+                            	.public _RES_3_16K_EA;
+                            	.external __RES_4_16K_sa
+                            	.public _RES_4_16K_SA;
+                            	.external __RES_4_16K_ea;
+                            	.public _RES_4_16K_EA;
+                            	.external __RES_5_16K_sa
+                            	.public _RES_5_16K_SA;
+                            	.external __RES_5_16K_ea;
+                            	.public _RES_5_16K_EA;
+                            	.external __RES_6_16K_sa
+                            	.public _RES_6_16K_SA;
+                            	.external __RES_6_16K_ea;
+                            	.public _RES_6_16K_EA;
+                            	.external __RES_7_16K_sa
+                            	.public _RES_7_16K_SA;
+                            	.external __RES_7_16K_ea;
+                            	.public _RES_7_16K_EA;
+                            	.external __RES_8_16K_sa
+                            	.public _RES_8_16K_SA;
+                            	.external __RES_8_16K_ea;
+                            	.public _RES_8_16K_EA;
+                            	.external __RES_9_16K_sa
+                            	.public _RES_9_16K_SA;
+                            	.external __RES_9_16K_ea;
+                            	.public _RES_9_16K_EA;
+                            	.external __RES_10_16K_sa
+                            	.public _RES_10_16K_SA;
+                            	.external __RES_10_16K_ea;
+                            	.public _RES_10_16K_EA;
+                            	.external __RES_11_16K_sa
+                            	.public _RES_11_16K_SA;
+                            	.external __RES_11_16K_ea;
+                            	.public _RES_11_16K_EA;
+                            	.external __RES_12_16K_sa
+                            	.public _RES_12_16K_SA;
+                            	.external __RES_12_16K_ea;
+                            	.public _RES_12_16K_EA;
+                            	.external __RES_DIAN_16K_sa
+                            	.public _RES_DIAN_16K_SA;
+                            	.external __RES_DIAN_16K_ea;
+                            	.public _RES_DIAN_16K_EA;
+                            	.external __RES_DING_16K_sa
+                            	.public _RES_DING_16K_SA;
+                            	.external __RES_DING_16K_ea;
+                            	.public _RES_DING_16K_EA;
+                            	.external __RES_FEN_16K_sa
+                            	.public _RES_FEN_16K_SA;
+                            	.external __RES_FEN_16K_ea;
+                            	.public _RES_FEN_16K_EA;
+                            	.external __RES_LIANG_16K_sa
+                            	.public _RES_LIANG_16K_SA;
+                            	.external __RES_LIANG_16K_ea;
+                            	.public _RES_LIANG_16K_EA;
+                            	.external __RES_LINGCHEN_16K_sa
+                            	.public _RES_LINGCHEN_16K_SA;
+                            	.external __RES_LINGCHEN_16K_ea;
+                            	.public _RES_LINGCHEN_16K_EA;
+                            	.external __RES_MIAO_16K_sa
+                            	.public _RES_MIAO_16K_SA;
+                            	.external __RES_MIAO_16K_ea;
+                            	.public _RES_MIAO_16K_EA;
+                            	.external __RES_NIAN_16K_sa
+                            	.public _RES_NIAN_16K_SA;
+                            	.external __RES_NIAN_16K_ea;
+                            	.public _RES_NIAN_16K_EA;
+                            	.external __RES_RI_16K_sa
+                            	.public _RES_RI_16K_SA;
+                            	.external __RES_RI_16K_ea;
+                            	.public _RES_RI_16K_EA;
+                            	.external __RES_SHANGWU_16K_sa
+                            	.public _RES_SHANGWU_16K_SA;
+                            	.external __RES_SHANGWU_16K_ea;
+                            	.public _RES_SHANGWU_16K_EA;
+                            	.external __RES_WANSHANG_16K_sa
+                            	.public _RES_WANSHANG_16K_SA;
+                            	.external __RES_WANSHANG_16K_ea;
+                            	.public _RES_WANSHANG_16K_EA;
+                            	.external __RES_XIANZAISHIKE_16K_sa
+                            	.public _RES_XIANZAISHIKE_16K_SA;
+                            	.external __RES_XIANZAISHIKE_16K_ea;
+                            	.public _RES_XIANZAISHIKE_16K_EA;
+                            	.external __RES_XIAWU_16K_sa
+                            	.public _RES_XIAWU_16K_SA;
+                            	.external __RES_XIAWU_16K_ea;
+                            	.public _RES_XIAWU_16K_EA;
+                            	.external __RES_YUE_16K_sa
+                            	.public _RES_YUE_16K_SA;
+                            	.external __RES_YUE_16K_ea;
+                            	.public _RES_YUE_16K_EA;
+                            	.external __RES_ZHENG_16K_sa
+                            	.public _RES_ZHENG_16K_SA;
+                            	.external __RES_ZHENG_16K_ea;
+                            	.public _RES_ZHENG_16K_EA;
+                            	
+                            	
+                            	_RES_Table:
+                            	
+                            	
+                            	_Snd_Table:
+                            	
+                            	_RES_0_16K_SA:
+000086B9 8F B0 00 00        		.DW offset __RES_0_16K_sa,seg __RES_0_16K_sa;
+                            	_RES_0_16K_EA:
+000086BB A2 B2 00 00        		.DW offset __RES_0_16K_ea,seg __RES_0_16K_ea;
+                            	
+                            	_RES_1_16K_SA:
+000086BD EB B7 00 00        		.DW offset __RES_1_16K_sa,seg __RES_1_16K_sa;
+                            	_RES_1_16K_EA:
+000086BF 9E B9 00 00        		.DW offset __RES_1_16K_ea,seg __RES_1_16K_ea;
+                            	
+                            	_RES_2_16K_SA:
+000086C1 C9 C7 00 00        		.DW offset __RES_2_16K_sa,seg __RES_2_16K_sa;
+                            	_RES_2_16K_EA:
+000086C3 1C C9 00 00        		.DW offset __RES_2_16K_ea,seg __RES_2_16K_ea;
+                            	
+                            	_RES_3_16K_SA:
+000086C5 9E B9 00 00        		.DW offset __RES_3_16K_sa,seg __RES_3_16K_sa;
+                            	_RES_3_16K_EA:
+000086C7 51 BB 00 00        		.DW offset __RES_3_16K_ea,seg __RES_3_16K_ea;
+                            	
+                            	_RES_4_16K_SA:
+000086C9 ED C1 00 00        		.DW offset __RES_4_16K_sa,seg __RES_4_16K_sa;
+                            	_RES_4_16K_EA:
+000086CB 70 C3 00 00        		.DW offset __RES_4_16K_ea,seg __RES_4_16K_ea;
+                            	
+                            	_RES_5_16K_SA:
+000086CD 04 BD 00 00        		.DW offset __RES_5_16K_sa,seg __RES_5_16K_sa;
+                            	_RES_5_16K_EA:
+000086CF B7 BE 00 00        		.DW offset __RES_5_16K_ea,seg __RES_5_16K_ea;
+                            	
+                            	_RES_6_16K_SA:
+000086D1 6F CA 00 00        		.DW offset __RES_6_16K_sa,seg __RES_6_16K_sa;
+                            	_RES_6_16K_EA:
+000086D3 C2 CB 00 00        		.DW offset __RES_6_16K_ea,seg __RES_6_16K_ea;
+                            	
+                            	_RES_7_16K_SA:
+000086D5 76 C6 00 00        		.DW offset __RES_7_16K_sa,seg __RES_7_16K_sa;
+                            	_RES_7_16K_EA:
+000086D7 C9 C7 00 00        		.DW offset __RES_7_16K_ea,seg __RES_7_16K_ea;
+                            	
+                            	_RES_8_16K_SA:
+000086D9 C2 CB 00 00        		.DW offset __RES_8_16K_sa,seg __RES_8_16K_sa;
+                            	_RES_8_16K_EA:
+000086DB B5 CC 00 00        		.DW offset __RES_8_16K_ea,seg __RES_8_16K_ea;
+                            	
+                            	_RES_9_16K_SA:
+000086DD 38 B6 00 00        		.DW offset __RES_9_16K_sa,seg __RES_9_16K_sa;
+                            	_RES_9_16K_EA:
+000086DF EB B7 00 00        		.DW offset __RES_9_16K_ea,seg __RES_9_16K_ea;
+                            	
+                            	_RES_10_16K_SA:
+000086E1 1C C9 00 00        		.DW offset __RES_10_16K_sa,seg __RES_10_16K_sa;
+                            	_RES_10_16K_EA:
+000086E3 6F CA 00 00        		.DW offset __RES_10_16K_ea,seg __RES_10_16K_ea;
+                            	
+                            	_RES_11_16K_SA:
+000086E5 69 AC 00 00        		.DW offset __RES_11_16K_sa,seg __RES_11_16K_sa;
+                            	_RES_11_16K_EA:
+000086E7 7C AE 00 00        		.DW offset __RES_11_16K_ea,seg __RES_11_16K_ea;
+                            	
+                            	_RES_12_16K_SA:
+000086E9 7C AE 00 00        		.DW offset __RES_12_16K_sa,seg __RES_12_16K_sa;
+                            	_RES_12_16K_EA:
+000086EB 8F B0 00 00        		.DW offset __RES_12_16K_ea,seg __RES_12_16K_ea;
+                            	
+                            	_RES_DIAN_16K_SA:
+000086ED 70 C3 00 00        		.DW offset __RES_DIAN_16K_sa,seg __RES_DIAN_16K_sa;
+                            	_RES_DIAN_16K_EA:
+000086EF F3 C4 00 00        		.DW offset __RES_DIAN_16K_ea,seg __RES_DIAN_16K_ea;
+                            	
+                            	_RES_DING_16K_SA:
+000086F1 A2 B2 00 00        		.DW offset __RES_DING_16K_sa,seg __RES_DING_16K_sa;
+                            	_RES_DING_16K_EA:
+000086F3 85 B4 00 00        		.DW offset __RES_DING_16K_ea,seg __RES_DING_16K_ea;
+                            	
+                            	_RES_FEN_16K_SA:
+000086F5 26 AA 00 00        		.DW offset __RES_FEN_16K_sa,seg __RES_FEN_16K_sa;
+                            	_RES_FEN_16K_EA:
+000086F7 69 AC 00 00        		.DW offset __RES_FEN_16K_ea,seg __RES_FEN_16K_ea;
+                            	
+                            	_RES_LIANG_16K_SA:
+000086F9 51 BB 00 00        		.DW offset __RES_LIANG_16K_sa,seg __RES_LIANG_16K_sa;
+                            	_RES_LIANG_16K_EA:
+000086FB 04 BD 00 00        		.DW offset __RES_LIANG_16K_ea,seg __RES_LIANG_16K_ea;
+                            	
+                            	_RES_LINGCHEN_16K_SA:
+000086FD 27 9D 00 00        		.DW offset __RES_LINGCHEN_16K_sa,seg __RES_LINGCHEN_16K_sa;
+                            	_RES_LINGCHEN_16K_EA:
+000086FF 2A A0 00 00        		.DW offset __RES_LINGCHEN_16K_ea,seg __RES_LINGCHEN_16K_ea;
+                            	
+                            	_RES_MIAO_16K_SA:
+00008701 85 B4 00 00        		.DW offset __RES_MIAO_16K_sa,seg __RES_MIAO_16K_sa;
+                            	_RES_MIAO_16K_EA:
+00008703 38 B6 00 00        		.DW offset __RES_MIAO_16K_ea,seg __RES_MIAO_16K_ea;
+                            	
+                            	_RES_NIAN_16K_SA:
+00008705 40 A5 00 00        		.DW offset __RES_NIAN_16K_sa,seg __RES_NIAN_16K_sa;
+                            	_RES_NIAN_16K_EA:
+00008707 B3 A7 00 00        		.DW offset __RES_NIAN_16K_ea,seg __RES_NIAN_16K_ea;
+                            	
+                            	_RES_RI_16K_SA:
+00008709 6A C0 00 00        		.DW offset __RES_RI_16K_sa,seg __RES_RI_16K_sa;
+                            	_RES_RI_16K_EA:
+0000870B ED C1 00 00        		.DW offset __RES_RI_16K_ea,seg __RES_RI_16K_ea;
+                            	
+                            	_RES_SHANGWU_16K_SA:
+0000870D B3 A7 00 00        		.DW offset __RES_SHANGWU_16K_sa,seg __RES_SHANGWU_16K_sa;
+                            	_RES_SHANGWU_16K_EA:
+0000870F 26 AA 00 00        		.DW offset __RES_SHANGWU_16K_ea,seg __RES_SHANGWU_16K_ea;
+                            	
+                            	_RES_WANSHANG_16K_SA:
+00008711 CD A2 00 00        		.DW offset __RES_WANSHANG_16K_sa,seg __RES_WANSHANG_16K_sa;
+                            	_RES_WANSHANG_16K_EA:
+00008713 40 A5 00 00        		.DW offset __RES_WANSHANG_16K_ea,seg __RES_WANSHANG_16K_ea;
+                            	
+                            	_RES_XIANZAISHIKE_16K_SA:
+00008715 A4 98 00 00        		.DW offset __RES_XIANZAISHIKE_16K_sa,seg __RES_XIANZAISHIKE_16K_sa;
+                            	_RES_XIANZAISHIKE_16K_EA:
+00008717 27 9D 00 00        		.DW offset __RES_XIANZAISHIKE_16K_ea,seg __RES_XIANZAISHIKE_16K_ea;
+                            	
+                            	_RES_XIAWU_16K_SA:
+00008719 2A A0 00 00        		.DW offset __RES_XIAWU_16K_sa,seg __RES_XIAWU_16K_sa;
+                            	_RES_XIAWU_16K_EA:
+0000871B CD A2 00 00        		.DW offset __RES_XIAWU_16K_ea,seg __RES_XIAWU_16K_ea;
+                            	
+                            	_RES_YUE_16K_SA:
+0000871D B7 BE 00 00        		.DW offset __RES_YUE_16K_sa,seg __RES_YUE_16K_sa;
+                            	_RES_YUE_16K_EA:
+0000871F 6A C0 00 00        		.DW offset __RES_YUE_16K_ea,seg __RES_YUE_16K_ea;
+                            	
+                            	_RES_ZHENG_16K_SA:
+00008721 F3 C4 00 00        		.DW offset __RES_ZHENG_16K_sa,seg __RES_ZHENG_16K_sa;
+                            	_RES_ZHENG_16K_EA:
+00008723 76 C6 00 00        		.DW offset __RES_ZHENG_16K_ea,seg __RES_ZHENG_16K_ea;
+                            	
+                            	
+                            	// End Table
+                            	.PUBLIC T_SACM_A2000_SpeechTable
+                            	T_SACM_A2000_SpeechTable:
+00008725 B9 86              		.DW _RES_0_16K_SA
+00008726 BD 86              		.DW _RES_1_16K_SA
+00008727 C1 86              		.DW _RES_2_16K_SA
+00008728 C5 86              		.DW _RES_3_16K_SA
+00008729 C9 86              		.DW _RES_4_16K_SA
+0000872A CD 86              		.DW _RES_5_16K_SA
+0000872B D1 86              		.DW _RES_6_16K_SA
+0000872C D5 86              		.DW _RES_7_16K_SA
+0000872D D9 86              		.DW _RES_8_16K_SA
+0000872E DD 86              		.DW _RES_9_16K_SA
+0000872F E1 86              		.DW _RES_10_16K_SA
+00008730 E5 86              		.DW _RES_11_16K_SA
+00008731 E9 86              		.DW _RES_12_16K_SA
+00008732 F9 86              		.DW _RES_LIANG_16K_SA
+00008733 F1 86              		.DW _RES_DING_16K_SA
+00008734 15 87              		.DW _RES_XIANZAISHIKE_16K_SA
+00008735 FD 86              		.DW _RES_LINGCHEN_16K_SA
+00008736 0D 87              		.DW _RES_SHANGWU_16K_SA
+00008737 19 87              		.DW _RES_XIAWU_16K_SA
+00008738 11 87              		.DW _RES_WANSHANG_16K_SA
+00008739 05 87              		.DW _RES_NIAN_16K_SA
+0000873A 1D 87              		.DW _RES_YUE_16K_SA
+0000873B 09 87              		.DW _RES_RI_16K_SA
+0000873C ED 86              		.DW _RES_DIAN_16K_SA
+0000873D F5 86              		.DW _RES_FEN_16K_SA
+0000873E 01 87              		.DW _RES_MIAO_16K_SA
+0000873F 21 87              		.DW _RES_ZHENG_16K_SA
+0 error(s), 0 warning(s).
+

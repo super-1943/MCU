@@ -1,0 +1,13 @@
+Version: 3.0
+Options: m37
+Obj: "D:\Program Files\SunPlus\unSP IDE 2.0.0\startupD.obj"
+Obj: "G:\neike\Debug\Resource.obj"
+Obj: "G:\neike\Debug\ddd.obj"
+Output: "G:\neike\Debug\neike.S37"
+;Locate: TEXT in "ddd.obj" at 8009 
+;Align: TEXT in "ddd.obj" with 0 
+;Locate: IRAM in "ddd.obj" at 808F  linkat 1 
+;Align: IRAM in "ddd.obj" with 0 
+;Locate: CODE in "ddd.obj" at 8045 
+;Align: CODE in "ddd.obj" with 0 
+;Locate: __sn_init_table at 8000 

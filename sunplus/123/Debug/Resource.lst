@@ -1,0 +1,27 @@
+Sunplus u'nSP Assembler - Ver. 1.14.3.1
+
+                            	
+                            	// Resource Table
+                            	// Created by IDE, Do not modify this table
+                            	
+00000000                    	.TEXT
+                            	.public _RES_Table;
+                            	.external __RES_S1_24K_sa
+                            	.public _RES_S1_24K_SA;
+                            	.external __RES_S1_24K_ea;
+                            	.public _RES_S1_24K_EA;
+                            	
+                            	
+                            	_RES_Table:
+                            	
+                            	_RES_S1_24K_SA:
+00000000 00 00 00 00        		.DW offset __RES_S1_24K_sa,seg __RES_S1_24K_sa;
+                            	_RES_S1_24K_EA:
+00000002 00 00 00 00        		.DW offset __RES_S1_24K_ea,seg __RES_S1_24K_ea;
+                            	
+                            	
+                            	// End Table
+                            	.public T_SACM_A2000_SpeechTable
+                            	T_SACM_A2000_SpeechTable:
+00000004 00 00              		.dw _RES_S1_24K_SA;
+0 error(s), 0 warning(s).

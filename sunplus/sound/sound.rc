@@ -1,0 +1,199 @@
+# Begin Project
+# Begin SubItem "sound  Resources"
+# Begin Group "Snd"
+#PROP Default_Filter=16k
+USEPARAM=FALSE
+PARAM=
+EXPORT=0
+# Begin Source File
+SOURCE=Snd\0.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_0_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\1.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_1_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\2.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_2_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\3.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_3_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\4.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_4_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\5.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_5_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\6.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_6_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\7.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_7_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\8.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_8_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\9.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_9_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\10.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_10_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\11.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_11_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\12.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_12_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\Dian.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_DIAN_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\DING.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_DING_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\Fen.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_FEN_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\Liang.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_LIANG_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\LingChen.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_LINGCHEN_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\Miao.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_MIAO_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\Nian.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_NIAN_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\Ri.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_RI_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\ShangWu.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_SHANGWU_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\WanShang.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_WANSHANG_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\XianZaiShiKe.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_XIANZAISHIKE_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\XiaWu.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_XIAWU_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\Yue.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_YUE_16K
+EXPORT=3
+# End Source File
+# Begin Source File
+SOURCE=Snd\Zheng.16k
+USEPARAM=FALSE
+PARAM=
+ID=RES_ZHENG_16K
+EXPORT=3
+# End Source File
+# End Group
+# End SubItem
+# End Project

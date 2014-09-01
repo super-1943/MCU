@@ -1,0 +1,81 @@
+Version: 3.0
+Options: m37
+Obj: "D:\Program Files\Sunplus\unSP IDE 2.0.0\startupD.obj"
+Obj: "F:\abc\shibieyuyin5\Debug\InitIO.obj"
+Obj: "F:\abc\shibieyuyin5\Debug\hardware.obj"
+Obj: "F:\abc\shibieyuyin5\Debug\FIQ.obj"
+Obj: "F:\abc\shibieyuyin5\Debug\Resource.obj"
+Obj: "F:\abc\shibieyuyin5\Debug\main.obj"
+Obj: "F:\abc\shibieyuyin5\Debug\S12_24K.res"
+Obj: "F:\abc\shibieyuyin5\Debug\1_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\2_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\3_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\4_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\5_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\6_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\7_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\18_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\10_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\11_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\12_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\17_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\16_48k.res"
+Obj: "F:\abc\shibieyuyin5\Debug\15_48k.res"
+Lib: "F:\abc\shibieyuyin5\.\bsrv222SDL.lib"
+Lib: "F:\abc\shibieyuyin5\sacmv26e.lib"
+Output: "F:\abc\shibieyuyin5\Debug\Guard_SD.S37"
+;Locate: TEXT in "BSRSDCON" of "bsrv222SDL.lib"  at 8009 
+;Align: TEXT in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: BSR_IRAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  at B793  linkat 47D 
+;Align: BSR_IRAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: IRAM in "hardware.obj" at B79F  linkat 489 
+;Align: IRAM in "hardware.obj" with 0 
+;Locate: BSR_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  at 39D 
+;Align: BSR_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: BSR_RAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  at 467 
+;Align: BSR_RAM_EXCLUSIVE in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: OVERLAP_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  at 1 
+;Align: OVERLAP_RAM_BLOCK in "BSRSDCON" of "bsrv222SDL.lib"  with 0 
+;Locate: OVERLAP_SRAM_BLOCK in "A2000" of "sacmv26e.lib"  at 362 
+;Align: OVERLAP_SRAM_BLOCK in "A2000" of "sacmv26e.lib"  with 0 
+;Locate: __sn_section_RES_10_48K in "10_48k.res" at EF2C 
+;Align: __sn_section_RES_10_48K in "10_48k.res" with 0 
+;Locate: __sn_section_RES_11_48K in "11_48k.res" at E92E 
+;Align: __sn_section_RES_11_48K in "11_48k.res" with 0 
+;Locate: __sn_section_RES_12_48K in "12_48k.res" at EC36 
+;Align: __sn_section_RES_12_48K in "12_48k.res" with 0 
+;Locate: __sn_section_RES_15_48K in "15_48k.res" at E2DF 
+;Align: __sn_section_RES_15_48K in "15_48k.res" with 0 
+;Locate: __sn_section_RES_16_48K in "16_48k.res" at DF2C 
+;Align: __sn_section_RES_16_48K in "16_48k.res" with 0 
+;Locate: __sn_section_RES_17_48K in "17_48k.res" at E614 
+;Align: __sn_section_RES_17_48K in "17_48k.res" with 0 
+;Locate: __sn_section_RES_18_48K in "18_48k.res" at C2D1 
+;Align: __sn_section_RES_18_48K in "18_48k.res" with 0 
+;Locate: __sn_section_RES_1_48K in "1_48k.res" at D77E 
+;Align: __sn_section_RES_1_48K in "1_48k.res" with 0 
+;Locate: __sn_section_RES_2_48K in "2_48k.res" at BE8E 
+;Align: __sn_section_RES_2_48K in "2_48k.res" with 0 
+;Locate: __sn_section_RES_3_48K in "3_48k.res" at D383 
+;Align: __sn_section_RES_3_48K in "3_48k.res" with 0 
+;Locate: __sn_section_RES_4_48K in "4_48k.res" at DB55 
+;Align: __sn_section_RES_4_48K in "4_48k.res" with 0 
+;Locate: __sn_section_RES_5_48K in "5_48k.res" at C714 
+;Align: __sn_section_RES_5_48K in "5_48k.res" with 0 
+;Locate: __sn_section_RES_6_48K in "6_48k.res" at CF64 
+;Align: __sn_section_RES_6_48K in "6_48k.res" with 0 
+;Locate: __sn_section_RES_7_48K in "7_48k.res" at CB45 
+;Align: __sn_section_RES_7_48K in "7_48k.res" with 0 
+;Locate: __sn_section_RES_S12_24K in "S12_24K.res" at B813 
+;Align: __sn_section_RES_S12_24K in "S12_24K.res" with 0 
+;Locate: CODE in "S480" of "sacmv26e.lib"  at A696 
+;Align: CODE in "S480" of "sacmv26e.lib"  with 0 
+;Locate: CODE in "A2000" of "sacmv26e.lib"  at AD9F 
+;Align: CODE in "A2000" of "sacmv26e.lib"  with 0 
+;Locate: CODE in "main.obj" at B394 
+;Align: CODE in "main.obj" with 0 
+;Locate: CODE in "hardware.obj" at B592 
+;Align: CODE in "hardware.obj" with 0 
+;Locate: CODE in "InitIO.obj" at B771 
+;Align: CODE in "InitIO.obj" with 0 
+;Locate: __sn_init_table at 8000 

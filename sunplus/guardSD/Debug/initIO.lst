@@ -1,0 +1,80 @@
+Sunplus u'nSP Assembler - Ver. 1.14.3.1
+              Listing File Has Been Relocated
+                            	.PUBLIC 	_InitIO
+                            	.PUBLIC 	_ShowRes
+                            	.PUBLIC 	_ClearWatchDog
+                            	
+                            	.DEFINE 	Port_IOA_Attrib 		0x7003
+                            	.DEFINE 	Port_IOA_Dir 			0x7002
+                            	.DEFINE 	Port_IOA_Data 			0x7000
+                            	
+                            	.DEFINE 	Port_IOB_Attrib 		0x7008
+                            	.DEFINE 	Port_IOB_Dir 			0x7007
+                            	.DEFINE 	Port_IOB_Data 			0x7005
+                            	
+0000B74F                    	.CODE
+                            	
+                            	_ClearWatchDog: .PROC
+0000B74F 88 D2              	 push r1 to [SP]
+0000B750 41 92              	 r1 = 0x0001
+0000B751 19 D3 12 70        	 [0x7012] = r1
+0000B753 88 90              	 pop r1 from [SP]
+0000B754 90 9A              	 retf
+                            	.ENDP
+                            	
+                            	_ShowRes: .PROC
+0000B755 A8 DA              		push r1, r5 to [SP]
+0000B756 08 0B 05 00        		r5 = SP + 5
+0000B758 03 98              		r4 = [r5+3]				
+0000B759 1C D9 05 70        		[0x7005] = r4
+0000B75B A8 90              		pop r1, r5 from [SP]
+0000B75C 90 9A              		retf
+                            	.ENDP
+                            	
+                            	_InitIO: .PROC
+0000B75D 09 93 FF FF        		r1=0xffff
+0000B75F 19 D3 08 70        		[Port_IOB_Attrib] = r1		//B口设置为同向输出
+0000B761 19 D3 07 70        		[Port_IOB_Dir] = r1			
+                            		//r1 = 0
+0000B763 19 D3 05 70        		[Port_IOB_Data] = r1        //B口置高电平
+0000B765 09 93 FF FF        		r1=0xffff
+0000B767 19 D3 03 70        		[Port_IOA_Attrib] = r1		//A口设置为同向输出
+0000B769 19 D3 02 70        		[Port_IOA_Dir] = r1			
+0000B76B 09 93 FF FF        		r1 = 0xffff
+0000B76D 19 D3 00 70        		[Port_IOA_Data] = r1        //A口置高电平
+0000B76F 90 9A              		retf
+                            	.ENDP
+                            	
+                            	.PUBLIC _LED_RED_ON
+                            	_LED_RED_ON: .PROC
+0000B770 11 93 05 70        	    r1 = [Port_IOB_Data]
+0000B772 09 93 FE FF        	    r1 = 0xfffe;
+0000B774 19 D3 05 70        	    [Port_IOB_Data] = r1;
+0000B776 90 9A              	   retf
+                            	.ENDP
+                            	
+                            	.PUBLIC _LED_RED_OFF
+                            	_LED_RED_OFF: .PROC
+0000B777 11 93 05 70        	    r1 = [Port_IOB_Data]
+0000B779 09 93 FF FF        	    r1 = 0xffff;
+0000B77B 19 D3 05 70        	    [Port_IOB_Data] = r1;
+0000B77D 90 9A              	   retf   
+                            	.ENDP
+                            	.PUBLIC _LED_GRE_ON
+                            	_LED_GRE_ON: .PROC
+0000B77E 11 93 05 70        	    r1 = [Port_IOB_Data]
+0000B780 09 93 FD FF        	    r1 = 0xfffd;
+0000B782 19 D3 05 70        	    [Port_IOB_Data] = r1;
+0000B784 90 9A              	   retf
+                            	.ENDP
+                            	
+                            	.PUBLIC _LED_GRE_OFF
+                            	_LED_GRE_OFF: .PROC
+0000B785 11 93 05 70        	    r1 = [Port_IOB_Data]
+0000B787 09 93 FF FF        	    r1 = 0xffff;
+0000B789 19 D3 05 70        	    [Port_IOB_Data] = r1;
+0000B78B 90 9A              	   retf   
+                            	.ENDP
+                            	.END
+0 error(s), 0 warning(s).
+

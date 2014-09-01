@@ -1,0 +1,184 @@
+.stabs "startup_code.",0x3c,0,0,0
+.stabs "__sn_main:F15",36,0,0,     33461
+.stabs "__sn_end:F15",36,0,0,     32804
+.stabs "__sn_exception:F15",36,0,0,     32805
+.stabs "C:\Documents and Settings\Administrator\×ÀÃæ\¸öÈË¹¤³ÌÎÄ¼ş¼Ğ\ÕÔÓÀ¿Æ\525/", 0x64,0,0,0
+.stabs "C:\Documents and Settings\Administrator\×ÀÃæ\¸öÈË¹¤³ÌÎÄ¼ş¼Ğ\ÕÔÓÀ¿Æ\525\Resource.asm", 0x64,0,0,0
+.stabs "unsigned int:t1=r1;0;65535;",128,0,0,0
+.stabs "long long int:t2=r1;-2147483648;2147483647;",128,0,0,0
+.stabs "float:t3=r1;2;0;",128,0,0,0
+.stabs "double:t4=r1;4;0;",128,0,0,0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabn 0xc0,0,0,         0
+.stabn 0xe0,0,0,         0
+.stabs "C:/Documents and Settings/Administrator/×ÀÃæ/¸öÈË¹¤³ÌÎÄ¼ş¼Ğ/ÕÔÓÀ¿Æ/525/",0x64,0,3,     32806
+.stabs "C:/Documents and Settings/Administrator/×/300Ã/346/¸/366È/313¹/244³/314Î/304¼/376¼/320/Õ/324Ó/300¿/306/525/my525.c",0x64,0,3,     32806
+.stabs "int:t1=r1;-32768;32767;",128,0,0,0
+.stabs "char:t2=r2;0;127;",128,0,0,0
+.stabs "long int:t3=r3;-2147483648;2147483647;",128,0,0,0
+.stabs "unsigned int:t4=r4;0;65535;",128,0,0,0
+.stabs "long unsigned int:t5=r5;0;4294967295;",128,0,0,0
+.stabs "long long int:t6=r6;-2147483648;2147483647;",128,0,0,0
+.stabs "long long unsigned int:t7=r7;0;4294967295;",128,0,0,0
+.stabs "short int:t8=r8;-32768;32767;",128,0,0,0
+.stabs "short unsigned int:t9=r9;0;65535;",128,0,0,0
+.stabs "signed char:t10=r10;-32768;32767;",128,0,0,0
+.stabs "unsigned char:t11=r11;0;65535;",128,0,0,0
+.stabs "float:t12=r1;2;0;",128,0,0,0
+.stabs "double:t13=r1;2;0;",128,0,0,0
+.stabs "long double:t14=r1;2;0;",128,0,0,0
+.stabs "complex int:t15=s2real:1,0,16;imag:1,16,16;;",128,0,0,0
+.stabs "complex float:t16=r16;2;0;",128,0,0,0
+.stabs "complex double:t17=r17;2;0;",128,0,0,0
+.stabs "complex long double:t18=r18;2;0;",128,0,0,0
+.stabs "void:t19=19",128,0,0,0
+.stabs "send525:F19",36,0,0,     32806
+.stabs "C:/Documents and Settings/Administrator/×/300Ã/346/¸/366È/313¹/244³/314Î/304¼/376¼/320/Õ/324Ó/300¿/306/525/my525.h",0x84,0,0,     32806
+.stabn 0x44,0,30,         0
+.stabn 0x44,0,31,         6
+.stabn 0x44,0,32,         6
+.stabn 0x44,0,33,        12
+.stabn 0x44,0,34,        18
+.stabn 0x44,0,35,        23
+.stabn 0x44,0,36,        28
+.stabn 0x44,0,37,        31
+.stabn 0x44,0,39,        48
+.stabn 0x44,0,40,        53
+.stabn 0x44,0,41,        58
+.stabn 0x44,0,43,        63
+.stabn 0x44,0,44,        69
+.stabn 0x44,0,45,        75
+.stabn 0x44,0,46,        81
+.stabn 0x44,0,49,        83
+.stabn 0x44,0,50,        89
+.stabn 0x44,0,51,        95
+.stabn 0x44,0,37,       101
+.stabn 0x44,0,54,       119
+.stabn 0x44,0,55,       125
+.stabn 0x44,0,55,       125
+.stabs "data:p1",160,0,0,6
+.stabn 0xc0,0,0,         6
+.stabs "temp:1",128,0,0,0
+.stabs "i:1",128,0,0,1
+.stabn 0xe0,0,0,       125
+.stabf        128
+.stabs "init525:F19",36,0,0,     32934
+.stabn 0x44,0,59,         0
+.stabn 0x44,0,60,         7
+.stabn 0x44,0,61,        13
+.stabn 0x44,0,62,        19
+.stabn 0x44,0,63,        25
+.stabn 0x44,0,64,        31
+.stabn 0x44,0,65,        37
+.stabn 0x44,0,66,        43
+.stabn 0x44,0,66,        43
+.stabf         46
+.stabs "sendword:F19",36,0,0,     32980
+.stabs "C:/Documents and Settings/Administrator/×/300Ã/346/¸/366È/313¹/244³/314Î/304¼/376¼/320/Õ/324Ó/300¿/306/525/my7219.h",0x84,0,0,     32980
+.stabn 0x44,0,36,         0
+.stabn 0x44,0,37,         6
+.stabn 0x44,0,38,         6
+.stabn 0x44,0,39,        12
+.stabn 0x44,0,41,        21
+.stabn 0x44,0,42,        24
+.stabn 0x44,0,43,        33
+.stabn 0x44,0,44,        38
+.stabn 0x44,0,46,        47
+.stabn 0x44,0,47,        53
+.stabn 0x44,0,48,        59
+.stabn 0x44,0,49,        65
+.stabn 0x44,0,52,        67
+.stabn 0x44,0,53,        73
+.stabn 0x44,0,54,        79
+.stabn 0x44,0,39,        85
+.stabn 0x44,0,57,        91
+.stabn 0x44,0,58,        97
+.stabn 0x44,0,59,       100
+.stabn 0x44,0,59,       100
+.stabs "word:p4",160,0,0,5
+.stabn 0xc0,0,0,         6
+.stabs "i:1",128,0,0,0
+.stabs "temp:1",128,0,0,1
+.stabn 0xe0,0,0,       100
+.stabf        103
+.stabs "init7219:F19",36,0,0,     33083
+.stabn 0x44,0,61,         0
+.stabn 0x44,0,62,         7
+.stabn 0x44,0,63,        13
+.stabn 0x44,0,64,        19
+.stabn 0x44,0,65,        25
+.stabn 0x44,0,66,        31
+.stabn 0x44,0,67,        37
+.stabn 0x44,0,68,        43
+.stabn 0x44,0,69,        49
+.stabn 0x44,0,70,        55
+.stabn 0x44,0,71,        61
+.stabn 0x44,0,71,        61
+.stabf         64
+.stabs "show:F19",36,0,0,     33147
+.stabn 0x44,0,80,         0
+.stabn 0x44,0,81,         7
+.stabn 0x44,0,83,         7
+.stabn 0x44,0,84,        13
+.stabn 0x44,0,85,        19
+.stabn 0x44,0,86,        25
+.stabn 0x44,0,87,        31
+.stabn 0x44,0,88,        37
+.stabn 0x44,0,89,        43
+.stabn 0x44,0,91,        49
+.stabn 0x44,0,92,        52
+.stabn 0x44,0,93,        71
+.stabn 0x44,0,94,        97
+.stabn 0x44,0,95,       109
+.stabn 0x44,0,96,       134
+.stabn 0x44,0,97,       154
+.stabn 0x44,0,98,       172
+.stabn 0x44,0,99,       175
+.stabn 0x44,0,100,       182
+.stabn 0x44,0,101,       188
+.stabn 0x44,0,102,       199
+.stabn 0x44,0,103,       210
+.stabn 0x44,0,104,       221
+.stabn 0x44,0,105,       227
+.stabn 0x44,0,106,       238
+.stabn 0x44,0,107,       249
+.stabn 0x44,0,107,       249
+.stabs "mode:p1",160,0,0,17
+.stabs "freq:p1",160,0,0,18
+.stabs "mvol:p1",160,0,0,19
+.stabn 0xc0,0,0,         7
+.stabs "tmp:20=ar1;0;7;1",128,0,0,0
+.stabn 0xe0,0,0,       249
+.stabf        252
+.stabs "table:G21=ar1;0;25;4",32,0,0,         1
+.stabs "delay:F19",36,0,0,     33399
+.stabs "C:/Documents and Settings/Administrator/×/300Ã/346/¸/366È/313¹/244³/314Î/304¼/376¼/320/Õ/324Ó/300¿/306/525/my525.c",0x84,0,0,     33399
+.stabn 0x44,0,10,         0
+.stabn 0x44,0,11,         6
+.stabn 0x44,0,12,         6
+.stabn 0x44,0,13,        15
+.stabn 0x44,0,14,        32
+.stabn 0x44,0,13,        35
+.stabn 0x44,0,12,        53
+.stabn 0x44,0,15,        59
+.stabn 0x44,0,15,        59
+.stabn 0xc0,0,0,         6
+.stabs "i:1",128,0,0,0
+.stabs "j:1",128,0,0,1
+.stabn 0xe0,0,0,        59
+.stabf         62
+.stabs "main:F1",36,0,0,     33461
+.stabn 0x44,0,17,         0
+.stabn 0x44,0,18,         7
+.stabn 0x44,0,19,         7
+.stabn 0x44,0,20,         9
+.stabn 0x44,0,21,        11
+.stabn 0x44,0,34,        15
+.stabn 0x44,0,36,        25
+.stabn 0x44,0,37,        27
+.stabn 0x44,0,37,        27
+.stabn 0xc0,0,0,         7
+.stabs "i:1",128,0,0,0
+.stabn 0xe0,0,0,        27
+.stabf         30

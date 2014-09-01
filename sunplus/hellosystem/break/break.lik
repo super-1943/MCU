@@ -1,0 +1,14 @@
+Version: 3.0
+Options: m37
+Obj: "C:\PROGRA~1\Sunplus\UNSPID~1.0\startupD.obj"
+Obj: "D:\break\Debug\Resource.obj"
+Obj: "D:\break\Debug\main.obj"
+Obj: "D:\break\Debug\int.obj"
+Output: "D:\break\Debug\break.S37"
+;Locate: TEXT in "int.obj" at 8009 
+;Align: TEXT in "int.obj" with 0 
+;Locate: IRAM in "main.obj" at 8069  linkat 1 
+;Align: IRAM in "main.obj" with 0 
+;Locate: CODE in "main.obj" at 8035 
+;Align: CODE in "main.obj" with 0 
+;Locate: __sn_init_table at 8000 

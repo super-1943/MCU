@@ -1,0 +1,190 @@
+Sunplus u'nSP Assembler - Ver. 1.14.3.1
+              Listing File Has Been Relocated
+                            	//======================================================
+                            	//  The information contained herein is the exclusive property of
+                            	//  Sunnnorth Technology Co. And shall not be distributed, reproduced,
+                            	//  or disclosed in whole in part without prior written permission.
+                            	//             (C) COPYRIGHT 2003  SUNNORTH TECHNOLOGY CO.
+                            	//                          ALL RIGHTS RESERVED
+                            	//  The entire notice above must be reproduced on all authorized copies.
+                            	//========================================================
+                            	
+                            	//============================================================
+                            	// 文件名称：Key.asm
+                            	// 实现功能：1*3按键扫描程序，适用于高电平有效的按键电路
+                            	//			 可处理长按键
+                            	//			 使用IRQ6_TMB2中断(128Hz)
+                            	// 日期：    2005/9/3
+                            	//============================================================
+                            	
+                            	//================================================
+                            	//	按键去抖动时间设定，单位为1/128秒
+                            	//================================================
+                            	.DEFINE Key_Debounce	4			//(4/128)秒=31ms
+                            	//================================================
+                            	//	持续按键多长时间算作长按键，单位1/128秒
+                            	//================================================
+                            	.DEFINE Key_TimeOut		192			//(192/128)秒=1.5s
+                            	
+                            	//================================================
+                            	//	按键使用端口设定
+                            	//================================================
+                            	.DEFINE Key_IO_Port			0		// 若按键使用IOA口则采用该行定义
+                            	//.DEFINE Key_IO_Port			1		// 若按键使用IOB口则采用该行定义
+                            	
+                            	.DEFINE Key_IO_HighByte		0		// 若按键使用IO口低8位则采用该行定义
+                            	//.DEFINE Key_IO_HighByte		1		// 若按键使用IO口高8位则采用该行定义
+                            	
+                            	/////-----       不必修改下面的定义	    -----/////
+                            	.IF Key_IO_HighByte==0
+                            		.DEFINE Key_ALL			0x0007		
+                            	.ELSE
+                            		.DEFINE Key_ALL			0x0700
+                            	.ENDIF
+                            	/////-----       不必修改下面的定义	    -----/////
+                            	.IF Key_IO_Port==0
+                            		.DEFINE P_Key_Data		0x7000
+                            		.DEFINE P_Key_Buf		0x7001
+                            		.DEFINE P_Key_Dir		0x7002
+                            		.DEFINE P_Key_Attrib	0x7003
+                            	.ELSE
+                            		.DEFINE P_Key_Data		0x7005
+                            		.DEFINE P_Key_Buf		0x7006
+                            		.DEFINE P_Key_Dir		0x7007
+                            		.DEFINE P_Key_Attrib	0x7008
+                            	.ENDIF
+                            	
+                            	
+                            	.DEFINE P_INT_Mask		0x702d
+                            	.DEFINE P_TimeBase_Setup	0x700e
+                            	.DEFINE	P_Watchdog_Clear	0x7012
+                            	.DEFINE C_IRQ6_TMB2		0x0001
+                            	.DEFINE C_TMB2_128Hz	0x0000
+                            	
+                            	.PUBLIC F_Key_Init
+                            	.PUBLIC _Key_Init
+                            	.PUBLIC F_Key_Scan
+                            	.PUBLIC _Key_Scan
+                            	.PUBLIC F_Key_Get
+                            	.PUBLIC _Key_Get
+                            	
+000002F5                    	.RAM
+000002F5 00 00              	.VAR KeyCode						// 存储获得的键值
+000002F6 00 00              	.VAR ScanCnt						// 该变量用来表示按键持续时间
+000002F7 00 00              	.VAR KeyUp							// 按键是否处于抬起状态
+                            	
+000096E6                    	.CODE
+                            	//======================================================
+                            	// 函数名称：	Key_Init
+                            	// C调用：		void Key_Init(void)
+                            	// 汇编调用：	F_Key_Init
+                            	// 实现功能：   初始化按键扫描程序，该函数将开启IRQ6_TMB2中断
+                            	// 入口参数：	无
+                            	// 出口参数：	无
+                            	// 破坏寄存器：	无
+                            	//======================================================
+                            	F_Key_Init:
+                            	_Key_Init:
+000096E6 88 D2              		push r1 to [sp]
+000096E7 40 F1              		INT Off
+000096E8 11 93 02 70        		r1 = [P_Key_Dir]				// 初始化IO为下拉输入
+000096EA 09 B3 F8 FF        		r1 &= ~Key_ALL
+000096EC 19 D3 02 70        		[P_Key_Dir] = r1
+000096EE 11 93 03 70        		r1 = [P_Key_Attrib]
+000096F0 09 B3 F8 FF        		r1 &= ~Key_ALL
+000096F2 19 D3 03 70        		[P_Key_Attrib] = r1
+000096F4 11 93 01 70        		r1 = [P_Key_Buf]
+000096F6 09 B3 F8 FF        		r1 &= ~Key_ALL
+000096F8 19 D3 01 70        		[P_Key_Buf] = r1
+                            	
+000096FA 40 92              		r1 = 0
+000096FB 19 D3 F6 02        		[ScanCnt] = r1					// 初始化变量
+000096FD 19 D3 F5 02        		[KeyCode] = r1
+000096FF 19 D3 F7 02        		[KeyUp] = r1
+00009701 40 92              		r1 = C_TMB2_128Hz				// 开启IRQ6_TMB2(128Hz)中断
+00009702 19 D3 0E 70        		[P_TimeBase_Setup] = r1
+00009704 11 93 2D 70        		r1 = [P_INT_Mask]
+00009706 41 A2              		r1 |= C_IRQ6_TMB2
+00009707 19 D3 2D 70        		[P_INT_Mask] = r1
+00009709 43 F1              		INT FIQ,IRQ
+0000970A 88 90              		pop r1 from [sp]
+0000970B 90 9A              	retf
+                            	
+                            	//======================================================
+                            	// 函数名称：	Key_Scan
+                            	// C调用：		void Key_Scan(void)
+                            	// 汇编调用：	F_Key_Scan
+                            	// 实现功能：   按键扫描，该函数被IRQ6_TMB2中断服务程序调用
+                            	// 入口参数：	无
+                            	// 出口参数：	无
+                            	// 破坏寄存器：	无
+                            	//======================================================
+                            	F_Key_Scan:
+                            	_Key_Scan:
+0000970C 90 D4              		push r1,r2 to [sp]
+0000970D 12 95 00 70        		r2 = [P_Key_Data]				// 获取IO端口状态
+0000970F 47 B4              		r2 &= Key_ALL
+00009710 04 4E              		jnz ?L_ScanKey_Down				// 判断当前是否有键按下
+                            	?L_ScanKey_Up:
+00009711 41 92              		r1 = 1							// 如果按键处于抬起状态则KeyUp置1
+00009712 19 D3 F7 02        		[KeyUp] = r1
+00009714 11 EE              		jmp ?L_ScanKey_Exit
+                            	?L_ScanKey_Down:
+00009715 40 92              		r1 = 0							// KeyUp置0
+00009716 19 D3 F7 02        		[KeyUp] = r1
+                            	.if Key_IO_HighByte
+                            		r2 = r2 lsr 4
+                            		r2 = r2 lsr 4
+                            	.endif
+00009718 12 45 F5 02        		cmp r2,[KeyCode]				// 本次得到的键值与上次得到的键值比较
+0000971A 06 5E              		je	?L_ScanKey_Cont
+                            	?L_ScanKey_New:						// 如果与上次键值不同则重置键值
+0000971B 1A D5 F5 02        		[KeyCode] = r2
+0000971D 41 92              		r1 = 1							// 重新记录键持续按下的时间
+0000971E 19 D3 F6 02        		[ScanCnt] = r1
+00009720 05 EE              		jmp ?L_ScanKey_Exit
+                            	?L_ScanKey_Cont:					// 如果此次键值与上次键值相同
+00009721 11 93 F6 02        		r1 = [ScanCnt]					// 更新按键持续时间(ScanCnt加1)
+00009723 41 02              		r1 += 1
+00009724 19 D3 F6 02        		[ScanCnt] = r1
+                            	?L_ScanKey_Exit:
+00009726 90 90              		pop r1,r2 from [sp]
+00009727 90 9A              	retf
+                            	
+                            	//======================================================
+                            	// 函数名称：	Key_Get
+                            	// C调用：		unsigned Key_Get(void)
+                            	// 汇编调用：	F_Key_Get
+                            	// 实现功能：   获取键值
+                            	// 入口参数：	无
+                            	// 出口参数：	r1 - 获得的键值
+                            	// 破坏寄存器：	r1
+                            	//======================================================
+                            	F_Key_Get:
+                            	_Key_Get:
+00009728 40 F1              		INT OFF
+00009729 90 D6              		push r2, r3 to [sp]
+0000972A 40 92              		r1 = 0x0000
+0000972B 41 94              		r2 = 0x01
+0000972C 1A D5 12 70        		[P_Watchdog_Clear] = r2
+0000972E 12 95 F6 02        		r2 = [ScanCnt]
+00009730 44 44              		cmp r2,Key_Debounce				// 如果按键持续时间小于Key_Debounce
+00009731 11 0E              		jb	?L_GetKey_Exit				// 则认为当前没有键按下
+00009732 13 97 F7 02        		r3 = [KeyUp]					// 如果按键处于抬起状态则认为发生了一次按键
+00009734 0E 5E              		jz ?L_GetKey_Exit				
+00009735 0A 45 C0 00        		cmp r2,Key_TimeOut				// 如果按键持续时间大于Key_TimeOut
+00009737 02 0E              		jb ?L_GetKey					// 则认为发生了长按键
+00009738 09 93 00 80        		r1 = 0x8000						// 键值最高位置1表示长键
+                            	?L_GetKey:
+0000973A 11 A3 F5 02        		r1 |= [KeyCode]					// 有按键则返回键值
+0000973C 40 94              		r2 = 0
+0000973D 1A D5 F5 02        		[KeyCode] = r2					// 重新初始化变量
+0000973F 1A D5 F6 02        		[ScanCnt] = r2
+00009741 1A D5 F7 02        		[KeyUp] = r2
+                            	?L_GetKey_Exit:
+00009743 43 F1              		INT FIQ,IRQ
+00009744 90 92              		pop r2, r3 from [sp]
+00009745 90 9A              	retf
+0 error(s), 0 warning(s).
+
+
