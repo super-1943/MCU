@@ -1,0 +1,99 @@
+<html>
+<body>
+<pre>
+<h1>礦ision2 Build Log</h1>
+<h2>Project:</h2>
+D:\zyc\源程序  大\7-21大.uv2
+Project File Date:  07/21/2008
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling Text.c...
+Text.c(15): warning C318: can't open file 'spce061.h'
+TEXT.C(53): error C202: 'P3': undefined identifier
+TEXT.C(54): error C202: 'P2': undefined identifier
+TEXT.C(55): error C202: 'P3': undefined identifier
+TEXT.C(56): error C202: 'P2': undefined identifier
+TEXT.C(57): error C202: 'P2': undefined identifier
+TEXT.C(58): error C202: 'P2': undefined identifier
+TEXT.C(59): error C202: 'P2': undefined identifier
+TEXT.C(61): error C202: 'P2': undefined identifier
+TEXT.C(62): error C202: 'P2': undefined identifier
+TEXT.C(63): error C202: 'P3': undefined identifier
+TEXT.C(65): error C202: 'P1': undefined identifier
+TEXT.C(66): error C202: 'P1': undefined identifier
+TEXT.C(67): error C202: 'P1': undefined identifier
+TEXT.C(68): error C202: 'P1': undefined identifier
+TEXT.C(98): error C202: 'CSN': undefined identifier
+TEXT.C(99): error C202: 'SCK': undefined identifier
+TEXT.C(100): error C202: 'DR': undefined identifier
+TEXT.C(101): error C202: 'AM': undefined identifier
+TEXT.C(102): error C202: 'PWR_UP': undefined identifier
+TEXT.C(103): error C202: 'TRX_CE': undefined identifier
+TEXT.C(104): error C202: 'TX_EN': undefined identifier
+TEXT.C(112): error C202: 'LED1': undefined identifier
+TEXT.C(113): error C202: 'LED2': undefined identifier
+TEXT.C(116): error C202: 'LED1': undefined identifier
+TEXT.C(117): error C202: 'LED2': undefined identifier
+TEXT.C(129): error C202: 'KEY1': undefined identifier
+TEXT.C(129): error C202: 'LED1': undefined identifier
+TEXT.C(130): error C202: 'KEY2': undefined identifier
+TEXT.C(130): error C202: 'LED2': undefined identifier
+TEXT.C(143): error C202: 'LED1': undefined identifier
+TEXT.C(144): error C202: 'LED2': undefined identifier
+TEXT.C(148): error C202: 'DR': undefined identifier
+TEXT.C(161): error C202: 'CSN': undefined identifier
+TEXT.C(167): error C202: 'CSN': undefined identifier
+TEXT.C(180): error C202: 'MOSI': undefined identifier
+TEXT.C(182): error C202: 'MOSI': undefined identifier
+TEXT.C(183): error C202: 'SCK': undefined identifier
+TEXT.C(185): error C202: 'SCK': undefined identifier
+TEXT.C(197): error C202: 'SCK': undefined identifier
+TEXT.C(198): error C202: 'MISO': undefined identifier
+TEXT.C(204): error C202: 'SCK': undefined identifier
+TEXT.C(215): error C202: 'CSN': undefined identifier
+TEXT.C(221): error C202: 'CSN': undefined identifier
+TEXT.C(223): error C202: 'CSN': undefined identifier
+TEXT.C(229): error C202: 'CSN': undefined identifier
+TEXT.C(230): error C202: 'TRX_CE': undefined identifier
+TEXT.C(232): error C202: 'TRX_CE': undefined identifier
+TEXT.C(240): error C202: 'TRX_CE': undefined identifier
+TEXT.C(241): error C202: 'CSN': undefined identifier
+TEXT.C(247): error C202: 'CSN': undefined identifier
+TEXT.C(248): error C202: 'DR': undefined identifier
+TEXT.C(250): error C202: 'TRX_CE': undefined identifier
+TEXT.C(254): error C202: 'LED1': undefined identifier
+TEXT.C(255): error C202: 'LED2': undefined identifier
+TEXT.C(259): error C202: 'LED1': undefined identifier
+TEXT.C(260): error C202: 'LED2': undefined identifier
+TEXT.C(267): error C202: 'TX_EN': undefined identifier
+TEXT.C(268): error C202: 'TRX_CE': undefined identifier
+TEXT.C(276): error C202: 'TX_EN': undefined identifier
+TEXT.C(277): error C202: 'TRX_CE': undefined identifier
+Target not created
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling Text.c...
+Text.c(16): warning C318: can't open file 'instrin.h'
+linking...
+Program Size: data=83.0 xdata=0 code=400
+creating hex file from "7-21大"...
+"7-21大" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling Text.c...
+linking...
+Program Size: data=83.0 xdata=0 code=400
+creating hex file from "7-21大"...
+"7-21大" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling Text.c...
+linking...
+Program Size: data=83.0 xdata=0 code=400
+creating hex file from "7-21大"...
+"7-21大" - 0 Error(s), 0 Warning(s).
+</pre>
+</body>
+</html>

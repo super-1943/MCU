@@ -1,0 +1,256 @@
+XL
+H 4 areas F global symbols
+M jfp_fasong.c
+S push_gset1 Ref0000
+S push_gset2 Ref0000
+S pop_gset1 Ref0000
+S pop_gset2 Ref0000
+A text size 18A flags 0
+dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_发送\jfp_fasong.c
+dbfunc e Delay 0 fV
+dbsym r i 14 i
+dbsym r x 10 i
+dbline FFFFFFFF 4
+dbline 50 4
+dbline 53 6
+dbline 53 C
+dbline 53 C
+dbline 53 10
+dbline 52 18
+dbline FFFFFFFE 26
+dbline 0 2A
+dbfunc e Spi_initial 2C fV
+dbline FFFFFFFF 2C
+dbline 57 2C
+dbline 5A 2C
+dbline FFFFFFFE 30
+dbline 0 30
+dbfunc e SpiReadSpiWrite 32 fc
+dbsym r cData 10 c
+dbline FFFFFFFF 32
+dbline 5E 32
+dbline 5F 32
+dbline 61 34
+dbline 61 34
+dbline 60 34
+dbline 61 38
+dbline 62 38
+dbline FFFFFFFE 3A
+dbline 0 3A
+dbfunc e system_Init 3C fV
+dbline FFFFFFFF 3C
+dbline 66 3C
+dbline 68 3C
+dbline 69 3E
+dbline 6A 40
+dbline 6B 42
+dbline 6C 44
+dbline 6D 46
+dbline 6E 48
+dbline 6F 4A
+dbline FFFFFFFE 4C
+dbline 0 4C
+dbfunc e Config905 4E fV
+dbsym r i 14 c
+dbline FFFFFFFF 52
+dbline 73 52
+dbline 75 52
+dbline 76 54
+dbline 78 5A
+dbline 79 5E
+dbline 7A 5E
+dbline 7B 6E
+dbline 78 6E
+dbline 78 70
+dbline 7C 74
+dbline FFFFFFFE 76
+dbline 0 7A
+dbfunc e TxPacket 7C fV
+dbsym r i 14 c
+dbsym r TxBUF 16 pc
+dbline FFFFFFFF 82
+dbline 80 82
+dbline 82 82
+dbline 83 84
+dbline 84 8A
+dbline 85 8E
+dbline 86 92
+dbline 87 92
+dbline 88 9E
+dbline 85 9E
+dbline 85 A0
+dbline 89 A4
+dbline 8A A6
+dbline 8B AC
+dbline 8C AE
+dbline 8D B2
+dbline 8E B6
+dbline 8F B6
+dbline 90 C6
+dbline 8D C6
+dbline 8D C8
+dbline 91 CC
+dbline 92 CE
+dbline 93 D0
+dbline 94 D6
+dbline FFFFFFFE D8
+dbline 0 DC
+dbfunc e SetTxMode DE fV
+dbline FFFFFFFF DE
+dbline 98 DE
+dbline 99 DE
+dbline 9A E0
+dbline 9B E2
+dbline FFFFFFFE E8
+dbline 0 E8
+dbfunc e main EA fV
+dbsym l temp 0 A[64:32]i
+dbsym l j 1 i
+dbsym l i 1 i
+dbline FFFFFFFF EE
+dbline 9F EE
+dbline A1 EE
+dbline A2 F2
+dbline A3 F6
+dbline A4 FA
+dbline A5 FE
+dbline A6 100
+dbline A7 102
+dbline A8 104
+dbline AA 10C
+dbline AE 10C
+dbline AF 110
+dbline B0 110
+dbline B0 110
+dbline B1 114
+dbline B2 11A
+dbline B3 11E
+dbline B4 124
+dbline B7 12A
+dbline B8 12C
+dbline B9 132
+dbline BB 132
+dbline BC 136
+dbline BD 136
+dbline BD 136
+dbline BE 13A
+dbline BF 140
+dbline C0 146
+dbline C1 14C
+dbline C3 152
+dbline C4 154
+dbline C5 15A
+dbline C7 15A
+dbline C8 15E
+dbline C9 15E
+dbline C9 15E
+dbline CA 162
+dbline CB 168
+dbline CC 16E
+dbline CD 174
+dbline CF 17A
+dbline D0 17C
+dbline D1 182
+dbline D2 182
+dbline A9 182
+dbline FFFFFFFE 184
+dbline 0 188
+S _main Def00EA
+S _SpiReadSpiWrite Def0032
+S _Delay Def0000
+S _Config905 Def004E
+S _TxPacket Def007C
+S _Spi_initial Def002C
+S _SetTxMode Def00DE
+S _system_Init Def003C
+A data size F flags 20
+dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_发送\jfp_fasong.c
+dbsym e TxAddress 0 A[4:4]c
+dbsym e RFConf 4 A[11:11]c
+S _RFConf Def0004
+S _TxAddress Def0000
+A idata size F flags 0
+A bss size 4 flags 20
+dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_发送\jfp_fasong.c
+dbsym e TxRxBuf 0 A[4:4]c
+S _TxRxBuf Def0000
+T 00 00 CC CC
+R 00 00 02 00
+T 02 00 CC CC
+R 00 00 02 00
+T 04 00 00 4C
+R 00 00 02 00
+T 06 00 0C 44
+R 00 00 02 00
+T 08 00 04 04
+R 00 00 02 00
+T 0A 00 CC CC
+R 00 00 02 00
+T 0C 00 CC CC
+R 00 00 02 00
+T 0E 00 58
+R 00 00 02 00
+T 00 00 0E 94 00 00 09 C0 44 27 55 27 02 C0 4F 5F
+R 00 00 00 00 12 04 00 00
+T 0E 00 5F 4F 40 35 E0 E0 5E 07 D0 F3 18 01 01 50
+R 00 00 00 00
+T 1C 00 10 40 22 20 91 F7 33 20 81 F7 0E 94 00 00
+R 00 00 00 00 12 0E 02 00
+T 2A 00 08 95
+R 00 00 00 00
+T 2C 00 80 E5 8D B9 08 95
+R 00 00 00 00
+T 32 00 0F B9 77 9B FE CF 0F B1 08 95
+R 00 00 00 00
+T 3C 00 C4 9A C7 98 C2 98 C3 98 94 98 C1 9A 95 98
+R 00 00 00 00
+T 4A 00 C0 98 08 95
+R 00 00 00 00
+T 4E 00 0E 94 00 00 C4 98 01 E0 10 E0 D3 DF 44 27
+R 00 00 00 00 12 04 00 00
+T 5C 00 09 C0 80 E0 90 E0 E4 2F FF 27 E8 0F F9 1F
+R 00 00 00 00 20 04 01 00 04 00 40 06 01 00 04 00
+T 6A 00 00 81 E2 DF 43 95 4B 30 A8 F3 C4 9A 0E 94
+R 00 00 00 00
+T 78 00 00 00 08 95
+R 00 00 00 00 12 02 02 00
+T 7C 00 0E 94 00 00 B8 01 C4 98 01 E0 10 E0 BB DF
+R 00 00 00 00 12 04 01 00
+T 8A 00 00 E2 D2 DF 44 27 07 C0 E4 2F FF 27 E6 0F
+R 00 00 00 00
+T 98 00 F7 1F 00 81 CA DF 43 95 44 30 B8 F3 C4 9A
+R 00 00 00 00
+T A6 00 01 E0 10 E0 AA DF C4 98 02 E2 C0 DF 44 27
+R 00 00 00 00
+T B4 00 09 C0 80 E0 90 E0 E4 2F FF 27 E8 0F F9 1F
+R 00 00 00 00 20 04 01 00 00 00 40 06 01 00 00 00
+T C2 00 00 81 B6 DF 43 95 44 30 A8 F3 C4 9A 95 9A
+R 00 00 00 00
+T D0 00 01 E0 10 E0 95 DF 95 98 0E 94 00 00 08 95
+R 00 00 00 00 12 0C 03 00
+T DE 00 95 98 C0 9A 02 E0 10 E0 8C DF 08 95
+R 00 00 00 00
+T EA 00 EF 97 21 97 82 E3 81 BB 83 EB 87 BB 8F E8
+R 00 00 00 00
+T F8 00 8A BB 8F EF 8B BB 96 DF 9D DF A5 DF 04 EF
+R 00 00 00 00
+T 06 01 11 E0 7B DF 3B C0 CC 99 11 C0 CC 9B FE CF
+R 00 00 00 00
+T 14 01 81 E3 80 93 00 00 80 93 01 00 89 E2 80 93
+R 00 00 00 00 00 06 03 00 00 0A 03 00
+T 22 01 02 00 80 E3 80 93 03 00 D9 DF
+R 00 00 00 00 00 02 03 00 00 08 03 00
+T 2C 01 00 E0 10 E0 A5 DF CD 99 12 C0 CD 9B FE CF
+R 00 00 00 00 20 02 03 00 00 00 40 04 03 00 00 00
+T 3A 01 80 E3 80 93 00 00 81 E3 80 93 01 00 82 E3
+R 00 00 00 00 00 06 03 00 00 0C 03 00
+T 48 01 80 93 02 00 89 E2 80 93 03 00 C5 DF
+R 00 00 00 00 00 04 03 00 00 0A 03 00
+T 54 01 00 E0 10 E0 91 DF CE 99 12 C0 CE 9B FE CF
+R 00 00 00 00 20 02 03 00 00 00 40 04 03 00 00 00
+T 62 01 89 E2 80 93 00 00 80 E3 80 93 01 00 81 E3
+R 00 00 00 00 00 06 03 00 00 0C 03 00
+T 70 01 80 93 02 00 82 E3 80 93 03 00 B1 DF
+R 00 00 00 00 00 04 03 00 00 0A 03 00
+T 7C 01 00 E0 10 E0 7D DF C4 CF EF 96 21 96 08 95
+R 00 00 00 00 20 02 03 00 00 00 40 04 03 00 00 00

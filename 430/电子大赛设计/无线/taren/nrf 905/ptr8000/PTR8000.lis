@@ -1,0 +1,775 @@
+                        .module PTR8000.C
+                        .area text(rom, con, rel)
+ 0000                   .dbfile D:\IccAvr\Pei\ptr8000\PTR8000.C
+ 0000                   .dbfunc e port_init _port_init fV
+                        .even
+ 0000           _port_init::
+ 0000                   .dbline -1
+ 0000                   .dbline 25
+ 0000           ; //ICC-AVR application builder : 2006-4-4 11:28:26
+ 0000           ; // Target : M16 PTR8000模块简单测试
+ 0000           ; // Crystal: 11.059Mhz
+ 0000           ; 
+ 0000           ; //最关键的是SPI的初始化，MSB首位和极性方式00，极性方式错误，数据则不正确
+ 0000           ; 
+ 0000           ; #include <iom16v.h>
+ 0000           ; #include <macros.h>
+ 0000           ; 
+ 0000           ; #include "config.h"
+ 0000           ; #include "nrf905.h"
+ 0000           ; 
+ 0000           ; #define MASTER  //编译控制是主机还是从机
+ 0000           ; 
+ 0000           ; #define T0N 25
+ 0000           ; 
+ 0000           ; //32字节数据包发送时间 
+ 0000           ; //=650us_StartUp+200us_Preamble+(4+32+2)Byts*8Bit/50000bps*1000000us=6.6ms
+ 0000           ; #define RFTN 10  //发送测试间隔 10*20ms
+ 0000           ; 
+ 0000           ; bit bTimer,bRfSend;
+ 0000           ; uchar T0Cnt,RfCnt;
+ 0000           ; 
+ 0000           ; void port_init(void)
+ 0000           ; {
+ 0000                   .dbline 26
+ 0000           ;  PORTA = 0x08;
+ 0000 88E0              ldi R24,8
+ 0002 8BBB              out 0x1b,R24
+ 0004                   .dbline 27
+ 0004           ;  DDRA  = 0x37;
+ 0004 87E3              ldi R24,55
+ 0006 8ABB              out 0x1a,R24
+ 0008                   .dbline 28
+ 0008           ;  PORTB = 0x50;
+ 0008 80E5              ldi R24,80
+ 000A 88BB              out 0x18,R24
+ 000C                   .dbline 29
+ 000C           ;  DDRB  = 0xBF;
+ 000C 8FEB              ldi R24,191
+ 000E 87BB              out 0x17,R24
+ 0010                   .dbline 30
+ 0010           ;  PORTC = 0x00; //m103 output only
+ 0010 2224              clr R2
+ 0012 25BA              out 0x15,R2
+ 0014                   .dbline 31
+ 0014           ;  DDRC  = 0x00;
+ 0014 24BA              out 0x14,R2
+ 0016                   .dbline 32
+ 0016           ;  PORTD = 0x1C;
+ 0016 8CE1              ldi R24,28
+ 0018 82BB              out 0x12,R24
+ 001A                   .dbline 33
+ 001A           ;  DDRD  = 0x80;
+ 001A 80E8              ldi R24,128
+ 001C 81BB              out 0x11,R24
+ 001E                   .dbline -2
+ 001E           L1:
+ 001E                   .dbline 0 ; func end
+ 001E 0895              ret
+ 0020                   .dbend
+ 0020                   .dbfunc e timer0_init _timer0_init fV
+                        .even
+ 0020           _timer0_init::
+ 0020                   .dbline -1
+ 0020                   .dbline 41
+ 0020           ; }
+ 0020           ; 
+ 0020           ; //TIMER0 initialize - prescale:1024
+ 0020           ; // WGM: Normal
+ 0020           ; // desired value: 20mSec
+ 0020           ; // actual value: 19.908mSec (0.5%)
+ 0020           ; void timer0_init(void)
+ 0020           ; {
+ 0020                   .dbline 42
+ 0020           ;  TCCR0 = 0x00; //stop
+ 0020 2224              clr R2
+ 0022 23BE              out 0x33,R2
+ 0024                   .dbline 43
+ 0024           ;  TCNT0 = 0x29; //set count
+ 0024 89E2              ldi R24,41
+ 0026 82BF              out 0x32,R24
+ 0028                   .dbline 44
+ 0028           ;  OCR0  = 0xD7;  //set compare
+ 0028 87ED              ldi R24,215
+ 002A 8CBF              out 0x3c,R24
+ 002C                   .dbline 45
+ 002C           ;  TCCR0 = 0x05; //start timer
+ 002C 85E0              ldi R24,5
+ 002E 83BF              out 0x33,R24
+ 0030                   .dbline -2
+ 0030           L2:
+ 0030                   .dbline 0 ; func end
+ 0030 0895              ret
+ 0032                   .dbend
+                        .area vector(rom, abs)
+                        .org 36
+ 0024 0C941900          jmp _timer0_ovf_isr
+                        .area text(rom, con, rel)
+ 0032                   .dbfile D:\IccAvr\Pei\ptr8000\PTR8000.C
+ 0032                   .dbfunc e timer0_ovf_isr _timer0_ovf_isr fV
+                        .even
+ 0032           _timer0_ovf_isr::
+ 0032 2A92              st -y,R2
+ 0034 8A93              st -y,R24
+ 0036 2FB6              in R2,0x3f
+ 0038 2A92              st -y,R2
+ 003A                   .dbline -1
+ 003A                   .dbline 50
+ 003A           ; }
+ 003A           ; 
+ 003A           ; #pragma interrupt_handler timer0_ovf_isr:10
+ 003A           ; void timer0_ovf_isr(void)
+ 003A           ; {
+ 003A                   .dbline 51
+ 003A           ;  TCNT0 = 0x29; //reload counter value
+ 003A 89E2              ldi R24,41
+ 003C 82BF              out 0x32,R24
+ 003E                   .dbline 53
+ 003E           ;  
+ 003E           ;  if (--T0Cnt==0)
+ 003E 80910100          lds R24,_T0Cnt
+ 0042 8150              subi R24,1
+ 0044 282E              mov R2,R24
+ 0046 20920100          sts _T0Cnt,R2
+ 004A 8823              tst R24
+ 004C 31F4              brne L4
+ 004E                   .dbline 54
+ 004E           ;    {T0Cnt=T0N;
+ 004E                   .dbline 54
+ 004E 89E1              ldi R24,25
+ 0050 80930100          sts _T0Cnt,R24
+ 0054                   .dbline 55
+ 0054           ;     bTimer=1;
+ 0054 81E0              ldi R24,1
+ 0056 80930300          sts _bTimer,R24
+ 005A                   .dbline 56
+ 005A           ;     }
+ 005A           L4:
+ 005A                   .dbline 57
+ 005A 80910000          lds R24,_RfCnt
+ 005E 8150              subi R24,1
+ 0060 282E              mov R2,R24
+ 0062 20920000          sts _RfCnt,R2
+ 0066 8823              tst R24
+ 0068 31F4              brne L6
+ 006A                   .dbline 58
+ 006A                   .dbline 58
+ 006A 8AE0              ldi R24,10
+ 006C 80930000          sts _RfCnt,R24
+ 0070                   .dbline 59
+ 0070 81E0              ldi R24,1
+ 0072 80930200          sts _bRfSend,R24
+ 0076                   .dbline 60
+ 0076           L6:
+ 0076                   .dbline -2
+ 0076           L3:
+ 0076 2990              ld R2,y+
+ 0078 2FBE              out 0x3f,R2
+ 007A 8991              ld R24,y+
+ 007C 2990              ld R2,y+
+ 007E                   .dbline 0 ; func end
+ 007E 1895              reti
+ 0080                   .dbend
+ 0080                   .dbfunc e timer1_init _timer1_init fV
+                        .even
+ 0080           _timer1_init::
+ 0080                   .dbline -1
+ 0080                   .dbline 68
+ 0080           ; if (--RfCnt==0)
+ 0080           ;    {RfCnt=RFTN;
+ 0080           ;     bRfSend=1;
+ 0080           ;     }
+ 0080           ; }
+ 0080           ; 
+ 0080           ; //TIMER1 initialize - prescale:8
+ 0080           ; // WGM: 0) Normal, TOP=0xFFFF
+ 0080           ; // desired value: 10mSec
+ 0080           ; // actual value:  9.999mSec (0.0%)
+ 0080           ; void timer1_init(void)
+ 0080           ; {
+ 0080                   .dbline 69
+ 0080           ;  TCCR1B = 0x00; //stop
+ 0080 2224              clr R2
+ 0082 2EBC              out 0x2e,R2
+ 0084                   .dbline 70
+ 0084           ;  TCNT1H = 0xCA; //setup
+ 0084 8AEC              ldi R24,202
+ 0086 8DBD              out 0x2d,R24
+ 0088                   .dbline 71
+ 0088           ;  TCNT1L = 0x01;
+ 0088 81E0              ldi R24,1
+ 008A 8CBD              out 0x2c,R24
+ 008C                   .dbline 72
+ 008C           ;  OCR1AH = 0x35;
+ 008C 85E3              ldi R24,53
+ 008E 8BBD              out 0x2b,R24
+ 0090                   .dbline 73
+ 0090           ;  OCR1AL = 0xFF;
+ 0090 8FEF              ldi R24,255
+ 0092 8ABD              out 0x2a,R24
+ 0094                   .dbline 74
+ 0094           ;  OCR1BH = 0x35;
+ 0094 85E3              ldi R24,53
+ 0096 89BD              out 0x29,R24
+ 0098                   .dbline 75
+ 0098           ;  OCR1BL = 0xFF;
+ 0098 8FEF              ldi R24,255
+ 009A 88BD              out 0x28,R24
+ 009C                   .dbline 76
+ 009C           ;  ICR1H  = 0x35;
+ 009C 85E3              ldi R24,53
+ 009E 87BD              out 0x27,R24
+ 00A0                   .dbline 77
+ 00A0           ;  ICR1L  = 0xFF;
+ 00A0 8FEF              ldi R24,255
+ 00A2 86BD              out 0x26,R24
+ 00A4                   .dbline 78
+ 00A4           ;  TCCR1A = 0x00;
+ 00A4 2FBC              out 0x2f,R2
+ 00A6                   .dbline 79
+ 00A6           ;  TCCR1B = 0x02; //start Timer
+ 00A6 82E0              ldi R24,2
+ 00A8 8EBD              out 0x2e,R24
+ 00AA                   .dbline -2
+ 00AA           L8:
+ 00AA                   .dbline 0 ; func end
+ 00AA 0895              ret
+ 00AC                   .dbend
+                        .area vector(rom, abs)
+                        .org 32
+ 0020 0C945600          jmp _timer1_ovf_isr
+                        .area text(rom, con, rel)
+ 00AC                   .dbfile D:\IccAvr\Pei\ptr8000\PTR8000.C
+ 00AC                   .dbfunc e timer1_ovf_isr _timer1_ovf_isr fV
+                        .even
+ 00AC           _timer1_ovf_isr::
+ 00AC 8A93              st -y,R24
+ 00AE 8FB7              in R24,0x3f
+ 00B0 8A93              st -y,R24
+ 00B2                   .dbline -1
+ 00B2                   .dbline 84
+ 00B2           ; }
+ 00B2           ; 
+ 00B2           ; #pragma interrupt_handler timer1_ovf_isr:9
+ 00B2           ; void timer1_ovf_isr(void)
+ 00B2           ; {
+ 00B2                   .dbline 86
+ 00B2           ;  //TIMER1 has overflowed
+ 00B2           ;  TCNT1H = 0xCA; //reload counter high value
+ 00B2 8AEC              ldi R24,202
+ 00B4 8DBD              out 0x2d,R24
+ 00B6                   .dbline 87
+ 00B6           ;  TCNT1L = 0x01; //reload counter low value
+ 00B6 81E0              ldi R24,1
+ 00B8 8CBD              out 0x2c,R24
+ 00BA                   .dbline -2
+ 00BA           L9:
+ 00BA 8991              ld R24,y+
+ 00BC 8FBF              out 0x3f,R24
+ 00BE 8991              ld R24,y+
+ 00C0                   .dbline 0 ; func end
+ 00C0 1895              reti
+ 00C2                   .dbend
+ 00C2                   .dbfunc e spi_init _spi_init fV
+ 00C2           ;           temp -> R16
+                        .even
+ 00C2           _spi_init::
+ 00C2                   .dbline -1
+ 00C2                   .dbline 92
+ 00C2           ; }
+ 00C2           ; 
+ 00C2           ; //SPI initialize
+ 00C2           ; void spi_init(void)
+ 00C2           ; {uchar temp;
+ 00C2                   .dbline 95
+ 00C2           ; 
+ 00C2           ;  //SPCR = 0xD1; //SPI中断允许,SPI允许，主机模式，MSB，极性方式00，1/16系统时钟速率
+ 00C2           ;  SPCR = 0x51; //不使用SPI中断,其它同上
+ 00C2 81E5              ldi R24,81
+ 00C4 8DB9              out 0xd,R24
+ 00C6                   .dbline 96
+ 00C6           ;  SPSR = 0x00; //setup SPI
+ 00C6 2224              clr R2
+ 00C8 2EB8              out 0xe,R2
+ 00CA                   .dbline 98
+ 00CA           ;  
+ 00CA           ;  temp = SPSR; //!!!
+ 00CA 0EB1              in R16,0xe
+ 00CC                   .dbline 99
+ 00CC           ;  temp = SPDR; //清空SPI，和中断标志，使SPI空闲    
+ 00CC 0FB1              in R16,0xf
+ 00CE                   .dbline -2
+ 00CE           L10:
+ 00CE                   .dbline 0 ; func end
+ 00CE 0895              ret
+ 00D0                   .dbsym r temp 16 c
+ 00D0                   .dbend
+                        .area vector(rom, abs)
+                        .org 40
+ 0028 0C946800          jmp _spi_stc_isr
+                        .area text(rom, con, rel)
+ 00D0                   .dbfile D:\IccAvr\Pei\ptr8000\PTR8000.C
+ 00D0                   .dbfunc e spi_stc_isr _spi_stc_isr fV
+ 00D0           ;           data -> R0
+                        .even
+ 00D0           _spi_stc_isr::
+ 00D0                   .dbline -1
+ 00D0                   .dbline 104
+ 00D0           ; }
+ 00D0           ; 
+ 00D0           ; #pragma interrupt_handler spi_stc_isr:11
+ 00D0           ; void spi_stc_isr(void)
+ 00D0           ; {uchar data;
+ 00D0                   .dbline -2
+ 00D0           L11:
+ 00D0                   .dbline 0 ; func end
+ 00D0 1895              reti
+ 00D2                   .dbsym l data 1 c
+ 00D2                   .dbend
+ 00D2                   .dbfunc e uart0_init _uart0_init fV
+                        .even
+ 00D2           _uart0_init::
+ 00D2                   .dbline -1
+ 00D2                   .dbline 116
+ 00D2           ;  //byte in SPDR has been sent/received
+ 00D2           ;  //data=SPDR;
+ 00D2           ;  //SPDR=0x66;
+ 00D2           ; }
+ 00D2           ; 
+ 00D2           ; //UART0 initialize
+ 00D2           ; // desired baud rate: 19200
+ 00D2           ; // actual: baud rate:19200 (0.0%)
+ 00D2           ; // char size: 5 bits
+ 00D2           ; // parity: Disabled
+ 00D2           ; void uart0_init(void)
+ 00D2           ; {
+ 00D2                   .dbline 117
+ 00D2           ;  UCSRB = 0x00; //disable while setting baud rate
+ 00D2 2224              clr R2
+ 00D4 2AB8              out 0xa,R2
+ 00D6                   .dbline 118
+ 00D6           ;  UCSRA = 0x00;
+ 00D6 2BB8              out 0xb,R2
+ 00D8                   .dbline 119
+ 00D8           ;  UCSRC = BIT(URSEL) | 0x00;
+ 00D8 80E8              ldi R24,128
+ 00DA 80BD              out 0x20,R24
+ 00DC                   .dbline 120
+ 00DC           ;  UBRRL = 0x23; //set baud rate lo
+ 00DC 83E2              ldi R24,35
+ 00DE 89B9              out 0x9,R24
+ 00E0                   .dbline 121
+ 00E0           ;  UBRRH = 0x00; //set baud rate hi
+ 00E0 20BC              out 0x20,R2
+ 00E2                   .dbline 122
+ 00E2           ;  UCSRB = 0x18;
+ 00E2 88E1              ldi R24,24
+ 00E4 8AB9              out 0xa,R24
+ 00E6                   .dbline -2
+ 00E6           L12:
+ 00E6                   .dbline 0 ; func end
+ 00E6 0895              ret
+ 00E8                   .dbend
+ 00E8                   .dbfunc e init_devices _init_devices fV
+                        .even
+ 00E8           _init_devices::
+ 00E8                   .dbline -1
+ 00E8                   .dbline 127
+ 00E8           ; }
+ 00E8           ; 
+ 00E8           ; //call this routine to initialize all peripherals
+ 00E8           ; void init_devices(void)
+ 00E8           ; {
+ 00E8                   .dbline 129
+ 00E8           ;  //stop errant interrupts until set up
+ 00E8           ;  CLI(); //disable all interrupts
+ 00E8 F894              cli
+ 00EA                   .dbline 130
+ 00EA           ;  port_init();
+ 00EA 8ADF              xcall _port_init
+ 00EC                   .dbline 131
+ 00EC           ;  timer0_init();
+ 00EC 99DF              xcall _timer0_init
+ 00EE                   .dbline 132
+ 00EE           ;  timer1_init();
+ 00EE C8DF              xcall _timer1_init
+ 00F0                   .dbline 133
+ 00F0           ;  spi_init();
+ 00F0 E8DF              xcall _spi_init
+ 00F2                   .dbline 134
+ 00F2           ;  uart0_init();
+ 00F2 EFDF              xcall _uart0_init
+ 00F4                   .dbline 136
+ 00F4           ; 
+ 00F4           ;  MCUCR = 0x00;
+ 00F4 2224              clr R2
+ 00F6 25BE              out 0x35,R2
+ 00F8                   .dbline 137
+ 00F8           ;  GICR  = 0x00;
+ 00F8 2BBE              out 0x3b,R2
+ 00FA                   .dbline 138
+ 00FA           ;  TIMSK = 0x05; //timer interrupt sources
+ 00FA 85E0              ldi R24,5
+ 00FC 89BF              out 0x39,R24
+ 00FE                   .dbline 139
+ 00FE           ;  SEI(); //re-enable interrupts
+ 00FE 7894              sei
+ 0100                   .dbline -2
+ 0100           L13:
+ 0100                   .dbline 0 ; func end
+ 0100 0895              ret
+ 0102                   .dbend
+ 0102                   .dbfunc e main _main fV
+                        .even
+ 0102           _main::
+ 0102                   .dbline -1
+ 0102                   .dbline 144
+ 0102           ;  //all peripherals are now initialized
+ 0102           ; }
+ 0102           ; 
+ 0102           ; void main()
+ 0102           ; {
+ 0102                   .dbline 145
+ 0102           ;    init_devices();
+ 0102 F2DF              xcall _init_devices
+ 0104                   .dbline 146
+ 0104           ;    SystemIni();
+ 0104 57D0              xcall _SystemIni
+ 0106                   .dbline 147
+ 0106           ;    nrf905_Init();
+ 0106 0E940000          xcall _nrf905_Init
+ 010A 0EC0              xjmp L16
+ 010C           L15:
+ 010C                   .dbline 150
+ 010C           ; 
+ 010C           ;    while (1)
+ 010C           ;    {  
+ 010C                   .dbline 151
+ 010C           ;       if (bTimer) TimerFunc();
+ 010C 20900300          lds R2,_bTimer
+ 0110 2220              tst R2
+ 0112 09F0              breq L18
+ 0114                   .dbline 151
+ 0114 44D0              xcall _TimerFunc
+ 0116           L18:
+ 0116                   .dbline 153
+ 0116           ;         #ifdef MASTER
+ 0116           ;           if (bRfSend)
+ 0116 20900200          lds R2,_bRfSend
+ 011A 2220              tst R2
+ 011C 21F0              breq L20
+ 011E                   .dbline 154
+ 011E           ;               { bRfSend=0;
+ 011E                   .dbline 154
+ 011E 2224              clr R2
+ 0120 20920200          sts _bRfSend,R2
+ 0124                   .dbline 155
+ 0124           ;                 RfSendProc();//发送测试
+ 0124 25D0              xcall _RfSendProc
+ 0126                   .dbline 156
+ 0126           ;               }
+ 0126           L20:
+ 0126                   .dbline 159
+ 0126 02D0              xcall _RfRecvProc
+ 0128                   .dbline 160
+ 0128           L16:
+ 0128                   .dbline 149
+ 0128 F1CF              xjmp L15
+ 012A           X0:
+ 012A                   .dbline 160
+ 012A           ;         #endif
+ 012A           ;         
+ 012A           ;         RfRecvProc();//接收处理
+ 012A           ;    };
+ 012A                   .dbline -2
+ 012A           L14:
+ 012A                   .dbline 0 ; func end
+ 012A 0895              ret
+ 012C                   .dbend
+ 012C                   .dbfunc e RfRecvProc _RfRecvProc fV
+ 012C           ;              i -> R20
+                        .even
+ 012C           _RfRecvProc::
+ 012C 0E940000          xcall push_gset1
+ 0130                   .dbline -1
+ 0130                   .dbline 165
+ 0130           ; }
+ 0130           ; 
+ 0130           ; //接收处理
+ 0130           ; void RfRecvProc()
+ 0130           ; {uchar i;
+ 0130                   .dbline 169
+ 0130           ; 
+ 0130           ;    //if ((PIND&(1<<AM))==0) return;//一般先AM=1指示地址匹配对
+ 0130           ;    
+ 0130           ;    if ((PIND&(1<<DR))==0) return;//DR=1时表示数据接收对而且Crc正确
+ 0130 8499              sbic 0x10,4
+ 0132 01C0              rjmp L23
+ 0134                   .dbline 169
+ 0134 1AC0              xjmp L22
+ 0136           L23:
+ 0136                   .dbline 172
+ 0136           ;    
+ 0136           ;    //已经接收到数据
+ 0136           ;    nrf905_ReadData();//读出...
+ 0136 0E940000          xcall _nrf905_ReadData
+ 013A                   .dbline 173
+ 013A           ;    for (i=0;i<32;i++)
+ 013A 4427              clr R20
+ 013C 0DC0              xjmp L28
+ 013E           L25:
+ 013E                   .dbline 174
+ 013E           ;    { if (RxBuf[i]!=(i+i)) 
+ 013E                   .dbline 174
+ 013E 242E              mov R2,R20
+ 0140 240E              add R2,R20
+ 0142 80E0              ldi R24,<_RxBuf
+ 0144 90E0              ldi R25,>_RxBuf
+ 0146 E42F              mov R30,R20
+ 0148 FF27              clr R31
+ 014A E80F              add R30,R24
+ 014C F91F              adc R31,R25
+ 014E 3080              ldd R3,z+0
+ 0150 3214              cp R3,R2
+ 0152 09F0              breq L29
+ 0154                   .dbline 175
+ 0154           ;         return;
+ 0154 0AC0              xjmp L22
+ 0156           L29:
+ 0156                   .dbline 176
+ 0156           L26:
+ 0156                   .dbline 173
+ 0156 4395              inc R20
+ 0158           L28:
+ 0158                   .dbline 173
+ 0158 4032              cpi R20,32
+ 015A 88F3              brlo L25
+ 015C                   .dbline 179
+ 015C           ;    }
+ 015C           ;    
+ 015C           ;    //数据接收正确...灯指示
+ 015C           ;    CPL(PORTD,LED);
+ 015C 80E8              ldi R24,128
+ 015E 90E0              ldi R25,0
+ 0160 22B2              in R2,0x12
+ 0162 3324              clr R3
+ 0164 2826              eor R2,R24
+ 0166 3926              eor R3,R25
+ 0168 22BA              out 0x12,R2
+ 016A                   .dbline -2
+ 016A           L22:
+ 016A 0E940000          xcall pop_gset1
+ 016E                   .dbline 0 ; func end
+ 016E 0895              ret
+ 0170                   .dbsym r i 20 c
+ 0170                   .dbend
+ 0170                   .dbfunc e RfSendProc _RfSendProc fV
+ 0170           ;              i -> R20
+                        .even
+ 0170           _RfSendProc::
+ 0170 0E940000          xcall push_gset1
+ 0174                   .dbline -1
+ 0174                   .dbline 189
+ 0174           ;    
+ 0174           ;    //从机回送数据包,这样双方都能指示是否收到有效数据包
+ 0174           ;    #ifndef MASTER
+ 0174           ;      RfSendProc();
+ 0174           ;    #endif
+ 0174           ; }
+ 0174           ; 
+ 0174           ; //发送测试
+ 0174           ; void RfSendProc()
+ 0174           ; {uchar i;
+ 0174                   .dbline 190
+ 0174 4427              clr R20
+ 0176 0AC0              xjmp L35
+ 0178           L32:
+ 0178                   .dbline 190
+ 0178 242E              mov R2,R20
+ 017A 240E              add R2,R20
+ 017C 80E0              ldi R24,<_TxBuf
+ 017E 90E0              ldi R25,>_TxBuf
+ 0180 E42F              mov R30,R20
+ 0182 FF27              clr R31
+ 0184 E80F              add R30,R24
+ 0186 F91F              adc R31,R25
+ 0188 2082              std z+0,R2
+ 018A           L33:
+ 018A                   .dbline 190
+ 018A 4395              inc R20
+ 018C           L35:
+ 018C                   .dbline 190
+ 018C           ;    for (i=0;i<32;i++) TxBuf[i]=i+i;
+ 018C 4032              cpi R20,32
+ 018E A0F3              brlo L32
+ 0190                   .dbline 191
+ 0190           ;    nrf905_SendData();//发送测试数据
+ 0190 0E940000          xcall _nrf905_SendData
+ 0194                   .dbline 192
+ 0194           ;    nrf905_RxOn();//重新回到接收状态
+ 0194 0E940000          xcall _nrf905_RxOn
+ 0198                   .dbline -2
+ 0198           L31:
+ 0198 0E940000          xcall pop_gset1
+ 019C                   .dbline 0 ; func end
+ 019C 0895              ret
+ 019E                   .dbsym r i 20 c
+ 019E                   .dbend
+ 019E                   .dbfunc e TimerFunc _TimerFunc fV
+                        .even
+ 019E           _TimerFunc::
+ 019E                   .dbline -1
+ 019E                   .dbline 196
+ 019E           ; }
+ 019E           ; 
+ 019E           ; void TimerFunc()
+ 019E           ; {
+ 019E                   .dbline 197
+ 019E           ;    bTimer=0;
+ 019E 2224              clr R2
+ 01A0 20920300          sts _bTimer,R2
+ 01A4                   .dbline 200
+ 01A4           ;    //WDR();//clear WDT
+ 01A4           ;    
+ 01A4           ;    CPL(PORTD,LED);
+ 01A4 80E8              ldi R24,128
+ 01A6 90E0              ldi R25,0
+ 01A8 22B2              in R2,0x12
+ 01AA 3324              clr R3
+ 01AC 2826              eor R2,R24
+ 01AE 3926              eor R3,R25
+ 01B0 22BA              out 0x12,R2
+ 01B2                   .dbline -2
+ 01B2           L36:
+ 01B2                   .dbline 0 ; func end
+ 01B2 0895              ret
+ 01B4                   .dbend
+ 01B4                   .dbfunc e SystemIni _SystemIni fV
+                        .even
+ 01B4           _SystemIni::
+ 01B4                   .dbline -1
+ 01B4                   .dbline 205
+ 01B4           ;    //SPDR=66;
+ 01B4           ; }
+ 01B4           ; 
+ 01B4           ; void SystemIni()
+ 01B4           ; {
+ 01B4                   .dbline 206
+ 01B4           ;   T0Cnt=T0N;
+ 01B4 89E1              ldi R24,25
+ 01B6 80930100          sts _T0Cnt,R24
+ 01BA                   .dbline 207
+ 01BA           ;   RfCnt=RFTN;
+ 01BA 8AE0              ldi R24,10
+ 01BC 80930000          sts _RfCnt,R24
+ 01C0                   .dbline -2
+ 01C0           L37:
+ 01C0                   .dbline 0 ; func end
+ 01C0 0895              ret
+ 01C2                   .dbend
+ 01C2                   .dbfunc e DelayMs _DelayMs fV
+ 01C2           ;              i -> R20
+ 01C2           ;             ms -> R22
+                        .even
+ 01C2           _DelayMs::
+ 01C2 0E940000          xcall push_gset2
+ 01C6 602F              mov R22,R16
+ 01C8                   .dbline -1
+ 01C8                   .dbline 211
+ 01C8           ; }
+ 01C8           ; 
+ 01C8           ; void DelayMs(uchar ms)
+ 01C8           ; {char i;
+ 01C8                   .dbline 212
+ 01C8           ; for (i=0;i<ms;i++)
+ 01C8 4427              clr R20
+ 01CA 04C0              xjmp L42
+ 01CC           L39:
+ 01CC                   .dbline 213
+ 01CC                   .dbline 213
+ 01CC 08EE              ldi R16,1000
+ 01CE 13E0              ldi R17,3
+ 01D0 06D0              xcall _DelayUs
+ 01D2                   .dbline 214
+ 01D2           L40:
+ 01D2                   .dbline 212
+ 01D2 4395              inc R20
+ 01D4           L42:
+ 01D4                   .dbline 212
+ 01D4 4617              cp R20,R22
+ 01D6 D0F3              brlo L39
+ 01D8                   .dbline 215
+ 01D8           ;   {DelayUs(1000);
+ 01D8           ;   }
+ 01D8           ;   return;
+ 01D8                   .dbline -2
+ 01D8           L38:
+ 01D8 0E940000          xcall pop_gset2
+ 01DC                   .dbline 0 ; func end
+ 01DC 0895              ret
+ 01DE                   .dbsym r i 20 c
+ 01DE                   .dbsym r ms 22 c
+ 01DE                   .dbend
+ 01DE                   .dbfunc e DelayUs _DelayUs fV
+ 01DE           ;              i -> R20,R21
+ 01DE           ;             us -> R16,R17
+                        .even
+ 01DE           _DelayUs::
+ 01DE 0E940000          xcall push_gset1
+ 01E2                   .dbline -1
+ 01E2                   .dbline 219
+ 01E2           ; }
+ 01E2           ; 
+ 01E2           ; void DelayUs(uint us)
+ 01E2           ; {uint i;
+ 01E2                   .dbline 220
+ 01E2           ;   for (i=0;i<us;i++)
+ 01E2 4427              clr R20
+ 01E4 5527              clr R21
+ 01E6 08C0              xjmp L47
+ 01E8           L44:
+ 01E8                   .dbline 221
+ 01E8                   .dbline 221
+ 01E8 0000              nop
+ 01EA                   .dbline 221
+ 01EA 0000              nop
+ 01EC                   .dbline 221
+ 01EC 0000              nop
+ 01EE                   .dbline 221
+ 01EE 0000              nop
+ 01F0                   .dbline 221
+ 01F0 0000              nop
+ 01F2                   .dbline 221
+ 01F2 0000              nop
+ 01F4                   .dbline 222
+ 01F4           L45:
+ 01F4                   .dbline 220
+ 01F4 4F5F              subi R20,255  ; offset = 1
+ 01F6 5F4F              sbci R21,255
+ 01F8           L47:
+ 01F8                   .dbline 220
+ 01F8 4017              cp R20,R16
+ 01FA 5107              cpc R21,R17
+ 01FC A8F3              brlo L44
+ 01FE                   .dbline -2
+ 01FE           L43:
+ 01FE 0E940000          xcall pop_gset1
+ 0202                   .dbline 0 ; func end
+ 0202 0895              ret
+ 0204                   .dbsym r i 20 i
+ 0204                   .dbsym r us 16 i
+ 0204                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile D:\IccAvr\Pei\ptr8000\PTR8000.C
+ 0000           _RfCnt::
+ 0000                   .blkb 1
+ 0001                   .dbsym e RfCnt _RfCnt c
+ 0001           _T0Cnt::
+ 0001                   .blkb 1
+ 0002                   .dbsym e T0Cnt _T0Cnt c
+ 0002           _bRfSend::
+ 0002                   .blkb 1
+ 0003                   .dbsym e bRfSend _bRfSend c
+ 0003           _bTimer::
+ 0003                   .blkb 1
+ 0004                   .dbsym e bTimer _bTimer c

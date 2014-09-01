@@ -1,0 +1,194 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+//                                                      02/Mar/2012  23:24:06 /
+// IAR C/C++ Compiler V5.30.3.20305/W32, Evaluation edition for MSP430        /
+// Copyright 1996-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    __rt_version  =  3                                                      /
+//    __double_size =  32                                                     /
+//    __reg_r4      =  free                                                   /
+//    __reg_r5      =  free                                                   /
+//    __pic         =  no                                                     /
+//    __core        =  430                                                    /
+//    Source file   =  E:\AllProject\430\G2231_Self\main.c                    /
+//    Command line  =  E:\AllProject\430\G2231_Self\main.c --preprocess=cl    /
+//                     E:\AllProject\430\G2231_Self\Debug\List\ -lC           /
+//                     E:\AllProject\430\G2231_Self\Debug\List\ -lA           /
+//                     E:\AllProject\430\G2231_Self\Debug\List\ -o            /
+//                     E:\AllProject\430\G2231_Self\Debug\Obj\ --no_cse       /
+//                     --no_unroll --no_inline --no_code_motion --no_tbaa     /
+//                     --debug -D__MSP430G2231__ -e --double=32               /
+//                     --dlib_config "D:\Program Files\IAR Systems\Embedded   /
+//                     Workbench 6.0 Evaluation\430\LIB\DLIB\dl430fn.h" -Ol   /
+//    List file     =  E:\AllProject\430\G2231_Self\Debug\List\main.s43       /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME main
+
+        RTMODEL "__SystemLibrary", "DLib"
+        RTMODEL "__core", "430"
+        RTMODEL "__double_size", "32"
+        RTMODEL "__pic", "no"
+        RTMODEL "__reg_r4", "free"
+        RTMODEL "__reg_r5", "free"
+        RTMODEL "__rt_version", "3"
+
+        RSEG CSTACK:DATA:SORT:NOROOT(0)
+
+        EXTERN ?longjmp_r4
+        EXTERN ?longjmp_r5
+        EXTERN ?setjmp_r4
+        EXTERN ?setjmp_r5
+
+        PUBWEAK ?setjmp_save_r4
+        PUBWEAK ?setjmp_save_r5
+        PUBWEAK _A_P1DIR
+        PUBWEAK _A_P1IN
+        PUBWEAK _A_P1OUT
+        PUBWEAK _A_WDTCTL
+        PUBLIC delay
+        FUNCTION delay,0203H
+        ARGFRAME CSTACK, 0, STACK
+        LOCFRAME CSTACK, 2, STACK
+        PUBLIC main
+        FUNCTION main,021a03H
+        ARGFRAME CSTACK, 0, STACK
+        LOCFRAME CSTACK, 2, STACK
+        
+        CFI Names cfiNames0
+        CFI StackFrame CFA SP DATA
+        CFI Resource PC:16, SP:16, SR:16, R4:16, R5:16, R6:16, R7:16, R8:16
+        CFI Resource R9:16, R10:16, R11:16, R12:16, R13:16, R14:16, R15:16
+        CFI EndNames cfiNames0
+        
+        CFI Common cfiCommon0 Using cfiNames0
+        CFI CodeAlign 2
+        CFI DataAlign 2
+        CFI ReturnAddress PC CODE
+        CFI CFA SP+2
+        CFI PC Frame(CFA, -2)
+        CFI SR Undefined
+        CFI R4 SameValue
+        CFI R5 SameValue
+        CFI R6 SameValue
+        CFI R7 SameValue
+        CFI R8 SameValue
+        CFI R9 SameValue
+        CFI R10 SameValue
+        CFI R11 SameValue
+        CFI R12 Undefined
+        CFI R13 Undefined
+        CFI R14 Undefined
+        CFI R15 Undefined
+        CFI EndCommon cfiCommon0
+        
+// E:\AllProject\430\G2231_Self\main.c
+//    1 #include "io430.h"
+
+        ASEGN DATA16_AN:DATA:NOROOT,020H
+// union <unnamed> volatile _A_P1IN
+_A_P1IN:
+        DS8 1
+
+        ASEGN DATA16_AN:DATA:NOROOT,021H
+// union <unnamed> volatile _A_P1OUT
+_A_P1OUT:
+        DS8 1
+
+        ASEGN DATA16_AN:DATA:NOROOT,022H
+// union <unnamed> volatile _A_P1DIR
+_A_P1DIR:
+        DS8 1
+
+        ASEGN DATA16_AN:DATA:NOROOT,0120H
+// union <unnamed> volatile _A_WDTCTL
+_A_WDTCTL:
+        DS8 2
+
+        RSEG CODE:CODE:REORDER:NOROOT(1)
+//    2 void delay(unsigned int t)
+delay:
+??delay_0:
+        CFI Block cfiBlock0 Using cfiCommon0
+        CFI Function delay
+//    3 {
+//    4 	while(t--);
+        MOV.W   R12, R15
+        MOV.W   R15, R12
+        ADD.W   #0xffff, R12
+        CMP.W   #0x0, R15
+        JNE     ??delay_0
+//    5 }
+        RET
+        CFI EndBlock cfiBlock0
+
+        RSEG CODE:CODE:REORDER:NOROOT(1)
+//    6 int main( void )
+main:
+        CFI Block cfiBlock1 Using cfiCommon0
+        CFI Function main
+//    7 {
+//    8 	// Stop watchdog timer to prevent time out reset
+//    9 	WDTCTL = WDTPW + WDTHOLD;
+        FUNCALL main, delay
+        LOCFRAME CSTACK, 2, STACK
+        FUNCALL main, delay
+        LOCFRAME CSTACK, 2, STACK
+        MOV.W   #0x5a80, &0x120
+//   10 	P1DIR|=0x41;
+        BIS.B   #0x41, &0x22
+//   11 	
+//   12 	while(1)
+//   13 	{
+//   14 		if(!(P1IN&0x08))//如果S2按下
+??main_0:
+        BIT.B   #0x8, &0x20
+        JC      ??main_0
+//   15 		{
+//   16 			P1OUT|=0x40;
+        BIS.B   #0x40, &0x21
+//   17 			P1OUT&=~0x01;
+        BIC.B   #0x1, &0x21
+//   18 			delay(15000);
+        MOV.W   #0x3a98, R12
+        CALL    #delay
+//   19 			P1OUT|=0x01;
+        BIS.B   #0x1, &0x21
+//   20 			P1OUT&=~0x40;
+        BIC.B   #0x40, &0x21
+//   21 			delay(15000);
+        MOV.W   #0x3a98, R12
+        CALL    #delay
+        JMP     ??main_0
+        CFI EndBlock cfiBlock1
+        REQUIRE _A_WDTCTL
+        REQUIRE _A_P1DIR
+        REQUIRE _A_P1IN
+        REQUIRE _A_P1OUT
+//   22 		}
+//   23 	}
+//   24 	return 0;
+//   25 }
+
+        RSEG CODE:CODE:REORDER:NOROOT(1)
+?setjmp_save_r4:
+        REQUIRE ?setjmp_r4
+        REQUIRE ?longjmp_r4
+
+        RSEG CODE:CODE:REORDER:NOROOT(1)
+?setjmp_save_r5:
+        REQUIRE ?setjmp_r5
+        REQUIRE ?longjmp_r5
+
+        END
+// 
+// 68 bytes in segment CODE
+//  5 bytes in segment DATA16_AN
+// 
+// 68 bytes of CODE memory
+//  0 bytes of DATA memory (+ 5 bytes shared)
+//
+//Errors: none
+//Warnings: 1

@@ -1,0 +1,74 @@
+#include "msp430x15x.h"
+  const unsigned int table[]=
+  {
+    0,41,81,122,163,204,245,286,327,368,408,449,490,531,571,612,652,693,
+    733,773,813,853,893,933,973,1013,1053,1092,1132,1171,1210,1249,1288,
+    1327,1366,1404,1442,1481,1519,1557,1595,1632,1670,1707,1744,1781,1818,
+    1855,1891,1927,1963,1999,2035,2070,2105,2140,2175,2210,2244,2278,2312,
+    2346,2379,2413,2446,2478,2511,2543,2575,2607,2638,2669,
+      
+  };
+void init_dac(void)
+{
+  ADC12CTL0=REF2_5V + REFON;
+  DAC12_0CTL=DAC12IR+DAC12AMP_5+DAC12ENC;
+}
+void delay(unsigned int i)
+{
+  while(i--);
+}
+void square(void)
+{
+  init_dac();
+  while(1)
+  {
+    DAC12_0DAT=0x0000;
+    delay(8000);
+    DAC12_0DAT=0x0fff;
+    delay(4000);
+  }
+}
+void sanjiao(void)
+{
+  init_dac();
+  while(1)
+  {
+    for(DAC12_0DAT=0x0000;DAC12_0DAT<0x0fff;DAC12_0DAT++);
+    for(DAC12_0DAT=0x0fff;DAC12_0DAT>0x00;DAC12_0DAT--);
+  }
+}
+void sint(void)
+{
+  unsigned char i;
+
+  while(1)
+  {
+    for(i=0;i<72;i++)
+    {
+      DAC12_0DAT=table[i];
+    }
+  }
+}
+int main( void )
+{
+  // Stop watchdog timer to prevent time out reset
+  WDTCTL = WDTPW + WDTHOLD;
+  unsigned int i;
+  P6SEL|=0x01;
+  ADC12CTL0=ADC12ON+SHT0_2+REFON+REF2_5V;
+  ADC12CTL1=SHP;
+  ADC12MCTL0=SREF_1;
+  init_dac();
+  DAC12_0DAT=0x0000;
+  for(i=0;i<0x3600;i++)
+  {}
+  ADC12CTL0|=ENC;
+  sint();
+  while(1)
+  {
+    ADC12CTL0|=ADC12SC;
+    while((ADC12IFG&BIT0)==0);
+    _NOP();
+  }
+
+}

@@ -1,0 +1,482 @@
+__text_start:
+__start:
+    0032 E5CF      LDI	R28,0x5F
+    0033 E0D4      LDI	R29,4
+    0034 BFCD      OUT	0x3D,R28
+    0035 BFDE      OUT	0x3E,R29
+    0036 51C0      SUBI	R28,0x10
+    0037 40D0      SBCI	R29,0
+    0038 EA0A      LDI	R16,0xAA
+    0039 8308      STD	Y+0,R16
+    003A 2400      CLR	R0
+    003B E6EF      LDI	R30,0x6F
+    003C E0F0      LDI	R31,0
+    003D E010      LDI	R17,0
+    003E 37E3      CPI	R30,0x73
+    003F 07F1      CPC	R31,R17
+    0040 F011      BEQ	0x0043
+    0041 9201      ST	R0,Z+
+    0042 CFFB      RJMP	0x003E
+    0043 8300      STD	Z+0,R16
+    0044 E5E4      LDI	R30,0x54
+    0045 E0F0      LDI	R31,0
+    0046 E6A0      LDI	R26,0x60
+    0047 E0B0      LDI	R27,0
+    0048 E010      LDI	R17,0
+    0049 36E3      CPI	R30,0x63
+    004A 07F1      CPC	R31,R17
+    004B F021      BEQ	0x0050
+    004C 95C8      LPM
+    004D 9631      ADIW	R30,1
+    004E 920D      ST	R0,X+
+    004F CFF9      RJMP	0x0049
+    0050 940E00C8  CALL	_main
+_exit:
+    0052 CFFF      RJMP	_exit
+_Delay:
+  i                    --> R20
+  x                    --> R16
+    0053 940E0123  CALL	push_gset1
+FILE: F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_发送\jfp_fasong.c
+(0001) //ICC-AVR application builder : 2007-8-11 20:37:32
+(0002) // Target : M16
+(0003) // Crystal: 8.0000Mhz
+(0004) #include <iom16v.h>
+(0005) #include <macros.h>
+(0006) #define uint  unsigned int
+(0007) #define uchar unsigned char
+(0008) ///////////////////////////模式控制定义/////////////////////////////////
+(0009) //#define  nrf905_TX_EN	  PB0	    //输出1   
+(0010) #define   Low_nrf905_TX_EN     PORTB &= ~(1 << PB0)
+(0011) #define   Hign_nrf905_TX_EN    PORTB |= (1 << PB0)
+(0012) //#define  nrf905_TRX_CE  PD5 	    //输出1
+(0013) #define   Hign_nrf905_TRX_CE    PORTD |= (1 << PD5)  
+(0014) #define   Low_nrf905_TRX_CE     PORTD &= ~(1 << PD5) 
+(0015) //#define  nrf905_PWR     PB1 	    //输出1
+(0016) #define   Hign_nrf905_PWR    PORTB |= (1 << PB1) 
+(0017) #define   Low_nrf905_PWR     PORTB &= ~(1 << PB1)
+(0018) //--------------------------------SPI口定义-------------------------------------
+(0019) //#define  nrf905_MISO	  PB6   	//输入0
+(0020) //#define  nrf905_MOSI    PB5	    //输出1
+(0021) //#define  nrf905_SCK     PB7	    //输出1
+(0022) #define   Low_nrf905_SCK     PORTB &= ~(1 << PB7)
+(0023) //------------------------------------------------------------------------------
+(0024) //#define  nrf905_CSN     PB4		//输出1		
+(0025) #define   Hign_nrf905_CSN    PORTB |= (1 << PB4)  
+(0026) #define   Low_nrf905_CSN     PORTB &= ~(1 << PB4)				
+(0027) //-------------------------------状态输出口-------------------------------------
+(0028) //#define  nrf905_CD      PD4	    //输入0
+(0029) #define   Hign_nrf905_CD    PORTD |= (1 << PD4) 
+(0030) #define   Low_nrf905_CD     PORTD &= ~(1 << PD4) 
+(0031) #define   Read_nrf905_CD    PINB & (1 << PD4)
+(0032) //#define  nrf905_AM      PB3	    //输入0
+(0033) #define   Hign_nrf905_AM    PORTB |= (1 << PB3) 
+(0034) #define   Low_nrf905_AM     PORTB &= ~(1 << PB3)
+(0035) #define   Read_nrf905_AM    PINB & (1 << PB3)
+(0036) //#define  nrf905_DR      PB2  		//输入0
+(0037) #define   Hign_nrf905_DR    PORTB |= (1 << PB2)
+(0038) #define   Low_nrf905_DR     PORTB &= ~(1 << PB2)
+(0039) #define   Read_nrf905_DR    PINB & (1 << PB2)
+(0040) //读取键值KEYA-KEYB-KEYC  
+(0041) #define   Read_KEY_A   	    PINA & (1 << PA6)
+(0042) #define   Read_KEY_B   	    PINA & (1 << PA5)
+(0043) #define   Read_KEY_C    	PINA & (1 << PA4)
+(0044) //----------------------------------905-SPI指令---------------------------------
+(0045) #define WC	0x00
+(0046) #define RRC	0x10
+(0047) #define WTP	0x20
+(0048) #define RTP	0x21
+(0049) #define WTA	0x22
+(0050) #define RTA	0x23
+(0051) #define RRP	0x24
+(0052) //---------------------------------发送数据-------------------------------------
+(0053) uchar TxRxBuf[4];
+(0054) //----------------------------------接收地址------------------------------------
+(0055) uchar TxAddress[4]={0xcc,0xcc,0xcc,0xcc };    
+(0056) //----------------------------------寄存器配置----------------------------------
+(0057) uchar RFConf[11]=
+(0058) {
+(0059)   0x00,                             //配置命令//
+(0060)   0x4c,                             //CH_NO,配置频段在430MHZ
+(0061)   0x0C,                             //输出功率为10db,不重发，节电为正常模式
+(0062)   0x44,                             //地址宽度设置，为4字节
+(0063)   0x04,0x04,                        //接收发送有效数据长度为4字节
+(0064)   0xCC,0xCC,0xCC,0xCC,              //接收地址
+(0065)   0x58,                              //CRC充许，8位CRC校验，外部时钟信号不使能，16M晶振
+(0066) };
+(0067) //----------------------------------函数申明------------------------------------
+(0068) void Delay(uint x);
+(0069) void Spi_initial();
+(0070) uchar SpiReadSpiWrite(uchar DATA);
+(0071) void system_Init(void);
+(0072) void Config905(void);
+(0073) void TxPacket(uchar TxBUF[4]);
+(0074) void SetTxMode(void);
+(0075) void TX(void);
+(0076) void StartUART(void);
+(0077) void R_S_Byte(uchar R_Byte);
+(0078) //----------------------------------100us延时子程序-----------------------------
+(0079) void Delay(uint x)
+(0080) {
+    0055 C009      RJMP	0x005F
+(0081) 	uint i;
+(0082) 	while(x--)
+(0083) 	for(i=0;i<80;i++);
+    0056 2744      CLR	R20
+    0057 2755      CLR	R21
+    0058 C002      RJMP	0x005B
+    0059 5F4F      SUBI	R20,0xFF
+    005A 4F5F      SBCI	R21,0xFF
+    005B 3540      CPI	R20,0x50
+    005C E0E0      LDI	R30,0
+    005D 075E      CPC	R21,R30
+    005E F3D0      BCS	0x0059
+    005F 0118      MOVW	R2,R16
+    0060 5001      SUBI	R16,1
+    0061 4010      SBCI	R17,0
+    0062 2022      TST	R2
+    0063 F791      BNE	0x0056
+    0064 2033      TST	R3
+    0065 F781      BNE	0x0056
+    0066 940E0126  CALL	pop_gset1
+    0068 9508      RET
+(0084) }
+(0085) //----------------------------------SPI初始化-----------------------------------
+(0086) void Spi_initial()
+(0087) {
+(0088) 	//SPCR=0x50;
+(0089) 	//SPSR=0x00;	
+(0090) 	SPCR   = (1<<SPE)|(1<<MSTR)|(0<<CPOL)|(0<<SPR0);   // 主机模式，fck/16, SPI方式0
+_Spi_initial:
+    0069 E580      LDI	R24,0x50
+    006A B98D      OUT	0x0D,R24
+    006B 9508      RET
+(0091) }
+(0092) //---------------------------------SPI读写程序----------------------------------	
+(0093) uchar SpiReadSpiWrite(unsigned char cData)//r
+(0094) {
+(0095) 	SPDR = cData;
+_SpiReadSpiWrite:
+  cData                --> R16
+    006C B90F      OUT	0x0F,R16
+(0096) 	while(!(SPSR & (1<<SPIF) ))
+    006D 9B77      SBIS	0x0E,7
+    006E CFFE      RJMP	0x006D
+(0097) 	{};			// 等待SPI发送完毕
+(0098) 	return SPDR;
+    006F B10F      IN	R16,0x0F
+    0070 9508      RET
+(0099) }
+(0100) //---------------------------------系统状态初始化-------------------------------
+(0101) void system_Init(void)			//r
+(0102) {
+(0103) 
+(0104)    	Hign_nrf905_CSN;				// Spi 	disable
+_system_Init:
+    0071 9AC4      SBI	0x18,4
+(0105) 	Low_nrf905_SCK;				// Spi clock line init low
+    0072 98C7      CBI	0x18,7
+(0106) 	Low_nrf905_DR;				// Init DR for input
+    0073 98C2      CBI	0x18,2
+(0107) 	Low_nrf905_AM;				// Init AM for input
+    0074 98C3      CBI	0x18,3
+(0108) 	Low_nrf905_CD;				// Init nrf905_CDfor input
+    0075 9894      CBI	0x12,4
+(0109) 	Hign_nrf905_PWR;				// nRF905 power on
+    0076 9AC1      SBI	0x18,1
+(0110) 	Low_nrf905_TRX_CE;			// Set nRF905 in standby mode
+    0077 9895      CBI	0x12,5
+(0111) 	Low_nrf905_TX_EN ;			// set radio in Rx mode
+    0078 98C0      CBI	0x18,0
+    0079 9508      RET
+_Config905:
+  i                    --> R20
+    007A 940E0123  CALL	push_gset1
+(0112) }
+(0113) //--------------------------------NRF905寄存器初始化函数------------------------
+(0114) void Config905(void)
+(0115) {
+(0116) 	uchar i;
+(0117) 	Low_nrf905_CSN;	
+    007C 98C4      CBI	0x18,4
+(0118) 	Delay(1);				// Spi enable for write a spi command
+    007D E001      LDI	R16,1
+    007E E010      LDI	R17,0
+    007F DFD3      RCALL	_Delay
+(0119) 	//SpiWrite(WC);				// Write config command写放配置命令
+(0120) 	for (i=0;i<11;i++)			// Write configration words  写放配置字
+    0080 2744      CLR	R20
+    0081 C009      RJMP	0x008B
+(0121) 	{
+(0122) 	 SpiReadSpiWrite(RFConf[i]);
+    0082 E684      LDI	R24,0x64
+    0083 E090      LDI	R25,0
+    0084 2FE4      MOV	R30,R20
+    0085 27FF      CLR	R31
+    0086 0FE8      ADD	R30,R24
+    0087 1FF9      ADC	R31,R25
+    0088 8100      LDD	R16,Z+0
+    0089 DFE2      RCALL	_SpiReadSpiWrite
+    008A 9543      INC	R20
+    008B 304B      CPI	R20,0xB
+    008C F3A8      BCS	0x0082
+(0123) 	}
+(0124) 	Hign_nrf905_CSN;					// Disable Spi
+    008D 9AC4      SBI	0x18,4
+    008E 940E0126  CALL	pop_gset1
+    0090 9508      RET
+_TxPacket:
+  i                    --> R20
+  TxBUF                --> R22
+    0091 940E0121  CALL	push_gset2
+    0093 01B8      MOVW	R22,R16
+(0125) }
+(0126) //--------------------------------NRF905待发数据打包----------------------------
+(0127) void TxPacket(uchar TxBUF[4])
+(0128) {
+(0129) 	uchar i;
+(0130) 	Low_nrf905_CSN;		   						// 使能Spi，允许对nrf905进行读写操作
+    0094 98C4      CBI	0x18,4
+(0131) 	Delay(1);
+    0095 E001      LDI	R16,1
+    0096 E010      LDI	R17,0
+    0097 DFBB      RCALL	_Delay
+(0132) 	SpiReadSpiWrite(WTP);				// 写数据前先写写数据命令
+    0098 E200      LDI	R16,0x20
+    0099 DFD2      RCALL	_SpiReadSpiWrite
+(0133) 	for (i=0;i<4;i++)
+    009A 2744      CLR	R20
+    009B C007      RJMP	0x00A3
+(0134) 	{
+(0135) 	SpiReadSpiWrite(TxBUF[i]);		// 待发送的32字节数据
+    009C 2FE4      MOV	R30,R20
+    009D 27FF      CLR	R31
+    009E 0FE6      ADD	R30,R22
+    009F 1FF7      ADC	R31,R23
+    00A0 8100      LDD	R16,Z+0
+    00A1 DFCA      RCALL	_SpiReadSpiWrite
+    00A2 9543      INC	R20
+    00A3 3044      CPI	R20,4
+    00A4 F3B8      BCS	0x009C
+(0136) 	}						
+(0137) 	Hign_nrf905_CSN;
+    00A5 9AC4      SBI	0x18,4
+(0138) 	Delay(1);							// 关闭Spi，不允许对nrf905进行读写操作
+    00A6 E001      LDI	R16,1
+    00A7 E010      LDI	R17,0
+    00A8 DFAA      RCALL	_Delay
+(0139) 	Low_nrf905_CSN;								// 使能Spi
+    00A9 98C4      CBI	0x18,4
+(0140) 	SpiReadSpiWrite(WTA);				// 写地址前首先先写地址命令
+    00AA E202      LDI	R16,0x22
+    00AB DFC0      RCALL	_SpiReadSpiWrite
+(0141) 	for (i=0;i<4;i++)					// 写 4 bytes 地址
+    00AC 2744      CLR	R20
+    00AD C009      RJMP	0x00B7
+(0142) 	{
+(0143) 	SpiReadSpiWrite(TxAddress[i]);
+    00AE E680      LDI	R24,0x60
+    00AF E090      LDI	R25,0
+    00B0 2FE4      MOV	R30,R20
+    00B1 27FF      CLR	R31
+    00B2 0FE8      ADD	R30,R24
+    00B3 1FF9      ADC	R31,R25
+    00B4 8100      LDD	R16,Z+0
+    00B5 DFB6      RCALL	_SpiReadSpiWrite
+    00B6 9543      INC	R20
+    00B7 3044      CPI	R20,4
+    00B8 F3A8      BCS	0x00AE
+(0144) 	}
+(0145) 	Hign_nrf905_CSN;					// 关闭Spi
+    00B9 9AC4      SBI	0x18,4
+(0146) 	Hign_nrf905_TRX_CE;					// Set TRX_CE high,start Tx data transmission
+    00BA 9A95      SBI	0x12,5
+(0147) 	Delay(1);							// 等待DR变高
+    00BB E001      LDI	R16,1
+    00BC E010      LDI	R17,0
+    00BD DF95      RCALL	_Delay
+(0148) 	Low_nrf905_TRX_CE;							// 设置TRX_CE=0
+    00BE 9895      CBI	0x12,5
+    00BF 940E0118  CALL	pop_gset2
+    00C1 9508      RET
+(0149) }
+(0150) //-------------------------------发送模式激发-----------------------------------
+(0151) void SetTxMode(void)
+(0152) {
+(0153) 	Low_nrf905_TRX_CE;				//
+_SetTxMode:
+    00C2 9895      CBI	0x12,5
+(0154) 	Hign_nrf905_TX_EN;				//发送使能
+    00C3 9AC0      SBI	0x18,0
+(0155) 	Delay(2); 				// delay for mode change(>=650us)根据晶振不同要改变
+    00C4 E002      LDI	R16,2
+    00C5 E010      LDI	R17,0
+    00C6 DF8C      RCALL	_Delay
+    00C7 9508      RET
+_main:
+  temp                 --> Y+0
+  j                    --> Y+1
+  i                    --> Y+1
+    00C8 97EF      SBIW	R28,0x3F
+    00C9 9721      SBIW	R28,1
+(0156) }
+(0157) //------------------------------主函数------------------------------------------
+(0158) void main(void)
+(0159) {  
+(0160) 	uint i,j,temp[32];
+(0161) 	DDRD=0x32;		  //
+    00CA E382      LDI	R24,0x32
+    00CB BB81      OUT	0x11,R24
+(0162) 	DDRB=0xB3;		  //
+    00CC EB83      LDI	R24,0xB3
+    00CD BB87      OUT	0x17,R24
+(0163) 	DDRA=0x8f;		  //
+    00CE E88F      LDI	R24,0x8F
+    00CF BB8A      OUT	0x1A,R24
+(0164) 	PORTA = 0xff;
+    00D0 EF8F      LDI	R24,0xFF
+    00D1 BB8B      OUT	0x1B,R24
+(0165) 	Spi_initial();
+    00D2 DF96      RCALL	_Spi_initial
+(0166) 	system_Init();
+    00D3 DF9D      RCALL	_system_Init
+(0167) 	Config905();
+    00D4 DFA5      RCALL	_Config905
+(0168) 	Delay(500);
+    00D5 EF04      LDI	R16,0xF4
+    00D6 E011      LDI	R17,1
+    00D7 DF7B      RCALL	_Delay
+    00D8 C03B      RJMP	0x0114
+(0169) 	while(1)
+(0170)  {
+(0171) 	//TX();
+(0172) 
+(0173) //------------------------------------------------------------------------------
+(0174) 	if((PINA & 0x10) == 0x00)						//有键按下
+    00D9 99CC      SBIC	0x19,4
+    00DA C011      RJMP	0x00EC
+(0175) 	{
+(0176) 	 while(!(PINA & 0x10));   			//等待按键松开  RED
+    00DB 9BCC      SBIS	0x19,4
+    00DC CFFE      RJMP	0x00DB
+(0177) 	 TxRxBuf[0]=0x31;
+    00DD E381      LDI	R24,0x31
+    00DE 9380006F  STS	TxRxBuf,R24
+(0178) 	 TxRxBuf[1]=0x31;
+    00E0 93800070  STS	TxRxBuf+1,R24
+(0179) 	 TxRxBuf[2]=0x29;
+    00E2 E289      LDI	R24,0x29
+    00E3 93800071  STS	TxRxBuf+2,R24
+(0180) 	 TxRxBuf[3]=0x30;   
+    00E5 E380      LDI	R24,0x30
+    00E6 93800072  STS	TxRxBuf+3,R24
+(0181) 
+(0182) //------------------------------------------------------------------------------
+(0183)      SetTxMode();
+    00E8 DFD9      RCALL	_SetTxMode
+(0184) 	 TxPacket(TxRxBuf);													
+    00E9 E60F      LDI	R16,0x6F
+    00EA E010      LDI	R17,0
+    00EB DFA5      RCALL	_TxPacket
+(0185) 	}
+(0186) //------------------------------------------------------------------------------
+(0187) 	if((PINA & 0x20) == 0x00)		//有键按下
+    00EC 99CD      SBIC	0x19,5
+    00ED C012      RJMP	0x0100
+(0188) 	{
+(0189) while(!(PINA & 0x20));   			//等待按键松开GREEN
+    00EE 9BCD      SBIS	0x19,5
+    00EF CFFE      RJMP	0x00EE
+(0190) 	 TxRxBuf[0]=0x30;
+    00F0 E380      LDI	R24,0x30
+    00F1 9380006F  STS	TxRxBuf,R24
+(0191) 	 TxRxBuf[1]=0x31;
+    00F3 E381      LDI	R24,0x31
+    00F4 93800070  STS	TxRxBuf+1,R24
+(0192) 	 TxRxBuf[2]=0x32;
+    00F6 E382      LDI	R24,0x32
+    00F7 93800071  STS	TxRxBuf+2,R24
+(0193) 	 TxRxBuf[3]=0x29;    
+    00F9 E289      LDI	R24,0x29
+    00FA 93800072  STS	TxRxBuf+3,R24
+(0194) //------------------------------------------------------------------------------
+(0195)      SetTxMode();			        // 设置进入发送状态
+    00FC DFC5      RCALL	_SetTxMode
+(0196) 	 TxPacket(TxRxBuf);			    // 装载待发送数据
+    00FD E60F      LDI	R16,0x6F
+    00FE E010      LDI	R17,0
+    00FF DF91      RCALL	_TxPacket
+(0197) 	 }
+(0198) //------------------------------------------------------------------------------
+(0199) 	if((PINA & 0x40) == 0x00)	    //有键按下
+    0100 99CE      SBIC	0x19,6
+    0101 C012      RJMP	0x0114
+(0200) 	{
+(0201) 	while(!(PINA & 0x40));   		//等待按键松开GREEN
+    0102 9BCE      SBIS	0x19,6
+    0103 CFFE      RJMP	0x0102
+(0202)  	 TxRxBuf[0]=0x29;
+    0104 E289      LDI	R24,0x29
+    0105 9380006F  STS	TxRxBuf,R24
+(0203) 	 TxRxBuf[1]=0x30;
+    0107 E380      LDI	R24,0x30
+    0108 93800070  STS	TxRxBuf+1,R24
+(0204) 	 TxRxBuf[2]=0x31;
+    010A E381      LDI	R24,0x31
+    010B 93800071  STS	TxRxBuf+2,R24
+(0205) 	 TxRxBuf[3]=0x32;  
+    010D E382      LDI	R24,0x32
+    010E 93800072  STS	TxRxBuf+3,R24
+(0206) //------------------------------------------------------------------------------
+(0207)      SetTxMode();                   // 设置进入发送状态
+    0110 DFB1      RCALL	_SetTxMode
+(0208) 	 TxPacket(TxRxBuf);             // 装载待发送数据
+FILE: <library>
+    0111 E60F      LDI	R16,0x6F
+    0112 E010      LDI	R17,0
+    0113 DF7D      RCALL	_TxPacket
+    0114 CFC4      RJMP	0x00D9
+    0115 96EF      ADIW	R28,0x3F
+    0116 9621      ADIW	R28,1
+    0117 9508      RET
+pop_gset2:
+    0118 E0E2      LDI	R30,2
+    0119 940C0127  JMP	pop
+push_gset5:
+    011B 92FA      ST	R15,-Y
+    011C 92EA      ST	R14,-Y
+push_gset4:
+    011D 92DA      ST	R13,-Y
+    011E 92CA      ST	R12,-Y
+push_gset3:
+    011F 92BA      ST	R11,-Y
+    0120 92AA      ST	R10,-Y
+push_gset2:
+    0121 937A      ST	R23,-Y
+    0122 936A      ST	R22,-Y
+push_gset1:
+    0123 935A      ST	R21,-Y
+    0124 934A      ST	R20,-Y
+    0125 9508      RET
+pop_gset1:
+    0126 E0E1      LDI	R30,1
+pop:
+    0127 9149      LD	R20,Y+
+    0128 9159      LD	R21,Y+
+    0129 FDE0      SBRC	R30,0
+    012A 9508      RET
+    012B 9169      LD	R22,Y+
+    012C 9179      LD	R23,Y+
+    012D FDE1      SBRC	R30,1
+    012E 9508      RET
+    012F 90A9      LD	R10,Y+
+    0130 90B9      LD	R11,Y+
+    0131 FDE2      SBRC	R30,2
+    0132 9508      RET
+    0133 90C9      LD	R12,Y+
+    0134 90D9      LD	R13,Y+
+    0135 FDE3      SBRC	R30,3
+    0136 9508      RET
+    0137 90E9      LD	R14,Y+
+    0138 90F9      LD	R15,Y+
+    0139 9508      RET

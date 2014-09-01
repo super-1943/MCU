@@ -1,0 +1,283 @@
+/******************************************************************************************\ 
+============================================================================================
+* T905.c
+*
+* This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTYT; 
+* without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*
+* NOTES:
+* This program is for the nRF905 with 232 interface;
+* $write date: 2004.4.7 ;time 11:00$
+* $Revision: 1 $
+*
+/*******************************************************************************************/
+#include <at89x52.h>
+//#include <intrins.h>
+
+#define uchar unsigned char 
+#define uint  unsigned int
+
+#define WC		0x00			// Write configuration register command    写配置寄存器
+#define RC		0x10 			// Read  configuration register command     读配置寄存器
+#define WTP		0x20 			// Write TX Payload  command    写发送有效数据
+#define RTP		0x21			// Read  TX Payload  command    读发送有效数据
+#define WTA		0x22			// Write TX Address  command    写发送地址
+#define RTA		0x23			// Read  TX Address  command    读发地址
+#define RRP		0x24			// Read  RX Payload  command    读接收有效数据
+/*******************************************************************************************/
+typedef struct RFConfig
+{
+	uchar n;
+	uchar buf[10];
+}RFConfig;
+
+code RFConfig RxTxConf =             //code 作为前缀表示用flash存取
+{
+	10,
+	0x01, 0x0c, 0x44, 0x20, 0x20, 0xcc, 0xcc, 0xcc,0xcc, 0x58	
+};
+// The content of this struct is nRF905's initialize data.初始化数据
+// CH_NO=1;433MHZ;Normal Opration,No Retrans;RX,TX Address is 4 Bytes
+// RX TX Payload Width is 32 Bytes;Disable Extern Clock;Fosc=16MHZ
+// 8 Bits CRC And enable
+/*******************************************************************************************/
+uchar data TxBuf[32];                  //data 表示写到ram中       平时写程序变量写到ram里，不变量写到flash里
+uchar data RxBuf[32];
+uchar key,rsbrf,delayf,tf;
+/*******************************************************************************************/
+uchar bdata DATA_BUF;                   //bdata 表示放在内部ram xdata表示放在外部ram
+sbit	flag	=DATA_BUF^7;            //DATA_BUF的第8位
+sbit	flag1	=DATA_BUF^0;            //DATA_BUF的第一位；
+/*******************************************************************************************/
+sbit	TX_EN	=P1^5;               //发射使能，高有效
+sbit	TRX_CE	=P3^4;               //TRX_CE发送接收使能  高有效
+sbit	PWR_UP	=P1^4;               //上电     
+sbit	MISO	=P3^1;               //spi输出
+sbit	MOSI	=P1^1;               //spi输入
+sbit	SCK		=P3^0;               //spi时钟
+sbit	CSN		=P1^0;               //spi片选
+
+sbit	AM		=P3^2;               //AM 地址匹配，受到有效地址被置高
+sbit	DR		=P1^2;               //数据准备就绪
+sbit	CD		=P1^3;               //载波检测，检测到频率相同的载波时，置高
+
+sbit    LED1    =P2^0; 
+sbit    LED2    =P2^1;
+sbit    KEY1    =P2^2;
+sbit    KEY2    =P2^3;
+
+/*******************************************************************************************/
+//void InitIO(void);				// Initialize IO port   初始化IO口
+//void Inituart(void);			// initialize 232 uart   
+//void Scankey(void);				// Scan key                 扫描键盘
+//void TxData (uchar x);			// Send key_value to CRT display   
+//void comdebug(void);
+void Config905(void);			// Config nRF905 module    配置NRF905模式
+void SetTxMode(void);			// Set nRF905 in Tx mode   设置为发送模式
+void SetRxMode(void);			// Set nRF905 in Rx mode   设置为接收模式
+void TxPacket(void);			// Send data by nRF905      发送函数
+void RxPacket(void);			// Recive data by nRF905    接收 函数
+void SpiWrite(uchar);			// Write data to nRF905     向nrf905写数据
+uchar SpiRead(void);			// Read data to nRF905      读nrf905的数据
+void Delay(uchar n);			// Delay 100us
+
+/*******************************************************************************************/
+void Delay(uchar n)
+{
+	uint i;
+	while(n--)
+	for(i=0;i<80;i++);	
+}
+
+void main()
+{
+unsigned int cyc=0;
+unsigned int distan=0;
+
+
+    //================NRF905初始化
+	CSN=1;						// Spi 	disable				关闭spi
+	SCK=0;						// Spi clock line init high
+	DR=1;						// Init DR for input       数据准备就绪，在此表示时刻都就绪
+	AM=1;						// Init AM for input       地址匹配，相符为高，再次表示相符，因为是两点通信
+	PWR_UP=1;					// nRF905 power on         上电
+	TRX_CE=0;					// Set nRF905 in standby mode     禁止发送接收
+	TX_EN=0;					// set radio in Rx mode	          禁止发送
+
+	//================
+	Config905();				// Config nRF905 module            配置905模式
+	TxBuf[0] = 1;
+	TxBuf[1] = 1;
+	SetTxMode();				// Set Tx Mode          启动发送模式
+	TxPacket();				// Transmit Tx buffer data   发送数据
+	LED1 = 0;                //点亮
+	LED2 = 0;
+
+	Delay(500);				// delay for led light	
+	LED1 = 1;                //熄灭
+	LED2 = 1;
+	TxBuf[0] = 0xff;                             
+	TxBuf[1] = 0xff;
+
+					// led close
+	SetRxMode();				// Set nRF905 in Rx mode       接收
+
+while(1)
+{
+	 //=====================从键盘获得数据
+	
+
+		   if(KEY1 ==0 ) {	LED1 = 0; TxBuf[0] = 1 ;tf = 1 ; }        //发送1点亮，按键发1;
+		   if(KEY2 ==0 ) {	LED2 = 0; TxBuf[1] = 1 ;tf = 1 ; }
+
+	   if (tf==1)
+	     {	
+		
+		  //===============NRF905发送相应的按键	  
+		     SetTxMode();				// Set Tx Mode   发送模式
+		     TxPacket();				// Transmit Tx buffer data发送数据 
+			TxBuf[0] = 0xff;
+			TxBuf[1] = 0xff;
+			SetRxMode();				// Set nRF905 in Rx mode
+			tf=0;
+			Delay(500);
+			LED1 = 1;
+			LED2 = 1;
+		  }
+
+         //=====================等待NRF905接收
+	   if (DR)			// If recive data ready...   数据准备就绪
+	   RxPacket();			// ... recive data       接收
+
+}
+
+}
+/*******************************************************************************************/
+/*******************************************************************************************/
+//function Config905();
+/*******************************************************************************************/
+void Config905(void)         //配置NRF905模式
+{
+	uchar i;					
+	CSN=0;						// Spi enable for write a spi command   给spi发送数据时CSN为低电平
+	SpiWrite(WC);				// Write config command写放配置命令
+	for (i=0;i<RxTxConf.n;i++)	// Write configration words  写放配置字 n=10
+	{
+		SpiWrite(RxTxConf.buf[i]);
+	}
+	CSN=1;						// Disable Spi  CSN=0时才可以写入数据
+}
+/*******************************************************************************************/
+//function SpiWrite();
+/*******************************************************************************************/
+void SpiWrite(uchar  byte)
+{
+	uchar i;	
+	DATA_BUF=byte;				// Put function's parameter into a bdata variable		
+	for (i=0;i<8;i++)			// Setup byte circulation bits   写入一个八位数据
+	{	
+		
+		if (flag)				// Put DATA_BUF.7 on data line" sbit flag=DATA_BUF^7"
+			MOSI=1;             //写入数据
+		else
+			MOSI=0;
+		SCK=1;					// Set clock line high   
+		DATA_BUF=DATA_BUF<<1;	// Shift DATA_BUF
+		SCK=0;					// Set clock line low    下降沿
+	}	
+}
+/*******************************************************************************************/
+//function SpiRead();
+/*******************************************************************************************/
+uchar SpiRead(void)           //读spi
+{
+	uchar i;	
+	for (i=0;i<8;i++)			// Setup byte circulation bits
+	{	
+		DATA_BUF=DATA_BUF<<1;	// Right shift DATA_BUF先读高位，左移
+		SCK=1;					// Set clock line high  
+		if (MISO)                //sbit MISO =P1^0
+			flag1=1;			// Read data   sbit flag1=DATA_BUF^0
+		else
+			flag1=0;
+							
+		
+		SCK=0;					// Set clock line low  时钟下降沿
+	}
+	return DATA_BUF;			// Return function parameter
+}
+/*******************************************************************************************/
+//function TxPacket();
+/*******************************************************************************************/
+void TxPacket(void)              //
+{
+	uchar i;
+	//Config905();				
+	CSN=0;						// Spi enable for write a spi command	允许写spi
+	SpiWrite(WTP);				// Write payload command    写发送有效数据地址
+	for (i=0;i<32;i++)                                        //写32位数据
+	{
+		SpiWrite(TxBuf[i]);		// Write 32 bytes Tx data  
+	}
+	CSN=1;						// Spi disable		  输入数据完毕			
+	Delay(1);
+
+	CSN=0;						// Spi enable for write a spi command	
+	SpiWrite(WTA);				// Write address command      写入Tx的地址
+	for (i=0;i<4;i++)			// Write 4 bytes address
+	{
+		SpiWrite(RxTxConf.buf[i+5]);
+	}	
+	CSN=1;						// Spi disable  写完各种数据
+
+	TRX_CE=1;					// Set TRX_CE high,start Tx data transmission   开始发送
+	Delay(1);					// while (DR!=1);
+	TRX_CE=0;					// Set TRX_CE low        禁止发送接收
+}
+/*******************************************************************************************/
+//function RxPacket();
+/*******************************************************************************************/
+void RxPacket(void)              //接收函数
+{
+	uchar i;	
+	TRX_CE=0;					// Set nRF905 in standby mode	 禁止发送接收
+	CSN=0;						// Spi enable for write a spi command   ，可以读写数据
+	SpiWrite(RRP);				// Read payload command	   读RX有效数据
+	for (i=0;i<32;i++)
+	{
+		RxBuf[i]=SpiRead();		// Read data and save to buffer		
+	}
+	CSN=1;						// Disable spi       禁止spi
+	while(DR||AM);	             //数据准备就绪||地址匹配
+//	P0=	RxBuf[0];				// Buffer[0] output from P0 port...
+	TRX_CE=1;                    //开始发送或接收数据，spi写停止
+	//xx=(RxBuf[0]>>4)&0x0f;
+	//TxData(xx);
+	 //=====================
+	   if(RxBuf[0] == 1) LED1 = 0 ;      //点亮
+	   if(RxBuf[1] == 1) LED2 = 0 ;
+	  
+	Delay(500);					// ...light led
+//	P0=0xff;					// Close led
+      LED1 = 1 ;              //熄灭
+	  LED2 = 1 ;								
+}
+/*******************************************************************************************/
+//function SetTxMode();
+/*******************************************************************************************/
+void SetTxMode(void)			//设置发送模式	
+{	
+	TX_EN=1;                    //启动发送
+  	TRX_CE=0;                   //关闭发送接收？？？？应该改为TRX_CE=1;吧？？
+	Delay(1); 					// delay for mode change(>=650us)
+}				
+/*******************************************************************************************/
+//function SetRxMode();
+/*******************************************************************************************/
+void SetRxMode(void)                  //设置接收模式
+{
+	TX_EN=0;                         //关闭发送             从RX寄存器里读数据
+ 	TRX_CE=1;                         //开启发送接收
+	Delay(1); 					// delay for mode change(>=650us)				
+}

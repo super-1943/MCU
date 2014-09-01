@@ -1,0 +1,1 @@
+main.o display.o lcd.o nrf905config.o b20.o timer.o 

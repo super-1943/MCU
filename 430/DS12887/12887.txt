@@ -1,0 +1,87 @@
+45    #include 
+46    #include 
+47
+48    /*************************/
+49    #define     TM_SEC      XBYTE[0xFF00] 
+50    #define     TM_MIN      XBYTE[0xFF02] 
+51    #define     TM_HOU      XBYTE[0xFF04] 
+52    #define     DAY         XBYTE[0xFF06] 
+53    #define     DATE        XBYTE[0xFF07] 
+54    #define     MONTH       XBYTE[0xFF08] 
+55    #define     YEAR        XBYTE[0xFF09] 
+56
+57    #define     AM_SEC      XBYTE[0xFF01] 
+58    #define     AM_MIN      XBYTE[0xFF03] 
+59    #define     AM_HOU      XBYTE[0xFF05] 
+60
+61    #define     REG_A       XBYTE[0xFF0a] 
+62    #define     REG_B       XBYTE[0xFF0b]
+63    #define     REG_C       XBYTE[0xFF0c]
+64    #define     REG_D       XBYTE[0xFF0d]
+65
+66
+67    void Set_calendar(void);
+68    void Read_calendar(void);
+69    void Start_calendar(void);
+70    void Stop_calendar(void);
+71
+72    code unsigned char at[7]={9,8,7,4,2,0,6};   /* Year Month Day hour minute second weekday*/
+73
+74    unsigned char calendar_time[7]={07,5,16,15,43,00,3}; /* 05/8/16 18:58:00 */
+75
+76    unsigned char xdata *calendar_address=0xff00;
+77
+78    sbit sec_LED = P2^7;
+79
+80    void main(void)
+81    {
+82        sec_LED = 1;        // shut down 
+83        Set_calendar();     // set 
+84        Start_calendar();   // start 
+85
+86        while(1)
+87        {
+88            Read_calendar();   // Read 
+89
+90            if( calendar_time[5] % 2 )
+91                sec_LED = 0;    // flash per second
+92            else
+93                sec_LED = 1;
+94        }
+95    }
+96
+97    void Set_calendar(void) //  Set_calendar
+98    {
+99        unsigned char i;
+100
+101       REG_B=0x80;         // start initialize
+102
+103       for(i=0;i<7;i++)
+104           *(calendar_address+at[i])=calendar_time[i];
+105   }
+106
+107   void Read_calendar(void) // Read_calendar
+108   {
+109       unsigned char  temp,i;
+110
+111       REG_B = 0x06;   //  binary data,24¡§Chour mode 
+112
+113       do              // monitor the UIE bit 
+114       {
+115           temp = REG_A;
+116       } while( temp & 0x80 );
+117
+118       for(i=0;i<7;i++)    //  Read_calendar and save in memory
+119           calendar_time[i]=*(calendar_address+at[i]);
+120   }
+121
+122   void Start_calendar(void) // turn on oscillator
+123   {
+124       REG_A=0x20;     //  0_010_0000  turn on oscillator
+125       REG_B=0x06;     //  binary data,24¡§Chour mode 
+126   }
+127
+128   void Stop_calendar(void) // turn off clock
+129   {
+130       REG_A=0x70;     //  0_111_0000  Stop oscillator
+131   }

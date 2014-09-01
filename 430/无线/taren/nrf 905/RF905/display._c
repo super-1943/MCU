@@ -1,0 +1,98 @@
+//************************************************************//
+//本模块用于显示程序运行过程中需要显示的一些数据，可按需要改动
+//注意：将要显示的数据设为外部变量
+//周金广做
+//**********************************************************//
+#include <stdio.h>
+#include <iom8v.h>
+#include <macros.h>
+
+
+void display4(unsigned char kk)  //临时少麻烦
+{ 
+  lcd_write_comm(0x30);
+  lcd_write_comm(0x0c);
+  switch(kk)
+	 {case 1: 
+	  case 2: 
+	  case 3: 
+	  case 4:
+	  case 5:
+	  case 6:  
+	  case 7: 
+	  case 8:
+	  case 9: 		  
+	  case 0:  lcd_write_comm(0x98); displaybyte2(kk); break;	
+	  case 13: lcd_write_comm(0x98);lcd_write_data('F');lcd_write_data('1'); break;		
+	  case 14: lcd_write_comm(0x98);lcd_write_data('F');lcd_write_data('2'); break; 
+	  case 15: lcd_write_comm(0x98);lcd_write_data('F');lcd_write_data('2'); break;	  
+	  case 16: lcd_write_comm(0x98);lcd_write_data('F');lcd_write_data('4');   	   break; 
+	  case '*':lcd_write_comm(0x98);lcd_write_data(' ');lcd_write_data('*'); break;		
+	  case '#':lcd_write_comm(0x98);lcd_write_data(' ');lcd_write_data('#');    break;
+	  default: lcd_write_comm(0x98);lcd_write_data('N');lcd_write_data('O'); break;
+     }  
+   
+}
+
+void displaybyte(unsigned char data)
+{ 
+  lcd_write_data(data/100%10+0x30);
+  lcd_write_data(data/10%10+0x30);
+  lcd_write_data(data%10+0x30); 
+}
+void displayint(unsigned char address,unsigned char data)
+{   lcd_write_comm(0x30);
+    lcd_write_comm(address);
+	displaybyte(data);
+}
+
+void displaybyte2(unsigned char data)
+{ 
+  lcd_write_data(data/10%10+0x30);
+  lcd_write_data(data%10+0x30); 
+}
+//////////////////////////////////////////////////////////////////////
+//*Ptr       字符串的首地址 
+//address    液晶屏的地址0x80-0x8f,0x90-0x9f之间
+//len        显示的数据的长度,如果不够后面补空格
+/////////////////////////////////////////////////////////////////////
+void display_char(unsigned char *Ptr ,unsigned char address,unsigned char len)
+{   unsigned char i;
+
+    lcd_write_comm(0x30);
+    lcd_write_comm(address);
+    lcd_write_comm(0x0c);
+	for(i=0;i<len;i++)
+	{
+	if(*Ptr!='/0')
+	lcd_write_data(*Ptr++);
+	else
+	lcd_write_data(' ');
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
+//*Ptr       字符串的首地址 
+//address    液晶屏的地址0x80-0x8f,0x90-0x9f之间
+//len        显示的数据的长度,如果不够后面补空格
+/////////////////////////////////////////////////////////////////////
+void display_int(unsigned char *Ptr ,unsigned char address,unsigned char len)
+{   unsigned char i;
+
+    lcd_write_comm(0x30);
+    lcd_write_comm(address);
+    lcd_write_comm(0x0c);
+	for(i=0;i<len;i++)
+	{
+	//if(*Ptr!='/0')
+	//if(*Ptr!=0)
+	{
+	displaybyte(*Ptr);
+	Ptr++ ;
+	lcd_write_data(' ');
+	}
+	//lcd_write_data(*Ptr++);
+	//else
+	//lcd_write_data(' ');
+	}
+}

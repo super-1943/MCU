@@ -1,0 +1,811 @@
+                        .module nrf905config.c
+                        .area data(ram, con, rel)
+ 0000           _TxBuf::
+ 0000                   .blkb 2
+                        .area idata
+ 0000 6566              .byte 'e,'f
+                        .area data(ram, con, rel)
+ 0002                   .blkb 2
+                        .area idata
+ 0002 6768              .byte 'g,'h
+                        .area data(ram, con, rel)
+ 0004                   .blkb 2
+                        .area idata
+ 0004 696A              .byte 'i,'j
+                        .area data(ram, con, rel)
+ 0006                   .blkb 2
+                        .area idata
+ 0006 6B6C              .byte 'k,'l
+                        .area data(ram, con, rel)
+ 0008                   .blkb 2
+                        .area idata
+ 0008 6D6E              .byte 'm,'n
+                        .area data(ram, con, rel)
+ 000A                   .blkb 2
+                        .area idata
+ 000A 6F70              .byte 'o,'p
+                        .area data(ram, con, rel)
+ 000C                   .blkb 2
+                        .area idata
+ 000C 7172              .byte 'q,'r
+                        .area data(ram, con, rel)
+ 000E                   .blkb 2
+                        .area idata
+ 000E 7374              .byte 's,'t
+                        .area data(ram, con, rel)
+ 0010                   .blkb 2
+                        .area idata
+ 0010 7576              .byte 'u,'v
+                        .area data(ram, con, rel)
+ 0012                   .blkb 2
+                        .area idata
+ 0012 7778              .byte 'w,'x
+                        .area data(ram, con, rel)
+ 0014                   .blkb 2
+                        .area idata
+ 0014 797A              .byte 'y,'z
+                        .area data(ram, con, rel)
+ 0016                   .blkb 2
+                        .area idata
+ 0016 7B7C              .byte 123,124
+                        .area data(ram, con, rel)
+ 0018                   .blkb 2
+                        .area idata
+ 0018 7D7E              .byte 125,126
+                        .area data(ram, con, rel)
+ 001A                   .blkb 2
+                        .area idata
+ 001A 7F80              .byte 127,128
+                        .area data(ram, con, rel)
+ 001C                   .blkb 2
+                        .area idata
+ 001C 8182              .byte 129,130
+                        .area data(ram, con, rel)
+ 001E                   .blkb 2
+                        .area idata
+ 001E 8384              .byte 131,132
+                        .area data(ram, con, rel)
+ 0020                   .dbfile F:\programme\RF905\nrf905config.c
+ 0020                   .dbsym e TxBuf _TxBuf A[32:32]c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile F:\programme\RF905\nrf905config.c
+ 0000                   .dbfunc e nrf905_Config _nrf905_Config fV
+                        .even
+ 0000           _nrf905_Config::
+ 0000 00D0              rcall push_gset2
+ 0002                   .dbline -1
+ 0002                   .dbline 14
+ 0002           ; #include "nrf905.h"
+ 0002           ; #include <iom8v.h>
+ 0002           ; extern void DelayMs(uchar ms);
+ 0002           ; extern void DelayUs(uint us);
+ 0002           ; 
+ 0002           ; #define SIZE 32
+ 0002           ; 
+ 0002           ; uchar TxBuf[SIZE]={101,102,103,104,105,106,107,108,109,110,
+ 0002           ;                    111,112,113,114,115,116,117,118,119,120,
+ 0002           ;                    121,122,123,124,125,126,127,128,129,130,
+ 0002           ;                                   131,132};
+ 0002           ; uchar RxBuf[SIZE];
+ 0002           ; void nrf905_Config(void)
+ 0002           ; {
+ 0002                   .dbline 15
+ 0002           ;   CLR(PORTB,CSN);                                // Spi 片选开
+ 0002 C298              cbi 0x18,2
+ 0004                   .dbline 16
+ 0004           ;   nrf905_SpiRW(WC);                              // Write config command
+ 0004 0027              clr R16
+ 0006 1127              clr R17
+ 0008 29D0              rcall _nrf905_SpiRW
+ 000A                   .dbline 17
+ 000A           ;   nrf905_SpiRW(CH_NO_BYTE);                      //中心频率低8位
+ 000A 0CE4              ldi R16,76
+ 000C 10E0              ldi R17,0
+ 000E 26D0              rcall _nrf905_SpiRW
+ 0010                   .dbline 18
+ 0010           ;   nrf905_SpiRW(PA_PWR_10dBm | HFREQ_PLL_433MHz); //发射+10dBm,发射频率433MHz,中心频率第9位=0
+ 0010 0CE0              ldi R16,12
+ 0012 10E0              ldi R17,0
+ 0014 23D0              rcall _nrf905_SpiRW
+ 0016                   .dbline 19
+ 0016           ;   nrf905_SpiRW(TX_AFW_4BYTE | RX_AFW_4BYTE);     //接收地址宽度4字节,发送地址宽度4字节
+ 0016 04E4              ldi R16,68
+ 0018 10E0              ldi R17,0
+ 001A 20D0              rcall _nrf905_SpiRW
+ 001C                   .dbline 20
+ 001C           ;   nrf905_SpiRW(RX_PW_32BYTE);                    //接收数据宽度32字节
+ 001C 00E2              ldi R16,32
+ 001E 10E0              ldi R17,0
+ 0020 1DD0              rcall _nrf905_SpiRW
+ 0022                   .dbline 21
+ 0022           ;   nrf905_SpiRW(TX_PW_32BYTE);                    //发送数据宽度32字节
+ 0022 00E2              ldi R16,32
+ 0024 10E0              ldi R17,0
+ 0026 1AD0              rcall _nrf905_SpiRW
+ 0028                   .dbline 22
+ 0028           ;   nrf905_SpiRW(RX_ADDRESS_0);                    //接收有效地址第1字节
+ 0028 02E1              ldi R16,18
+ 002A 10E0              ldi R17,0
+ 002C 20E0              ldi R18,0
+ 002E 30E0              ldi R19,0
+ 0030 15D0              rcall _nrf905_SpiRW
+ 0032                   .dbline 23
+ 0032           ;   nrf905_SpiRW(RX_ADDRESS_1);                    //接收有效地址第2字节
+ 0032 04E3              ldi R16,52
+ 0034 10E0              ldi R17,0
+ 0036 20E0              ldi R18,0
+ 0038 30E0              ldi R19,0
+ 003A 10D0              rcall _nrf905_SpiRW
+ 003C                   .dbline 24
+ 003C           ;   nrf905_SpiRW(RX_ADDRESS_2);                    //接收有效地址第3字节
+ 003C 06E5              ldi R16,86
+ 003E 10E0              ldi R17,0
+ 0040 20E0              ldi R18,0
+ 0042 30E0              ldi R19,0
+ 0044 0BD0              rcall _nrf905_SpiRW
+ 0046                   .dbline 25
+ 0046           ;   nrf905_SpiRW(RX_ADDRESS_3);                    //接收有效地址第4字节
+ 0046 08E7              ldi R16,120
+ 0048 10E0              ldi R17,0
+ 004A 20E0              ldi R18,0
+ 004C 30E0              ldi R19,0
+ 004E 06D0              rcall _nrf905_SpiRW
+ 0050                   .dbline 26
+ 0050           ;   nrf905_SpiRW(CRC16_EN | XOF_16MHz);            //CRC16模式使能,晶体振荡器频率16MHz
+ 0050 08ED              ldi R16,216
+ 0052 10E0              ldi R17,0
+ 0054 03D0              rcall _nrf905_SpiRW
+ 0056                   .dbline 27
+ 0056           ;   SET(PORTB,CSN);                                // Disable Spi
+ 0056 C29A              sbi 0x18,2
+ 0058                   .dbline -2
+ 0058           L1:
+ 0058 00D0              rcall pop_gset2
+ 005A                   .dbline 0 ; func end
+ 005A 0895              ret
+ 005C                   .dbend
+ 005C                   .dbfunc e nrf905_SpiRW _nrf905_SpiRW fc
+ 005C           ;           temp -> R20
+ 005C           ;            val -> R16
+                        .even
+ 005C           _nrf905_SpiRW::
+ 005C 00D0              rcall push_gset1
+ 005E                   .dbline -1
+ 005E                   .dbline 31
+ 005E           ; }
+ 005E           ; 
+ 005E           ; uchar nrf905_SpiRW(uchar val) 
+ 005E           ; {   uchar temp;
+ 005E                   .dbline 33
+ 005E           ; 
+ 005E           ;     SPDR=val;
+ 005E 0FB9              out 0xf,R16
+ 0060           L3:
+ 0060                   .dbline 35
+ 0060           L4:
+ 0060                   .dbline 34
+ 0060           ;       while ((SPSR&(1<<SPIF))==0)
+ 0060 779B              sbis 0xe,7
+ 0062 FECF              rjmp L3
+ 0064                   .dbline 36
+ 0064           ;       ;
+ 0064           ;       temp=SPDR;
+ 0064 4FB1              in R20,0xf
+ 0066                   .dbline 37
+ 0066           ;       return temp;
+ 0066 042F              mov R16,R20
+ 0068                   .dbline -2
+ 0068           L2:
+ 0068 00D0              rcall pop_gset1
+ 006A                   .dbline 0 ; func end
+ 006A 0895              ret
+ 006C                   .dbsym r temp 20 c
+ 006C                   .dbsym r val 16 c
+ 006C                   .dbend
+ 006C                   .dbfunc e nrf905_StandBy _nrf905_StandBy fV
+                        .even
+ 006C           _nrf905_StandBy::
+ 006C                   .dbline -1
+ 006C                   .dbline 42
+ 006C           ; }
+ 006C           ; 
+ 006C           ; //PwrDown->StandBy
+ 006C           ; void nrf905_StandBy()
+ 006C           ; {
+ 006C                   .dbline 43
+ 006C           ;    SET(PORTB,PWRUP);
+ 006C C09A              sbi 0x18,0
+ 006E                   .dbline 44
+ 006E           ;    CLR(PORTB,TRXCE);
+ 006E C198              cbi 0x18,1
+ 0070                   .dbline 45
+ 0070           ;    CLR(PORTB,TX_EN);
+ 0070 C698              cbi 0x18,6
+ 0072                   .dbline -2
+ 0072           L6:
+ 0072                   .dbline 0 ; func end
+ 0072 0895              ret
+ 0074                   .dbend
+ 0074                   .dbfunc e nrf905_Off _nrf905_Off fV
+                        .even
+ 0074           _nrf905_Off::
+ 0074                   .dbline -1
+ 0074                   .dbline 50
+ 0074           ; }
+ 0074           ; 
+ 0074           ; //->PwrDown
+ 0074           ; void nrf905_Off()
+ 0074           ; {
+ 0074                   .dbline 51
+ 0074           ;   CLR(PORTB,PWRUP);
+ 0074 C098              cbi 0x18,0
+ 0076                   .dbline -2
+ 0076           L7:
+ 0076                   .dbline 0 ; func end
+ 0076 0895              ret
+ 0078                   .dbend
+ 0078                   .dbfunc e nrf905_TxOn _nrf905_TxOn fV
+                        .even
+ 0078           _nrf905_TxOn::
+ 0078                   .dbline -1
+ 0078                   .dbline 56
+ 0078           ; }
+ 0078           ; 
+ 0078           ; //->ShockBurst Send
+ 0078           ; void nrf905_TxOn()
+ 0078           ; {
+ 0078                   .dbline 57
+ 0078           ;   SET(PORTB,PWRUP);
+ 0078 C09A              sbi 0x18,0
+ 007A                   .dbline 58
+ 007A           ;   SET(PORTB,TX_EN);
+ 007A C69A              sbi 0x18,6
+ 007C                   .dbline 59
+ 007C           ;   CLR(PORTB,TRXCE);
+ 007C C198              cbi 0x18,1
+ 007E                   .dbline -2
+ 007E           L8:
+ 007E                   .dbline 0 ; func end
+ 007E 0895              ret
+ 0080                   .dbend
+ 0080                   .dbfunc e nrf905_TxSend _nrf905_TxSend fV
+                        .even
+ 0080           _nrf905_TxSend::
+ 0080                   .dbline -1
+ 0080                   .dbline 64
+ 0080           ; }
+ 0080           ; 
+ 0080           ; //->ShockBurst Send
+ 0080           ; void nrf905_TxSend()
+ 0080           ; {
+ 0080                   .dbline 65
+ 0080           ;   SET(PORTB,TRXCE);
+ 0080 C19A              sbi 0x18,1
+ 0082                   .dbline 66
+ 0082           ;   DelayUs(20);//>10us
+ 0082 04E1              ldi R16,20
+ 0084 10E0              ldi R17,0
+ 0086 7DD0              rcall _DelayUs
+ 0088                   .dbline 67
+ 0088           ;   CLR(PORTB,TRXCE);//只发送一次
+ 0088 C198              cbi 0x18,1
+ 008A                   .dbline -2
+ 008A           L9:
+ 008A                   .dbline 0 ; func end
+ 008A 0895              ret
+ 008C                   .dbend
+ 008C                   .dbfunc e nrf905_RxOn _nrf905_RxOn fV
+                        .even
+ 008C           _nrf905_RxOn::
+ 008C                   .dbline -1
+ 008C                   .dbline 72
+ 008C           ; }
+ 008C           ; 
+ 008C           ; //->ShockBurst Recv
+ 008C           ; void nrf905_RxOn()
+ 008C           ; {
+ 008C                   .dbline 73
+ 008C           ;   SET(PORTB,PWRUP);
+ 008C C09A              sbi 0x18,0
+ 008E                   .dbline 74
+ 008E           ;   CLR(PORTB,TX_EN);      //maybe first
+ 008E C698              cbi 0x18,6
+ 0090                   .dbline 75
+ 0090           ;   SET(PORTB,TRXCE);
+ 0090 C19A              sbi 0x18,1
+ 0092                   .dbline -2
+ 0092           L10:
+ 0092                   .dbline 0 ; func end
+ 0092 0895              ret
+ 0094                   .dbend
+ 0094                   .dbfunc e nrf905_Init _nrf905_Init fV
+                        .even
+ 0094           _nrf905_Init::
+ 0094                   .dbline -1
+ 0094                   .dbline 80
+ 0094           ; }
+ 0094           ; 
+ 0094           ; //初始化nrf905
+ 0094           ; void nrf905_Init()
+ 0094           ; {
+ 0094                   .dbline 81
+ 0094           ;    nrf905_StandBy();
+ 0094 EBDF              rcall _nrf905_StandBy
+ 0096                   .dbline 82
+ 0096           ;    DelayMs(10);//!!!must >3ms
+ 0096 0AE0              ldi R16,10
+ 0098 68D0              rcall _DelayMs
+ 009A                   .dbline 83
+ 009A           ;    nrf905_Config();
+ 009A B2DF              rcall _nrf905_Config
+ 009C                   .dbline 85
+ 009C           ;    
+ 009C           ;    nrf905_SpiTest();//test...
+ 009C 02D0              rcall _nrf905_SpiTest
+ 009E                   .dbline 86
+ 009E           ;    nrf905_RxOn();
+ 009E F6DF              rcall _nrf905_RxOn
+ 00A0                   .dbline -2
+ 00A0           L11:
+ 00A0                   .dbline 0 ; func end
+ 00A0 0895              ret
+ 00A2                   .dbend
+ 00A2                   .dbfunc e nrf905_SpiTest _nrf905_SpiTest fV
+ 00A2           ;              i -> R20
+                        .even
+ 00A2           _nrf905_SpiTest::
+ 00A2 00D0              rcall push_gset1
+ 00A4                   .dbline -1
+ 00A4                   .dbline 91
+ 00A4           ; }
+ 00A4           ; 
+ 00A4           ; //测试：通过读配置，判断SPI操作是否正确
+ 00A4           ; void nrf905_SpiTest()
+ 00A4           ; {uchar i;
+ 00A4                   .dbline 92
+ 00A4           ;   CLR(PORTB,CSN);                   
+ 00A4 C298              cbi 0x18,2
+ 00A6                   .dbline 93
+ 00A6           ;   nrf905_SpiRW(RC);  //读配置
+ 00A6 00E1              ldi R16,16
+ 00A8 D9DF              rcall _nrf905_SpiRW
+ 00AA                   .dbline 94
+ 00AA           ;   for (i=0;i<10;i++)
+ 00AA 4427              clr R20
+ 00AC 0AC0              rjmp L16
+ 00AE           L13:
+ 00AE                   .dbline 95
+ 00AE                   .dbline 96
+ 00AE 0027              clr R16
+ 00B0 D5DF              rcall _nrf905_SpiRW
+ 00B2 80E0              ldi R24,<_RxBuf
+ 00B4 90E0              ldi R25,>_RxBuf
+ 00B6 E42F              mov R30,R20
+ 00B8 FF27              clr R31
+ 00BA E80F              add R30,R24
+ 00BC F91F              adc R31,R25
+ 00BE 0083              std z+0,R16
+ 00C0                   .dbline 97
+ 00C0           L14:
+ 00C0                   .dbline 94
+ 00C0 4395              inc R20
+ 00C2           L16:
+ 00C2                   .dbline 94
+ 00C2 4A30              cpi R20,10
+ 00C4 A0F3              brlo L13
+ 00C6                   .dbline 98
+ 00C6           ;   { 
+ 00C6           ;     RxBuf[i]=  nrf905_SpiRW(0);//read from nrf905
+ 00C6           ;   }
+ 00C6           ;   SET(PORTB,CSN);  
+ 00C6 C29A              sbi 0x18,2
+ 00C8                   .dbline -2
+ 00C8           L12:
+ 00C8 00D0              rcall pop_gset1
+ 00CA                   .dbline 0 ; func end
+ 00CA 0895              ret
+ 00CC                   .dbsym r i 20 c
+ 00CC                   .dbend
+ 00CC                   .dbfunc e nrf905_SetTxAddr _nrf905_SetTxAddr fV
+                        .even
+ 00CC           _nrf905_SetTxAddr::
+ 00CC                   .dbline -1
+ 00CC                   .dbline 103
+ 00CC           ; }
+ 00CC           ; 
+ 00CC           ; //写Tx地址
+ 00CC           ; void nrf905_SetTxAddr()
+ 00CC           ; {
+ 00CC                   .dbline 104
+ 00CC           ;   CLR(PORTB,CSN);                   
+ 00CC C298              cbi 0x18,2
+ 00CE                   .dbline 105
+ 00CE           ;   nrf905_SpiRW(WTA);  //写Tx地址  
+ 00CE 02E2              ldi R16,34
+ 00D0 C5DF              rcall _nrf905_SpiRW
+ 00D2                   .dbline 106
+ 00D2           ;   nrf905_SpiRW(TX_ADDRESS_0);
+ 00D2 02E1              ldi R16,18
+ 00D4 C3DF              rcall _nrf905_SpiRW
+ 00D6                   .dbline 107
+ 00D6           ;   nrf905_SpiRW(TX_ADDRESS_1);
+ 00D6 04E3              ldi R16,52
+ 00D8 C1DF              rcall _nrf905_SpiRW
+ 00DA                   .dbline 108
+ 00DA           ;   nrf905_SpiRW(TX_ADDRESS_2);
+ 00DA 06E5              ldi R16,86
+ 00DC BFDF              rcall _nrf905_SpiRW
+ 00DE                   .dbline 109
+ 00DE           ;   nrf905_SpiRW(TX_ADDRESS_3);
+ 00DE 08E7              ldi R16,120
+ 00E0 BDDF              rcall _nrf905_SpiRW
+ 00E2                   .dbline 110
+ 00E2           ;   SET(PORTB,CSN);  
+ 00E2 C29A              sbi 0x18,2
+ 00E4                   .dbline -2
+ 00E4           L17:
+ 00E4                   .dbline 0 ; func end
+ 00E4 0895              ret
+ 00E6                   .dbend
+ 00E6                   .dbfunc e nrf905_SetData _nrf905_SetData fV
+ 00E6           ;              i -> R20
+                        .even
+ 00E6           _nrf905_SetData::
+ 00E6 00D0              rcall push_gset1
+ 00E8                   .dbline -1
+ 00E8                   .dbline 115
+ 00E8           ; }
+ 00E8           ; 
+ 00E8           ; //写Tx数据
+ 00E8           ; void nrf905_SetData()
+ 00E8           ; {uchar i;
+ 00E8                   .dbline 117
+ 00E8           ; 
+ 00E8           ;   CLR(PORTB,CSN);                   
+ 00E8 C298              cbi 0x18,2
+ 00EA                   .dbline 118
+ 00EA           ;   nrf905_SpiRW(WTP);  //写TxPayload 
+ 00EA 00E2              ldi R16,32
+ 00EC B7DF              rcall _nrf905_SpiRW
+ 00EE                   .dbline 119
+ 00EE           ;   for (i=0;i<SIZE;i++)
+ 00EE 4427              clr R20
+ 00F0 09C0              rjmp L22
+ 00F2           L19:
+ 00F2                   .dbline 120
+ 00F2                   .dbline 121
+ 00F2 80E0              ldi R24,<_TxBuf
+ 00F4 90E0              ldi R25,>_TxBuf
+ 00F6 E42F              mov R30,R20
+ 00F8 FF27              clr R31
+ 00FA E80F              add R30,R24
+ 00FC F91F              adc R31,R25
+ 00FE 0081              ldd R16,z+0
+ 0100 ADDF              rcall _nrf905_SpiRW
+ 0102                   .dbline 122
+ 0102           L20:
+ 0102                   .dbline 119
+ 0102 4395              inc R20
+ 0104           L22:
+ 0104                   .dbline 119
+ 0104 4032              cpi R20,32
+ 0106 A8F3              brlo L19
+ 0108                   .dbline 124
+ 0108           ;   { 
+ 0108           ;     nrf905_SpiRW(TxBuf[i]);
+ 0108           ;   }
+ 0108           ;   
+ 0108           ;   SET(PORTB,CSN);  
+ 0108 C29A              sbi 0x18,2
+ 010A                   .dbline -2
+ 010A           L18:
+ 010A 00D0              rcall pop_gset1
+ 010C                   .dbline 0 ; func end
+ 010C 0895              ret
+ 010E                   .dbsym r i 20 c
+ 010E                   .dbend
+ 010E                   .dbfunc e nrf905_WaitSended _nrf905_WaitSended fV
+                        .even
+ 010E           _nrf905_WaitSended::
+ 010E                   .dbline -1
+ 010E                   .dbline 129
+ 010E           ; }
+ 010E           ; 
+ 010E           ; //等待发送结束
+ 010E           ; void nrf905_WaitSended()
+ 010E           ; {
+ 010E           L24:
+ 010E                   .dbline 130
+ 010E           L25:
+ 010E                   .dbline 130
+ 010E           ;    while ((PINC&(1<<DR))==0);
+ 010E 9A9B              sbis 0x13,2
+ 0110 FECF              rjmp L24
+ 0112                   .dbline -2
+ 0112           L23:
+ 0112                   .dbline 0 ; func end
+ 0112 0895              ret
+ 0114                   .dbend
+ 0114                   .dbfunc e nrf905_SendData _nrf905_SendData fV
+                        .even
+ 0114           _nrf905_SendData::
+ 0114                   .dbline -1
+ 0114                   .dbline 135
+ 0114           ; }
+ 0114           ; 
+ 0114           ; //发送TxBuf中的数据
+ 0114           ; void nrf905_SendData()
+ 0114           ; {
+ 0114                   .dbline 136
+ 0114           ;    nrf905_TxOn();      //切换到发送模式
+ 0114 B1DF              rcall _nrf905_TxOn
+ 0116                   .dbline 137
+ 0116           ;    nrf905_SetTxAddr(); //写发送地址
+ 0116 DADF              rcall _nrf905_SetTxAddr
+ 0118                   .dbline 138
+ 0118           ;    nrf905_SetData();   //写数据
+ 0118 E6DF              rcall _nrf905_SetData
+ 011A                   .dbline 139
+ 011A           ;    nrf905_TxSend();    //启动发送
+ 011A B2DF              rcall _nrf905_TxSend
+ 011C                   .dbline 141
+ 011C           ;   // nrf905_WaitSended();//等待发送结束   有改动
+ 011C           ;    DelayMs(10);
+ 011C 0AE0              ldi R16,10
+ 011E 25D0              rcall _DelayMs
+ 0120                   .dbline -2
+ 0120           L27:
+ 0120                   .dbline 0 ; func end
+ 0120 0895              ret
+ 0122                   .dbend
+ 0122                   .dbfunc e nrf905_SendAgain _nrf905_SendAgain fV
+                        .even
+ 0122           _nrf905_SendAgain::
+ 0122                   .dbline -1
+ 0122                   .dbline 147
+ 0122           ;    
+ 0122           ; }
+ 0122           ; 
+ 0122           ; //测试直接重新发送上次写入的数据
+ 0122           ; void nrf905_SendAgain()
+ 0122           ; {
+ 0122                   .dbline 148
+ 0122           ;    nrf905_TxOn();
+ 0122 AADF              rcall _nrf905_TxOn
+ 0124                   .dbline 149
+ 0124           ;    nrf905_TxSend();
+ 0124 ADDF              rcall _nrf905_TxSend
+ 0126                   .dbline 151
+ 0126           ;   // nrf905_WaitSended();
+ 0126           ;    DelayMs(20);
+ 0126 04E1              ldi R16,20
+ 0128 20D0              rcall _DelayMs
+ 012A                   .dbline -2
+ 012A           L28:
+ 012A                   .dbline 0 ; func end
+ 012A 0895              ret
+ 012C                   .dbend
+ 012C                   .dbfunc e nrf905_ReadData _nrf905_ReadData fV
+ 012C           ;              i -> R20
+                        .even
+ 012C           _nrf905_ReadData::
+ 012C 00D0              rcall push_gset1
+ 012E                   .dbline -1
+ 012E                   .dbline 156
+ 012E           ; }
+ 012E           ; 
+ 012E           ; //读出接收到的数据
+ 012E           ; void nrf905_ReadData()
+ 012E           ; {
+ 012E                   .dbline 159
+ 012E           ;   uchar i;
+ 012E           ; 
+ 012E           ;   CLR(PORTB,CSN);                   
+ 012E C298              cbi 0x18,2
+ 0130                   .dbline 160
+ 0130           ;   nrf905_SpiRW(RRP);  //读RxPayload 
+ 0130 04E2              ldi R16,36
+ 0132 94DF              rcall _nrf905_SpiRW
+ 0134                   .dbline 161
+ 0134           ;   for (i=0;i<SIZE;i++)
+ 0134 4427              clr R20
+ 0136 0AC0              rjmp L33
+ 0138           L30:
+ 0138                   .dbline 162
+ 0138                   .dbline 163
+ 0138 0027              clr R16
+ 013A 90DF              rcall _nrf905_SpiRW
+ 013C 80E0              ldi R24,<_RxBuf
+ 013E 90E0              ldi R25,>_RxBuf
+ 0140 E42F              mov R30,R20
+ 0142 FF27              clr R31
+ 0144 E80F              add R30,R24
+ 0146 F91F              adc R31,R25
+ 0148 0083              std z+0,R16
+ 014A                   .dbline 164
+ 014A           L31:
+ 014A                   .dbline 161
+ 014A 4395              inc R20
+ 014C           L33:
+ 014C                   .dbline 161
+ 014C 4032              cpi R20,32
+ 014E A0F3              brlo L30
+ 0150                   .dbline 166
+ 0150           ;   { 
+ 0150           ;     RxBuf[i]=nrf905_SpiRW(0);//read...
+ 0150           ;   }
+ 0150           ;   
+ 0150           ;   SET(PORTB,CSN);  
+ 0150 C29A              sbi 0x18,2
+ 0152                   .dbline -2
+ 0152           L29:
+ 0152 00D0              rcall pop_gset1
+ 0154                   .dbline 0 ; func end
+ 0154 0895              ret
+ 0156                   .dbsym r i 20 c
+ 0156                   .dbend
+ 0156                   .dbfunc e RfRecvProc _RfRecvProc fc
+ 0156           ;              i -> <dead>
+                        .even
+ 0156           _RfRecvProc::
+ 0156                   .dbline -1
+ 0156                   .dbline 174
+ 0156           ; 
+ 0156           ; }
+ 0156           ; 
+ 0156           ; 
+ 0156           ; 
+ 0156           ; //接收处理
+ 0156           ; uchar  RfRecvProc()
+ 0156           ; {uchar i;
+ 0156                   .dbline 179
+ 0156           ;    //if((PINC&(1<<CD))==0)  return 'C';
+ 0156           ;       
+ 0156           ;   // if ((PINC&(1<<AM))==0) return 'A';//一般先AM=1指示地址匹配对
+ 0156           ;    
+ 0156           ;    if ((PINC&(1<<DR))==0) return 'N';//DR=1时表示数据接收对而且Crc正确
+ 0156 9A99              sbic 0x13,2
+ 0158 02C0              rjmp L35
+ 015A                   .dbline 179
+ 015A 0EE4              ldi R16,78
+ 015C 02C0              rjmp L34
+ 015E           L35:
+ 015E                   .dbline 182
+ 015E           ;    
+ 015E           ;    //已经接收到数据
+ 015E           ;    nrf905_ReadData();//读出...
+ 015E E6DF              rcall _nrf905_ReadData
+ 0160                   .dbline 183
+ 0160           ;    return 'y';
+ 0160 09E7              ldi R16,121
+ 0162                   .dbline -2
+ 0162           L34:
+ 0162                   .dbline 0 ; func end
+ 0162 0895              ret
+ 0164                   .dbsym l i 1 c
+ 0164                   .dbend
+ 0164                   .dbfunc e RfSendProc _RfSendProc fV
+ 0164           ;              i -> <dead>
+                        .even
+ 0164           _RfSendProc::
+ 0164                   .dbline -1
+ 0164                   .dbline 200
+ 0164           ;   /* for (i=0;i<32;i++)
+ 0164           ;    { if (RxBuf[i]!=(i+i)) 
+ 0164           ;         return;
+ 0164           ;    }*/
+ 0164           ;    
+ 0164           ;    //数据接收正确...灯指示
+ 0164           ;     //    CPL(PORTD,LED);
+ 0164           ;    
+ 0164           ;    //从机回送数据包,这样双方都能指示是否收到有效数据包
+ 0164           ;   /* #ifndef MASTER
+ 0164           ;      RfSendProc();
+ 0164           ;    #endif*/
+ 0164           ; }
+ 0164           ; 
+ 0164           ; //发送测试
+ 0164           ; void RfSendProc()
+ 0164           ; {uchar i;
+ 0164                   .dbline 203
+ 0164           ;   // for (i=0;i<32;i++) 
+ 0164           ;   // TxBuf[i]=i+i;
+ 0164           ;    nrf905_SendData();  //发送测试数据
+ 0164 D7DF              rcall _nrf905_SendData
+ 0166                   .dbline 204
+ 0166           ;    nrf905_RxOn();      //重新回到接收状态
+ 0166 92DF              rcall _nrf905_RxOn
+ 0168                   .dbline -2
+ 0168           L37:
+ 0168                   .dbline 0 ; func end
+ 0168 0895              ret
+ 016A                   .dbsym l i 1 c
+ 016A                   .dbend
+ 016A                   .dbfunc e DelayMs _DelayMs fV
+ 016A           ;              i -> R20
+ 016A           ;             ms -> R22
+                        .even
+ 016A           _DelayMs::
+ 016A 00D0              rcall push_gset2
+ 016C 602F              mov R22,R16
+ 016E                   .dbline -1
+ 016E                   .dbline 212
+ 016E           ; }
+ 016E           ; 
+ 016E           ; 
+ 016E           ; 
+ 016E           ; 
+ 016E           ; 
+ 016E           ; void DelayMs(uchar ms)
+ 016E           ; {char i;
+ 016E                   .dbline 213
+ 016E           ; for (i=0;i<ms;i++)
+ 016E 4427              clr R20
+ 0170 04C0              rjmp L42
+ 0172           L39:
+ 0172                   .dbline 214
+ 0172                   .dbline 214
+ 0172 08EE              ldi R16,1000
+ 0174 13E0              ldi R17,3
+ 0176 05D0              rcall _DelayUs
+ 0178                   .dbline 215
+ 0178           L40:
+ 0178                   .dbline 213
+ 0178 4395              inc R20
+ 017A           L42:
+ 017A                   .dbline 213
+ 017A 4617              cp R20,R22
+ 017C D0F3              brlo L39
+ 017E                   .dbline 216
+ 017E           ;   {DelayUs(1000);
+ 017E           ;   }
+ 017E           ;   return;
+ 017E                   .dbline -2
+ 017E           L38:
+ 017E 00D0              rcall pop_gset2
+ 0180                   .dbline 0 ; func end
+ 0180 0895              ret
+ 0182                   .dbsym r i 20 c
+ 0182                   .dbsym r ms 22 c
+ 0182                   .dbend
+ 0182                   .dbfunc e DelayUs _DelayUs fV
+ 0182           ;              i -> R20,R21
+ 0182           ;             us -> R16,R17
+                        .even
+ 0182           _DelayUs::
+ 0182 00D0              rcall push_gset1
+ 0184                   .dbline -1
+ 0184                   .dbline 220
+ 0184           ; }
+ 0184           ; 
+ 0184           ; void DelayUs(uint us)
+ 0184           ; {uint i;
+ 0184                   .dbline 221
+ 0184           ;   for (i=0;i<us;i++)
+ 0184 4427              clr R20
+ 0186 5527              clr R21
+ 0188 02C0              rjmp L47
+ 018A           L44:
+ 018A                   .dbline 222
+ 018A           L45:
+ 018A                   .dbline 221
+ 018A 4F5F              subi R20,255  ; offset = 1
+ 018C 5F4F              sbci R21,255
+ 018E           L47:
+ 018E                   .dbline 221
+ 018E 4017              cp R20,R16
+ 0190 5107              cpc R21,R17
+ 0192 D8F3              brlo L44
+ 0194                   .dbline -2
+ 0194           L43:
+ 0194 00D0              rcall pop_gset1
+ 0196                   .dbline 0 ; func end
+ 0196 0895              ret
+ 0198                   .dbsym r i 20 i
+ 0198                   .dbsym r us 16 i
+ 0198                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile F:\programme\RF905\nrf905config.c
+ 0000           _RxBuf::
+ 0000                   .blkb 32
+ 0020                   .dbsym e RxBuf _RxBuf A[32:32]c

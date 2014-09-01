@@ -1,0 +1,36 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: 430shangweiji - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\Student\LOCALS~1\Temp\RSPC4.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/430shangweiji.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ   /c 
+"F:\kkk\430shangweiji\430shangweijiDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\Student\LOCALS~1\Temp\RSPC4.tmp" 
+Creating temporary file "C:\DOCUME~1\Student\LOCALS~1\Temp\RSPC5.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/430shangweiji.pdb" /debug /machine:I386 /out:"Debug/430shangweiji.exe" /pdbtype:sept 
+.\Debug\430shangweiji.obj
+.\Debug\430shangweijiDlg.obj
+.\Debug\StdAfx.obj
+.\Debug\430shangweiji.res
+.\Debug\mscomm.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\Student\LOCALS~1\Temp\RSPC5.tmp"
+<h3>Output Window</h3>
+Compiling...
+430shangweijiDlg.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+430shangweiji.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

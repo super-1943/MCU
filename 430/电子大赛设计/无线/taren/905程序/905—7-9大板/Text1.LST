@@ -1,0 +1,349 @@
+C51 COMPILER V7.06   TEXT1                                                                 07/09/2008 22:24:00 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          
+   2          #include <at89x52.h>
+   3          #include <intrins.h>
+   4          #include "7219.h"
+   5          #define uchar unsigned char 
+   6          #define uint  unsigned int
+   7          
+   8          #define WC              0x00                    // Write configuration register command
+   9          #define RC              0x10                    // Read  configuration register command
+  10          #define WTP             0x20                    // Write TX Payload  command
+  11          #define RTP             0x21                    // Read  TX Payload  command
+  12          #define WTA             0x22                    // Write TX Address  command
+  13          #define RTA             0x23                    // Read  TX Address  command
+  14          #define RRP             0x24                    // Read  RX Payload  command
+  15          /*******************************************************************************************/
+  16          typedef struct RFConfig
+  17          {
+  18                  uchar n;
+  19                  uchar buf[10];
+  20          }RFConfig;
+  21          
+  22          code RFConfig RxTxConf =
+  23          {
+  24                  10,
+  25                  0x01, 0x0c, 0x44, 0x20, 0x20, 0xcc, 0xcc, 0xcc,0xcc, 0x58       
+  26          };
+  27          
+  28          /*******************************************************************************************/
+  29          uchar data TxBuf[32];
+  30          uchar data RxBuf[32];
+  31          uchar tf,timer=0,dig1=0,dig2=0,dig3=0,dig4=0;
+  32          /*******************************************************************************************/
+  33          uchar bdata DATA_BUF;
+  34          sbit    flag    =DATA_BUF^7;
+  35          sbit    flag1   =DATA_BUF^0;
+  36          /*******************************************************************************************/
+  37          sbit    TX_EN   =P3^5;               //∑¢…‰ πƒ‹£¨∏ﬂ”––ß
+  38          sbit    TRX_CE  =P2^4;               //TRX_CE∑¢ÀÕΩ” ’ πƒ‹  ∏ﬂ”––ß
+  39          sbit    PWR_UP  =P3^6;               //…œµÁ     
+  40          sbit    MISO    =P2^1;               //spi ‰≥ˆ
+  41          sbit    MOSI    =P2^6;               //spi ‰»Î
+  42          sbit    SCK             =P2^0;               //spi ±÷”
+  43          sbit    CSN             =P2^5;               //spi∆¨—°
+  44          
+  45          sbit    AM              =P2^2;               //AM µÿ÷∑∆•≈‰£¨ ‹µΩ”––ßµÿ÷∑±ª÷√∏ﬂ
+  46          sbit    DR              =P2^7;               // ˝æ›◊º±∏æÕ–˜
+  47          sbit    CD              =P3^7;               //‘ÿ≤®ºÏ≤‚£¨ºÏ≤‚µΩ∆µ¬ œ‡Õ¨µƒ‘ÿ≤® ±£¨÷√∏ﬂ
+  48          
+  49          sbit    LED1    =P1^0; 
+  50          sbit    LED2    =P1^1;
+  51          sbit    KEY1    =P1^2;
+  52          sbit    KEY2    =P1^3;
+  53          
+  54          /*******************************************************************************************/
+  55          void Config905(void);                   // Config nRF905 module≈‰÷√NRF905ƒ£ Ω
+C51 COMPILER V7.06   TEXT1                                                                 07/09/2008 22:24:00 PAGE 2   
+
+  56          void SetTxMode(void);                   // Set nRF905 in Tx mode
+  57          void SetRxMode(void);                   // Set nRF905 in Rx mode
+  58          void TxPacket(void);                    // Send data by nRF905
+  59          void RxPacket(void);                    // Recive data by nRF905
+  60          void SpiWrite(uchar);                   // Write data to nRF905
+  61          uchar SpiRead(void);                    // Read data to nRF905
+  62          void Delay(uchar n);                    // Delay 100us
+  63          void TxData (uchar x);                  // Send key_value to CRT display
+  64          void initial_IO();             //ioø⁄≥ı ºªØ
+  65          void initial_TM() ;
+  66          /*******************************************************************************************/
+  67          void Delay(uchar n)
+  68          {
+  69   1              uint i;
+  70   1              while(n--)
+  71   1              for(i=0;i<80;i++);      
+  72   1      }
+  73          
+  74          void main()
+  75          {
+  76   1         initial_7219();               //7219≥ı ºªØ
+  77   1         initial_IO();                  //io≥ı ºªØ
+  78   1         initial_TM();                  // ±÷”≥ı ºªØ
+  79   1          //================NRF905≥ı ºªØ
+  80   1              CSN=1;                                          // Spi  disable                                         
+  81   1              SCK=0;                                          // Spi clock line init high
+  82   1              DR=1;                                           // Init DR for input
+  83   1              AM=1;                                           // Init AM for input
+  84   1              PWR_UP=1;                                       // nRF905 power on
+  85   1              TRX_CE=0;                                       // Set nRF905 in standby mode
+  86   1              TX_EN=0;                                        // set radio in Rx mode 
+  87   1      
+  88   1              //================
+  89   1              Config905();                            // Config nRF905 module
+  90   1              TxBuf[0] = 1;
+  91   1              TxBuf[1] = 1;
+  92   1              SetTxMode();                            // Set Tx Mode
+  93   1              TxPacket();                             // Transmit Tx buffer data
+  94   1              LED1 = 0;
+  95   1              LED2 = 0;
+  96   1      
+  97   1              Delay(500);                             // delay for led light  
+  98   1              LED1 = 1;
+  99   1              LED2 = 1;
+ 100   1              TxBuf[0] = 0xff;
+ 101   1              TxBuf[1] = 0xff;
+ 102   1      
+ 103   1                                              // led close
+ 104   1              SetRxMode();                            // Set nRF905 in Rx mode
+ 105   1      
+ 106   1      while(1)
+ 107   1      {
+ 108   2      
+ 109   2          send(4,dig4);
+ 110   2               //=====================¥”º¸≈ÃªÒµ√ ˝æ›
+ 111   2              LED2=CD;         //‘ÿ≤®ºÏ≤‚
+ 112   2      
+ 113   2                         if(KEY1 ==0 )
+ 114   2                         Delay(1);
+ 115   2                 if(KEY1 ==0 )
+ 116   2                    { LED1 = 0; TxBuf[0] = 1 ;tf = 1 ; }
+ 117   2                         
+C51 COMPILER V7.06   TEXT1                                                                 07/09/2008 22:24:00 PAGE 3   
+
+ 118   2      
+ 119   2                 if (tf==1)
+ 120   2                   {  
+ 121   3                      
+ 122   3                        //===============NRF905∑¢ÀÕœ‡”¶µƒ∞¥º¸   
+ 123   3                           SetTxMode();                               // Set Tx Mode
+ 124   3                           TxPacket();                                // Transmit Tx buffer data
+ 125   3                              TxBuf[0] = 0xff;
+ 126   3                              TxBuf[1] = 0xff;
+ 127   3                              SetRxMode();                            // Set nRF905 in Rx mode
+ 128   3                              tf=0;
+ 129   3                              Delay(500);
+ 130   3                              LED1 = 1;
+ 131   3                      
+ 132   3                        }
+ 133   2      
+ 134   2               //=====================µ»¥˝NRF905Ω” ’
+ 135   2                 if (DR)                      // If recive data ready... 
+ 136   2                 RxPacket();                  // ... recive data
+ 137   2      
+ 138   2      }
+ 139   1      
+ 140   1      }
+ 141          /*******************************************************************************************/
+ 142          void Config905(void)
+ 143          {
+ 144   1              uchar i;                                        
+ 145   1              CSN=0;                                          // Spi enable for write a spi command
+ 146   1              SpiWrite(WC);                           // Write config command–¥∑≈≈‰÷√√¸¡Ó
+ 147   1              for (i=0;i<RxTxConf.n;i++)      // Write configration words  –¥∑≈≈‰÷√◊÷
+ 148   1              {
+ 149   2                      SpiWrite(RxTxConf.buf[i]);
+ 150   2              }
+ 151   1              CSN=1;                                          // Disable Spi
+ 152   1      }
+ 153          
+ 154          /*******************************************************************************************/
+ 155          void SpiWrite(uchar  byte)
+ 156          {
+ 157   1              uchar i;        
+ 158   1              DATA_BUF=byte;                          // Put function's parameter into a bdata variable               
+ 159   1              for (i=0;i<8;i++)                       // Setup byte circulation bits
+ 160   1              {       
+ 161   2                      
+ 162   2                      if (flag)                               // Put DATA_BUF.7 on data line
+ 163   2                              MOSI=1;
+ 164   2                      else
+ 165   2                              MOSI=0;
+ 166   2                      SCK=1;                                  // Set clock line high
+ 167   2                      DATA_BUF=DATA_BUF<<1;   // Shift DATA_BUF
+ 168   2                      SCK=0;                                  // Set clock line low 
+ 169   2              }       
+ 170   1      }
+ 171          
+ 172          /*******************************************************************************************/
+ 173          uchar SpiRead(void)
+ 174          {
+ 175   1              uchar i;        
+ 176   1              for (i=0;i<8;i++)                       // Setup byte circulation bits
+ 177   1              {       
+ 178   2                      DATA_BUF=DATA_BUF<<1;   // Right shift DATA_BUF
+ 179   2                      SCK=1;                                  // Set clock line high
+C51 COMPILER V7.06   TEXT1                                                                 07/09/2008 22:24:00 PAGE 4   
+
+ 180   2                      if (MISO)
+ 181   2                              flag1=1;                        // Read data
+ 182   2                      else
+ 183   2                              flag1=0;
+ 184   2                                                              
+ 185   2                      
+ 186   2                      SCK=0;                                  // Set clock line low
+ 187   2              }
+ 188   1              return DATA_BUF;                        // Return function parameter
+ 189   1      }
+ 190          
+ 191          /*******************************************************************************************/
+ 192          void TxPacket(void)
+ 193          {
+ 194   1              uchar i;
+ 195   1              //Config905();                          
+ 196   1              CSN=0;                                          // Spi enable for write a spi command   
+ 197   1              SpiWrite(WTP);                          // Write payload command
+ 198   1              for (i=0;i<32;i++)
+ 199   1              {
+ 200   2                      SpiWrite(TxBuf[i]);             // Write 32 bytes Tx data
+ 201   2              }
+ 202   1              CSN=1;                                          // Spi disable                                          
+ 203   1              Delay(1);
+ 204   1              CSN=0;                                          // Spi enable for write a spi command   
+ 205   1              SpiWrite(WTA);                          // Write address command
+ 206   1              for (i=0;i<4;i++)                       // Write 4 bytes address
+ 207   1              {
+ 208   2                      SpiWrite(RxTxConf.buf[i+5]);
+ 209   2              }       
+ 210   1              CSN=1;                                          // Spi disable
+ 211   1              TRX_CE=1;                                       // Set TRX_CE high,start Tx data transmission
+ 212   1              Delay(1);                                       // while (DR!=1);
+ 213   1              TRX_CE=0;                                       // Set TRX_CE low
+ 214   1      }
+ 215          
+ 216          /*******************************************************************************************/
+ 217          void RxPacket(void)
+ 218          {
+ 219   1              uchar i;        
+ 220   1              TRX_CE=0;                                       // Set nRF905 in standby mode   
+ 221   1              CSN=0;                                          // Spi enable for write a spi command
+ 222   1              SpiWrite(RRP);                          // Read payload command 
+ 223   1              for (i=0;i<32;i++)
+ 224   1              {
+ 225   2                      RxBuf[i]=SpiRead();             // Read data and save to buffer         
+ 226   2              }
+ 227   1              CSN=1;                                          // Disable spi
+ 228   1              while(DR||AM);  
+ 229   1                 if(RxBuf[0] == 1) 
+ 230   1                 {
+ 231   2                   LED1 = 0 ;
+ 232   2                       if(dig4<9)
+ 233   2                       dig4++;
+ 234   2                       else 
+ 235   2                       dig4=0;
+ 236   2                       
+ 237   2                      }
+ 238   1                
+ 239   1              Delay(500);                                     // ...light led
+ 240   1            LED1 = 1 ;
+ 241   1                                                                              
+C51 COMPILER V7.06   TEXT1                                                                 07/09/2008 22:24:00 PAGE 5   
+
+ 242   1      }
+ 243          /*******************************************************************************************/
+ 244          
+ 245          void SetTxMode(void)                            
+ 246          {       
+ 247   1              TX_EN=1;
+ 248   1              TRX_CE=0;
+ 249   1              Delay(1);                                       // delay for mode change(>=650us)
+ 250   1      }                               
+ 251          /*******************************************************************************************/
+ 252          void SetRxMode(void)
+ 253          {
+ 254   1              TX_EN=0;
+ 255   1              TRX_CE=1;
+ 256   1              Delay(1);                                       // delay for mode change(>=650us)                               
+ 257   1      }
+ 258          
+ 259          void initial_IO()
+ 260          {
+ 261   1          EA=1;
+ 262   1              EX0=1;   //Õ‚≤ø÷–∂œø™
+ 263   1              IT0=1;   //œ¬Ωµ—ÿ¥•∑¢
+ 264   1              EX1=1;
+ 265   1              IT1=1;
+ 266   1      
+ 267   1              ET0=1;// ø™ ±÷”0÷–∂œ
+ 268   1      }
+ 269          void initial_TM()   // ±÷”≥ı ºªØ
+ 270          {
+ 271   1       
+ 272   1        TF0=0;  //««Â±Í÷æŒª
+ 273   1        TR0=0;  //πÿ±’ ±÷”
+ 274   1        TMOD=0x01;  // ±÷”0£¨π§◊˜∑Ω Ω1£ª
+ 275   1        TH0=(65536-50000)/256;
+ 276   1        TL0=(65526-50000)%256;   //50ms
+ 277   1        TR0=1;
+ 278   1      } 
+ 279          
+ 280          void T0_inter() interrupt 1
+ 281          {
+ 282   1         timer++;
+ 283   1         if(timer==20)
+ 284   1          if(dig1<9)
+ 285   1            {dig1++;timer=0;}
+ 286   1                else if(dig2<9)
+ 287   1                       {dig1=0;dig2++;timer=0;}
+ 288   1                                else if(dig3<9)
+ 289   1                                   {dig2=0;dig3++;timer=0;}
+ 290   1                                          else
+ 291   1                                                {dig1=0;dig2=0;dig3=0;timer=0;}
+ 292   1               send(1,dig1);
+ 293   1               send(2,dig2);
+ 294   1               send(3,dig3);
+ 295   1      
+ 296   1              initial_TM();
+ 297   1              
+ 298   1      } 
+ 299          
+ 300          void EX0_inter()  interrupt 0
+ 301          {
+ 302   1        if  (dig4<9)
+ 303   1           dig4++;
+C51 COMPILER V7.06   TEXT1                                                                 07/09/2008 22:24:00 PAGE 6   
+
+ 304   1               else 
+ 305   1                 dig4=0;
+ 306   1               send(4,dig4);
+ 307   1      }
+ 308          
+ 309          void EX1_inter()  interrupt 2
+ 310          {
+ 311   1        if  (dig4>0)
+ 312   1           dig4--;
+ 313   1               else 
+ 314   1                 dig4=9;
+ 315   1                 send(4,dig4);
+ 316   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    679    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     71       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

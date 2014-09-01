@@ -1,0 +1,117 @@
+#include<io430.h>
+#define controlOUT P5OUT
+#define lcd_com    P5OUT &= ~(BIT4)
+#define lcd_data   P5OUT |= BIT4
+#define lcd_rw     P5OUT &= ~(BIT5)
+#define lcde_on    P5OUT |= BIT6
+#define lcde_off   P5OUT &= ~(BIT6)
+#define lcd_rst    P5OUT|= BIT7
+#define byteOUT    P4OUT
+
+unsigned char  Chinese_1[]={"欢迎使用！"};
+unsigned char  Chinese_2[]={"现在电压为："};
+unsigned char  Chinese_3[6];
+unsigned char  Address[]=
+{
+          0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,	  //第一行
+	 0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,	  //第二行	汉字位置
+	 0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,	  //第三行
+	 0x98,0x99,0x9a,0x9b,0x9c,0x9d,0x9e,0x9f,	  //第四行
+};
+
+void delay()
+{
+  for(unsigned int i=0;i<800;i++)
+        ;
+}
+
+/***********************写命令******************************/
+void write_com( unsigned char com_byte )
+{
+  delay();
+  lcd_com;//rs
+  lcd_rw;//rw
+  lcde_on;   //e
+  //P5OUT |= BIT7;   //rst
+  byteOUT = com_byte;
+  lcde_off;//e
+}
+/**********************写数据*************************************/
+void write_data( unsigned char data_byte )
+{
+  delay();
+  lcd_data;//rs
+  lcd_rw;//rw
+  lcde_on;   //e
+ // P5OUT |= BIT7;   //rst
+  byteOUT = data_byte;
+  lcde_off;//e
+}
+
+// 汉字数组，汉字起始地址，汉字，汉字个数
+void write_Chinese(unsigned char *str,unsigned char a,unsigned char b,unsigned char c)
+{
+  write_com(0x30);
+  while(c)
+  {
+    write_com(Address[a]);
+	write_data(str[b]);
+	b++;
+	write_data(str[b]);
+	b++;
+	a++;
+	c--;
+   }
+}
+void floatToStr(float t, unsigned char *str) 
+{	
+  int temp = (int)(t*100);
+  unsigned char a[5]; 
+                                 	
+        //取得整数值到数组         	
+	                                 	
+	a[0]=(temp/100)%10; 
+        a[1]= 0xae - '0' ;
+	a[2]=(temp/10)%10;                                       	
+	a[3]=(temp/1)%10;
+        a[4]='V'-'0';
+   int i;                                                    
+	for(i=0; i<5; i++)         //转成ASCII码              	
+		a[i]=a[i]+'0';   
+	for(i=0; i<5;i++)                                       	
+		{ *str=a[i]; str++; }  //加入有效的数字           	
+	*str='\0'; 
+} 
+
+void lcd_init()
+{
+  //设置输入输出方式
+  P4DIR = 0xff;//输出
+  P5DIR = 0xff;
+  //一般Io口
+  P4SEL = 0;
+  P5SEL = 0;
+  
+  write_com(0x30);    //基本指令集动作
+  write_com(0x03);    //AC归零，不改变DDRAM的内容
+  write_com(0x0c);    //显示0N 游标0FF 游标位反白OFF
+  write_com(0x01);    //清屏
+}
+
+
+float value= 2.97;
+void main()
+{
+  WDTCTL=WDTPW+WDTHOLD;
+  lcd_init();
+  floatToStr(value,Chinese_3);
+  while(1)
+  {
+   write_Chinese(Chinese_1,0,0,5);
+   write_Chinese(Chinese_2,8,0,6);
+   write_Chinese(Chinese_3,16,0,3);
+  }
+}
+  
+  
+  

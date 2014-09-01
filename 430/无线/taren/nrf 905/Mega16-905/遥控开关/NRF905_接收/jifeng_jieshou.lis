@@ -1,0 +1,2723 @@
+                        .module jifeng_jieshou.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+                        .area lit(rom, con, rel)
+ 0000           _ling16::
+ 0000 00E0              .byte 0,224
+ 0002 F008              .byte 240,8
+ 0004 0818              .byte 8,24
+ 0006 F0C0              .byte 240,192
+ 0008 000F              .byte 0,15
+ 000A 1F20              .byte 31,32
+ 000C 2030              .byte 32,48
+ 000E 1F07              .byte 31,7
+ 0010                   .dbsym e ling16 _ling16 A[16:16]kc
+ 0010           _yi16::
+ 0010 0000              .byte 0,0
+ 0012 10F0              .byte 16,240
+ 0014 F800              .byte 248,0
+ 0016 0000              .byte 0,0
+ 0018 0000              .byte 0,0
+ 001A 203F              .byte 32,63
+ 001C 3F20              .byte 63,32
+ 001E 2000              .byte 32,0
+ 0020                   .dbsym e yi16 _yi16 A[16:16]kc
+ 0020           _er16::
+ 0020 0070              .byte 0,'p
+ 0022 7808              .byte 'x,8
+ 0024 0898              .byte 8,152
+ 0026 F870              .byte 248,'p
+ 0028 0030              .byte 0,48
+ 002A 3834              .byte 56,52
+ 002C 3231              .byte 50,49
+ 002E 3038              .byte 48,56
+ 0030                   .dbsym e er16 _er16 A[16:16]kc
+ 0030           _san16::
+ 0030 0030              .byte 0,48
+ 0032 3888              .byte 56,136
+ 0034 88F8              .byte 136,248
+ 0036 7000              .byte 'p,0
+ 0038 0018              .byte 0,24
+ 003A 3821              .byte 56,33
+ 003C 2133              .byte 33,51
+ 003E 1E0C              .byte 30,12
+ 0040                   .dbsym e san16 _san16 A[16:16]kc
+ 0040           _si16::
+ 0040 0000              .byte 0,0
+ 0042 8060              .byte 128,96
+ 0044 30F8              .byte 48,248
+ 0046 F800              .byte 248,0
+ 0048 0006              .byte 0,6
+ 004A 0524              .byte 5,36
+ 004C 243F              .byte 36,63
+ 004E 3F24              .byte 63,36
+ 0050                   .dbsym e si16 _si16 A[16:16]kc
+ 0050           _wu16::
+ 0050 00F0              .byte 0,240
+ 0052 F888              .byte 248,136
+ 0054 8888              .byte 136,136
+ 0056 0800              .byte 8,0
+ 0058 0019              .byte 0,25
+ 005A 3920              .byte 57,32
+ 005C 2031              .byte 32,49
+ 005E 1F06              .byte 31,6
+ 0060                   .dbsym e wu16 _wu16 A[16:16]kc
+ 0060           _liu16::
+ 0060 00E0              .byte 0,224
+ 0062 F088              .byte 240,136
+ 0064 8898              .byte 136,152
+ 0066 9800              .byte 152,0
+ 0068 000F              .byte 0,15
+ 006A 3F20              .byte 63,32
+ 006C 2020              .byte 32,32
+ 006E 1F0E              .byte 31,14
+ 0070                   .dbsym e liu16 _liu16 A[16:16]kc
+ 0070           _qi16::
+ 0070 0038              .byte 0,56
+ 0072 1808              .byte 24,8
+ 0074 88E8              .byte 136,232
+ 0076 3808              .byte 56,8
+ 0078 0000              .byte 0,0
+ 007A 003E              .byte 0,62
+ 007C 3F00              .byte 63,0
+ 007E 0000              .byte 0,0
+ 0080                   .dbsym e qi16 _qi16 A[16:16]kc
+ 0080           _ba16::
+ 0080 0070              .byte 0,'p
+ 0082 F88C              .byte 248,140
+ 0084 8C8C              .byte 140,140
+ 0086 F870              .byte 248,'p
+ 0088 000E              .byte 0,14
+ 008A 1F31              .byte 31,49
+ 008C 3133              .byte 49,51
+ 008E 1F0E              .byte 31,14
+ 0090                   .dbsym e ba16 _ba16 A[16:16]kc
+ 0090           _jiu16::
+ 0090 00F0              .byte 0,240
+ 0092 F808              .byte 248,8
+ 0094 0818              .byte 8,24
+ 0096 F8F0              .byte 248,240
+ 0098 0019              .byte 0,25
+ 009A 3332              .byte 51,50
+ 009C 323B              .byte 50,59
+ 009E 1F0F              .byte 31,15
+ 00A0                   .dbsym e jiu16 _jiu16 A[16:16]kc
+ 00A0           _xsdian::
+ 00A0 0000              .byte 0,0
+ 00A2 0000              .byte 0,0
+ 00A4 0000              .byte 0,0
+ 00A6 0000              .byte 0,0
+ 00A8 0000              .byte 0,0
+ 00AA 0000              .byte 0,0
+ 00AC 3030              .byte 48,48
+ 00AE 3000              .byte 48,0
+ 00B0                   .dbsym e xsdian _xsdian A[16:16]kc
+ 00B0           _wu::
+ 00B0 0040              .byte 0,64
+ 00B2 4242              .byte 'B,'B
+ 00B4 4242              .byte 'B,'B
+ 00B6 FE42              .byte 254,'B
+ 00B8 C242              .byte 194,'B
+ 00BA 4342              .byte 'C,'B
+ 00BC 6040              .byte 96,64
+ 00BE 0000              .byte 0,0
+ 00C0 0080              .byte 0,128
+ 00C2 4020              .byte 64,32
+ 00C4 1806              .byte 24,6
+ 00C6 0100              .byte 1,0
+ 00C8 3F40              .byte 63,64
+ 00CA 4040              .byte 64,64
+ 00CC 4040              .byte 64,64
+ 00CE 7000              .byte 'p,0
+ 00D0                   .dbsym e wu _wu A[32:32]kc
+ 00D0           _xian::
+ 00D0 0020              .byte 0,32
+ 00D2 30AC              .byte 48,172
+ 00D4 6320              .byte 'c,32
+ 00D6 3020              .byte 48,32
+ 00D8 20FF              .byte 32,255
+ 00DA 9092              .byte 144,146
+ 00DC 94D0              .byte 148,208
+ 00DE 8000              .byte 128,0
+ 00E0 2062              .byte 32,'b
+ 00E2 2312              .byte 35,18
+ 00E4 1212              .byte 18,18
+ 00E6 4141              .byte 'A,'A
+ 00E8 2117              .byte 33,23
+ 00EA 1824              .byte 24,36
+ 00EC 4280              .byte 'B,128
+ 00EE E000              .byte 224,0
+ 00F0                   .dbsym e xian _xian A[32:32]kc
+ 00F0           _yao::
+ 00F0 4042              .byte 64,'B
+ 00F2 44CC              .byte 'D,204
+ 00F4 0042              .byte 0,'B
+ 00F6 362A              .byte 54,42
+ 00F8 22FE              .byte 34,254
+ 00FA 2129              .byte 33,41
+ 00FC 2580              .byte 37,128
+ 00FE 0000              .byte 0,0
+ 0100 0040              .byte 0,64
+ 0102 201F              .byte 32,31
+ 0104 2141              .byte 33,'A
+ 0106 5D49              .byte 93,'I
+ 0108 494F              .byte 'I,'O
+ 010A 4949              .byte 'I,'I
+ 010C 5D61              .byte 93,'a
+ 010E 2100              .byte 33,0
+ 0110                   .dbsym e yao _yao A[32:32]kc
+ 0110           _kong::
+ 0110 1010              .byte 16,16
+ 0112 10FF              .byte 16,255
+ 0114 9050              .byte 144,'P
+ 0116 0C44              .byte 12,'D
+ 0118 2415              .byte 36,21
+ 011A 0614              .byte 6,20
+ 011C 2454              .byte 36,'T
+ 011E 0C00              .byte 12,0
+ 0120 0242              .byte 2,'B
+ 0122 817F              .byte 129,127
+ 0124 0040              .byte 0,64
+ 0126 4242              .byte 'B,'B
+ 0128 4242              .byte 'B,'B
+ 012A 7E42              .byte 126,'B
+ 012C 4362              .byte 'C,'b
+ 012E 4000              .byte 64,0
+ 0130                   .dbsym e kong _kong A[32:32]kc
+ 0130           _xi::
+ 0130 0002              .byte 0,2
+ 0132 2222              .byte 34,34
+ 0134 322E              .byte 50,46
+ 0136 A262              .byte 162,'b
+ 0138 2222              .byte 34,34
+ 013A 9109              .byte 145,9
+ 013C 0100              .byte 1,0
+ 013E 0000              .byte 0,0
+ 0140 0000              .byte 0,0
+ 0142 4222              .byte 'B,34
+ 0144 1A43              .byte 26,'C
+ 0146 827E              .byte 130,126
+ 0148 0202              .byte 2,2
+ 014A 0A13              .byte 10,19
+ 014C 6600              .byte 'f,0
+ 014E 0000              .byte 0,0
+ 0150                   .dbsym e xi _xi A[32:32]kc
+ 0150           _tong::
+ 0150 2030              .byte 32,48
+ 0152 AC63              .byte 172,'c
+ 0154 3088              .byte 48,136
+ 0156 C8A8              .byte 200,168
+ 0158 998E              .byte 153,142
+ 015A 88A8              .byte 136,168
+ 015C CC88              .byte 204,136
+ 015E 0000              .byte 0,0
+ 0160 2267              .byte 34,'g
+ 0162 2212              .byte 34,18
+ 0164 9240              .byte 146,64
+ 0166 300F              .byte 48,15
+ 0168 0000              .byte 0,0
+ 016A 3F40              .byte 63,64
+ 016C 4041              .byte 64,'A
+ 016E 7000              .byte 'p,0
+ 0170                   .dbsym e tong _tong A[32:32]kc
+ 0170           _ji::
+ 0170 2030              .byte 32,48
+ 0172 AC63              .byte 172,'c
+ 0174 3000              .byte 48,0
+ 0176 FE88              .byte 254,136
+ 0178 90A0              .byte 144,160
+ 017A FFA0              .byte 255,160
+ 017C 9098              .byte 144,152
+ 017E 0000              .byte 0,0
+ 0180 2267              .byte 34,'g
+ 0182 2212              .byte 34,18
+ 0184 1200              .byte 18,0
+ 0186 7F48              .byte 127,'H
+ 0188 4442              .byte 'D,'B
+ 018A 7F42              .byte 127,'B
+ 018C 446C              .byte 'D,'l
+ 018E 4000              .byte 64,0
+ 0190                   .dbsym e ji _ji A[32:32]kc
+ 0190           _dian::
+ 0190 00F8              .byte 0,248
+ 0192 4848              .byte 'H,'H
+ 0194 4848              .byte 'H,'H
+ 0196 FF48              .byte 255,'H
+ 0198 4848              .byte 'H,'H
+ 019A 48FC              .byte 'H,252
+ 019C 0800              .byte 8,0
+ 019E 0000              .byte 0,0
+ 01A0 0007              .byte 0,7
+ 01A2 0202              .byte 2,2
+ 01A4 0202              .byte 2,2
+ 01A6 3F42              .byte 63,'B
+ 01A8 4242              .byte 'B,'B
+ 01AA 4247              .byte 'B,'G
+ 01AC 4070              .byte 64,'p
+ 01AE 0000              .byte 0,0
+ 01B0                   .dbsym e dian _dian A[32:32]kc
+ 01B0           _qi::
+ 01B0 8080              .byte 128,128
+ 01B2 9F91              .byte 159,145
+ 01B4 9191              .byte 145,145
+ 01B6 9FE0              .byte 159,224
+ 01B8 9F91              .byte 159,145
+ 01BA B1D1              .byte 177,209
+ 01BC 9FC0              .byte 159,192
+ 01BE 8000              .byte 128,0
+ 01C0 0808              .byte 8,8
+ 01C2 FC8C              .byte 252,140
+ 01C4 8A8A              .byte 138,138
+ 01C6 F900              .byte 249,0
+ 01C8 F98A              .byte 249,138
+ 01CA 8A8C              .byte 138,140
+ 01CC FC08              .byte 252,8
+ 01CE 0800              .byte 8,0
+ 01D0                   .dbsym e qi _qi A[32:32]kc
+ 01D0           _kai::
+ 01D0 8082              .byte 128,130
+ 01D2 8282              .byte 130,130
+ 01D4 FE82              .byte 254,130
+ 01D6 8282              .byte 130,130
+ 01D8 8282              .byte 130,130
+ 01DA FE82              .byte 254,130
+ 01DC 83C2              .byte 131,194
+ 01DE 8000              .byte 128,0
+ 01E0 0080              .byte 0,128
+ 01E2 4030              .byte 64,48
+ 01E4 0F00              .byte 15,0
+ 01E6 0000              .byte 0,0
+ 01E8 0000              .byte 0,0
+ 01EA FF00              .byte 255,0
+ 01EC 0000              .byte 0,0
+ 01EE 0000              .byte 0,0
+ 01F0                   .dbsym e kai _kai A[32:32]kc
+ 01F0           _feng::
+ 01F0 00F0              .byte 0,240
+ 01F2 10FF              .byte 16,255
+ 01F4 10F8              .byte 16,248
+ 01F6 9088              .byte 144,136
+ 01F8 4F54              .byte 'O,'T
+ 01FA A454              .byte 164,'T
+ 01FC 4CC4              .byte 'L,196
+ 01FE 4000              .byte 64,0
+ 0200 2067              .byte 32,'g
+ 0202 221F              .byte 34,31
+ 0204 123B              .byte 18,59
+ 0206 0014              .byte 0,20
+ 0208 1515              .byte 21,21
+ 020A FF15              .byte 255,21
+ 020C 1514              .byte 21,20
+ 020E 0000              .byte 0,0
+ 0210                   .dbsym e feng _feng A[32:32]kc
+ 0210           _ming::
+ 0210 00FC              .byte 0,252
+ 0212 4444              .byte 'D,'D
+ 0214 44FE              .byte 'D,254
+ 0216 0400              .byte 4,0
+ 0218 FE22              .byte 254,34
+ 021A 2222              .byte 34,34
+ 021C 22FF              .byte 34,255
+ 021E 0200              .byte 2,0
+ 0220 000F              .byte 0,15
+ 0222 0404              .byte 4,4
+ 0224 048F              .byte 4,143
+ 0226 4030              .byte 64,48
+ 0228 0F02              .byte 15,2
+ 022A 0242              .byte 2,'B
+ 022C 827F              .byte 130,127
+ 022E 0000              .byte 0,0
+ 0230                   .dbsym e ming _ming A[32:32]kc
+ 0230           _xiang::
+ 0230 00FC              .byte 0,252
+ 0232 0404              .byte 4,4
+ 0234 FE04              .byte 254,4
+ 0236 F808              .byte 248,8
+ 0238 CC4A              .byte 204,'J
+ 023A 49C8              .byte 'I,200
+ 023C 08FC              .byte 8,252
+ 023E 0800              .byte 8,0
+ 0240 001F              .byte 0,31
+ 0242 0808              .byte 8,8
+ 0244 1F00              .byte 31,0
+ 0246 FF00              .byte 255,0
+ 0248 0F08              .byte 15,8
+ 024A 084F              .byte 8,'O
+ 024C 807F              .byte 128,127
+ 024E 0000              .byte 0,0
+ 0250                   .dbsym e xiang _xiang A[32:32]kc
+                        .area data(ram, con, rel)
+ 0000                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+ 0000           _TxAddress::
+ 0000                   .blkb 2
+                        .area idata
+ 0000 CCCC              .byte 204,204
+                        .area data(ram, con, rel)
+ 0002                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+ 0002                   .blkb 2
+                        .area idata
+ 0002 CCCC              .byte 204,204
+                        .area data(ram, con, rel)
+ 0004                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+ 0004                   .dbsym e TxAddress _TxAddress A[4:4]c
+ 0004           _RFConf::
+ 0004                   .blkb 2
+                        .area idata
+ 0004 004C              .byte 0,'L
+                        .area data(ram, con, rel)
+ 0006                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+ 0006                   .blkb 2
+                        .area idata
+ 0006 0C44              .byte 12,'D
+                        .area data(ram, con, rel)
+ 0008                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+ 0008                   .blkb 2
+                        .area idata
+ 0008 0404              .byte 4,4
+                        .area data(ram, con, rel)
+ 000A                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+ 000A                   .blkb 2
+                        .area idata
+ 000A CCCC              .byte 204,204
+                        .area data(ram, con, rel)
+ 000C                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+ 000C                   .blkb 2
+                        .area idata
+ 000C CCCC              .byte 204,204
+                        .area data(ram, con, rel)
+ 000E                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+ 000E                   .blkb 1
+                        .area idata
+ 000E 58                .byte 'X
+                        .area data(ram, con, rel)
+ 000F                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+ 000F                   .dbsym e RFConf _RFConf A[11:11]c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+ 0000                   .dbfunc e Delay _Delay fV
+ 0000           ;              i -> R20,R21
+ 0000           ;              x -> R16,R17
+                        .even
+ 0000           _Delay::
+ 0000 00D0              rcall push_gset1
+ 0002                   .dbline -1
+ 0002                   .dbline 183
+ 0002           ; //ICC-AVR application builder : 2007-8-11 20:37:32
+ 0002           ; // Target : M16
+ 0002           ; // Crystal: 8.0000Mhz
+ 0002           ; #include <iom16v.h>
+ 0002           ; #include <macros.h>
+ 0002           ; #define uint  unsigned int
+ 0002           ; #define uchar unsigned char
+ 0002           ; //---------------------------------模式控制定义---------------------------------
+ 0002           ; //#define  nrf905_TX_EN         PB0       //输出1
+ 0002           ; #define   Hign_nrf905_TX_EN    PORTB |= (1 << PB0);   
+ 0002           ; #define   Low_nrf905_TX_EN     PORTB &= ~(1 << PB0); 
+ 0002           ; //#define  nrf905_TRX_CE  PD5             //输出1
+ 0002           ; #define   Hign_nrf905_TRX_CE    PORTD |= (1 << PD5);   
+ 0002           ; #define   Low_nrf905_TRX_CE     PORTD &= ~(1 << PD5); 
+ 0002           ; //#define  nrf905_PWR     PB1             //输出1
+ 0002           ; #define   Hign_nrf905_PWR    PORTB |= (1 << PB1);   
+ 0002           ; #define   Low_nrf905_PWR     PORTB &= ~(1 << PB1); 
+ 0002           ; //--------------------------------NRF905-SPI口接口定义--------------------------
+ 0002           ; //#define  nrf905_MISO          PB6           //输入0
+ 0002           ; //#define  nrf905_MOSI    PB5     //输出1
+ 0002           ; //#define  nrf905_SCK     PB7     //输出1
+ 0002           ; #define   Low_nrf905_SCK     PORTB &= ~(1 << PB7); 
+ 0002           ; //#define  nrf905_CSN     PB4         //输出1         
+ 0002           ; #define   Hign_nrf905_CSN    PORTB |= (1 << PB4);   
+ 0002           ; #define   Low_nrf905_CSN     PORTB &= ~(1 << PB4);                                            
+ 0002           ; //-------------------------------NRF905状态输出口-------------------------------
+ 0002           ; //#define  nrf905_CD      PD4     //输入0
+ 0002           ; #define   Hign_nrf905_CD    PORTD |= (1 << PD4);   
+ 0002           ; #define   Low_nrf905_CD     PORTD &= ~(1 << PD4); 
+ 0002           ; #define   Read_nrf905_CD    PINB & (1 << PD4);
+ 0002           ; //#define  nrf905_AM      PB3     //输入0
+ 0002           ; #define   Hign_nrf905_AM    PORTB |= (1 << PB3);   
+ 0002           ; #define   Low_nrf905_AM     PORTB &= ~(1 << PB3); 
+ 0002           ; #define   Read_nrf905_AM    PINB & (1 << PB3);
+ 0002           ; //#define  nrf905_DR      PB2                 //输入0
+ 0002           ; #define   Hign_nrf905_DR     PORTB |= (1 << PB2);   
+ 0002           ; #define   Low_nrf905_DR     PORTB &= ~(1 << PB2); 
+ 0002           ; #define   Read_nrf905_DR    PINB & (1 << PB2);   
+ 0002           ; //------------------------------LCD状态输出口-----------------------------------
+ 0002           ; //#define LCD_CS           PC7        //1-out
+ 0002           ; //#define   Out_LCD_CS       DDRC |= (1 << PC7);
+ 0002           ; #define   Hign_LCD_CS      PORTC |= (1 << PC7);   
+ 0002           ; #define   Low_LCD_CS       PORTC &= ~(1 << PC7); 
+ 0002           ; //#define LCD_RESET         PC6       //1-out
+ 0002           ; //#define   Out_CD_RESET      DDRC |= (1 << PC6);
+ 0002           ; #define   Hign_LCD_RESET    PORTC |= (1 << PC6);   
+ 0002           ; #define   Low_LCD_RESET     PORTC &= ~(1 << PC6); 
+ 0002           ; //#define LCD_RS           PC5        //1-out
+ 0002           ; //#define   Out_LCD_RS       DDRC |= (1 << PC5);
+ 0002           ; #define   Hign_LCD_RS      PORTC |= (1 << PC5);   
+ 0002           ; #define   Low_LCD_RS       PORTC &= ~(1 << PC5); 
+ 0002           ; //#define LCD_SCL        PC4  //1-out
+ 0002           ; //#define   Out_LCD_SCL      DDRC |= (1 << PC4); 
+ 0002           ; #define   Hign_LCD_SCL     PORTC |= (1 << PC4);   
+ 0002           ; #define   Low_LCD_SCL      PORTC &= ~(1 << PC4);
+ 0002           ; //#define LCD_SI         PC3          //1-ou
+ 0002           ; //#define   Out_LCD_SI      DDRC |= (1 << PC3); 
+ 0002           ; #define   Hign_LCD_SI    PORTC |= (1 << PC3);   
+ 0002           ; #define   Low_LCD_SI     PORTC &= ~(1 << PC3);
+ 0002           ; //-------------------------------BELL蜂明器-------------------------------------
+ 0002           ; #define   Hign_BELL  PORTD |= (1 << PD6);   
+ 0002           ; #define   Low_BELL     PORTD &= ~(1 << PD6); 
+ 0002           ; //-------------------------------JDQ继电器--------------------------------------
+ 0002           ; #define   Hign_JDQ  PORTD |= (1 << PD7)
+ 0002           ; #define   Low_JDQ     PORTD &= ~(1 << PD7)
+ 0002           ; //------------------------LCD字库---------------------------------------------
+ 0002           ; const uchar ling16[16]= 
+ 0002           ; {0x00,0xE0,0xF0,0x08,0x08,0x18,0xF0,0xC0,0x00,0x0F,0x1F,0x20,0x20,0x30,0x1F,0x07};//0
+ 0002           ; const uchar yi16[16]= 
+ 0002           ; {0x00,0x00,0x10,0xF0,0xF8,0x00,0x00,0x00,0x00,0x00,0x20,0x3F,0x3F,0x20,0x20,0x00};//1
+ 0002           ; const uchar er16[16]= 
+ 0002           ; {0x00,0x70,0x78,0x08,0x08,0x98,0xF8,0x70,0x00,0x30,0x38,0x34,0x32,0x31,0x30,0x38};//2
+ 0002           ; const uchar san16[16]=
+ 0002           ; {0x00,0x30,0x38,0x88,0x88,0xF8,0x70,0x00,0x00,0x18,0x38,0x21,0x21,0x33,0x1E,0x0C};//3
+ 0002           ; const uchar si16[16]= 
+ 0002           ; {0x00,0x00,0x80,0x60,0x30,0xF8,0xF8,0x00,0x00,0x06,0x05,0x24,0x24,0x3F,0x3F,0x24};//4
+ 0002           ; const uchar wu16[16]= 
+ 0002           ; {0x00,0xF0,0xF8,0x88,0x88,0x88,0x08,0x00,0x00,0x19,0x39,0x20,0x20,0x31,0x1F,0x06};//5
+ 0002           ; const uchar liu16[16]= 
+ 0002           ; {0x00,0xE0,0xF0,0x88,0x88,0x98,0x98,0x00,0x00,0x0F,0x3F,0x20,0x20,0x20,0x1F,0x0E};//6
+ 0002           ; const uchar qi16[16]= 
+ 0002           ; {0x00,0x38,0x18,0x08,0x88,0xE8,0x38,0x08,0x00,0x00,0x00,0x3E,0x3F,0x00,0x00,0x00};//7
+ 0002           ; const uchar ba16[16]= 
+ 0002           ; {0x00,0x70,0xF8,0x8C,0x8C,0x8C,0xF8,0x70,0x00,0x0E,0x1F,0x31,0x31,0x33,0x1F,0x0E};//8
+ 0002           ; const uchar jiu16[16]= 
+ 0002           ; {0x00,0xF0,0xF8,0x08,0x08,0x18,0xF8,0xF0,0x00,0x19,0x33,0x32,0x32,0x3B,0x1F,0x0F};//9
+ 0002           ; const uchar xsdian[16]=
+ 0002           ; {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x30,0x30,0x30,0x00};//.
+ 0002           ; 
+ 0002           ; //-------------------------------------------------------------------------------
+ 0002           ; const uchar wu[32]=                                                                                                                            //无
+ 0002           ; {0x00,0x40,0x42,0x42,0x42,0x42,0xFE,0x42,0xC2,0x42,0x43,0x42,0x60,0x40,0x00,0x00,
+ 0002           ; 0x00,0x80,0x40,0x20,0x18,0x06,0x01,0x00,0x3F,0x40,0x40,0x40,0x40,0x40,0x70,0x00};
+ 0002           ; const uchar xian[32]=                                                                                                                  //线
+ 0002           ; {0x00,0x20,0x30,0xAC,0x63,0x20,0x30,0x20,0x20,0xFF,0x90,0x92,0x94,0xD0,0x80,0x00,
+ 0002           ; 0x20,0x62,0x23,0x12,0x12,0x12,0x41,0x41,0x21,0x17,0x18,0x24,0x42,0x80,0xE0,0x00};
+ 0002           ; const uchar yao[32]=                                                                                                                   //遥
+ 0002           ; {0x40,0x42,0x44,0xCC,0x00,0x42,0x36,0x2A,0x22,0xFE,0x21,0x29,0x25,0x80,0x00,0x00,
+ 0002           ; 0x00,0x40,0x20,0x1F,0x21,0x41,0x5D,0x49,0x49,0x4F,0x49,0x49,0x5D,0x61,0x21,0x00};
+ 0002           ; const uchar kong[32]=                                                                                                                  //控
+ 0002           ; {0x10,0x10,0x10,0xFF,0x90,0x50,0x0C,0x44,0x24,0x15,0x06,0x14,0x24,0x54,0x0C,0x00,
+ 0002           ; 0x02,0x42,0x81,0x7F,0x00,0x40,0x42,0x42,0x42,0x42,0x7E,0x42,0x43,0x62,0x40,0x00};
+ 0002           ; const uchar xi[32]=                                                                                                                            //系
+ 0002           ; {0x00,0x02,0x22,0x22,0x32,0x2E,0xA2,0x62,0x22,0x22,0x91,0x09,0x01,0x00,0x00,0x00,
+ 0002           ; 0x00,0x00,0x42,0x22,0x1A,0x43,0x82,0x7E,0x02,0x02,0x0A,0x13,0x66,0x00,0x00,0x00};
+ 0002           ; const uchar tong[32]=                                                                                                                 //统
+ 0002           ; {0x20,0x30,0xAC,0x63,0x30,0x88,0xC8,0xA8,0x99,0x8E,0x88,0xA8,0xCC,0x88,0x00,0x00,
+ 0002           ; 0x22,0x67,0x22,0x12,0x92,0x40,0x30,0x0F,0x00,0x00,0x3F,0x40,0x40,0x41,0x70,0x00};
+ 0002           ; const uchar ji[32]=                                                                                                                           //继                                                                                    //继
+ 0002           ; {0x20,0x30,0xAC,0x63,0x30,0x00,0xFE,0x88,0x90,0xA0,0xFF,0xA0,0x90,0x98,0x00,0x00,
+ 0002           ; 0x22,0x67,0x22,0x12,0x12,0x00,0x7F,0x48,0x44,0x42,0x7F,0x42,0x44,0x6C,0x40,0x00};
+ 0002           ; const uchar dian[32]=                                                                                                                 //电
+ 0002           ; {0x00,0xF8,0x48,0x48,0x48,0x48,0xFF,0x48,0x48,0x48,0x48,0xFC,0x08,0x00,0x00,0x00,
+ 0002           ; 0x00,0x07,0x02,0x02,0x02,0x02,0x3F,0x42,0x42,0x42,0x42,0x47,0x40,0x70,0x00,0x00};
+ 0002           ; const uchar qi[32]=                                                                                                                           //器
+ 0002           ; {0x80,0x80,0x9F,0x91,0x91,0x91,0x9F,0xE0,0x9F,0x91,0xB1,0xD1,0x9F,0xC0,0x80,0x00,
+ 0002           ; 0x08,0x08,0xFC,0x8C,0x8A,0x8A,0xF9,0x00,0xF9,0x8A,0x8A,0x8C,0xFC,0x08,0x08,0x00};
+ 0002           ; const uchar kai[32]=                                                                                                                  //开
+ 0002           ; {0x80,0x82,0x82,0x82,0xFE,0x82,0x82,0x82,0x82,0x82,0xFE,0x82,0x83,0xC2,0x80,0x00,
+ 0002           ; 0x00,0x80,0x40,0x30,0x0F,0x00,0x00,0x00,0x00,0x00,0xFF,0x00,0x00,0x00,0x00,0x00};
+ 0002           ; const uchar feng[32]=                                                                                                                 //蜂
+ 0002           ; {0x00,0xF0,0x10,0xFF,0x10,0xF8,0x90,0x88,0x4F,0x54,0xA4,0x54,0x4C,0xC4,0x40,0x00,
+ 0002           ; 0x20,0x67,0x22,0x1F,0x12,0x3B,0x00,0x14,0x15,0x15,0xFF,0x15,0x15,0x14,0x00,0x00};
+ 0002           ; const uchar ming[32]=                                                                                                                 //明
+ 0002           ; {0x00,0xFC,0x44,0x44,0x44,0xFE,0x04,0x00,0xFE,0x22,0x22,0x22,0x22,0xFF,0x02,0x00,
+ 0002           ; 0x00,0x0F,0x04,0x04,0x04,0x8F,0x40,0x30,0x0F,0x02,0x02,0x42,0x82,0x7F,0x00,0x00};
+ 0002           ; const uchar xiang[32]=                                                                                                                                //响
+ 0002           ; {0x00,0xFC,0x04,0x04,0xFE,0x04,0xF8,0x08,0xCC,0x4A,0x49,0xC8,0x08,0xFC,0x08,0x00,
+ 0002           ; 0x00,0x1F,0x08,0x08,0x1F,0x00,0xFF,0x00,0x0F,0x08,0x08,0x4F,0x80,0x7F,0x00,0x00};
+ 0002           ; //----------------------------------NRF905-SPI指令------------------------------
+ 0002           ; #define WC    0x00
+ 0002           ; #define RRC   0x10
+ 0002           ; #define WTP   0x20
+ 0002           ; #define RTP   0x21
+ 0002           ; #define WTA   0x22
+ 0002           ; #define RTA   0x23
+ 0002           ; #define RRP   0x24
+ 0002           ; //---------------------------------发送数据-------------------------------------
+ 0002           ; uchar TxRxBuffer[4];
+ 0002           ; //----------------------------------接收地址------------------------------------
+ 0002           ; uchar TxAddress[4]={0xcc,0xcc,0xcc,0xcc };    
+ 0002           ; //------------------------------------------------------------------------------
+ 0002           ; uchar count1 ,count2;
+ 0002           ; //----------------------------------寄存器配置----------------------------------
+ 0002           ; uchar RFConf[11]=
+ 0002           ; {
+ 0002           ;   0x00,                            //配置命令//
+ 0002           ;   0x4c,                           //CH_NO,配置频段在430MHZ
+ 0002           ;   0x0C,                          //输出功率为10db,不重发，节电为正常模式
+ 0002           ;   0x44,                         //地址宽度设置，为4字节
+ 0002           ;   0x04,0x04,                   //接收发送有效数据长度为32字节
+ 0002           ;   0xCC,0xCC,0xCC,0xCC,        //接收地址
+ 0002           ;   0x58,                      //CRC充许，8位CRC校验，外部时钟信号不使能，16M晶振
+ 0002           ; };
+ 0002           ; //----------------------------------NRF905函数申明------------------------------
+ 0002           ; void Delay(uint x);                                                  //延时子程序                                                                                                                                                                                     
+ 0002           ; void Spi_initial();                            //SPI初始化
+ 0002           ; uchar SpiReadSpiWrite(unsigned char cData);    //SPI读写子程序
+ 0002           ; void system_Init(void);                                                  //系统初始化
+ 0002           ; void Config905(void);                                            //NRF905初始化子程序
+ 0002           ; void TxPacket(void);                                          
+ 0002           ; void SetTxMode(void);                                            //数据发送
+ 0002           ; void SetRxMode(void);                                            //
+ 0002           ; void TX(void);
+ 0002           ; unsigned char CheckDR(void);
+ 0002           ; void RxPacket(void);
+ 0002           ; void  RX(void);
+ 0002           ; //-------------------------------串口函数申明-----------------------------------
+ 0002           ; void StartUART(void);
+ 0002           ; void R_S_Byte(uchar R_Byte);
+ 0002           ; //-------------------------------LCD函数申明------------------------------------
+ 0002           ; void LCD_Delay(uint time);
+ 0002           ; void Lcd_init(void);
+ 0002           ; void Lcd_Write_Data(uchar DATA) ;
+ 0002           ; void Lcd_Write_command(uchar COMMAND);
+ 0002           ; void Lcd_CURSOR(uchar add_page,uchar add_col)  ;
+ 0002           ; void Lcd_Clear(void) ;
+ 0002           ; void dis_1616hz(uchar x1,uchar x2,uchar row,const uchar hz[]);
+ 0002           ; void dis_168hz(uchar x1,uchar row,const uchar hz[]);
+ 0002           ; void LCDtime();
+ 0002           ; //----------------------------------100us延时子程序-----------------------------
+ 0002           ; void Delay(uint x)
+ 0002           ; {
+ 0002 09C0              rjmp L3
+ 0004           L2:
+ 0004                   .dbline 186
+ 0004 4427              clr R20
+ 0006 5527              clr R21
+ 0008 02C0              rjmp L8
+ 000A           L5:
+ 000A                   .dbline 186
+ 000A           L6:
+ 000A                   .dbline 186
+ 000A 4F5F              subi R20,255  ; offset = 1
+ 000C 5F4F              sbci R21,255
+ 000E           L8:
+ 000E                   .dbline 186
+ 000E 4035              cpi R20,80
+ 0010 E0E0              ldi R30,0
+ 0012 5E07              cpc R21,R30
+ 0014 D0F3              brlo L5
+ 0016           L3:
+ 0016                   .dbline 185
+ 0016           ;       uint i;
+ 0016           ;       while(x--)
+ 0016 202E              mov R2,R16
+ 0018 312E              mov R3,R17
+ 001A 0150              subi R16,1
+ 001C 1040              sbci R17,0
+ 001E 2220              tst R2
+ 0020 89F7              brne L2
+ 0022 3320              tst R3
+ 0024 79F7              brne L2
+ 0026           X0:
+ 0026                   .dbline -2
+ 0026           L1:
+ 0026 00D0              rcall pop_gset1
+ 0028                   .dbline 0 ; func end
+ 0028 0895              ret
+ 002A                   .dbsym r i 20 i
+ 002A                   .dbsym r x 16 i
+ 002A                   .dbend
+ 002A                   .dbfunc e Spi_initial _Spi_initial fV
+                        .even
+ 002A           _Spi_initial::
+ 002A                   .dbline -1
+ 002A                   .dbline 190
+ 002A           ;       for(i=0;i<80;i++);
+ 002A           ; }
+ 002A           ; //----------------------------------SPI初始化-----------------------------------
+ 002A           ; void Spi_initial()
+ 002A           ; {
+ 002A                   .dbline 191
+ 002A           ;       SPCR   = (1<<SPE)|(1<<MSTR)|(0<<CPOL)|(0<<SPR0);// 主机模式，fck/16, SPI方式0
+ 002A 80E5              ldi R24,80
+ 002C 8DB9              out 0xd,R24
+ 002E                   .dbline -2
+ 002E           L9:
+ 002E                   .dbline 0 ; func end
+ 002E 0895              ret
+ 0030                   .dbend
+ 0030                   .dbfunc e SpiReadSpiWrite _SpiReadSpiWrite fc
+ 0030           ;          cData -> R16
+                        .even
+ 0030           _SpiReadSpiWrite::
+ 0030                   .dbline -1
+ 0030                   .dbline 195
+ 0030           ; }
+ 0030           ; //---------------------------------SPI读写程序----------------------------------      
+ 0030           ; uchar SpiReadSpiWrite(unsigned char cData)
+ 0030           ; {
+ 0030                   .dbline 196
+ 0030           ;       SPDR = cData;
+ 0030 0FB9              out 0xf,R16
+ 0032           L11:
+ 0032                   .dbline 198
+ 0032                   .dbline 198
+ 0032           L12:
+ 0032                   .dbline 197
+ 0032           ;       while(!(SPSR & (1<<SPIF) ))  // 等待SPI发送完毕
+ 0032 779B              sbis 0xe,7
+ 0034 FECF              rjmp L11
+ 0036                   .dbline 198
+ 0036           ;       {};                     
+ 0036                   .dbline 199
+ 0036           ;       return SPDR;
+ 0036 0FB1              in R16,0xf
+ 0038                   .dbline -2
+ 0038           L10:
+ 0038                   .dbline 0 ; func end
+ 0038 0895              ret
+ 003A                   .dbsym r cData 16 c
+ 003A                   .dbend
+ 003A                   .dbfunc e system_Init _system_Init fV
+                        .even
+ 003A           _system_Init::
+ 003A                   .dbline -1
+ 003A                   .dbline 203
+ 003A           ; }
+ 003A           ; //--------------------------------系统状态初始化--------------------------------
+ 003A           ; void system_Init(void)                        
+ 003A           ; {
+ 003A                   .dbline 205
+ 003A           ; 
+ 003A           ;       Hign_nrf905_CSN;                        // SPI使能
+ 003A C49A              sbi 0x18,4
+ 003C                   .dbline 205
+ 003C                   .dbline 206
+ 003C           ;       Low_nrf905_SCK;                         
+ 003C C798              cbi 0x18,7
+ 003E                   .dbline 206
+ 003E                   .dbline 207
+ 003E           ;       Low_nrf905_DR;                          // DR=0
+ 003E C298              cbi 0x18,2
+ 0040                   .dbline 207
+ 0040                   .dbline 208
+ 0040           ;       Low_nrf905_AM;                          // AM=0
+ 0040 C398              cbi 0x18,3
+ 0042                   .dbline 208
+ 0042                   .dbline 209
+ 0042           ;       Low_nrf905_CD;                          // CD=0
+ 0042 9498              cbi 0x12,4
+ 0044                   .dbline 209
+ 0044                   .dbline 210
+ 0044           ;       Hign_nrf905_PWR;                    // PWR=1
+ 0044 C19A              sbi 0x18,1
+ 0046                   .dbline 210
+ 0046                   .dbline 211
+ 0046           ;       Low_nrf905_TRX_CE;                      // nrf905_TRX_CE=0
+ 0046 9598              cbi 0x12,5
+ 0048                   .dbline 211
+ 0048                   .dbline 212
+ 0048           ;       Low_nrf905_TX_EN ;                      // nrf905_TX_EN=0
+ 0048 C098              cbi 0x18,0
+ 004A                   .dbline 212
+ 004A                   .dbline -2
+ 004A           L14:
+ 004A                   .dbline 0 ; func end
+ 004A 0895              ret
+ 004C                   .dbend
+ 004C                   .dbfunc e Config905 _Config905 fV
+ 004C           ;              i -> R20
+                        .even
+ 004C           _Config905::
+ 004C 00D0              rcall push_gset1
+ 004E                   .dbline -1
+ 004E                   .dbline 216
+ 004E           ; }
+ 004E           ; //--------------------------------NRF905寄存器初始化函数------------------------
+ 004E           ; void Config905(void)
+ 004E           ; {
+ 004E                   .dbline 218
+ 004E           ;       uchar i;
+ 004E           ;       Low_nrf905_CSN;                         //SPI使能                                                                                       
+ 004E C498              cbi 0x18,4
+ 0050                   .dbline 218
+ 0050                   .dbline 219
+ 0050           ;       Delay(1);                                  
+ 0050 01E0              ldi R16,1
+ 0052 10E0              ldi R17,0
+ 0054 D5DF              rcall _Delay
+ 0056                   .dbline 220
+ 0056           ;       for (i=0;i<11;i++)                      //碞RF905配置字
+ 0056 4427              clr R20
+ 0058 09C0              rjmp L19
+ 005A           L16:
+ 005A                   .dbline 221
+ 005A                   .dbline 222
+ 005A 80E0              ldi R24,<_RFConf
+ 005C 90E0              ldi R25,>_RFConf
+ 005E E42F              mov R30,R20
+ 0060 FF27              clr R31
+ 0062 E80F              add R30,R24
+ 0064 F91F              adc R31,R25
+ 0066 0081              ldd R16,z+0
+ 0068 E3DF              rcall _SpiReadSpiWrite
+ 006A                   .dbline 223
+ 006A           L17:
+ 006A                   .dbline 220
+ 006A 4395              inc R20
+ 006C           L19:
+ 006C                   .dbline 220
+ 006C 4B30              cpi R20,11
+ 006E A8F3              brlo L16
+ 0070                   .dbline 224
+ 0070           ;       {
+ 0070           ;        SpiReadSpiWrite(RFConf[i]);
+ 0070           ;       }
+ 0070           ;       Hign_nrf905_CSN;                                        // Disable Spi
+ 0070 C49A              sbi 0x18,4
+ 0072                   .dbline 224
+ 0072                   .dbline -2
+ 0072           L15:
+ 0072 00D0              rcall pop_gset1
+ 0074                   .dbline 0 ; func end
+ 0074 0895              ret
+ 0076                   .dbsym r i 20 c
+ 0076                   .dbend
+ 0076                   .dbfunc e TxPacket _TxPacket fV
+ 0076           ;              i -> R20
+                        .even
+ 0076           _TxPacket::
+ 0076 00D0              rcall push_gset1
+ 0078                   .dbline -1
+ 0078                   .dbline 228
+ 0078           ; }
+ 0078           ; //--------------------------------NRF905待发数据打包----------------------------
+ 0078           ; void TxPacket(void)
+ 0078           ; {
+ 0078                   .dbline 230
+ 0078           ;       uchar i;
+ 0078           ;       Low_nrf905_CSN;                                         // 使能Spi，允许对nrf905进行读写操作
+ 0078 C498              cbi 0x18,4
+ 007A                   .dbline 230
+ 007A                   .dbline 231
+ 007A           ;       Delay(1);
+ 007A 01E0              ldi R16,1
+ 007C 10E0              ldi R17,0
+ 007E C0DF              rcall _Delay
+ 0080                   .dbline 232
+ 0080           ;       SpiReadSpiWrite(WTP);                           // 写数据前先写写数据命令
+ 0080 00E2              ldi R16,32
+ 0082 D6DF              rcall _SpiReadSpiWrite
+ 0084                   .dbline 233
+ 0084           ;       for (i=0;i<32;i++)
+ 0084 4427              clr R20
+ 0086 09C0              rjmp L24
+ 0088           L21:
+ 0088                   .dbline 234
+ 0088                   .dbline 235
+ 0088 80E0              ldi R24,<_TxRxBuffer
+ 008A 90E0              ldi R25,>_TxRxBuffer
+ 008C E42F              mov R30,R20
+ 008E FF27              clr R31
+ 0090 E80F              add R30,R24
+ 0092 F91F              adc R31,R25
+ 0094 0081              ldd R16,z+0
+ 0096 CCDF              rcall _SpiReadSpiWrite
+ 0098                   .dbline 236
+ 0098           L22:
+ 0098                   .dbline 233
+ 0098 4395              inc R20
+ 009A           L24:
+ 009A                   .dbline 233
+ 009A 4032              cpi R20,32
+ 009C A8F3              brlo L21
+ 009E                   .dbline 237
+ 009E           ;       {
+ 009E           ;       SpiReadSpiWrite(TxRxBuffer[i]);         // 待发送的32字节数据
+ 009E           ;       }                                               
+ 009E           ;       Hign_nrf905_CSN;
+ 009E C49A              sbi 0x18,4
+ 00A0                   .dbline 237
+ 00A0                   .dbline 238
+ 00A0           ;       Delay(1);                                                       // 关闭Spi，不允许对nrf905进行读写操作
+ 00A0 01E0              ldi R16,1
+ 00A2 10E0              ldi R17,0
+ 00A4 ADDF              rcall _Delay
+ 00A6                   .dbline 239
+ 00A6           ;       Low_nrf905_CSN;                                         // 使能Spi
+ 00A6 C498              cbi 0x18,4
+ 00A8                   .dbline 239
+ 00A8                   .dbline 240
+ 00A8           ;       SpiReadSpiWrite(WTA);                           // 写地址前首先先写地址命令
+ 00A8 02E2              ldi R16,34
+ 00AA C2DF              rcall _SpiReadSpiWrite
+ 00AC                   .dbline 241
+ 00AC           ;       for (i=0;i<4;i++)                                       // 写入4 bytes 接收地址
+ 00AC 4427              clr R20
+ 00AE 09C0              rjmp L28
+ 00B0           L25:
+ 00B0                   .dbline 242
+ 00B0                   .dbline 243
+ 00B0 80E0              ldi R24,<_TxAddress
+ 00B2 90E0              ldi R25,>_TxAddress
+ 00B4 E42F              mov R30,R20
+ 00B6 FF27              clr R31
+ 00B8 E80F              add R30,R24
+ 00BA F91F              adc R31,R25
+ 00BC 0081              ldd R16,z+0
+ 00BE B8DF              rcall _SpiReadSpiWrite
+ 00C0                   .dbline 244
+ 00C0           L26:
+ 00C0                   .dbline 241
+ 00C0 4395              inc R20
+ 00C2           L28:
+ 00C2                   .dbline 241
+ 00C2 4430              cpi R20,4
+ 00C4 A8F3              brlo L25
+ 00C6                   .dbline 245
+ 00C6           ;       {
+ 00C6           ;       SpiReadSpiWrite(TxAddress[i]);
+ 00C6           ;       }
+ 00C6           ;       Hign_nrf905_CSN;                                        // 关闭Spi
+ 00C6 C49A              sbi 0x18,4
+ 00C8                   .dbline 245
+ 00C8                   .dbline 246
+ 00C8           ;       Hign_nrf905_TRX_CE;                                     // Set TRX_CE high,start Tx data transmission
+ 00C8 959A              sbi 0x12,5
+ 00CA                   .dbline 246
+ 00CA                   .dbline 247
+ 00CA           ;       Delay(1);                                                       // 等待DR变高
+ 00CA 01E0              ldi R16,1
+ 00CC 10E0              ldi R17,0
+ 00CE 98DF              rcall _Delay
+ 00D0                   .dbline 248
+ 00D0           ;       Low_nrf905_TRX_CE;                                      // 设置TRX_CE=0
+ 00D0 9598              cbi 0x12,5
+ 00D2                   .dbline 248
+ 00D2                   .dbline -2
+ 00D2           L20:
+ 00D2 00D0              rcall pop_gset1
+ 00D4                   .dbline 0 ; func end
+ 00D4 0895              ret
+ 00D6                   .dbsym r i 20 c
+ 00D6                   .dbend
+ 00D6                   .dbfunc e SetTxMode _SetTxMode fV
+                        .even
+ 00D6           _SetTxMode::
+ 00D6                   .dbline -1
+ 00D6                   .dbline 252
+ 00D6           ; }
+ 00D6           ; //------------------------------设置发送模式------------------------------------
+ 00D6           ; void SetTxMode(void)
+ 00D6           ; {
+ 00D6                   .dbline 253
+ 00D6           ;       Low_nrf905_TRX_CE;                              //
+ 00D6 9598              cbi 0x12,5
+ 00D8                   .dbline 253
+ 00D8                   .dbline 254
+ 00D8           ;       Hign_nrf905_TX_EN;                              //发送使能
+ 00D8 C09A              sbi 0x18,0
+ 00DA                   .dbline 254
+ 00DA                   .dbline 255
+ 00DA           ;       Delay(2);                               // delay for mode change(>=650us)
+ 00DA 02E0              ldi R16,2
+ 00DC 10E0              ldi R17,0
+ 00DE 90DF              rcall _Delay
+ 00E0                   .dbline -2
+ 00E0           L29:
+ 00E0                   .dbline 0 ; func end
+ 00E0 0895              ret
+ 00E2                   .dbend
+ 00E2                   .dbfunc e SetRxMode _SetRxMode fV
+                        .even
+ 00E2           _SetRxMode::
+ 00E2                   .dbline -1
+ 00E2                   .dbline 259
+ 00E2           ; }
+ 00E2           ; //------------------------------设置接收模式激发--------------------------------
+ 00E2           ; void SetRxMode(void)
+ 00E2           ; {
+ 00E2                   .dbline 260
+ 00E2           ;       Low_nrf905_TX_EN;
+ 00E2 C098              cbi 0x18,0
+ 00E4                   .dbline 260
+ 00E4                   .dbline 261
+ 00E4           ;       Hign_nrf905_TRX_CE;
+ 00E4 959A              sbi 0x12,5
+ 00E6                   .dbline 261
+ 00E6                   .dbline 262
+ 00E6           ;       Delay(10);                                      // delay for mode change(>=650us)
+ 00E6 0AE0              ldi R16,10
+ 00E8 10E0              ldi R17,0
+ 00EA 8ADF              rcall _Delay
+ 00EC                   .dbline -2
+ 00EC           L30:
+ 00EC                   .dbline 0 ; func end
+ 00EC 0895              ret
+ 00EE                   .dbend
+ 00EE                   .dbfunc e TX _TX fV
+                        .even
+ 00EE           _TX::
+ 00EE                   .dbline -1
+ 00EE                   .dbline 266
+ 00EE           ; }
+ 00EE           ; //------------------------------发送数据----------------------------------------
+ 00EE           ; void TX(void)
+ 00EE           ; {
+ 00EE                   .dbline 267
+ 00EE           ;      SetTxMode();        // Set nRF905 in Tx mode
+ 00EE F3DF              rcall _SetTxMode
+ 00F0                   .dbline 268
+ 00F0           ;        TxPacket();                       // Send data by nRF905
+ 00F0 C2DF              rcall _TxPacket
+ 00F2                   .dbline -2
+ 00F2           L31:
+ 00F2                   .dbline 0 ; func end
+ 00F2 0895              ret
+ 00F4                   .dbend
+ 00F4                   .dbfunc e CheckDR _CheckDR fc
+                        .even
+ 00F4           _CheckDR::
+ 00F4                   .dbline -1
+ 00F4                   .dbline 272
+ 00F4           ; }
+ 00F4           ; //-----------------------------判断是否收到数据---------------------------------
+ 00F4           ; unsigned char CheckDR(void)           //检查是否有新数据传入 
+ 00F4           ; {
+ 00F4                   .dbline 273
+ 00F4           ;       if (PINB & (1 << PB2))
+ 00F4 B29B              sbis 0x16,2
+ 00F6 02C0              rjmp L33
+ 00F8                   .dbline 274
+ 00F8           ;       {
+ 00F8                   .dbline 275
+ 00F8           ;               return 1;                               //收到数据
+ 00F8 01E0              ldi R16,1
+ 00FA 01C0              rjmp L32
+ 00FC           L33:
+ 00FC                   .dbline 278
+ 00FC           ;       }
+ 00FC           ;       else
+ 00FC           ;       {
+ 00FC                   .dbline 279
+ 00FC           ;               return 0;
+ 00FC 0027              clr R16
+ 00FE                   .dbline -2
+ 00FE           L32:
+ 00FE                   .dbline 0 ; func end
+ 00FE 0895              ret
+ 0100                   .dbend
+ 0100                   .dbfunc e RxPacket _RxPacket fV
+ 0100           ;              i -> R20
+                        .even
+ 0100           _RxPacket::
+ 0100 00D0              rcall push_gset1
+ 0102                   .dbline -1
+ 0102                   .dbline 284
+ 0102           ;       }
+ 0102           ; }
+ 0102           ; //-----------------------------------读接收数据包-------------------------------
+ 0102           ; void RxPacket(void)                                                   //读数据
+ 0102           ; {
+ 0102                   .dbline 286
+ 0102           ;       uchar i;
+ 0102           ;     Low_nrf905_TRX_CE;
+ 0102 9598              cbi 0x12,5
+ 0104                   .dbline 286
+ 0104                   .dbline 287
+ 0104           ;       Low_nrf905_CSN;                                             // 使能SPI
+ 0104 C498              cbi 0x18,4
+ 0106                   .dbline 287
+ 0106                   .dbline 288
+ 0106           ;     Delay(1);
+ 0106 01E0              ldi R16,1
+ 0108 10E0              ldi R17,0
+ 010A 7ADF              rcall _Delay
+ 010C                   .dbline 289
+ 010C           ;       SpiReadSpiWrite(RRP);                              // 写入数据接收缓冲区数据命令
+ 010C 04E2              ldi R16,36
+ 010E 90DF              rcall _SpiReadSpiWrite
+ 0110                   .dbline 290
+ 0110           ;       for (i = 0 ;i < 4 ;i++)
+ 0110 4427              clr R20
+ 0112 0AC0              rjmp L39
+ 0114           L36:
+ 0114                   .dbline 291
+ 0114                   .dbline 292
+ 0114 0027              clr R16
+ 0116 8CDF              rcall _SpiReadSpiWrite
+ 0118 80E0              ldi R24,<_TxRxBuffer
+ 011A 90E0              ldi R25,>_TxRxBuffer
+ 011C E42F              mov R30,R20
+ 011E FF27              clr R31
+ 0120 E80F              add R30,R24
+ 0122 F91F              adc R31,R25
+ 0124 0083              std z+0,R16
+ 0126                   .dbline 293
+ 0126           L37:
+ 0126                   .dbline 290
+ 0126 4395              inc R20
+ 0128           L39:
+ 0128                   .dbline 290
+ 0128 4430              cpi R20,4
+ 012A A0F3              brlo L36
+ 012C                   .dbline 294
+ 012C           ;       {   
+ 012C           ;       TxRxBuffer[i]=SpiReadSpiWrite(0);         // 读取数据接收缓冲区数据       
+ 012C           ;       }
+ 012C           ;       Hign_nrf905_CSN;
+ 012C C49A              sbi 0x18,4
+ 012E                   .dbline 294
+ 012E                   .dbline 295
+ 012E           ;     Delay(2);                            //
+ 012E 02E0              ldi R16,2
+ 0130 10E0              ldi R17,0
+ 0132 66DF              rcall _Delay
+ 0134                   .dbline 296
+ 0134           ;       Hign_nrf905_TRX_CE;                                                     
+ 0134 959A              sbi 0x12,5
+ 0136                   .dbline 296
+ 0136                   .dbline -2
+ 0136           L35:
+ 0136 00D0              rcall pop_gset1
+ 0138                   .dbline 0 ; func end
+ 0138 0895              ret
+ 013A                   .dbsym r i 20 c
+ 013A                   .dbend
+ 013A                   .dbfunc e RX _RX fV
+                        .even
+ 013A           _RX::
+ 013A                   .dbline -1
+ 013A                   .dbline 300
+ 013A           ; }
+ 013A           ; //--------------------------------设置接收模式----------------------------------
+ 013A           ; void  RX(void)
+ 013A           ; {
+ 013A                   .dbline 301
+ 013A           ;     SetRxMode();                                //设置NRF905接收模式
+ 013A D3DF              rcall _SetRxMode
+ 013C           L41:
+ 013C                   .dbline 302
+ 013C           L42:
+ 013C                   .dbline 302
+ 013C           ;     while (CheckDR()==0);              //等待接收完成
+ 013C DBDF              rcall _CheckDR
+ 013E 0023              tst R16
+ 0140 E9F3              breq L41
+ 0142                   .dbline 303
+ 0142           ;       RxPacket();                     //读取接收数据缓冲区
+ 0142 DEDF              rcall _RxPacket
+ 0144                   .dbline 304
+ 0144           ;       Delay(10);
+ 0144 0AE0              ldi R16,10
+ 0146 10E0              ldi R17,0
+ 0148 5BDF              rcall _Delay
+ 014A                   .dbline -2
+ 014A           L40:
+ 014A                   .dbline 0 ; func end
+ 014A 0895              ret
+ 014C                   .dbend
+ 014C                   .dbfunc e LCD_Delay _LCD_Delay fV
+ 014C           ;              i -> R20,R21
+ 014C           ;           time -> R16,R17
+                        .even
+ 014C           _LCD_Delay::
+ 014C 00D0              rcall push_gset1
+ 014E                   .dbline -1
+ 014E                   .dbline 311
+ 014E           ; }
+ 014E           ; //******************************************************************************
+ 014E           ; //以下为LCD驱动
+ 014E           ; //******************************************************************************
+ 014E           ; //------------------------------------------------------------------------------
+ 014E           ; void LCD_Delay(uint time)
+ 014E           ; {
+ 014E                   .dbline 313
+ 014E 402F              mov R20,R16
+ 0150 512F              mov R21,R17
+ 0152 02C0              rjmp L48
+ 0154           L45:
+ 0154                   .dbline 313
+ 0154           L46:
+ 0154                   .dbline 313
+ 0154 4150              subi R20,1
+ 0156 5040              sbci R21,0
+ 0158           L48:
+ 0158                   .dbline 313
+ 0158           ;       uint i;
+ 0158           ;       for(i=time;i>0;i--);
+ 0158 4030              cpi R20,0
+ 015A 4507              cpc R20,R21
+ 015C D9F7              brne L45
+ 015E           X1:
+ 015E                   .dbline -2
+ 015E           L44:
+ 015E 00D0              rcall pop_gset1
+ 0160                   .dbline 0 ; func end
+ 0160 0895              ret
+ 0162                   .dbsym r i 20 i
+ 0162                   .dbsym r time 16 i
+ 0162                   .dbend
+ 0162                   .dbfunc e Lcd_init _Lcd_init fV
+                        .even
+ 0162           _Lcd_init::
+ 0162                   .dbline -1
+ 0162                   .dbline 317
+ 0162           ; }
+ 0162           ; //---------------------------LCD初始化---------------------------------------
+ 0162           ; void Lcd_init(void)
+ 0162           ; {
+ 0162                   .dbline 318
+ 0162           ;       DDRC=0xF8;
+ 0162 88EF              ldi R24,248
+ 0164 84BB              out 0x14,R24
+ 0166                   .dbline 320
+ 0166           ;       //ASSR &= ~(1 <<AS2); 
+ 0166           ;       Hign_LCD_CS;
+ 0166 AF9A              sbi 0x15,7
+ 0168                   .dbline 320
+ 0168                   .dbline 321
+ 0168           ;       Low_LCD_RESET;          //硬复位
+ 0168 AE98              cbi 0x15,6
+ 016A                   .dbline 321
+ 016A                   .dbline 322
+ 016A           ;       LCD_Delay(50);
+ 016A 02E3              ldi R16,50
+ 016C 10E0              ldi R17,0
+ 016E EEDF              rcall _LCD_Delay
+ 0170                   .dbline 323
+ 0170           ;       Hign_LCD_RESET;                 
+ 0170 AE9A              sbi 0x15,6
+ 0172                   .dbline 323
+ 0172                   .dbline 325
+ 0172           ;       ////////////////////////////////////////////////////////
+ 0172           ;       Lcd_Write_command(0xe2);        //软复位RESet:initialize the internal functions
+ 0172 02EE              ldi R16,226
+ 0174 4AD0              rcall _Lcd_Write_command
+ 0176                   .dbline 326
+ 0176           ;       LCD_Delay(100);
+ 0176 04E6              ldi R16,100
+ 0178 10E0              ldi R17,0
+ 017A E8DF              rcall _LCD_Delay
+ 017C                   .dbline 327
+ 017C           ;       Lcd_Write_command(0xae);        //DISPLAY OFF 
+ 017C 0EEA              ldi R16,174
+ 017E 45D0              rcall _Lcd_Write_command
+ 0180                   .dbline 328
+ 0180           ;       Lcd_Write_command(0xa1);        //ADC SELECT ON
+ 0180 01EA              ldi R16,161
+ 0182 43D0              rcall _Lcd_Write_command
+ 0184                   .dbline 329
+ 0184           ;       Lcd_Write_command(0xc0);        //SHL SELECT COM64-COM1
+ 0184 00EC              ldi R16,192
+ 0186 41D0              rcall _Lcd_Write_command
+ 0188                   .dbline 330
+ 0188           ;       Lcd_Write_command(0xa2);        //SET LCD BIAS(1/9)
+ 0188 02EA              ldi R16,162
+ 018A 3FD0              rcall _Lcd_Write_command
+ 018C                   .dbline 332
+ 018C           ;       //////////////////////////////////////////////////////
+ 018C           ;       Lcd_Write_command(0x2c);//SET POWER CONTROL(VC=1)
+ 018C 0CE2              ldi R16,44
+ 018E 3DD0              rcall _Lcd_Write_command
+ 0190                   .dbline 333
+ 0190           ;       Lcd_Write_command(0x2e);        //SET POWER CONTROL(VR=1)
+ 0190 0EE2              ldi R16,46
+ 0192 3BD0              rcall _Lcd_Write_command
+ 0194                   .dbline 334
+ 0194           ;       Lcd_Write_command(0x2f);        //SET POWER CONTROL(VF=1)
+ 0194 0FE2              ldi R16,47
+ 0196 39D0              rcall _Lcd_Write_command
+ 0198                   .dbline 336
+ 0198           ;       ////////////////////////////////////////////////////////
+ 0198           ;       Lcd_Write_command(0x26);        //REGULATOR RESISTOR SELECT(R2 R1 R0)=110
+ 0198 06E2              ldi R16,38
+ 019A 37D0              rcall _Lcd_Write_command
+ 019C                   .dbline 337
+ 019C           ;       Lcd_Write_command(0x81);        //SET REFERENCE VOLTAGE MODE    
+ 019C 01E8              ldi R16,129
+ 019E 35D0              rcall _Lcd_Write_command
+ 01A0                   .dbline 338
+ 01A0           ;       Lcd_Write_command(0x3f);        //SET REFERENCE VOLTAGE REGISTER 2ch
+ 01A0 0FE3              ldi R16,63
+ 01A2 33D0              rcall _Lcd_Write_command
+ 01A4                   .dbline 340
+ 01A4           ;       //////////////////////////////////////////////////////
+ 01A4           ;       Lcd_Write_command(0x7f);        //START DISPLAY LINE(COM1)  起始行
+ 01A4 0FE7              ldi R16,127
+ 01A6 31D0              rcall _Lcd_Write_command
+ 01A8                   .dbline 342
+ 01A8           ;       //////////////////////////////////////////////////////
+ 01A8           ;       Lcd_Write_command(0xe0);        //写入数据时地址自动加1，读数据时不变
+ 01A8 00EE              ldi R16,224
+ 01AA 2FD0              rcall _Lcd_Write_command
+ 01AC                   .dbline 344
+ 01AC           ;       //////////////////////////////////////////////////////////
+ 01AC           ;       Lcd_Write_command(0xaf);        //DISPLAY ON  
+ 01AC 0FEA              ldi R16,175
+ 01AE 2DD0              rcall _Lcd_Write_command
+ 01B0                   .dbline -2
+ 01B0           L49:
+ 01B0                   .dbline 0 ; func end
+ 01B0 0895              ret
+ 01B2                   .dbend
+ 01B2                   .dbfunc e Lcd_Write_Data _Lcd_Write_Data fV
+ 01B2           ;              i -> R20,R21
+ 01B2           ;           temp -> R22,R23
+ 01B2           ;           DATA -> R20
+                        .even
+ 01B2           _Lcd_Write_Data::
+ 01B2 00D0              rcall push_gset2
+ 01B4 402F              mov R20,R16
+ 01B6                   .dbline -1
+ 01B6                   .dbline 348
+ 01B6           ; }
+ 01B6           ; //--------------------------------LCD写数据函数---------------------------------
+ 01B6           ; void Lcd_Write_Data(uchar DATA)              //写一个字节，再加一列，正好在一页
+ 01B6           ; {                                            //定好一页后，再一列一列的写
+ 01B6                   .dbline 350
+ 01B6           ;       int i,temp;
+ 01B6           ;       temp=DATA;
+ 01B6 642F              mov R22,R20
+ 01B8 7727              clr R23
+ 01BA                   .dbline 351
+ 01BA           ;       Low_LCD_RS;             
+ 01BA AD98              cbi 0x15,5
+ 01BC                   .dbline 351
+ 01BC                   .dbline 352
+ 01BC           ;       Hign_LCD_CS;
+ 01BC AF9A              sbi 0x15,7
+ 01BE                   .dbline 352
+ 01BE                   .dbline 353
+ 01BE           ;       Hign_LCD_SCL;
+ 01BE AC9A              sbi 0x15,4
+ 01C0                   .dbline 353
+ 01C0                   .dbline 354
+ 01C0           ;       LCD_Delay(1);
+ 01C0 01E0              ldi R16,1
+ 01C2 10E0              ldi R17,0
+ 01C4 C3DF              rcall _LCD_Delay
+ 01C6                   .dbline 355
+ 01C6           ;       Low_LCD_CS;
+ 01C6 AF98              cbi 0x15,7
+ 01C8                   .dbline 355
+ 01C8                   .dbline 356
+ 01C8           ;       Low_LCD_SCL;
+ 01C8 AC98              cbi 0x15,4
+ 01CA                   .dbline 356
+ 01CA                   .dbline 357
+ 01CA           ;       Hign_LCD_RS;            //RS=1 时为写数据
+ 01CA AD9A              sbi 0x15,5
+ 01CC                   .dbline 357
+ 01CC                   .dbline 358
+ 01CC           ;       LCD_Delay(1);
+ 01CC 01E0              ldi R16,1
+ 01CE 10E0              ldi R17,0
+ 01D0 BDDF              rcall _LCD_Delay
+ 01D2                   .dbline 359
+ 01D2           ;       for(i=0;i<8;i++)
+ 01D2 4427              clr R20
+ 01D4 5527              clr R21
+ 01D6           L51:
+ 01D6                   .dbline 360
+ 01D6           ;       {
+ 01D6                   .dbline 361
+ 01D6           ;               Low_LCD_SCL;
+ 01D6 AC98              cbi 0x15,4
+ 01D8                   .dbline 361
+ 01D8                   .dbline 362
+ 01D8           ;               if(temp&0x80)
+ 01D8 67FF              sbrs R22,7
+ 01DA 02C0              rjmp L55
+ 01DC                   .dbline 363
+ 01DC           ;               {
+ 01DC                   .dbline 364
+ 01DC           ;               Hign_LCD_SI;
+ 01DC AB9A              sbi 0x15,3
+ 01DE                   .dbline 364
+ 01DE                   .dbline 365
+ 01DE           ;               }
+ 01DE 01C0              rjmp L56
+ 01E0           L55:
+ 01E0                   .dbline 367
+ 01E0           ;               else
+ 01E0           ;               {
+ 01E0                   .dbline 368
+ 01E0           ;               Low_LCD_SI;
+ 01E0 AB98              cbi 0x15,3
+ 01E2                   .dbline 368
+ 01E2                   .dbline 369
+ 01E2           ;               }
+ 01E2           L56:
+ 01E2                   .dbline 370
+ 01E2 01E0              ldi R16,1
+ 01E4 10E0              ldi R17,0
+ 01E6 B2DF              rcall _LCD_Delay
+ 01E8                   .dbline 371
+ 01E8 660F              lsl R22
+ 01EA 771F              rol R23
+ 01EC                   .dbline 372
+ 01EC AC9A              sbi 0x15,4
+ 01EE                   .dbline 372
+ 01EE                   .dbline 373
+ 01EE 01E0              ldi R16,1
+ 01F0 10E0              ldi R17,0
+ 01F2 ACDF              rcall _LCD_Delay
+ 01F4                   .dbline 374
+ 01F4 AC98              cbi 0x15,4
+ 01F6                   .dbline 374
+ 01F6                   .dbline 375
+ 01F6           L52:
+ 01F6                   .dbline 359
+ 01F6 4F5F              subi R20,255  ; offset = 1
+ 01F8 5F4F              sbci R21,255
+ 01FA                   .dbline 359
+ 01FA 4830              cpi R20,8
+ 01FC E0E0              ldi R30,0
+ 01FE 5E07              cpc R21,R30
+ 0200 54F3              brlt L51
+ 0202                   .dbline 376
+ 0202           ;               LCD_Delay(1);
+ 0202           ;               temp=temp<<1;
+ 0202           ;               Hign_LCD_SCL;
+ 0202           ;               LCD_Delay(1);
+ 0202           ;               Low_LCD_SCL;
+ 0202           ;       }
+ 0202           ;       Low_LCD_RS;
+ 0202 AD98              cbi 0x15,5
+ 0204                   .dbline 376
+ 0204                   .dbline 377
+ 0204           ;       Hign_LCD_CS;    //先cs置0，然后把数据都送到口上准备好（产生上升沿），最后才置片选cs为1  
+ 0204 AF9A              sbi 0x15,7
+ 0206                   .dbline 377
+ 0206                   .dbline -2
+ 0206           L50:
+ 0206 00D0              rcall pop_gset2
+ 0208                   .dbline 0 ; func end
+ 0208 0895              ret
+ 020A                   .dbsym r i 20 I
+ 020A                   .dbsym r temp 22 I
+ 020A                   .dbsym r DATA 20 c
+ 020A                   .dbend
+ 020A                   .dbfunc e Lcd_Write_command _Lcd_Write_command fV
+ 020A           ;              i -> R20
+ 020A           ;           temp -> R22
+ 020A           ;        COMMAND -> R20
+                        .even
+ 020A           _Lcd_Write_command::
+ 020A 00D0              rcall push_gset2
+ 020C 402F              mov R20,R16
+ 020E                   .dbline -1
+ 020E                   .dbline 381
+ 020E           ; }
+ 020E           ; //---------------------------------LCD写命令函数--------------------------------
+ 020E           ; void Lcd_Write_command(uchar COMMAND)
+ 020E           ; {
+ 020E                   .dbline 383
+ 020E           ;       uchar i,temp;
+ 020E           ;       temp = COMMAND;
+ 020E 642F              mov R22,R20
+ 0210                   .dbline 384
+ 0210           ;       Hign_LCD_RS;            
+ 0210 AD9A              sbi 0x15,5
+ 0212                   .dbline 384
+ 0212                   .dbline 385
+ 0212           ;       Hign_LCD_CS;
+ 0212 AF9A              sbi 0x15,7
+ 0214                   .dbline 385
+ 0214                   .dbline 386
+ 0214           ;       Hign_LCD_SCL;
+ 0214 AC9A              sbi 0x15,4
+ 0216                   .dbline 386
+ 0216                   .dbline 387
+ 0216           ;       LCD_Delay(1);
+ 0216 01E0              ldi R16,1
+ 0218 10E0              ldi R17,0
+ 021A 98DF              rcall _LCD_Delay
+ 021C                   .dbline 388
+ 021C           ;       Low_LCD_RS;             //RS=0 为写命令
+ 021C AD98              cbi 0x15,5
+ 021E                   .dbline 388
+ 021E                   .dbline 389
+ 021E           ;       Low_LCD_CS;
+ 021E AF98              cbi 0x15,7
+ 0220                   .dbline 389
+ 0220                   .dbline 390
+ 0220           ;       Low_LCD_SCL;
+ 0220 AC98              cbi 0x15,4
+ 0222                   .dbline 390
+ 0222                   .dbline 391
+ 0222           ;       LCD_Delay(1);
+ 0222 01E0              ldi R16,1
+ 0224 10E0              ldi R17,0
+ 0226 92DF              rcall _LCD_Delay
+ 0228                   .dbline 392
+ 0228           ;       for(i=0;i<8;i++)
+ 0228 4427              clr R20
+ 022A 10C0              rjmp L61
+ 022C           L58:
+ 022C                   .dbline 393
+ 022C           ;       {
+ 022C                   .dbline 394
+ 022C           ;               Low_LCD_SCL;
+ 022C AC98              cbi 0x15,4
+ 022E                   .dbline 394
+ 022E                   .dbline 395
+ 022E           ;               if(temp&0x80)
+ 022E 67FF              sbrs R22,7
+ 0230 02C0              rjmp L62
+ 0232                   .dbline 396
+ 0232           ;               {
+ 0232                   .dbline 397
+ 0232           ;               Hign_LCD_SI;
+ 0232 AB9A              sbi 0x15,3
+ 0234                   .dbline 397
+ 0234                   .dbline 398
+ 0234           ;               }
+ 0234 01C0              rjmp L63
+ 0236           L62:
+ 0236                   .dbline 400
+ 0236           ;               else
+ 0236           ;               {
+ 0236                   .dbline 401
+ 0236           ;               Low_LCD_SI;
+ 0236 AB98              cbi 0x15,3
+ 0238                   .dbline 401
+ 0238                   .dbline 402
+ 0238           ;               }
+ 0238           L63:
+ 0238                   .dbline 403
+ 0238 660F              lsl R22
+ 023A                   .dbline 404
+ 023A 01E0              ldi R16,1
+ 023C 10E0              ldi R17,0
+ 023E 86DF              rcall _LCD_Delay
+ 0240                   .dbline 405
+ 0240 AC9A              sbi 0x15,4
+ 0242                   .dbline 405
+ 0242                   .dbline 406
+ 0242 01E0              ldi R16,1
+ 0244 10E0              ldi R17,0
+ 0246 82DF              rcall _LCD_Delay
+ 0248                   .dbline 407
+ 0248 AC98              cbi 0x15,4
+ 024A                   .dbline 407
+ 024A                   .dbline 408
+ 024A           L59:
+ 024A                   .dbline 392
+ 024A 4395              inc R20
+ 024C           L61:
+ 024C                   .dbline 392
+ 024C 4830              cpi R20,8
+ 024E 70F3              brlo L58
+ 0250                   .dbline 409
+ 0250           ;               temp=temp<<1;   
+ 0250           ;               LCD_Delay(1);
+ 0250           ;               Hign_LCD_SCL;
+ 0250           ;               LCD_Delay(1);
+ 0250           ;               Low_LCD_SCL;
+ 0250           ;       }
+ 0250           ;       Hign_LCD_RS;
+ 0250 AD9A              sbi 0x15,5
+ 0252                   .dbline 409
+ 0252                   .dbline 410
+ 0252           ;       Hign_LCD_CS;      //用了temp后，原来的command的就不会变了
+ 0252 AF9A              sbi 0x15,7
+ 0254                   .dbline 410
+ 0254                   .dbline -2
+ 0254           L57:
+ 0254 00D0              rcall pop_gset2
+ 0256                   .dbline 0 ; func end
+ 0256 0895              ret
+ 0258                   .dbsym r i 20 c
+ 0258                   .dbsym r temp 22 c
+ 0258                   .dbsym r COMMAND 20 c
+ 0258                   .dbend
+ 0258                   .dbfunc e Lcd_CURSOR _Lcd_CURSOR fV
+ 0258           ;        add_col -> R20
+ 0258           ;       add_page -> R22
+                        .even
+ 0258           _Lcd_CURSOR::
+ 0258 00D0              rcall push_gset2
+ 025A 422F              mov R20,R18
+ 025C 602F              mov R22,R16
+ 025E                   .dbline -1
+ 025E                   .dbline 414
+ 025E           ; }
+ 025E           ; //-------------------------------LCD光标函数------------------------------------
+ 025E           ; void Lcd_CURSOR(uchar add_page,uchar add_col)               //光标定位        //8页(<0fh)， 且128列(>0fh)
+ 025E           ; {                                                           //每页8行
+ 025E                   .dbline 415
+ 025E           ;       Lcd_Write_command(0xB0+(add_page&0x0f));     //+号为合成为一个字节（其实就是或）B0+0x
+ 025E 062F              mov R16,R22
+ 0260 0F70              andi R16,15
+ 0262 0055              subi R16,80    ; addi 176
+ 0264 D2DF              rcall _Lcd_Write_command
+ 0266                   .dbline 416
+ 0266           ;       Lcd_Write_command(0x10|(add_col>>4)); //Set column address MSB(10+xx)即Y7 Y6 Y5 Y4
+ 0266 042F              mov R16,R20
+ 0268 0295              swap R16
+ 026A 0F70              andi R16,#0x0F
+ 026C 0061              ori R16,16
+ 026E CDDF              rcall _Lcd_Write_command
+ 0270                   .dbline 417
+ 0270           ;       Lcd_Write_command(add_col&0x0f);      //Set column address LSB(00+xx)即Y3 Y2 Y1 Y0
+ 0270 042F              mov R16,R20
+ 0272 0F70              andi R16,15
+ 0274 CADF              rcall _Lcd_Write_command
+ 0276                   .dbline -2
+ 0276           L64:
+ 0276 00D0              rcall pop_gset2
+ 0278                   .dbline 0 ; func end
+ 0278 0895              ret
+ 027A                   .dbsym r add_col 20 c
+ 027A                   .dbsym r add_page 22 c
+ 027A                   .dbend
+ 027A                   .dbfunc e Lcd_Clear _Lcd_Clear fV
+ 027A           ;              i -> R20
+ 027A           ;              j -> R22
+                        .even
+ 027A           _Lcd_Clear::
+ 027A 00D0              rcall push_gset2
+ 027C                   .dbline -1
+ 027C                   .dbline 421
+ 027C           ; }
+ 027C           ; //-------------------------------LCD清屏函数------------------------------------
+ 027C           ; void Lcd_Clear(void)                         //128x64字节,实际中一般要多
+ 027C           ; {     
+ 027C                   .dbline 423
+ 027C           ;       uchar i,j;
+ 027C           ;       for(i=0;i<9;i++)                     //>8页
+ 027C 4427              clr R20
+ 027E 0EC0              rjmp L69
+ 0280           L66:
+ 0280                   .dbline 424
+ 0280           ;       {
+ 0280                   .dbline 425
+ 0280           ;                Lcd_CURSOR(i,0);               
+ 0280 2227              clr R18
+ 0282 042F              mov R16,R20
+ 0284 E9DF              rcall _Lcd_CURSOR
+ 0286                   .dbline 426
+ 0286           ;                for(j=0;j<132;j++)          //>128列
+ 0286 6627              clr R22
+ 0288 06C0              rjmp L73
+ 028A           L70:
+ 028A                   .dbline 427
+ 028A                   .dbline 428
+ 028A 262F              mov R18,R22
+ 028C 042F              mov R16,R20
+ 028E E4DF              rcall _Lcd_CURSOR
+ 0290                   .dbline 429
+ 0290 0027              clr R16
+ 0292 8FDF              rcall _Lcd_Write_Data
+ 0294                   .dbline 430
+ 0294           L71:
+ 0294                   .dbline 426
+ 0294 6395              inc R22
+ 0296           L73:
+ 0296                   .dbline 426
+ 0296 6438              cpi R22,132
+ 0298 C0F3              brlo L70
+ 029A                   .dbline 431
+ 029A           L67:
+ 029A                   .dbline 423
+ 029A 4395              inc R20
+ 029C           L69:
+ 029C                   .dbline 423
+ 029C 4930              cpi R20,9
+ 029E 80F3              brlo L66
+ 02A0                   .dbline -2
+ 02A0           L65:
+ 02A0 00D0              rcall pop_gset2
+ 02A2                   .dbline 0 ; func end
+ 02A2 0895              ret
+ 02A4                   .dbsym r i 20 c
+ 02A4                   .dbsym r j 22 c
+ 02A4                   .dbend
+ 02A4                   .dbfunc e Test_LCD _Test_LCD fV
+ 02A4           ;              i -> R20
+ 02A4           ;              j -> R22
+                        .even
+ 02A4           _Test_LCD::
+ 02A4 00D0              rcall push_gset2
+ 02A6                   .dbline -1
+ 02A6                   .dbline 435
+ 02A6           ;                {      
+ 02A6           ;                        Lcd_CURSOR(i,j);      //列在变，光标也在不停的换列
+ 02A6           ;                        Lcd_Write_Data(0); //定好一页后，再一列一列的写00h,列在变
+ 02A6           ;                }              
+ 02A6           ;       }
+ 02A6           ; }     
+ 02A6           ; //--------------------------------LCD测试---------------------------------------
+ 02A6           ; void Test_LCD(void)
+ 02A6           ; {     
+ 02A6                   .dbline 437
+ 02A6           ;       uchar i,j;
+ 02A6           ;       for(i=0xB0;i<0xB8;i++)          //B0-B8共8页
+ 02A6 40EB              ldi R20,176
+ 02A8 14C0              rjmp L78
+ 02AA           L75:
+ 02AA                   .dbline 438
+ 02AA           ;       {
+ 02AA                   .dbline 439
+ 02AA           ;               Lcd_Write_command(i);     //+号为合成为一个字节（其实就是或）B0+0x
+ 02AA 042F              mov R16,R20
+ 02AC AEDF              rcall _Lcd_Write_command
+ 02AE                   .dbline 440
+ 02AE           ;               Lcd_Write_command(0x10); //Set column address MSB(10+xx)即Y7 Y6 Y5 Y4
+ 02AE 00E1              ldi R16,16
+ 02B0 ACDF              rcall _Lcd_Write_command
+ 02B2                   .dbline 441
+ 02B2           ;               Lcd_Write_command(0x01); 
+ 02B2 01E0              ldi R16,1
+ 02B4 AADF              rcall _Lcd_Write_command
+ 02B6                   .dbline 442
+ 02B6           ;                Lcd_CURSOR(i,0);
+ 02B6 2227              clr R18
+ 02B8 042F              mov R16,R20
+ 02BA CEDF              rcall _Lcd_CURSOR
+ 02BC                   .dbline 443
+ 02BC           ;                for(j=0;j<132;j++)
+ 02BC 6627              clr R22
+ 02BE 06C0              rjmp L82
+ 02C0           L79:
+ 02C0                   .dbline 444
+ 02C0                   .dbline 445
+ 02C0 262F              mov R18,R22
+ 02C2 042F              mov R16,R20
+ 02C4 C9DF              rcall _Lcd_CURSOR
+ 02C6                   .dbline 446
+ 02C6 01E0              ldi R16,1
+ 02C8 74DF              rcall _Lcd_Write_Data
+ 02CA                   .dbline 447
+ 02CA           L80:
+ 02CA                   .dbline 443
+ 02CA 6395              inc R22
+ 02CC           L82:
+ 02CC                   .dbline 443
+ 02CC 6438              cpi R22,132
+ 02CE C0F3              brlo L79
+ 02D0                   .dbline 449
+ 02D0           L76:
+ 02D0                   .dbline 437
+ 02D0 4395              inc R20
+ 02D2           L78:
+ 02D2                   .dbline 437
+ 02D2 483B              cpi R20,184
+ 02D4 50F3              brlo L75
+ 02D6                   .dbline -2
+ 02D6           L74:
+ 02D6 00D0              rcall pop_gset2
+ 02D8                   .dbline 0 ; func end
+ 02D8 0895              ret
+ 02DA                   .dbsym r i 20 c
+ 02DA                   .dbsym r j 22 c
+ 02DA                   .dbend
+ 02DA                   .dbfunc e dis_1616hz _dis_1616hz fV
+ 02DA           ;              i -> R20
+ 02DA           ;              j -> R14
+ 02DA           ;             hz -> R22,R23
+ 02DA           ;            row -> R10
+ 02DA           ;             x2 -> R12
+ 02DA           ;             x1 -> R14
+                        .even
+ 02DA           _dis_1616hz::
+ 02DA 00D0              rcall push_gset5
+ 02DC C22E              mov R12,R18
+ 02DE E02E              mov R14,R16
+ 02E0 AA84              ldd R10,y+10
+ 02E2 6C85              ldd R22,y+12
+ 02E4 7D85              ldd R23,y+13
+ 02E6                   .dbline -1
+ 02E6                   .dbline 493
+ 02E6           ;                {                              //每读写一次，列会自动加1
+ 02E6           ;                        Lcd_CURSOR(i,j);       //列在变，光标也在不停的换列，重新进行定位
+ 02E6           ;                        Lcd_Write_Data(0x01);  //检测写进f0h？？？4点亮4点暗
+ 02E6           ;                }
+ 02E6           ;                               
+ 02E6           ;       }
+ 02E6           ; }
+ 02E6           ; /*
+ 02E6           ; //------------------------------------------------------------------------------
+ 02E6           ; void dis_biankuang()                  //边框设计
+ 02E6           ; {     
+ 02E6           ;       uchar i,j,k;
+ 02E6           ;       for(i=0xB0;i<0xB8;i++)          //2页16行
+ 02E6           ;       {
+ 02E6           ;               Lcd_Write_command(i);           //+号为合成为一个字节（其实就是或）B0+0x
+ 02E6           ;               Lcd_Write_command(0x10);        //Set column address MSB(10+xx)即Y7 Y6 Y5 Y4
+ 02E6           ;               Lcd_Write_command(0x01); 
+ 02E6           ;               Lcd_CURSOR(i,0);
+ 02E6           ;                for(j=0;j<132;j++)
+ 02E6           ;                {                              //每读写一次，列会自动加1
+ 02E6           ;                        Lcd_CURSOR(i,j);       //改变列位置，列在变，光标也在不停的换列，重新进行定位
+ 02E6           ;                        Lcd_Write_Data(0x03);  //检测写进f0h？？？4点亮4点暗
+ 02E6           ;                }
+ 02E6           ;                for(k=0xB0;k<0xB7;k++)
+ 02E6           ;                {
+ 02E6           ;                for(j=2;j<6;j++)
+ 02E6           ;                {
+ 02E6           ;                 Lcd_CURSOR(k,j);       //改变列位置，列在变，光标也在不停的换列，重新进行定位
+ 02E6           ;                 Lcd_Write_Data(0xff);
+ 02E6           ;                }
+ 02E6           ;                for(j=130;j<132;j++)
+ 02E6           ;                {
+ 02E6           ;                 Lcd_CURSOR(k,j);       //改变列位置，列在变，光标也在不停的换列，重新进行定位
+ 02E6           ;                 Lcd_Write_Data(0xff);
+ 02E6           ;                }
+ 02E6           ;                }
+ 02E6           ;                i=i+7;
+ 02E6           ;                for(j=0;j<132;j++)      
+ 02E6           ;                {                              //每读写一次，列会自动加1
+ 02E6           ;                        Lcd_CURSOR(i,j);       //列在变，光标也在不停的换列，重新进行定位
+ 02E6           ;                        Lcd_Write_Data(0x03);  //检测写进f0h？？？4点亮4点暗
+ 02E6           ;                }
+ 02E6           ; 
+ 02E6           ;                       
+ 02E6           ;       }
+ 02E6           ; }
+ 02E6           ; */
+ 02E6           ; //------------------------------16*16汉字显示-----------------------------------
+ 02E6           ; void dis_1616hz(uchar x1,uchar x2,uchar row,const uchar hz[])                 //16*16
+ 02E6           ; {     
+ 02E6                   .dbline 495
+ 02E6           ;       uchar i,j;
+ 02E6           ;       for(i=x1;i<x2;i++)              //2页16行
+ 02E6 4E2D              mov R20,R14
+ 02E8 32C0              rjmp L87
+ 02EA           L84:
+ 02EA                   .dbline 496
+ 02EA           ;       {
+ 02EA                   .dbline 497
+ 02EA           ;               Lcd_Write_command(i);           //+号为合成为一个字节（其实就是或）B0+0x
+ 02EA 042F              mov R16,R20
+ 02EC 8EDF              rcall _Lcd_Write_command
+ 02EE                   .dbline 498
+ 02EE           ;               Lcd_Write_command(0x10);        //Set column address MSB(10+xx)即Y7 Y6 Y5 Y4
+ 02EE 00E1              ldi R16,16
+ 02F0 8CDF              rcall _Lcd_Write_command
+ 02F2                   .dbline 499
+ 02F2           ;               Lcd_Write_command(0x01); 
+ 02F2 01E0              ldi R16,1
+ 02F4 8ADF              rcall _Lcd_Write_command
+ 02F6                   .dbline 500
+ 02F6           ;               Lcd_CURSOR(i,0);
+ 02F6 2227              clr R18
+ 02F8 042F              mov R16,R20
+ 02FA AEDF              rcall _Lcd_CURSOR
+ 02FC                   .dbline 501
+ 02FC           ;                for(j=0;j<16;j++)
+ 02FC EE24              clr R14
+ 02FE 0EC0              rjmp L91
+ 0300           L88:
+ 0300                   .dbline 502
+ 0300                   .dbline 503
+ 0300 2E2D              mov R18,R14
+ 0302 2A0D              add R18,R10
+ 0304 042F              mov R16,R20
+ 0306 A8DF              rcall _Lcd_CURSOR
+ 0308                   .dbline 504
+ 0308 2E2C              mov R2,R14
+ 030A 3324              clr R3
+ 030C 260E              add R2,R22
+ 030E 371E              adc R3,R23
+ 0310 E22D              mov R30,R2
+ 0312 F32D              mov R31,R3
+ 0314 C895              lpm
+ 0316 002D              mov R16,R0
+ 0318 4CDF              rcall _Lcd_Write_Data
+ 031A                   .dbline 505
+ 031A           L89:
+ 031A                   .dbline 501
+ 031A E394              inc R14
+ 031C           L91:
+ 031C                   .dbline 501
+ 031C 8E2D              mov R24,R14
+ 031E 8031              cpi R24,16
+ 0320 78F3              brlo L88
+ 0322                   .dbline 506
+ 0322           ;                {                              //每读写一次，列会自动加1
+ 0322           ;                        Lcd_CURSOR(i,j+row);       //改变列位置，列在变，光标也在不停的换列，重新进行定位
+ 0322           ;                        Lcd_Write_Data(hz[j]);  //检测写进f0h？？？4点亮4点暗
+ 0322           ;                }
+ 0322           ;                i++;
+ 0322 4395              inc R20
+ 0324                   .dbline 507
+ 0324           ;                for(j=0;j<16;j++)      
+ 0324 EE24              clr R14
+ 0326 0FC0              rjmp L95
+ 0328           L92:
+ 0328                   .dbline 508
+ 0328                   .dbline 509
+ 0328 2E2D              mov R18,R14
+ 032A 2A0D              add R18,R10
+ 032C 042F              mov R16,R20
+ 032E 94DF              rcall _Lcd_CURSOR
+ 0330                   .dbline 510
+ 0330 8E2D              mov R24,R14
+ 0332 9927              clr R25
+ 0334 860F              add R24,R22
+ 0336 971F              adc R25,R23
+ 0338 4096              adiw R24,16
+ 033A E82F              mov R30,R24
+ 033C F92F              mov R31,R25
+ 033E C895              lpm
+ 0340 002D              mov R16,R0
+ 0342 37DF              rcall _Lcd_Write_Data
+ 0344                   .dbline 511
+ 0344           L93:
+ 0344                   .dbline 507
+ 0344 E394              inc R14
+ 0346           L95:
+ 0346                   .dbline 507
+ 0346 8E2D              mov R24,R14
+ 0348 8031              cpi R24,16
+ 034A 70F3              brlo L92
+ 034C                   .dbline 512
+ 034C           L85:
+ 034C                   .dbline 495
+ 034C 4395              inc R20
+ 034E           L87:
+ 034E                   .dbline 495
+ 034E 4C15              cp R20,R12
+ 0350 08F4              brsh X2
+ 0352 CBCF              rjmp L84
+ 0354           X2:
+ 0354                   .dbline -2
+ 0354           L83:
+ 0354 00D0              rcall pop_gset5
+ 0356                   .dbline 0 ; func end
+ 0356 0895              ret
+ 0358                   .dbsym r i 20 c
+ 0358                   .dbsym r j 14 c
+ 0358                   .dbsym r hz 22 pkc
+ 0358                   .dbsym r row 10 c
+ 0358                   .dbsym r x2 12 c
+ 0358                   .dbsym r x1 14 c
+ 0358                   .dbend
+ 0358                   .dbfunc e dis_168hz _dis_168hz fV
+ 0358           ;              b -> R20
+ 0358           ;              a -> R22
+ 0358           ;              j -> R10
+ 0358           ;             hz -> R12,R13
+ 0358           ;            row -> R14
+ 0358           ;             x1 -> R20
+                        .even
+ 0358           _dis_168hz::
+ 0358 00D0              rcall push_gset5
+ 035A E22E              mov R14,R18
+ 035C 402F              mov R20,R16
+ 035E CA84              ldd R12,y+10
+ 0360 DB84              ldd R13,y+11
+ 0362                   .dbline -1
+ 0362                   .dbline 546
+ 0362           ;                {                              //每读写一次，列会自动加1
+ 0362           ;                        Lcd_CURSOR(i,j+row);       //列在变，光标也在不停的换列，重新进行定位
+ 0362           ;                        Lcd_Write_Data(hz[j+16]);  //检测写进f0h？？？4点亮4点暗
+ 0362           ;                }              
+ 0362           ;       }
+ 0362           ; }
+ 0362           ; /*------------------------------------------------------------------------------
+ 0362           ; void Dis16x16(uchar add_page, uchar add_col,const uchar *pHZ,uchar state)
+ 0362           ; {
+ 0362           ;     uchar i;
+ 0362           ;     Lcd_CURSOR(add_page, add_col);
+ 0362           ;     for(i=0;i<16;i++) 
+ 0362           ;     {                                                //一个汉字2行，16列，32个字节
+ 0362           ;       if(state)                                    //state(选亮，黑)
+ 0362           ;       {
+ 0362           ;               Lcd_Write_Data(pHZ[i]);              //光标定位后沿着行开始写16列的字模数据？？？？？？
+ 0362           ;       }
+ 0362           ;     //        else
+ 0362           ;     //        {
+ 0362           ;               Lcd_Write_Data(~pHZ[i]);            //如果列变，光标也会不停的换列，这里光标只换页不换列
+ 0362           ;     //        }                                           //那还是一列一列的写吗？？？？(写一次会自动加1列）
+ 0362           ;      // }                                             //而清时在不停的换列
+ 0362           ;     Lcd_CURSOR(add_page-1, add_col);                //加或减都行，只是取模方向不同
+ 0362           ;     for(;i<32;i++)
+ 0362           ;     {  
+ 0362           ;       if(state)
+ 0362           ;       {
+ 0362           ;               Lcd_Write_Data(pHZ[i]);
+ 0362           ;       }
+ 0362           ;     //        else
+ 0362           ;     //        {
+ 0362           ;       //      Lcd_Write_Data(~pHZ[i]);
+ 0362           ;       }
+ 0362           ;     }
+ 0362           ; }
+ 0362           ; */
+ 0362           ; //-----------------------------16*8点阵显示-------------------------------------
+ 0362           ; void dis_168hz(uchar x1,uchar row,const uchar hz[])                   //16*16
+ 0362           ; {     
+ 0362                   .dbline 548
+ 0362           ;       uchar a,b,j;
+ 0362           ;       a=x1;
+ 0362 642F              mov R22,R20
+ 0364                   .dbline 549
+ 0364           ;       b=x1+1;
+ 0364 4F5F              subi R20,255    ; addi 1
+ 0366                   .dbline 550
+ 0366           ;               Lcd_Write_command(a);           //+号为合成为一个字节（其实就是或）B0+0x
+ 0366 062F              mov R16,R22
+ 0368 50DF              rcall _Lcd_Write_command
+ 036A                   .dbline 551
+ 036A           ;               Lcd_Write_command(0x10);        //Set column address MSB(10+xx)即Y7 Y6 Y5 Y4
+ 036A 00E1              ldi R16,16
+ 036C 4EDF              rcall _Lcd_Write_command
+ 036E                   .dbline 552
+ 036E           ;               Lcd_Write_command(0x01); 
+ 036E 01E0              ldi R16,1
+ 0370 4CDF              rcall _Lcd_Write_command
+ 0372                   .dbline 553
+ 0372           ;               Lcd_CURSOR(a,0);
+ 0372 2227              clr R18
+ 0374 062F              mov R16,R22
+ 0376 70DF              rcall _Lcd_CURSOR
+ 0378                   .dbline 554
+ 0378           ;                for(j=0;j<8;j++)
+ 0378 AA24              clr R10
+ 037A 0EC0              rjmp L100
+ 037C           L97:
+ 037C                   .dbline 555
+ 037C                   .dbline 556
+ 037C 2A2D              mov R18,R10
+ 037E 2E0D              add R18,R14
+ 0380 062F              mov R16,R22
+ 0382 6ADF              rcall _Lcd_CURSOR
+ 0384                   .dbline 557
+ 0384 2A2C              mov R2,R10
+ 0386 3324              clr R3
+ 0388 2C0C              add R2,R12
+ 038A 3D1C              adc R3,R13
+ 038C E22D              mov R30,R2
+ 038E F32D              mov R31,R3
+ 0390 C895              lpm
+ 0392 002D              mov R16,R0
+ 0394 0EDF              rcall _Lcd_Write_Data
+ 0396                   .dbline 558
+ 0396           L98:
+ 0396                   .dbline 554
+ 0396 A394              inc R10
+ 0398           L100:
+ 0398                   .dbline 554
+ 0398 8A2D              mov R24,R10
+ 039A 8830              cpi R24,8
+ 039C 78F3              brlo L97
+ 039E                   .dbline 559
+ 039E           ;                {                              //每读写一次，列会自动加1
+ 039E           ;                        Lcd_CURSOR(a,j+row);       //改变列位置，列在变，光标也在不停的换列，重新进行定位
+ 039E           ;                        Lcd_Write_Data(hz[j]);  //检测写进f0h？？？4点亮4点暗
+ 039E           ;                }
+ 039E           ;                Lcd_Write_command(b);          //+号为合成为一个字节（其实就是或）B0+0x
+ 039E 042F              mov R16,R20
+ 03A0 34DF              rcall _Lcd_Write_command
+ 03A2                   .dbline 560
+ 03A2           ;               Lcd_Write_command(0x10);        //Set column address MSB(10+xx)即Y7 Y6 Y5 Y4
+ 03A2 00E1              ldi R16,16
+ 03A4 32DF              rcall _Lcd_Write_command
+ 03A6                   .dbline 561
+ 03A6           ;               Lcd_Write_command(0x01); 
+ 03A6 01E0              ldi R16,1
+ 03A8 30DF              rcall _Lcd_Write_command
+ 03AA                   .dbline 562
+ 03AA           ;               Lcd_CURSOR(b,0);
+ 03AA 2227              clr R18
+ 03AC 042F              mov R16,R20
+ 03AE 54DF              rcall _Lcd_CURSOR
+ 03B0                   .dbline 563
+ 03B0           ;                for(j=0;j<8;j++)      
+ 03B0 AA24              clr R10
+ 03B2 0FC0              rjmp L104
+ 03B4           L101:
+ 03B4                   .dbline 564
+ 03B4                   .dbline 565
+ 03B4 2A2D              mov R18,R10
+ 03B6 2E0D              add R18,R14
+ 03B8 042F              mov R16,R20
+ 03BA 4EDF              rcall _Lcd_CURSOR
+ 03BC                   .dbline 566
+ 03BC 8A2D              mov R24,R10
+ 03BE 9927              clr R25
+ 03C0 8C0D              add R24,R12
+ 03C2 9D1D              adc R25,R13
+ 03C4 0896              adiw R24,8
+ 03C6 E82F              mov R30,R24
+ 03C8 F92F              mov R31,R25
+ 03CA C895              lpm
+ 03CC 002D              mov R16,R0
+ 03CE F1DE              rcall _Lcd_Write_Data
+ 03D0                   .dbline 567
+ 03D0           L102:
+ 03D0                   .dbline 563
+ 03D0 A394              inc R10
+ 03D2           L104:
+ 03D2                   .dbline 563
+ 03D2 8A2D              mov R24,R10
+ 03D4 8830              cpi R24,8
+ 03D6 70F3              brlo L101
+ 03D8                   .dbline -2
+ 03D8           L96:
+ 03D8 00D0              rcall pop_gset5
+ 03DA                   .dbline 0 ; func end
+ 03DA 0895              ret
+ 03DC                   .dbsym r b 20 c
+ 03DC                   .dbsym r a 22 c
+ 03DC                   .dbsym r j 10 c
+ 03DC                   .dbsym r hz 12 pkc
+ 03DC                   .dbsym r row 14 c
+ 03DC                   .dbsym r x1 20 c
+ 03DC                   .dbend
+ 03DC                   .dbfunc e dis_shuzi _dis_shuzi fV
+ 03DC           ;          shuzi -> y+8
+ 03DC           ;              y -> R22
+ 03DC           ;              x -> R20
+                        .even
+ 03DC           _dis_shuzi::
+ 03DC 00D0              rcall push_gset3
+ 03DE 622F              mov R22,R18
+ 03E0 402F              mov R20,R16
+ 03E2 2297              sbiw R28,2
+ 03E4                   .dbline -1
+ 03E4                   .dbline 571
+ 03E4           ;                {                              //每读写一次，列会自动加1
+ 03E4           ;                        Lcd_CURSOR(b,j+row);       //列在变，光标也在不停的换列，重新进行定位
+ 03E4           ;                        Lcd_Write_Data(hz[j+8]);  //检测写进f0h？？？4点亮4点暗
+ 03E4           ;                }              
+ 03E4           ;       
+ 03E4           ; }
+ 03E4           ; void dis_shuzi(uchar x,uchar y,uchar shuzi)   
+ 03E4           ; {
+ 03E4                   .dbline 572
+ 03E4           ;       switch  (shuzi)
+ 03E4 A884              ldd R10,y+8
+ 03E6 BB24              clr R11
+ 03E8 AA20              tst R10
+ 03EA 19F4              brne X3
+ 03EC BB20              tst R11
+ 03EE 09F4              brne X5
+ 03F0 73C0              rjmp L118
+ 03F2           X5:
+ 03F2           X3:
+ 03F2 8A2D              mov R24,R10
+ 03F4 9B2D              mov R25,R11
+ 03F6 8130              cpi R24,1
+ 03F8 E0E0              ldi R30,0
+ 03FA 9E07              cpc R25,R30
+ 03FC 09F4              brne X6
+ 03FE 64C0              rjmp L117
+ 0400           X6:
+ 0400 8230              cpi R24,2
+ 0402 E0E0              ldi R30,0
+ 0404 9E07              cpc R25,R30
+ 0406 09F4              brne X7
+ 0408 57C0              rjmp L116
+ 040A           X7:
+ 040A 8330              cpi R24,3
+ 040C E0E0              ldi R30,0
+ 040E 9E07              cpc R25,R30
+ 0410 09F4              brne X8
+ 0412 4AC0              rjmp L115
+ 0414           X8:
+ 0414 8430              cpi R24,4
+ 0416 E0E0              ldi R30,0
+ 0418 9E07              cpc R25,R30
+ 041A 09F4              brne X9
+ 041C 3DC0              rjmp L114
+ 041E           X9:
+ 041E 8530              cpi R24,5
+ 0420 E0E0              ldi R30,0
+ 0422 9E07              cpc R25,R30
+ 0424 89F1              breq L113
+ 0426 8630              cpi R24,6
+ 0428 E0E0              ldi R30,0
+ 042A 9E07              cpc R25,R30
+ 042C 29F1              breq L112
+ 042E 8730              cpi R24,7
+ 0430 E0E0              ldi R30,0
+ 0432 9E07              cpc R25,R30
+ 0434 C9F0              breq L111
+ 0436 8830              cpi R24,8
+ 0438 E0E0              ldi R30,0
+ 043A 9E07              cpc R25,R30
+ 043C 69F0              breq L110
+ 043E 8930              cpi R24,9
+ 0440 E0E0              ldi R30,0
+ 0442 9E07              cpc R25,R30
+ 0444 09F0              breq L109
+ 0446 4FC0              rjmp L107
+ 0448           X4:
+ 0448                   .dbline 573
+ 0448           ;       {
+ 0448           L109:
+ 0448                   .dbline 580
+ 0448           ;       //case 0x0f:dispaly[2]=9;break;
+ 0448           ;       //case 0x0e:dispaly[2]=9;break;
+ 0448           ;       //case 0x0d:dispaly[2]=8;break;
+ 0448           ;       //case 0x0c:dispaly[2]=8;break;
+ 0448           ;       //case 0x0b:dispaly[2]=7;break;
+ 0448           ;       //case 0x0a:dispaly[2]=6;break;
+ 0448           ;       case 0x09:dis_168hz(x,y,jiu16);break;
+ 0448 80E0              ldi R24,<_jiu16
+ 044A 90E0              ldi R25,>_jiu16
+ 044C 9983              std y+1,R25
+ 044E 8883              std y+0,R24
+ 0450 262F              mov R18,R22
+ 0452 042F              mov R16,R20
+ 0454 81DF              rcall _dis_168hz
+ 0456                   .dbline 580
+ 0456 47C0              rjmp L107
+ 0458           L110:
+ 0458                   .dbline 581
+ 0458           ;       case 0x08:dis_168hz(x,y,ba16);break;
+ 0458 80E0              ldi R24,<_ba16
+ 045A 90E0              ldi R25,>_ba16
+ 045C 9983              std y+1,R25
+ 045E 8883              std y+0,R24
+ 0460 262F              mov R18,R22
+ 0462 042F              mov R16,R20
+ 0464 79DF              rcall _dis_168hz
+ 0466                   .dbline 581
+ 0466 3FC0              rjmp L107
+ 0468           L111:
+ 0468                   .dbline 582
+ 0468           ;       case 0x07:dis_168hz(x,y,qi16);break;
+ 0468 80E0              ldi R24,<_qi16
+ 046A 90E0              ldi R25,>_qi16
+ 046C 9983              std y+1,R25
+ 046E 8883              std y+0,R24
+ 0470 262F              mov R18,R22
+ 0472 042F              mov R16,R20
+ 0474 71DF              rcall _dis_168hz
+ 0476                   .dbline 582
+ 0476 37C0              rjmp L107
+ 0478           L112:
+ 0478                   .dbline 583
+ 0478           ;       case 0x06:dis_168hz(x,y,liu16);break;
+ 0478 80E0              ldi R24,<_liu16
+ 047A 90E0              ldi R25,>_liu16
+ 047C 9983              std y+1,R25
+ 047E 8883              std y+0,R24
+ 0480 262F              mov R18,R22
+ 0482 042F              mov R16,R20
+ 0484 69DF              rcall _dis_168hz
+ 0486                   .dbline 583
+ 0486 2FC0              rjmp L107
+ 0488           L113:
+ 0488                   .dbline 584
+ 0488           ;       case 0x05:dis_168hz(x,y,wu16);break;
+ 0488 80E0              ldi R24,<_wu16
+ 048A 90E0              ldi R25,>_wu16
+ 048C 9983              std y+1,R25
+ 048E 8883              std y+0,R24
+ 0490 262F              mov R18,R22
+ 0492 042F              mov R16,R20
+ 0494 61DF              rcall _dis_168hz
+ 0496                   .dbline 584
+ 0496 27C0              rjmp L107
+ 0498           L114:
+ 0498                   .dbline 585
+ 0498           ;       case 0x04:dis_168hz(x,y,si16);break;
+ 0498 80E0              ldi R24,<_si16
+ 049A 90E0              ldi R25,>_si16
+ 049C 9983              std y+1,R25
+ 049E 8883              std y+0,R24
+ 04A0 262F              mov R18,R22
+ 04A2 042F              mov R16,R20
+ 04A4 59DF              rcall _dis_168hz
+ 04A6                   .dbline 585
+ 04A6 1FC0              rjmp L107
+ 04A8           L115:
+ 04A8                   .dbline 586
+ 04A8           ;       case 0x03:dis_168hz(x,y,san16);break;
+ 04A8 80E0              ldi R24,<_san16
+ 04AA 90E0              ldi R25,>_san16
+ 04AC 9983              std y+1,R25
+ 04AE 8883              std y+0,R24
+ 04B0 262F              mov R18,R22
+ 04B2 042F              mov R16,R20
+ 04B4 51DF              rcall _dis_168hz
+ 04B6                   .dbline 586
+ 04B6 17C0              rjmp L107
+ 04B8           L116:
+ 04B8                   .dbline 587
+ 04B8           ;       case 0x02:dis_168hz(x,y,er16);break;
+ 04B8 80E0              ldi R24,<_er16
+ 04BA 90E0              ldi R25,>_er16
+ 04BC 9983              std y+1,R25
+ 04BE 8883              std y+0,R24
+ 04C0 262F              mov R18,R22
+ 04C2 042F              mov R16,R20
+ 04C4 49DF              rcall _dis_168hz
+ 04C6                   .dbline 587
+ 04C6 0FC0              rjmp L107
+ 04C8           L117:
+ 04C8                   .dbline 588
+ 04C8           ;       case 0x01:dis_168hz(x,y,yi16);break;
+ 04C8 80E0              ldi R24,<_yi16
+ 04CA 90E0              ldi R25,>_yi16
+ 04CC 9983              std y+1,R25
+ 04CE 8883              std y+0,R24
+ 04D0 262F              mov R18,R22
+ 04D2 042F              mov R16,R20
+ 04D4 41DF              rcall _dis_168hz
+ 04D6                   .dbline 588
+ 04D6 07C0              rjmp L107
+ 04D8           L118:
+ 04D8                   .dbline 589
+ 04D8 80E0              ldi R24,<_ling16
+ 04DA 90E0              ldi R25,>_ling16
+ 04DC 9983              std y+1,R25
+ 04DE 8883              std y+0,R24
+ 04E0 262F              mov R18,R22
+ 04E2 042F              mov R16,R20
+ 04E4 39DF              rcall _dis_168hz
+ 04E6                   .dbline 589
+ 04E6                   .dbline 590
+ 04E6           L107:
+ 04E6                   .dbline -2
+ 04E6           L105:
+ 04E6 2296              adiw R28,2
+ 04E8 00D0              rcall pop_gset3
+ 04EA                   .dbline 0 ; func end
+ 04EA 0895              ret
+ 04EC                   .dbsym l shuzi 8 c
+ 04EC                   .dbsym r y 22 c
+ 04EC                   .dbsym r x 20 c
+ 04EC                   .dbend
+ 04EC                   .dbfunc e dis_ykxt _dis_ykxt fV
+                        .even
+ 04EC           _dis_ykxt::
+ 04EC 2497              sbiw R28,4
+ 04EE                   .dbline -1
+ 04EE                   .dbline 628
+ 04EE           ;       case 0x00:dis_168hz(x,y,ling16);break;
+ 04EE           ;       default:break;
+ 04EE           ;       }
+ 04EE           ; }
+ 04EE           ; //-----------------------------------------------------------------------------
+ 04EE           ; 
+ 04EE           ; /*void LCDtime(uchar x,uchar nian1,uchar nian2,uchar nian3,uchar nian4,
+ 04EE           ;                    uchar yue1,uchar yue2,
+ 04EE           ;                    uchar ri1,uchar ri2,
+ 04EE           ;                    uchar shi1,uchar shi2,
+ 04EE           ;                    uchar fen1,uchar fen1,)    //LCD时间显示函数
+ 04EE           ; */
+ 04EE           ; //------------------------------------------------------------------------------
+ 04EE           ; /*
+ 04EE           ; void LCDtime()                                 
+ 04EE           ;       {
+ 04EE           ;       dis_168hz(0xB6,5,er16);                  //n1
+ 04EE           ;       dis_168hz(0xB6,13,ling16);                       //n2
+ 04EE           ;       dis_168hz(0xB6,21,ling16);                       //n3   
+ 04EE           ;       dis_168hz(0xB6,29,qi16);                         //n4
+ 04EE           ;       dis_168hz(0xB6,37,heng16);
+ 04EE           ;       dis_168hz(0xB6,45,yi16);                         //y1
+ 04EE           ;       dis_168hz(0xB6,53,ling16);                       //y2
+ 04EE           ;       dis_168hz(0xB6,61,heng16);              
+ 04EE           ;       dis_168hz(0xB6,69,yi16);                         //r1
+ 04EE           ;       dis_168hz(0xB6,77,ling16);               //r2
+ 04EE           ;       ///////////////////////////////////////////////
+ 04EE           ;       dis_168hz(0xB6,90,yi16);                        //s1
+ 04EE           ;       dis_168hz(0xB6,98,san16);           //s2
+ 04EE           ;       dis_168hz(0xB6,106,maohao16);           //
+ 04EE           ;       dis_168hz(0xB6,114,yi16);               //f3
+ 04EE           ;       dis_168hz(0xB6,122,liu16);              //f4
+ 04EE           ;       }
+ 04EE           ; */
+ 04EE           ; //------------------------------------------------------------------------------
+ 04EE           ; 
+ 04EE           ; //------------------------------------------------------------------------------
+ 04EE           ; 
+ 04EE           ; void  dis_ykxt()
+ 04EE           ; {
+ 04EE                   .dbline 630
+ 04EE           ; //---------------------------第一行“无线遥控系统“-----------------------------
+ 04EE           ;       dis_1616hz(0xB0,0xB1,20,wu);
+ 04EE 80E0              ldi R24,<_wu
+ 04F0 90E0              ldi R25,>_wu
+ 04F2 9B83              std y+3,R25
+ 04F4 8A83              std y+2,R24
+ 04F6 84E1              ldi R24,20
+ 04F8 8883              std y+0,R24
+ 04FA 21EB              ldi R18,177
+ 04FC 00EB              ldi R16,176
+ 04FE EDDE              rcall _dis_1616hz
+ 0500                   .dbline 631
+ 0500           ;       dis_1616hz(0xB0,0xB1,36,xian);
+ 0500 80E0              ldi R24,<_xian
+ 0502 90E0              ldi R25,>_xian
+ 0504 9B83              std y+3,R25
+ 0506 8A83              std y+2,R24
+ 0508 84E2              ldi R24,36
+ 050A 8883              std y+0,R24
+ 050C 21EB              ldi R18,177
+ 050E 00EB              ldi R16,176
+ 0510 E4DE              rcall _dis_1616hz
+ 0512                   .dbline 632
+ 0512           ;       dis_1616hz(0xB0,0xB1,52,yao);
+ 0512 80E0              ldi R24,<_yao
+ 0514 90E0              ldi R25,>_yao
+ 0516 9B83              std y+3,R25
+ 0518 8A83              std y+2,R24
+ 051A 84E3              ldi R24,52
+ 051C 8883              std y+0,R24
+ 051E 21EB              ldi R18,177
+ 0520 00EB              ldi R16,176
+ 0522 DBDE              rcall _dis_1616hz
+ 0524                   .dbline 633
+ 0524           ;       dis_1616hz(0xB0,0xB1,68,kong);
+ 0524 80E0              ldi R24,<_kong
+ 0526 90E0              ldi R25,>_kong
+ 0528 9B83              std y+3,R25
+ 052A 8A83              std y+2,R24
+ 052C 84E4              ldi R24,68
+ 052E 8883              std y+0,R24
+ 0530 21EB              ldi R18,177
+ 0532 00EB              ldi R16,176
+ 0534 D2DE              rcall _dis_1616hz
+ 0536                   .dbline 634
+ 0536           ;       dis_1616hz(0xB0,0xB1,84,xi);
+ 0536 80E0              ldi R24,<_xi
+ 0538 90E0              ldi R25,>_xi
+ 053A 9B83              std y+3,R25
+ 053C 8A83              std y+2,R24
+ 053E 84E5              ldi R24,84
+ 0540 8883              std y+0,R24
+ 0542 21EB              ldi R18,177
+ 0544 00EB              ldi R16,176
+ 0546 C9DE              rcall _dis_1616hz
+ 0548                   .dbline 635
+ 0548           ;       dis_1616hz(0xB0,0xB1,100,tong);
+ 0548 80E0              ldi R24,<_tong
+ 054A 90E0              ldi R25,>_tong
+ 054C 9B83              std y+3,R25
+ 054E 8A83              std y+2,R24
+ 0550 84E6              ldi R24,100
+ 0552 8883              std y+0,R24
+ 0554 21EB              ldi R18,177
+ 0556 00EB              ldi R16,176
+ 0558 C0DE              rcall _dis_1616hz
+ 055A                   .dbline -2
+ 055A           L119:
+ 055A 2496              adiw R28,4
+ 055C                   .dbline 0 ; func end
+ 055C 0895              ret
+ 055E                   .dbend
+ 055E                   .dbfunc e dis_jdql _dis_jdql fV
+                        .even
+ 055E           _dis_jdql::
+ 055E 2497              sbiw R28,4
+ 0560                   .dbline -1
+ 0560                   .dbline 639
+ 0560           ; }
+ 0560           ; //----------------------------第2行“继电器开”-------------------------------------
+ 0560           ; void dis_jdql()
+ 0560           ; {
+ 0560                   .dbline 640
+ 0560           ;       dis_1616hz(0xB3,0xB4,35,ji);
+ 0560 80E0              ldi R24,<_ji
+ 0562 90E0              ldi R25,>_ji
+ 0564 9B83              std y+3,R25
+ 0566 8A83              std y+2,R24
+ 0568 83E2              ldi R24,35
+ 056A 8883              std y+0,R24
+ 056C 24EB              ldi R18,180
+ 056E 03EB              ldi R16,179
+ 0570 B4DE              rcall _dis_1616hz
+ 0572                   .dbline 641
+ 0572           ;       dis_1616hz(0xB3,0xB4,51,dian);
+ 0572 80E0              ldi R24,<_dian
+ 0574 90E0              ldi R25,>_dian
+ 0576 9B83              std y+3,R25
+ 0578 8A83              std y+2,R24
+ 057A 83E3              ldi R24,51
+ 057C 8883              std y+0,R24
+ 057E 24EB              ldi R18,180
+ 0580 03EB              ldi R16,179
+ 0582 ABDE              rcall _dis_1616hz
+ 0584                   .dbline 642
+ 0584           ;       dis_1616hz(0xB3,0xB4,67,qi);
+ 0584 80E0              ldi R24,<_qi
+ 0586 90E0              ldi R25,>_qi
+ 0588 9B83              std y+3,R25
+ 058A 8A83              std y+2,R24
+ 058C 83E4              ldi R24,67
+ 058E 8883              std y+0,R24
+ 0590 24EB              ldi R18,180
+ 0592 03EB              ldi R16,179
+ 0594 A2DE              rcall _dis_1616hz
+ 0596                   .dbline 643
+ 0596           ;       dis_1616hz(0xB3,0xB4,83,kai);
+ 0596 80E0              ldi R24,<_kai
+ 0598 90E0              ldi R25,>_kai
+ 059A 9B83              std y+3,R25
+ 059C 8A83              std y+2,R24
+ 059E 83E5              ldi R24,83
+ 05A0 8883              std y+0,R24
+ 05A2 24EB              ldi R18,180
+ 05A4 03EB              ldi R16,179
+ 05A6 99DE              rcall _dis_1616hz
+ 05A8                   .dbline -2
+ 05A8           L120:
+ 05A8 2496              adiw R28,4
+ 05AA                   .dbline 0 ; func end
+ 05AA 0895              ret
+ 05AC                   .dbend
+ 05AC                   .dbfunc e dis_fmqx _dis_fmqx fV
+                        .even
+ 05AC           _dis_fmqx::
+ 05AC 2497              sbiw R28,4
+ 05AE                   .dbline -1
+ 05AE                   .dbline 647
+ 05AE           ; }     
+ 05AE           ; //---------------------------第3行“蜂明器响“--------------------------------------
+ 05AE           ; void dis_fmqx()
+ 05AE           ; {
+ 05AE                   .dbline 648
+ 05AE           ;       dis_1616hz(0xB3,0xB4,35,feng);
+ 05AE 80E0              ldi R24,<_feng
+ 05B0 90E0              ldi R25,>_feng
+ 05B2 9B83              std y+3,R25
+ 05B4 8A83              std y+2,R24
+ 05B6 83E2              ldi R24,35
+ 05B8 8883              std y+0,R24
+ 05BA 24EB              ldi R18,180
+ 05BC 03EB              ldi R16,179
+ 05BE 8DDE              rcall _dis_1616hz
+ 05C0                   .dbline 649
+ 05C0           ;       dis_1616hz(0xB3,0xB4,51,ming);
+ 05C0 80E0              ldi R24,<_ming
+ 05C2 90E0              ldi R25,>_ming
+ 05C4 9B83              std y+3,R25
+ 05C6 8A83              std y+2,R24
+ 05C8 83E3              ldi R24,51
+ 05CA 8883              std y+0,R24
+ 05CC 24EB              ldi R18,180
+ 05CE 03EB              ldi R16,179
+ 05D0 84DE              rcall _dis_1616hz
+ 05D2                   .dbline 650
+ 05D2           ;       dis_1616hz(0xB3,0xB4,67,qi);
+ 05D2 80E0              ldi R24,<_qi
+ 05D4 90E0              ldi R25,>_qi
+ 05D6 9B83              std y+3,R25
+ 05D8 8A83              std y+2,R24
+ 05DA 83E4              ldi R24,67
+ 05DC 8883              std y+0,R24
+ 05DE 24EB              ldi R18,180
+ 05E0 03EB              ldi R16,179
+ 05E2 7BDE              rcall _dis_1616hz
+ 05E4                   .dbline 651
+ 05E4           ;       dis_1616hz(0xB3,0xB4,83,xiang);
+ 05E4 80E0              ldi R24,<_xiang
+ 05E6 90E0              ldi R25,>_xiang
+ 05E8 9B83              std y+3,R25
+ 05EA 8A83              std y+2,R24
+ 05EC 83E5              ldi R24,83
+ 05EE 8883              std y+0,R24
+ 05F0 24EB              ldi R18,180
+ 05F2 03EB              ldi R16,179
+ 05F4 72DE              rcall _dis_1616hz
+ 05F6                   .dbline -2
+ 05F6           L121:
+ 05F6 2496              adiw R28,4
+ 05F8                   .dbline 0 ; func end
+ 05F8 0895              ret
+ 05FA                   .dbend
+ 05FA                   .dbfunc e StartUART _StartUART fV
+                        .even
+ 05FA           _StartUART::
+ 05FA                   .dbline -1
+ 05FA                   .dbline 655
+ 05FA           ; }
+ 05FA           ; //-------------------------------串口初始化-------------------------------------
+ 05FA           ; void StartUART(void)
+ 05FA           ; {
+ 05FA                   .dbline 656
+ 05FA           ;        UCSRA=0x00;    
+ 05FA 2224              clr R2
+ 05FC 2BB8              out 0xb,R2
+ 05FE                   .dbline 657
+ 05FE           ;        UCSRB=0x18;    
+ 05FE 88E1              ldi R24,24
+ 0600 8AB9              out 0xa,R24
+ 0602                   .dbline 658
+ 0602           ;        UCSRC=0x06;    
+ 0602 86E0              ldi R24,6
+ 0604 80BD              out 0x20,R24
+ 0606                   .dbline 659
+ 0606           ;        UBRRL=0x33;
+ 0606 83E3              ldi R24,51
+ 0608 89B9              out 0x9,R24
+ 060A                   .dbline 660
+ 060A           ;        UBRRH=0x00;
+ 060A 20BC              out 0x20,R2
+ 060C                   .dbline 661
+ 060C           ;        UCSRA=UCSRA|0x08;      
+ 060C 5B9A              sbi 0xb,3
+ 060E                   .dbline -2
+ 060E           L122:
+ 060E                   .dbline 0 ; func end
+ 060E 0895              ret
+ 0610                   .dbend
+ 0610                   .dbfunc e R_S_Byte _R_S_Byte fV
+ 0610           ;         R_Byte -> R16
+                        .even
+ 0610           _R_S_Byte::
+ 0610                   .dbline -1
+ 0610                   .dbline 665
+ 0610           ; }
+ 0610           ; //------------------------------串口发送----------------------------------------
+ 0610           ; void R_S_Byte(uchar R_Byte)
+ 0610           ; {     
+ 0610                   .dbline 666
+ 0610           ;      UDR= R_Byte;  
+ 0610 0CB9              out 0xc,R16
+ 0612                   .dbline -2
+ 0612           L123:
+ 0612                   .dbline 0 ; func end
+ 0612 0895              ret
+ 0614                   .dbsym r R_Byte 16 c
+ 0614                   .dbend
+ 0614                   .dbfunc e main _main fV
+ 0614           ;              i -> <dead>
+                        .even
+ 0614           _main::
+ 0614                   .dbline -1
+ 0614                   .dbline 670
+ 0614           ; }
+ 0614           ; //------------------------------主函数------------------------------------------
+ 0614           ; void main(void)
+ 0614           ; {  
+ 0614                   .dbline 672
+ 0614           ;       uint i;
+ 0614           ;       DDRD=0xF2;                                                //端口D设置                                                                                     
+ 0614 82EF              ldi R24,242
+ 0616 81BB              out 0x11,R24
+ 0618                   .dbline 673
+ 0618           ;       DDRB=0xB3;                                           //端口B设置                                                        
+ 0618 83EB              ldi R24,179
+ 061A 87BB              out 0x17,R24
+ 061C                   .dbline 675
+ 061C           ; //------------------------------------------------------------------------------                                                                                      
+ 061C           ;       Spi_initial();                  //SPI初始化                                                                                                                       
+ 061C 06DD              rcall _Spi_initial
+ 061E                   .dbline 676
+ 061E           ;       system_Init();                             //系统状态初始化                                                                                             
+ 061E 0DDD              rcall _system_Init
+ 0620                   .dbline 677
+ 0620           ;       Config905();                              //NRF905初始化        
+ 0620 15DD              rcall _Config905
+ 0622                   .dbline 679
+ 0622           ; //------------------------------------------------------------------------------      
+ 0622           ;       Lcd_init();                                      //LCD初始化                                                      
+ 0622 9FDD              rcall _Lcd_init
+ 0624                   .dbline 681
+ 0624           ; //------------------------------------------------------------------------------
+ 0624           ;       StartUART();                            //串口初始化9600波特率
+ 0624 EADF              rcall _StartUART
+ 0626                   .dbline 682
+ 0626           ;       Delay(500);
+ 0626 04EF              ldi R16,500
+ 0628 11E0              ldi R17,1
+ 062A EADC              rcall _Delay
+ 062C                   .dbline 683
+ 062C           ;       Lcd_Clear();                            //清屏幕
+ 062C 26DE              rcall _Lcd_Clear
+ 062E 19C0              rjmp L126
+ 0630           L125:
+ 0630                   .dbline 687
+ 0630           ;       
+ 0630           ; //------------------------------------------------------------------------------
+ 0630           ;       while(1)
+ 0630           ;       {
+ 0630                   .dbline 688
+ 0630           ;       RX();                                   //接收数据
+ 0630 84DD              rcall _RX
+ 0632                   .dbline 689
+ 0632           ;       if(TxRxBuffer[0])
+ 0632 20900200          lds R2,_TxRxBuffer
+ 0636 2220              tst R2
+ 0638 91F0              breq L128
+ 063A                   .dbline 690
+ 063A           ;       {
+ 063A                   .dbline 691
+ 063A           ;       if(TxRxBuffer[0]==0x29)
+ 063A 822D              mov R24,R2
+ 063C 8932              cpi R24,41
+ 063E 19F4              brne L130
+ 0640                   .dbline 692
+ 0640           ;       {
+ 0640                   .dbline 693
+ 0640           ;       Low_JDQ;                           //打开继电器
+ 0640 9798              cbi 0x12,7
+ 0642                   .dbline 694
+ 0642           ;       dis_ykxt();
+ 0642 54DF              rcall _dis_ykxt
+ 0644                   .dbline 695
+ 0644           ;       dis_jdql();
+ 0644 8CDF              rcall _dis_jdql
+ 0646                   .dbline 696
+ 0646           ;       }
+ 0646           L130:
+ 0646                   .dbline 697
+ 0646           ;       if(TxRxBuffer[0]==0x30)
+ 0646 80910200          lds R24,_TxRxBuffer
+ 064A 8033              cpi R24,48
+ 064C 19F4              brne L132
+ 064E                   .dbline 698
+ 064E           ;       {
+ 064E                   .dbline 699
+ 064E           ;       Low_BELL;                          //打开蜂明器
+ 064E 9698              cbi 0x12,6
+ 0650                   .dbline 699
+ 0650                   .dbline 700
+ 0650           ;       dis_ykxt();
+ 0650 4DDF              rcall _dis_ykxt
+ 0652                   .dbline 701
+ 0652           ;       dis_fmqx();
+ 0652 ACDF              rcall _dis_fmqx
+ 0654                   .dbline 702
+ 0654           ;       }
+ 0654           L132:
+ 0654                   .dbline 703
+ 0654           ;       if(TxRxBuffer[0]==0x31)
+ 0654 80910200          lds R24,_TxRxBuffer
+ 0658 8133              cpi R24,49
+ 065A 09F4              brne L134
+ 065C                   .dbline 704
+ 065C           ;       {
+ 065C                   .dbline 705
+ 065C           ;       Lcd_Clear();              //清屏幕
+ 065C 0EDE              rcall _Lcd_Clear
+ 065E                   .dbline 706
+ 065E           ;       }
+ 065E           L134:
+ 065E                   .dbline 707
+ 065E           ;       }
+ 065E           L128:
+ 065E                   .dbline 708
+ 065E 979A              sbi 0x12,7
+ 0660                   .dbline 709
+ 0660 969A              sbi 0x12,6
+ 0662                   .dbline 709
+ 0662                   .dbline 710
+ 0662           L126:
+ 0662                   .dbline 686
+ 0662 E6CF              rjmp L125
+ 0664           X10:
+ 0664                   .dbline -2
+ 0664           L124:
+ 0664                   .dbline 0 ; func end
+ 0664 0895              ret
+ 0666                   .dbsym l i 1 i
+ 0666                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile F:\开发板配套资料\JASK3000软件开发包\遥控开关\NRF905_接收\jifeng_jieshou.c
+ 0000           _count2::
+ 0000                   .blkb 1
+ 0001                   .dbsym e count2 _count2 c
+ 0001           _count1::
+ 0001                   .blkb 1
+ 0002                   .dbsym e count1 _count1 c
+ 0002           _TxRxBuffer::
+ 0002                   .blkb 4
+ 0006                   .dbsym e TxRxBuffer _TxRxBuffer A[4:4]c

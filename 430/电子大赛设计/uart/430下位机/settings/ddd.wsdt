@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>USART/Debug</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>205</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>723</ColumnWidth1><ColumnWidth2>193</ColumnWidth2><ColumnWidth3>48</ColumnWidth3></Build>
+      <TerminalIO/>
+    </Static>
+    <Windows>
+      
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-28958-9732</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>USART</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-19025-9918</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd1></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>G:\&#x8D75;&#x6C38;&#x79D1;&#x7684;&#x6587;&#x4eF6;\&#x5B8C;&#x6210;&#x6A21;&#x5757;\myproject\uart\430&#x4e0B;&#x4F4D;&#x673A;\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>361</SelStart><SelEnd>361</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>G:\&#x8D75;&#x6C38;&#x79D1;&#x7684;&#x6587;&#x4eF6;\&#x5B8C;&#x6210;&#x6A21;&#x5757;\myproject\uart\430&#x4e0B;&#x4F4D;&#x673A;\ziku12864.c</Filename><XPos>0</XPos><YPos>52</YPos><SelStart>1710</SelStart><SelEnd>1710</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>G:\&#x8D75;&#x6C38;&#x79D1;&#x7684;&#x6587;&#x4eF6;\&#x5B8C;&#x6210;&#x6A21;&#x5757;\myproject\uart\430&#x4e0B;&#x4F4D;&#x673A;\ziku12864.h</Filename><XPos>0</XPos><YPos>39</YPos><SelStart>1260</SelStart><SelEnd>1294</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files\IAR Systems\Embedded Workbench Evaluation 5.0\430\INC\msp430x14x.h</Filename><XPos>0</XPos><YPos>127</YPos><SelStart>4956</SelStart><SelEnd>4956</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files\IAR Systems\Embedded Workbench Evaluation 5.0\430\INC\msp430x15x.h</Filename><XPos>0</XPos><YPos>121</YPos><SelStart>4747</SelStart><SelEnd>4747</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>G:\&#x8D75;&#x6C38;&#x79D1;&#x7684;&#x6587;&#x4eF6;\&#x5B8C;&#x6210;&#x6A21;&#x5757;\myproject\uart\430&#x4e0B;&#x4F4D;&#x673A;\led.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>277</SelStart><SelEnd>277</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-01488570><key>iaridepm.enu1</key></Toolbar-01488570></Sizes></Row0><Row1><Sizes/></Row1><Row2><Sizes/></Row2><Row3><Sizes/></Row3><Row4><Sizes/></Row4><Row5><Sizes/></Row5><Row6><Sizes/></Row6><Row7><Sizes/></Row7><Row8><Sizes/></Row8><Row9><Sizes/></Row9><Row10><Sizes/></Row10><Row11><Sizes/></Row11><Row12><Sizes/></Row12><Row13><Sizes/></Row13><Row14><Sizes/></Row14><Row15><Sizes/></Row15><Row16><Sizes/></Row16><Row17><Sizes/></Row17><Row18><Sizes/></Row18><Row19><Sizes/></Row19><Row20><Sizes/></Row20><Row21><Sizes/></Row21><Row22><Sizes/></Row22><Row23><Sizes/></Row23><Row24><Sizes/></Row24><Row25><Sizes/></Row25><Row26><Sizes/></Row26><Row27><Sizes/></Row27><Row28><Sizes/></Row28><Row29><Sizes/></Row29></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>543</Bottom><Right>279</Right><x>-2</x><y>-2</y><xscreen>281</xscreen><yscreen>238</yscreen><sizeHorzCX>195139</sizeHorzCX><sizeHorzCY>288835</sizeHorzCY><sizeVertCX>195139</sizeVertCX><sizeVertCY>661408</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>236</Bottom><Right>1442</Right><x>-2</x><y>-2</y><xscreen>1444</xscreen><yscreen>238</yscreen><sizeHorzCX>1002778</sizeHorzCX><sizeHorzCY>288835</sizeHorzCY><sizeVertCX>195139</sizeVertCX><sizeVertCY>288835</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

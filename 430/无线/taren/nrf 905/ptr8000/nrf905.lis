@@ -1,0 +1,690 @@
+                        .module nrf905.C
+                        .area text(rom, con, rel)
+ 0000                   .dbfile D:\IccAvr\Pei\ptr8000\nrf905.C
+ 0000                   .dbfunc e nrf905_Config _nrf905_Config fV
+                        .even
+ 0000           _nrf905_Config::
+ 0000 0E940000          xcall push_gset2
+ 0004                   .dbline -1
+ 0004                   .dbline 122
+ 0004           ; #include "config.h"
+ 0004           ; 
+ 0004           ; extern void DelayMs(uchar ms);
+ 0004           ; extern void DelayUs(uint us);
+ 0004           ; 
+ 0004           ; #define SIZE 32
+ 0004           ; 
+ 0004           ; uchar TxBuf[SIZE],RxBuf[SIZE];
+ 0004           ; 
+ 0004           ; /*-------------------------------------------------------------------------------------------
+ 0004           ; nrf905配置寄存器宏定义 author:HotPower
+ 0004           ;         nrf905配置寄存器(10Byte)
+ 0004           ; 工作频率f=(422.4+CH_NO/10)*(1+HFREQ_PLL)MHz
+ 0004           ; -------------------------------------------------------------------------------------------*/
+ 0004           ; #define RX_ADDRESS           0x12345678               //接收有效地址(本方)
+ 0004           ; #define TX_ADDRESS           0x12345678               //发送有效地址(对方)
+ 0004           ; 
+ 0004           ; #define CH_NO_FREQ_422_4MHz  0x000                     //工作频率422.4MHz(433MHz频段最低频率)
+ 0004           ; #define CH_NO_FREQ_422_5MHz  0x001                     //工作频率422.5MHz
+ 0004           ; #define CH_NO_FREQ_425_0MHz  0x01a                     //工作频率425.0MHz
+ 0004           ; #define CH_NO_FREQ_427_5MHz  0x033                     //工作频率427.5MHz
+ 0004           ; 
+ 0004           ; #define CH_NO_FREQ_430_0MHz  0x04c                     //工作频率430.0MHz
+ 0004           ; #define CH_NO_FREQ_433_0MHz  0x06a                     //工作频率433.0MHz(433MHz频段基准频率)
+ 0004           ; #define CH_NO_FREQ_433_1MHz  0x06b                     //工作频率433.1MHz
+ 0004           ; #define CH_NO_FREQ_433_2MHz  0x06c                     //工作频率433.2MHz
+ 0004           ; #define CH_NO_FREQ_434_7MHz  0x07b                     //工作频率434.7MHz
+ 0004           ; #define CH_NO_FREQ_473_5MHz  0x1ff                     //工作频率473.5MHz(433MHz频段最高频率)
+ 0004           ; 
+ 0004           ; #define CH_NO_FREQ_844_8MHz  0x000                     //工作频率844.8MHz(868MHz频段最低频率)
+ 0004           ; 
+ 0004           ; #define CH_NO_FREQ_862_0MHz  0x056                     //工作频率862.0MHz
+ 0004           ; #define CH_NO_FREQ_868_0MHz  0x074                     //工作频率868.0MHz(868MHz频段基准频率)
+ 0004           ; #define CH_NO_FREQ_868_2MHz  0x075                     //工作频率868.2MHz
+ 0004           ; #define CH_NO_FREQ_868_4MHz  0x076                     //工作频率868.4MHz
+ 0004           ; #define CH_NO_FREQ_869_8MHz  0x07d                     //工作频率869.8MHz
+ 0004           ; #define CH_NO_FREQ_895_8MHz  0x0ff                     //工作频率895.8MHz
+ 0004           ; #define CH_NO_FREQ_896_0MHz  0x100                     //工作频率896.0MHz
+ 0004           ; #define CH_NO_FREQ_900_0MHz  0x114                     //工作频率900.0MHz
+ 0004           ; #define CH_NO_FREQ_902_2MHz  0x11f                     //工作频率902.2MHz
+ 0004           ; #define CH_NO_FREQ_902_4MHz  0x120                     //工作频率902.4MHz
+ 0004           ; #define CH_NO_FREQ_915_0MHz  0x15f                     //工作频率915.0MHz(915MHz频段基准频率)
+ 0004           ; #define CH_NO_FREQ_927_8MHz  0x19f                     //工作频率927.8MHz
+ 0004           ; 
+ 0004           ; #define CH_NO_FREQ_947_0MHz  0x1ff                     //工作频率947.0MHz(915MHz频段最高频率)
+ 0004           ; 
+ 0004           ; #define CH_NO_FREQ           CH_NO_FREQ_430_0MHz       //工作频率433.0MHz
+ 0004           ; 
+ 0004           ; 
+ 0004           ; #define CH_NO_BYTE           CH_NO_FREQ & 0xff         //工作频率低8位       Byte0       01101100
+ 0004           ; 
+ 0004           ; #define AUTO_RETRAN          0x20                      //重发数据包          Byte1.5     0
+ 0004           ; #define RX_RED_PWR           0x10                      //接收低功耗模式      Byte1.4     0
+ 0004           ; #define PA_PWR__10dBm        0x00                      //输出功率-10dBm      Byte1.3~2   00
+ 0004           ; #define PA_PWR_2dBm          0x04                      //输出功率+2dBm       Byte1.3~2
+ 0004           ; #define PA_PWR_6dBm          0x08                      //输出功率+6dBm       Byte1.3~2
+ 0004           ; #define PA_PWR_10dBm         0x0c                      //输出功率+10dBm      Byte1.3~2   
+ 0004           ; #define HFREQ_PLL_433MHz     0x00                      //工作在433MHz频段    Byte1.1     0
+ 0004           ; #define HFREQ_PLL_868MHz     0x02                      //工作在868MHz频段    Byte1.1
+ 0004           ; #define HFREQ_PLL_915MHz     0x02                      //工作在915MHz频段    Byte1.1
+ 0004           ; #define CH_NO_BIT8           CH_NO_FREQ >> 8           //工作频率第9位       Byte1.0     0
+ 0004           ; 
+ 0004           ; #define TX_AFW_1BYTE         1 * 16                    //发送地址宽度1字节   Byte2.7~4
+ 0004           ; #define TX_AFW_2BYTE         2 * 16                    //发送地址宽度2字节   Byte2.7~4
+ 0004           ; #define TX_AFW_3BYTE         3 * 16                    //发送地址宽度3字节   Byte2.7~4
+ 0004           ; #define TX_AFW_4BYTE         4 * 16                    //发送地址宽度4字节   Byte2.7~4   100
+ 0004           ; #define RX_AFW_1BYTE         1                         //接收地址宽度1字节   Byte2.3~0
+ 0004           ; #define RX_AFW_2BYTE         2                         //接收地址宽度2字节   Byte2.3~0
+ 0004           ; #define RX_AFW_3BYTE         3                         //接收地址宽度3字节   Byte2.3~0
+ 0004           ; #define RX_AFW_4BYTE         4                         //接收地址宽度4字节   Byte2.3~0   100
+ 0004           ; 
+ 0004           ; #define RX_PW_1BYTE          1                         //接收数据宽度1字节   Byte3.5~0
+ 0004           ; #define RX_PW_32BYTE         32                        //接收数据宽度32字节  Byte3.5~0   00100000
+ 0004           ; #define TX_PW_1BYTE          1                         //发送数据宽度1字节   Byte4.5~0 
+ 0004           ; #define TX_PW_32BYTE         32                        //发送数据宽度32字节  Byte4.5~0   00100000
+ 0004           ; 
+ 0004           ; #define RX_ADDRESS_0         RX_ADDRESS >> 24          //接收有效地址第1字节 Byte5       11100111
+ 0004           ; #define RX_ADDRESS_1         (RX_ADDRESS >> 16) & 0xff //接收有效地址第2字节 Byte6       11100111 
+ 0004           ; #define RX_ADDRESS_2         (RX_ADDRESS >> 8) & 0xff  //接收有效地址第3字节 Byte7       11100111
+ 0004           ; #define RX_ADDRESS_3         RX_ADDRESS & 0xff         //接收有效地址第4字节 Byte8       11100111
+ 0004           ;        
+ 0004           ; #define CRC_MODE_16BIT       0x80                      //CRC16模式           Byte9.7     1
+ 0004           ; #define CRC_MODE_8BIT        0x00                      //CRC8模式            Byte9.7     
+ 0004           ; #define CRC_EN               0x40                      //CRC使能             Byte9.6     1
+ 0004           ; #define CRC16_EN             0xc0                      //CRC16模式使能       Byte9.7~6   11
+ 0004           ; #define CRC8_EN              0x40                      //CRC8模式使能        Byte9.7~6
+ 0004           ; #define XOF_20MHz            0x20                      //晶体振荡器频率20MHz Byte9.5~3
+ 0004           ; #define XOF_16MHz            0x18                      //晶体振荡器频率16MHz Byte9.5~3   100
+ 0004           ; #define XOF_12MHz            0x10                      //晶体振荡器频率12MHz Byte9.5~3
+ 0004           ; #define XOF_8MHz             0x08                      //晶体振荡器频率8MHz  Byte9.5~3
+ 0004           ; #define XOF_4MHz             0x00                      //晶体振荡器频率4MHz  Byte9.5~3
+ 0004           ; #define UP_CLK_EN            0x40                      //输出时钟使能        Byte9.2     1
+ 0004           ; #define UP_CLK_FREQ_500kHz   0x03                      //输出时钟频率500kHz  Byte9.1~0   11
+ 0004           ; #define UP_CLK_FREQ_1MHz     0x02                      //输出时钟频率1MHz    Byte9.1~0
+ 0004           ; #define UP_CLK_FREQ_2MHz     0x01                      //输出时钟频率2MHz    Byte9.1~0
+ 0004           ; #define UP_CLK_FREQ_4MHz     0x00                      //输出时钟频率4MHz    Byte9.1~0
+ 0004           ; 
+ 0004           ; #define UP_CLK_EN_500kHz     0x43                      //输出时钟频率500kHz  Byte9.2~0   111
+ 0004           ; #define UP_CLK_EN_1MHz       0x42                      //输出时钟频率1MHz    Byte9.2~0
+ 0004           ; #define UP_CLK_EN_2MHz       0x41                      //输出时钟频率2MHz    Byte9.2~0
+ 0004           ; #define UP_CLK_EN_4MHz       0x40                      //输出时钟频率4MHz    Byte9.2~0
+ 0004           ; 
+ 0004           ; #define TX_ADDRESS_0         TX_ADDRESS >> 24          //发送有效地址第1字节
+ 0004           ; #define TX_ADDRESS_1         (TX_ADDRESS >> 16) & 0xff //发送有效地址第2字节
+ 0004           ; #define TX_ADDRESS_2         (TX_ADDRESS >> 8) & 0xff  //发送有效地址第3字节
+ 0004           ; #define TX_ADDRESS_3         TX_ADDRESS & 0xff         //发送有效地址第4字节
+ 0004           ; 
+ 0004           ; /*-----------------------------------------------
+ 0004           ;         nrf905命令控制字 author:HotPower
+ 0004           ; ------------------------------------------------*/
+ 0004           ; #define WC        0x00            // Write configuration register command
+ 0004           ; #define RC        0x10            // Read  configuration register command
+ 0004           ; #define WTP       0x20            // Write TX Payload  command
+ 0004           ; #define RTP       0x21            // Read  TX Payload  command
+ 0004           ; #define WTA       0x22            // Write TX Address  command
+ 0004           ; #define RTA       0x23            // Read  TX Address  command
+ 0004           ; #define RRP       0x24            // Read  RX Payload  command
+ 0004           ;  
+ 0004           ; 
+ 0004           ; //配置nRF905
+ 0004           ; void nrf905_Config(void)
+ 0004           ; {
+ 0004                   .dbline 123
+ 0004           ;   CLR(PORTB,CSN);                   // Spi 片选开
+ 0004 C498              cbi 0x18,4
+ 0006                   .dbline 124
+ 0006           ;   nrf905_SpiRW(WC);                // Write config command
+ 0006 0027              clr R16
+ 0008 1127              clr R17
+ 000A 2AD0              xcall _nrf905_SpiRW
+ 000C                   .dbline 125
+ 000C           ;   nrf905_SpiRW(CH_NO_BYTE);                      //中心频率低8位
+ 000C 0CE4              ldi R16,76
+ 000E 10E0              ldi R17,0
+ 0010 27D0              xcall _nrf905_SpiRW
+ 0012                   .dbline 126
+ 0012           ;   nrf905_SpiRW(PA_PWR_10dBm | HFREQ_PLL_433MHz); //发射+10dBm,发射频率433MHz,中心频率第9位=0
+ 0012 0CE0              ldi R16,12
+ 0014 10E0              ldi R17,0
+ 0016 24D0              xcall _nrf905_SpiRW
+ 0018                   .dbline 127
+ 0018           ;   nrf905_SpiRW(TX_AFW_4BYTE | RX_AFW_4BYTE);     //接收地址宽度4字节,发送地址宽度4字节
+ 0018 04E4              ldi R16,68
+ 001A 10E0              ldi R17,0
+ 001C 21D0              xcall _nrf905_SpiRW
+ 001E                   .dbline 128
+ 001E           ;   nrf905_SpiRW(RX_PW_32BYTE);                    //接收数据宽度32字节
+ 001E 00E2              ldi R16,32
+ 0020 10E0              ldi R17,0
+ 0022 1ED0              xcall _nrf905_SpiRW
+ 0024                   .dbline 129
+ 0024           ;   nrf905_SpiRW(TX_PW_32BYTE);                    //发送数据宽度32字节
+ 0024 00E2              ldi R16,32
+ 0026 10E0              ldi R17,0
+ 0028 1BD0              xcall _nrf905_SpiRW
+ 002A                   .dbline 130
+ 002A           ;   nrf905_SpiRW(RX_ADDRESS_0);                    //接收有效地址第1字节
+ 002A 02E1              ldi R16,18
+ 002C 10E0              ldi R17,0
+ 002E 20E0              ldi R18,0
+ 0030 30E0              ldi R19,0
+ 0032 16D0              xcall _nrf905_SpiRW
+ 0034                   .dbline 131
+ 0034           ;   nrf905_SpiRW(RX_ADDRESS_1);                    //接收有效地址第2字节
+ 0034 04E3              ldi R16,52
+ 0036 10E0              ldi R17,0
+ 0038 20E0              ldi R18,0
+ 003A 30E0              ldi R19,0
+ 003C 11D0              xcall _nrf905_SpiRW
+ 003E                   .dbline 132
+ 003E           ;   nrf905_SpiRW(RX_ADDRESS_2);                    //接收有效地址第3字节
+ 003E 06E5              ldi R16,86
+ 0040 10E0              ldi R17,0
+ 0042 20E0              ldi R18,0
+ 0044 30E0              ldi R19,0
+ 0046 0CD0              xcall _nrf905_SpiRW
+ 0048                   .dbline 133
+ 0048           ;   nrf905_SpiRW(RX_ADDRESS_3);                    //接收有效地址第4字节
+ 0048 08E7              ldi R16,120
+ 004A 10E0              ldi R17,0
+ 004C 20E0              ldi R18,0
+ 004E 30E0              ldi R19,0
+ 0050 07D0              xcall _nrf905_SpiRW
+ 0052                   .dbline 134
+ 0052           ;   nrf905_SpiRW(CRC16_EN | XOF_16MHz);            //CRC16模式使能,晶体振荡器频率16MHz
+ 0052 08ED              ldi R16,216
+ 0054 10E0              ldi R17,0
+ 0056 04D0              xcall _nrf905_SpiRW
+ 0058                   .dbline 135
+ 0058           ;   SET(PORTB,CSN);                 // Disable Spi
+ 0058 C49A              sbi 0x18,4
+ 005A                   .dbline -2
+ 005A           L1:
+ 005A 0E940000          xcall pop_gset2
+ 005E                   .dbline 0 ; func end
+ 005E 0895              ret
+ 0060                   .dbend
+ 0060                   .dbfunc e nrf905_SpiRW _nrf905_SpiRW fc
+ 0060           ;           temp -> R20
+ 0060           ;            val -> R16
+                        .even
+ 0060           _nrf905_SpiRW::
+ 0060 0E940000          xcall push_gset1
+ 0064                   .dbline -1
+ 0064                   .dbline 139
+ 0064           ; }
+ 0064           ; 
+ 0064           ; uchar nrf905_SpiRW(uchar val) 
+ 0064           ; {uchar temp;
+ 0064                   .dbline 141
+ 0064           ; 
+ 0064           ;     SPDR=val;
+ 0064 0FB9              out 0xf,R16
+ 0066           L3:
+ 0066                   .dbline 142
+ 0066           L4:
+ 0066                   .dbline 142
+ 0066           ;       while ((SPSR&(1<<SPIF))==0);
+ 0066 779B              sbis 0xe,7
+ 0068 FECF              rjmp L3
+ 006A                   .dbline 143
+ 006A           ;       temp=SPDR;
+ 006A 4FB1              in R20,0xf
+ 006C                   .dbline 144
+ 006C           ;       return temp;
+ 006C 042F              mov R16,R20
+ 006E                   .dbline -2
+ 006E           L2:
+ 006E 0E940000          xcall pop_gset1
+ 0072                   .dbline 0 ; func end
+ 0072 0895              ret
+ 0074                   .dbsym r temp 20 c
+ 0074                   .dbsym r val 16 c
+ 0074                   .dbend
+ 0074                   .dbfunc e nrf905_StandBy _nrf905_StandBy fV
+                        .even
+ 0074           _nrf905_StandBy::
+ 0074                   .dbline -1
+ 0074                   .dbline 149
+ 0074           ; }
+ 0074           ; 
+ 0074           ; //PwrDown->StandBy
+ 0074           ; void nrf905_StandBy()
+ 0074           ; {
+ 0074                   .dbline 150
+ 0074           ;    SET(PORTB,PWR);
+ 0074 C09A              sbi 0x18,0
+ 0076                   .dbline 151
+ 0076           ;    CLR(PORTB,TRXCE);
+ 0076 C198              cbi 0x18,1
+ 0078                   .dbline 152
+ 0078           ;    CLR(PORTB,TX_EN);
+ 0078 C298              cbi 0x18,2
+ 007A                   .dbline -2
+ 007A           L6:
+ 007A                   .dbline 0 ; func end
+ 007A 0895              ret
+ 007C                   .dbend
+ 007C                   .dbfunc e nrf905_Off _nrf905_Off fV
+                        .even
+ 007C           _nrf905_Off::
+ 007C                   .dbline -1
+ 007C                   .dbline 157
+ 007C           ; }
+ 007C           ; 
+ 007C           ; //->PwrDown
+ 007C           ; void nrf905_Off()
+ 007C           ; {
+ 007C                   .dbline 158
+ 007C           ;   CLR(PORTB,PWR);
+ 007C C098              cbi 0x18,0
+ 007E                   .dbline -2
+ 007E           L7:
+ 007E                   .dbline 0 ; func end
+ 007E 0895              ret
+ 0080                   .dbend
+ 0080                   .dbfunc e nrf905_TxOn _nrf905_TxOn fV
+                        .even
+ 0080           _nrf905_TxOn::
+ 0080                   .dbline -1
+ 0080                   .dbline 163
+ 0080           ; }
+ 0080           ; 
+ 0080           ; //->ShockBurst Send
+ 0080           ; void nrf905_TxOn()
+ 0080           ; {
+ 0080                   .dbline 164
+ 0080           ;   SET(PORTB,PWR);
+ 0080 C09A              sbi 0x18,0
+ 0082                   .dbline 165
+ 0082           ;   SET(PORTB,TX_EN);
+ 0082 C29A              sbi 0x18,2
+ 0084                   .dbline 166
+ 0084           ;   CLR(PORTB,TRXCE);
+ 0084 C198              cbi 0x18,1
+ 0086                   .dbline -2
+ 0086           L8:
+ 0086                   .dbline 0 ; func end
+ 0086 0895              ret
+ 0088                   .dbend
+ 0088                   .dbfunc e nrf905_TxSend _nrf905_TxSend fV
+                        .even
+ 0088           _nrf905_TxSend::
+ 0088                   .dbline -1
+ 0088                   .dbline 171
+ 0088           ; }
+ 0088           ; 
+ 0088           ; //->ShockBurst Send
+ 0088           ; void nrf905_TxSend()
+ 0088           ; {
+ 0088                   .dbline 172
+ 0088           ;   SET(PORTB,TRXCE);
+ 0088 C19A              sbi 0x18,1
+ 008A                   .dbline 173
+ 008A           ;   DelayUs(20);//>10us
+ 008A 04E1              ldi R16,20
+ 008C 10E0              ldi R17,0
+ 008E 0E940000          xcall _DelayUs
+ 0092                   .dbline 174
+ 0092           ;   CLR(PORTB,TRXCE);//只发送一次
+ 0092 C198              cbi 0x18,1
+ 0094                   .dbline -2
+ 0094           L9:
+ 0094                   .dbline 0 ; func end
+ 0094 0895              ret
+ 0096                   .dbend
+ 0096                   .dbfunc e nrf905_RxOn _nrf905_RxOn fV
+                        .even
+ 0096           _nrf905_RxOn::
+ 0096                   .dbline -1
+ 0096                   .dbline 179
+ 0096           ; }
+ 0096           ; 
+ 0096           ; //->ShockBurst Recv
+ 0096           ; void nrf905_RxOn()
+ 0096           ; {
+ 0096                   .dbline 180
+ 0096           ;   SET(PORTB,PWR);
+ 0096 C09A              sbi 0x18,0
+ 0098                   .dbline 181
+ 0098           ;   CLR(PORTB,TX_EN);//maybe first
+ 0098 C298              cbi 0x18,2
+ 009A                   .dbline 182
+ 009A           ;   SET(PORTB,TRXCE);
+ 009A C19A              sbi 0x18,1
+ 009C                   .dbline -2
+ 009C           L10:
+ 009C                   .dbline 0 ; func end
+ 009C 0895              ret
+ 009E                   .dbend
+ 009E                   .dbfunc e nrf905_Init _nrf905_Init fV
+                        .even
+ 009E           _nrf905_Init::
+ 009E                   .dbline -1
+ 009E                   .dbline 187
+ 009E           ; }
+ 009E           ; 
+ 009E           ; //初始化nrf905
+ 009E           ; void nrf905_Init()
+ 009E           ; {
+ 009E                   .dbline 188
+ 009E           ;    nrf905_StandBy();
+ 009E EADF              xcall _nrf905_StandBy
+ 00A0                   .dbline 189
+ 00A0           ;    DelayMs(10);//!!!must >3ms
+ 00A0 0AE0              ldi R16,10
+ 00A2 0E940000          xcall _DelayMs
+ 00A6                   .dbline 190
+ 00A6           ;    nrf905_Config();
+ 00A6 ACDF              xcall _nrf905_Config
+ 00A8                   .dbline 192
+ 00A8           ;    
+ 00A8           ;    nrf905_SpiTest();//test...
+ 00A8 02D0              xcall _nrf905_SpiTest
+ 00AA                   .dbline 193
+ 00AA           ;    nrf905_RxOn();
+ 00AA F5DF              xcall _nrf905_RxOn
+ 00AC                   .dbline -2
+ 00AC           L11:
+ 00AC                   .dbline 0 ; func end
+ 00AC 0895              ret
+ 00AE                   .dbend
+ 00AE                   .dbfunc e nrf905_SpiTest _nrf905_SpiTest fV
+ 00AE           ;              i -> R20
+                        .even
+ 00AE           _nrf905_SpiTest::
+ 00AE 0E940000          xcall push_gset1
+ 00B2                   .dbline -1
+ 00B2                   .dbline 198
+ 00B2           ; }
+ 00B2           ; 
+ 00B2           ; //测试：通过读配置，判断SPI操作是否正确
+ 00B2           ; void nrf905_SpiTest()
+ 00B2           ; {uchar i;
+ 00B2                   .dbline 199
+ 00B2           ;   CLR(PORTB,CSN);                   
+ 00B2 C498              cbi 0x18,4
+ 00B4                   .dbline 200
+ 00B4           ;   nrf905_SpiRW(RC);  //读配置
+ 00B4 00E1              ldi R16,16
+ 00B6 D4DF              xcall _nrf905_SpiRW
+ 00B8                   .dbline 201
+ 00B8           ;   for (i=0;i<10;i++)
+ 00B8 4427              clr R20
+ 00BA 0AC0              xjmp L16
+ 00BC           L13:
+ 00BC                   .dbline 202
+ 00BC                   .dbline 203
+ 00BC 0027              clr R16
+ 00BE D0DF              xcall _nrf905_SpiRW
+ 00C0 80E0              ldi R24,<_RxBuf
+ 00C2 90E0              ldi R25,>_RxBuf
+ 00C4 E42F              mov R30,R20
+ 00C6 FF27              clr R31
+ 00C8 E80F              add R30,R24
+ 00CA F91F              adc R31,R25
+ 00CC 0083              std z+0,R16
+ 00CE                   .dbline 204
+ 00CE           L14:
+ 00CE                   .dbline 201
+ 00CE 4395              inc R20
+ 00D0           L16:
+ 00D0                   .dbline 201
+ 00D0 4A30              cpi R20,10
+ 00D2 A0F3              brlo L13
+ 00D4                   .dbline 205
+ 00D4           ;   { 
+ 00D4           ;     RxBuf[i]=  nrf905_SpiRW(0);//read from nrf905
+ 00D4           ;   }
+ 00D4           ;   SET(PORTB,CSN);  
+ 00D4 C49A              sbi 0x18,4
+ 00D6                   .dbline -2
+ 00D6           L12:
+ 00D6 0E940000          xcall pop_gset1
+ 00DA                   .dbline 0 ; func end
+ 00DA 0895              ret
+ 00DC                   .dbsym r i 20 c
+ 00DC                   .dbend
+ 00DC                   .dbfunc e nrf905_SetTxAddr _nrf905_SetTxAddr fV
+                        .even
+ 00DC           _nrf905_SetTxAddr::
+ 00DC                   .dbline -1
+ 00DC                   .dbline 210
+ 00DC           ; }
+ 00DC           ; 
+ 00DC           ; //写Tx地址
+ 00DC           ; void nrf905_SetTxAddr()
+ 00DC           ; {
+ 00DC                   .dbline 211
+ 00DC           ;   CLR(PORTB,CSN);                   
+ 00DC C498              cbi 0x18,4
+ 00DE                   .dbline 212
+ 00DE           ;   nrf905_SpiRW(WTA);  //写Tx地址  
+ 00DE 02E2              ldi R16,34
+ 00E0 BFDF              xcall _nrf905_SpiRW
+ 00E2                   .dbline 213
+ 00E2           ;   nrf905_SpiRW(TX_ADDRESS_0);
+ 00E2 02E1              ldi R16,18
+ 00E4 BDDF              xcall _nrf905_SpiRW
+ 00E6                   .dbline 214
+ 00E6           ;   nrf905_SpiRW(TX_ADDRESS_1);
+ 00E6 04E3              ldi R16,52
+ 00E8 BBDF              xcall _nrf905_SpiRW
+ 00EA                   .dbline 215
+ 00EA           ;   nrf905_SpiRW(TX_ADDRESS_2);
+ 00EA 06E5              ldi R16,86
+ 00EC B9DF              xcall _nrf905_SpiRW
+ 00EE                   .dbline 216
+ 00EE           ;   nrf905_SpiRW(TX_ADDRESS_3);
+ 00EE 08E7              ldi R16,120
+ 00F0 B7DF              xcall _nrf905_SpiRW
+ 00F2                   .dbline 217
+ 00F2           ;   SET(PORTB,CSN);  
+ 00F2 C49A              sbi 0x18,4
+ 00F4                   .dbline -2
+ 00F4           L17:
+ 00F4                   .dbline 0 ; func end
+ 00F4 0895              ret
+ 00F6                   .dbend
+ 00F6                   .dbfunc e nrf905_SetData _nrf905_SetData fV
+ 00F6           ;              i -> R20
+                        .even
+ 00F6           _nrf905_SetData::
+ 00F6 0E940000          xcall push_gset1
+ 00FA                   .dbline -1
+ 00FA                   .dbline 222
+ 00FA           ; }
+ 00FA           ; 
+ 00FA           ; //写Tx数据
+ 00FA           ; void nrf905_SetData()
+ 00FA           ; {uchar i;
+ 00FA                   .dbline 224
+ 00FA           ; 
+ 00FA           ;   CLR(PORTB,CSN);                   
+ 00FA C498              cbi 0x18,4
+ 00FC                   .dbline 225
+ 00FC           ;   nrf905_SpiRW(WTP);  //写TxPayload 
+ 00FC 00E2              ldi R16,32
+ 00FE B0DF              xcall _nrf905_SpiRW
+ 0100                   .dbline 226
+ 0100           ;   for (i=0;i<SIZE;i++)
+ 0100 4427              clr R20
+ 0102 09C0              xjmp L22
+ 0104           L19:
+ 0104                   .dbline 227
+ 0104                   .dbline 228
+ 0104 80E0              ldi R24,<_TxBuf
+ 0106 90E0              ldi R25,>_TxBuf
+ 0108 E42F              mov R30,R20
+ 010A FF27              clr R31
+ 010C E80F              add R30,R24
+ 010E F91F              adc R31,R25
+ 0110 0081              ldd R16,z+0
+ 0112 A6DF              xcall _nrf905_SpiRW
+ 0114                   .dbline 229
+ 0114           L20:
+ 0114                   .dbline 226
+ 0114 4395              inc R20
+ 0116           L22:
+ 0116                   .dbline 226
+ 0116 4032              cpi R20,32
+ 0118 A8F3              brlo L19
+ 011A                   .dbline 231
+ 011A           ;   { 
+ 011A           ;     nrf905_SpiRW(TxBuf[i]);
+ 011A           ;   }
+ 011A           ;   
+ 011A           ;   SET(PORTB,CSN);  
+ 011A C49A              sbi 0x18,4
+ 011C                   .dbline -2
+ 011C           L18:
+ 011C 0E940000          xcall pop_gset1
+ 0120                   .dbline 0 ; func end
+ 0120 0895              ret
+ 0122                   .dbsym r i 20 c
+ 0122                   .dbend
+ 0122                   .dbfunc e nrf905_WaitSended _nrf905_WaitSended fV
+                        .even
+ 0122           _nrf905_WaitSended::
+ 0122                   .dbline -1
+ 0122                   .dbline 236
+ 0122           ; }
+ 0122           ; 
+ 0122           ; //等待发送结束
+ 0122           ; void nrf905_WaitSended()
+ 0122           ; {
+ 0122           L24:
+ 0122                   .dbline 237
+ 0122           L25:
+ 0122                   .dbline 237
+ 0122           ;    while ((PIND&(1<<DR))==0);
+ 0122 849B              sbis 0x10,4
+ 0124 FECF              rjmp L24
+ 0126                   .dbline -2
+ 0126           L23:
+ 0126                   .dbline 0 ; func end
+ 0126 0895              ret
+ 0128                   .dbend
+ 0128                   .dbfunc e nrf905_SendData _nrf905_SendData fV
+                        .even
+ 0128           _nrf905_SendData::
+ 0128                   .dbline -1
+ 0128                   .dbline 242
+ 0128           ; }
+ 0128           ; 
+ 0128           ; //发送TxBuf中的数据
+ 0128           ; void nrf905_SendData()
+ 0128           ; {
+ 0128                   .dbline 243
+ 0128           ;    nrf905_TxOn();//切换到发送模式
+ 0128 ABDF              xcall _nrf905_TxOn
+ 012A                   .dbline 244
+ 012A           ;    nrf905_SetTxAddr();//写发送地址
+ 012A D8DF              xcall _nrf905_SetTxAddr
+ 012C                   .dbline 245
+ 012C           ;    nrf905_SetData();//写数据
+ 012C E4DF              xcall _nrf905_SetData
+ 012E                   .dbline 246
+ 012E           ;    nrf905_TxSend();//启动发送
+ 012E ACDF              xcall _nrf905_TxSend
+ 0130                   .dbline 247
+ 0130           ;    nrf905_WaitSended();//等待发送结束
+ 0130 F8DF              xcall _nrf905_WaitSended
+ 0132                   .dbline -2
+ 0132           L27:
+ 0132                   .dbline 0 ; func end
+ 0132 0895              ret
+ 0134                   .dbend
+ 0134                   .dbfunc e nrf905_SendAgain _nrf905_SendAgain fV
+                        .even
+ 0134           _nrf905_SendAgain::
+ 0134                   .dbline -1
+ 0134                   .dbline 253
+ 0134           ;    
+ 0134           ; }
+ 0134           ; 
+ 0134           ; //测试直接重新发送上次写入的数据
+ 0134           ; void nrf905_SendAgain()
+ 0134           ; {
+ 0134                   .dbline 254
+ 0134           ;    nrf905_TxOn();
+ 0134 A5DF              xcall _nrf905_TxOn
+ 0136                   .dbline 255
+ 0136           ;    nrf905_TxSend();
+ 0136 A8DF              xcall _nrf905_TxSend
+ 0138                   .dbline 256
+ 0138           ;    nrf905_WaitSended();
+ 0138 F4DF              xcall _nrf905_WaitSended
+ 013A                   .dbline -2
+ 013A           L28:
+ 013A                   .dbline 0 ; func end
+ 013A 0895              ret
+ 013C                   .dbend
+ 013C                   .dbfunc e nrf905_ReadData _nrf905_ReadData fV
+ 013C           ;              i -> R20
+                        .even
+ 013C           _nrf905_ReadData::
+ 013C 0E940000          xcall push_gset1
+ 0140                   .dbline -1
+ 0140                   .dbline 262
+ 0140           ;    
+ 0140           ; }
+ 0140           ; 
+ 0140           ; //读出接收到的数据
+ 0140           ; void nrf905_ReadData()
+ 0140           ; {
+ 0140                   .dbline 265
+ 0140           ;   uchar i;
+ 0140           ; 
+ 0140           ;   CLR(PORTB,CSN);                   
+ 0140 C498              cbi 0x18,4
+ 0142                   .dbline 266
+ 0142           ;   nrf905_SpiRW(RRP);  //读RxPayload 
+ 0142 04E2              ldi R16,36
+ 0144 8DDF              xcall _nrf905_SpiRW
+ 0146                   .dbline 267
+ 0146           ;   for (i=0;i<SIZE;i++)
+ 0146 4427              clr R20
+ 0148 0AC0              xjmp L33
+ 014A           L30:
+ 014A                   .dbline 268
+ 014A                   .dbline 269
+ 014A 0027              clr R16
+ 014C 89DF              xcall _nrf905_SpiRW
+ 014E 80E0              ldi R24,<_RxBuf
+ 0150 90E0              ldi R25,>_RxBuf
+ 0152 E42F              mov R30,R20
+ 0154 FF27              clr R31
+ 0156 E80F              add R30,R24
+ 0158 F91F              adc R31,R25
+ 015A 0083              std z+0,R16
+ 015C                   .dbline 270
+ 015C           L31:
+ 015C                   .dbline 267
+ 015C 4395              inc R20
+ 015E           L33:
+ 015E                   .dbline 267
+ 015E 4032              cpi R20,32
+ 0160 A0F3              brlo L30
+ 0162                   .dbline 272
+ 0162           ;   { 
+ 0162           ;     RxBuf[i]=nrf905_SpiRW(0);//read...
+ 0162           ;   }
+ 0162           ;   
+ 0162           ;   SET(PORTB,CSN);  
+ 0162 C49A              sbi 0x18,4
+ 0164                   .dbline -2
+ 0164           L29:
+ 0164 0E940000          xcall pop_gset1
+ 0168                   .dbline 0 ; func end
+ 0168 0895              ret
+ 016A                   .dbsym r i 20 c
+ 016A                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile D:\IccAvr\Pei\ptr8000\nrf905.C
+ 0000           _RxBuf::
+ 0000                   .blkb 32
+ 0020                   .dbsym e RxBuf _RxBuf A[32:32]c
+ 0020           _TxBuf::
+ 0020                   .blkb 32
+ 0040                   .dbsym e TxBuf _TxBuf A[32:32]c

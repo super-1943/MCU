@@ -1,0 +1,61 @@
+XL
+H 4 areas 4 global symbols
+M timer.c
+S _value_T Ref0000
+S _set_data Ref0000
+A text size 82 flags 0
+dbfile F:\programme\º¸≈Ãœ‘ æ—ßœ∞\key\timer.c
+dbfunc e timer0_init 0 fV
+dbline FFFFFFFF 0
+dbline 7 0
+dbline D 0
+dbline E 4
+dbline F 8
+dbline FFFFFFFE C
+dbline 0 C
+dbfunc e timer0_ovf_isr E fV
+dbline FFFFFFFF 20
+dbline 18 20
+dbline 19 20
+dbline 1B 24
+dbline 1D 36
+dbline 1E 3E
+dbline 1E 3E
+dbline 1F 48
+dbline 20 54
+dbline 21 54
+dbline 22 68
+dbline 24 6C
+dbline FFFFFFFE 6E
+dbline 0 80
+S _timer0_ovf_isr Def000E
+S _timer0_init Def0000
+A vector size 14 flags C
+A data size 2 flags 20
+dbfile F:\programme\º¸≈Ãœ‘ æ—ßœ∞\key\timer.c
+dbsym s i 0 i
+A idata size 2 flags 0
+T 00 00 22 24 23 BE 8B E9 82 BF 81 E0 83 BF 08 95
+R 00 00 00 00
+T 12 00 07 C0
+R 00 00 01 00 80 02 00 00
+T 00 00 00 00
+R 00 00 03 00
+T 0E 00 2A 92 3A 92 4A 92 5A 92 8A 93 9A 93 EA 93
+R 00 00 00 00
+T 1C 00 2F B6 2A 92 8B E9 82 BF 80 91 00 00 90 91
+R 00 00 00 00 00 0C 02 00
+T 2A 00 01 00 01 96 90 93 01 00 80 93 00 00 84 36
+R 00 00 00 00 00 02 02 00 00 08 02 00 00 0C 02 00
+T 38 00 E0 E0 9E 07 59 F4 80 91 00 00 8F 5F 80 93
+R 00 00 00 00 02 0A 00 00
+T 46 00 00 00 22 24 33 24 30 92 01 00 20 92 00 00
+R 00 00 00 00 02 02 00 00 00 0A 02 00 00 0E 02 00
+T 54 00 20 90 00 00 33 24 40 90 00 00 50 90 01 00
+R 00 00 00 00 02 04 01 00 00 0A 02 00 00 0E 02 00
+T 62 00 42 14 53 04 10 F4 AB 9A 01 C0 AB 98 29 90
+R 00 00 00 00
+T 70 00 2F BE E9 91 99 91 89 91 59 90 49 90 39 90
+R 00 00 00 00
+T 7E 00 29 90 18 95
+R 00 00 00 00

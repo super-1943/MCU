@@ -1,0 +1,258 @@
+XL
+H 2 areas 17 global symbols
+M nrf905.C
+S push_gset1 Ref0000
+S push_gset2 Ref0000
+S _DelayMs Ref0000
+S _DelayUs Ref0000
+S pop_gset1 Ref0000
+S pop_gset2 Ref0000
+A text size 16A flags 0
+dbfile D:\IccAvr\Pei\ptr8000\nrf905.C
+dbfunc e nrf905_Config 0 fV
+dbline FFFFFFFF 4
+dbline 7A 4
+dbline 7B 4
+dbline 7C 6
+dbline 7D C
+dbline 7E 12
+dbline 7F 18
+dbline 80 1E
+dbline 81 24
+dbline 82 2A
+dbline 83 34
+dbline 84 3E
+dbline 85 48
+dbline 86 52
+dbline 87 58
+dbline FFFFFFFE 5A
+dbline 0 5E
+dbfunc e nrf905_SpiRW 60 fc
+dbsym r temp 14 c
+dbsym r val 10 c
+dbline FFFFFFFF 64
+dbline 8B 64
+dbline 8D 64
+dbline 8E 66
+dbline 8E 66
+dbline 8F 6A
+dbline 90 6C
+dbline FFFFFFFE 6E
+dbline 0 72
+dbfunc e nrf905_StandBy 74 fV
+dbline FFFFFFFF 74
+dbline 95 74
+dbline 96 74
+dbline 97 76
+dbline 98 78
+dbline FFFFFFFE 7A
+dbline 0 7A
+dbfunc e nrf905_Off 7C fV
+dbline FFFFFFFF 7C
+dbline 9D 7C
+dbline 9E 7C
+dbline FFFFFFFE 7E
+dbline 0 7E
+dbfunc e nrf905_TxOn 80 fV
+dbline FFFFFFFF 80
+dbline A3 80
+dbline A4 80
+dbline A5 82
+dbline A6 84
+dbline FFFFFFFE 86
+dbline 0 86
+dbfunc e nrf905_TxSend 88 fV
+dbline FFFFFFFF 88
+dbline AB 88
+dbline AC 88
+dbline AD 8A
+dbline AE 92
+dbline FFFFFFFE 94
+dbline 0 94
+dbfunc e nrf905_RxOn 96 fV
+dbline FFFFFFFF 96
+dbline B3 96
+dbline B4 96
+dbline B5 98
+dbline B6 9A
+dbline FFFFFFFE 9C
+dbline 0 9C
+dbfunc e nrf905_Init 9E fV
+dbline FFFFFFFF 9E
+dbline BB 9E
+dbline BC 9E
+dbline BD A0
+dbline BE A6
+dbline C0 A8
+dbline C1 AA
+dbline FFFFFFFE AC
+dbline 0 AC
+dbfunc e nrf905_SpiTest AE fV
+dbsym r i 14 c
+dbline FFFFFFFF B2
+dbline C6 B2
+dbline C7 B2
+dbline C8 B4
+dbline C9 B8
+dbline CA BC
+dbline CB BC
+dbline CC CE
+dbline C9 CE
+dbline C9 D0
+dbline CD D4
+dbline FFFFFFFE D6
+dbline 0 DA
+dbfunc e nrf905_SetTxAddr DC fV
+dbline FFFFFFFF DC
+dbline D2 DC
+dbline D3 DC
+dbline D4 DE
+dbline D5 E2
+dbline D6 E6
+dbline D7 EA
+dbline D8 EE
+dbline D9 F2
+dbline FFFFFFFE F4
+dbline 0 F4
+dbfunc e nrf905_SetData F6 fV
+dbsym r i 14 c
+dbline FFFFFFFF FA
+dbline DE FA
+dbline E0 FA
+dbline E1 FC
+dbline E2 100
+dbline E3 104
+dbline E4 104
+dbline E5 114
+dbline E2 114
+dbline E2 116
+dbline E7 11A
+dbline FFFFFFFE 11C
+dbline 0 120
+dbfunc e nrf905_WaitSended 122 fV
+dbline FFFFFFFF 122
+dbline EC 122
+dbline ED 122
+dbline ED 122
+dbline FFFFFFFE 126
+dbline 0 126
+dbfunc e nrf905_SendData 128 fV
+dbline FFFFFFFF 128
+dbline F2 128
+dbline F3 128
+dbline F4 12A
+dbline F5 12C
+dbline F6 12E
+dbline F7 130
+dbline FFFFFFFE 132
+dbline 0 132
+dbfunc e nrf905_SendAgain 134 fV
+dbline FFFFFFFF 134
+dbline FD 134
+dbline FE 134
+dbline FF 136
+dbline 100 138
+dbline FFFFFFFE 13A
+dbline 0 13A
+dbfunc e nrf905_ReadData 13C fV
+dbsym r i 14 c
+dbline FFFFFFFF 140
+dbline 106 140
+dbline 109 140
+dbline 10A 142
+dbline 10B 146
+dbline 10C 14A
+dbline 10D 14A
+dbline 10E 15C
+dbline 10B 15C
+dbline 10B 15E
+dbline 110 162
+dbline FFFFFFFE 164
+dbline 0 168
+S _nrf905_SendAgain Def0134
+S _nrf905_SetTxAddr Def00DC
+S _nrf905_RxOn Def0096
+S _nrf905_TxOn Def0080
+S _nrf905_Init Def009E
+S _nrf905_SetData Def00F6
+S _nrf905_StandBy Def0074
+S _nrf905_SpiTest Def00AE
+S _nrf905_SpiRW Def0060
+S _nrf905_WaitSended Def0122
+S _nrf905_ReadData Def013C
+S _nrf905_SendData Def0128
+S _nrf905_Off Def007C
+S _nrf905_TxSend Def0088
+S _nrf905_Config Def0000
+A bss size 40 flags 20
+dbfile D:\IccAvr\Pei\ptr8000\nrf905.C
+dbsym e RxBuf 0 A[32:32]c
+dbsym e TxBuf 20 A[32:32]c
+S _RxBuf Def0000
+S _TxBuf Def0020
+T 00 00 0E 94 00 00 C4 98 00 27 11 27 2A D0 0C E4
+R 00 00 00 00 12 04 01 00
+T 0E 00 10 E0 27 D0 0C E0 10 E0 24 D0 04 E4 10 E0
+R 00 00 00 00
+T 1C 00 21 D0 00 E2 10 E0 1E D0 00 E2 10 E0 1B D0
+R 00 00 00 00
+T 2A 00 02 E1 10 E0 20 E0 30 E0 16 D0 04 E3 10 E0
+R 00 00 00 00
+T 38 00 20 E0 30 E0 11 D0 06 E5 10 E0 20 E0 30 E0
+R 00 00 00 00
+T 46 00 0C D0 08 E7 10 E0 20 E0 30 E0 07 D0 08 ED
+R 00 00 00 00
+T 54 00 10 E0 04 D0 C4 9A 0E 94 00 00 08 95
+R 00 00 00 00 12 0A 05 00
+T 60 00 0E 94 00 00 0F B9 77 9B FE CF 4F B1 04 2F
+R 00 00 00 00 12 04 00 00
+T 6E 00 0E 94 00 00 08 95
+R 00 00 00 00 12 04 04 00
+T 74 00 C0 9A C1 98 C2 98 08 95
+R 00 00 00 00
+T 7C 00 C0 98 08 95
+R 00 00 00 00
+T 80 00 C0 9A C2 9A C1 98 08 95
+R 00 00 00 00
+T 88 00 C1 9A 04 E1 10 E0 0E 94 00 00 C1 98 08 95
+R 00 00 00 00 12 0A 03 00
+T 96 00 C0 9A C2 98 C1 9A 08 95
+R 00 00 00 00
+T 9E 00 EA DF 0A E0 0E 94 00 00 AC DF 02 D0 F5 DF
+R 00 00 00 00 12 08 02 00
+T AC 00 08 95
+R 00 00 00 00
+T AE 00 0E 94 00 00 C4 98 00 E1 D4 DF 44 27 0A C0
+R 00 00 00 00 12 04 00 00
+T BC 00 00 27 D0 DF 80 E0 90 E0 E4 2F FF 27 E8 0F
+R 00 00 00 00 20 06 01 00 00 00 40 08 01 00 00 00
+T CA 00 F9 1F 00 83 43 95 4A 30 A0 F3 C4 9A 0E 94
+R 00 00 00 00
+T D8 00 00 00 08 95
+R 00 00 00 00 12 02 04 00
+T DC 00 C4 98 02 E2 BF DF 02 E1 BD DF 04 E3 BB DF
+R 00 00 00 00
+T EA 00 06 E5 B9 DF 08 E7 B7 DF C4 9A 08 95
+R 00 00 00 00
+T F6 00 0E 94 00 00 C4 98 00 E2 B0 DF 44 27 09 C0
+R 00 00 00 00 12 04 00 00
+T 04 01 80 E0 90 E0 E4 2F FF 27 E8 0F F9 1F 00 81
+R 00 00 00 00 20 02 01 00 20 00 40 04 01 00 20 00
+T 12 01 A6 DF 43 95 40 32 A8 F3 C4 9A 0E 94 00 00
+R 00 00 00 00 12 0E 04 00
+T 20 01 08 95
+R 00 00 00 00
+T 22 01 84 9B FE CF 08 95
+R 00 00 00 00
+T 28 01 AB DF D8 DF E4 DF AC DF F8 DF 08 95
+R 00 00 00 00
+T 34 01 A5 DF A8 DF F4 DF 08 95
+R 00 00 00 00
+T 3C 01 0E 94 00 00 C4 98 04 E2 8D DF 44 27 0A C0
+R 00 00 00 00 12 04 00 00
+T 4A 01 00 27 89 DF 80 E0 90 E0 E4 2F FF 27 E8 0F
+R 00 00 00 00 20 06 01 00 00 00 40 08 01 00 00 00
+T 58 01 F9 1F 00 83 43 95 40 32 A0 F3 C4 9A 0E 94
+R 00 00 00 00
+T 66 01 00 00 08 95
+R 00 00 00 00 12 02 04 00

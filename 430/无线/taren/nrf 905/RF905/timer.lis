@@ -1,0 +1,141 @@
+                        .module timer.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile F:\programme\键盘显示学习\key\timer.c
+ 0000                   .dbfunc e timer0_init _timer0_init fV
+                        .even
+ 0000           _timer0_init::
+ 0000                   .dbline -1
+ 0000                   .dbline 7
+ 0000           ; #include <stdio.h>
+ 0000           ; #include <iom8v.h>
+ 0000           ; #include <macros.h>
+ 0000           ; extern unsigned char  value_T,set_data;
+ 0000           ; 
+ 0000           ; void timer0_init(void) //CTC模式输出1KHz/2KHz方波
+ 0000           ; {
+ 0000                   .dbline 13
+ 0000           ;  //CLI(); //disable all interrupts
+ 0000           ;  //MCUCR = 0x00;
+ 0000           ; // GICR  = 0x00;
+ 0000           ; // TIMSK = 0x01; //timer interrupt sources
+ 0000           ;  
+ 0000           ;  TCCR0 = 0x00; //stop
+ 0000 2224              clr R2
+ 0002 23BE              out 0x33,R2
+ 0004                   .dbline 14
+ 0004           ;  TCNT0 = 155;       // set count
+ 0004 8BE9              ldi R24,155
+ 0006 82BF              out 0x32,R24
+ 0008                   .dbline 15
+ 0008           ;  TCCR0 = 0x01;   //start timer
+ 0008 81E0              ldi R24,1
+ 000A 83BF              out 0x33,R24
+ 000C                   .dbline -2
+ 000C           L1:
+ 000C                   .dbline 0 ; func end
+ 000C 0895              ret
+ 000E                   .dbend
+                        .area vector(rom, abs)
+                        .org 18
+ 0012 07C0              rjmp _timer0_ovf_isr
+                        .area text(rom, con, rel)
+ 000E                   .dbfile F:\programme\键盘显示学习\key\timer.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile F:\programme\键盘显示学习\key\timer.c
+ 0000           L3:
+ 0000                   .blkb 2
+                        .area idata
+ 0000 0000              .word 0
+                        .area data(ram, con, rel)
+ 0002                   .dbfile F:\programme\键盘显示学习\key\timer.c
+                        .area text(rom, con, rel)
+ 000E                   .dbfile F:\programme\键盘显示学习\key\timer.c
+ 000E                   .dbfunc e timer0_ovf_isr _timer0_ovf_isr fV
+ 000E                   .dbsym s i L3 i
+                        .even
+ 000E           _timer0_ovf_isr::
+ 000E 2A92              st -y,R2
+ 0010 3A92              st -y,R3
+ 0012 4A92              st -y,R4
+ 0014 5A92              st -y,R5
+ 0016 8A93              st -y,R24
+ 0018 9A93              st -y,R25
+ 001A EA93              st -y,R30
+ 001C 2FB6              in R2,0x3f
+ 001E 2A92              st -y,R2
+ 0020                   .dbline -1
+ 0020                   .dbline 24
+ 0020           ;  //SEI();          //re-enable interrupts
+ 0020           ; }
+ 0020           ; 
+ 0020           ; 
+ 0020           ; 
+ 0020           ; 
+ 0020           ; #pragma interrupt_handler timer0_ovf_isr:10
+ 0020           ; void timer0_ovf_isr(void)
+ 0020           ; {static unsigned int i=0;
+ 0020                   .dbline 25
+ 0020           ;  TCNT0 =155 ;                 //reload counter value
+ 0020 8BE9              ldi R24,155
+ 0022 82BF              out 0x32,R24
+ 0024                   .dbline 27
+ 0024           ;  
+ 0024           ;  i++;
+ 0024 80910000          lds R24,L3
+ 0028 90910100          lds R25,L3+1
+ 002C 0196              adiw R24,1
+ 002E 90930100          sts L3+1,R25
+ 0032 80930000          sts L3,R24
+ 0036                   .dbline 29
+ 0036           ;  // value_T++;
+ 0036           ;  if(i==100)
+ 0036 8436              cpi R24,100
+ 0038 E0E0              ldi R30,0
+ 003A 9E07              cpc R25,R30
+ 003C 59F4              brne L4
+ 003E                   .dbline 30
+ 003E           ;   { value_T++;
+ 003E                   .dbline 30
+ 003E 80910000          lds R24,_value_T
+ 0042 8F5F              subi R24,255    ; addi 1
+ 0044 80930000          sts _value_T,R24
+ 0048                   .dbline 31
+ 0048           ;     i=0;
+ 0048 2224              clr R2
+ 004A 3324              clr R3
+ 004C 30920100          sts L3+1,R3
+ 0050 20920000          sts L3,R2
+ 0054                   .dbline 32
+ 0054           ;   }
+ 0054           L4:
+ 0054                   .dbline 33
+ 0054           ;  if(i < set_data)
+ 0054 20900000          lds R2,_set_data
+ 0058 3324              clr R3
+ 005A 40900000          lds R4,L3
+ 005E 50900100          lds R5,L3+1
+ 0062 4214              cp R4,R2
+ 0064 5304              cpc R5,R3
+ 0066 10F4              brsh L6
+ 0068                   .dbline 34
+ 0068           ;         PORTC|=BIT(PC3);
+ 0068 AB9A              sbi 0x15,3
+ 006A 01C0              rjmp L7
+ 006C           L6:
+ 006C                   .dbline 36
+ 006C AB98              cbi 0x15,3
+ 006E           L7:
+ 006E                   .dbline -2
+ 006E           L2:
+ 006E 2990              ld R2,y+
+ 0070 2FBE              out 0x3f,R2
+ 0072 E991              ld R30,y+
+ 0074 9991              ld R25,y+
+ 0076 8991              ld R24,y+
+ 0078 5990              ld R5,y+
+ 007A 4990              ld R4,y+
+ 007C 3990              ld R3,y+
+ 007E 2990              ld R2,y+
+ 0080                   .dbline 0 ; func end
+ 0080 1895              reti
+ 0082                   .dbend

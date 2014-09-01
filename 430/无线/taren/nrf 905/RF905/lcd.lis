@@ -1,0 +1,704 @@
+                        .module lcd.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile F:\programme\RF905\lcd.c
+ 0000                   .dbfunc e delay _delay fV
+ 0000           ;              i -> R20,R21
+ 0000           ;          times -> R16,R17
+                        .even
+ 0000           _delay::
+ 0000 00D0              rcall push_gset1
+ 0002                   .dbline -1
+ 0002                   .dbline 21
+ 0002           ; ///****************************************************************//
+ 0002           ; //液晶显示模块，采用ATmega8单片机和OCM4*8液晶，串行方式
+ 0002           ; //采用PORTD的高三位
+ 0002           ; //pd5---lcd_cs
+ 0002           ; //pd7---lcd_sdat
+ 0002           ; //pd6---lcd_sclk
+ 0002           ; //周金广2006年7月20日整理
+ 0002           ; ///****************************************************************//
+ 0002           ; ///////////////////////////////////////////////////
+ 0002           ; //lcd初始化程序
+ 0002           ; //////////////////////////////////////////////////
+ 0002           ; #include <stdio.h>
+ 0002           ; #include <iom8v.h>
+ 0002           ; #include <macros.h>
+ 0002           ; 
+ 0002           ; 
+ 0002           ; ///////////////////////////////////////////////
+ 0002           ; //
+ 0002           ; //////////////////////////////////////////////
+ 0002           ; void delay(unsigned int times)
+ 0002           ; {unsigned int i;
+ 0002                   .dbline 22
+ 0002           ; for(i=0;i<times;i++)
+ 0002 4427              clr R20
+ 0004 5527              clr R21
+ 0006 02C0              rjmp L5
+ 0008           L2:
+ 0008                   .dbline 23
+ 0008           L3:
+ 0008                   .dbline 22
+ 0008 4F5F              subi R20,255  ; offset = 1
+ 000A 5F4F              sbci R21,255
+ 000C           L5:
+ 000C                   .dbline 22
+ 000C 4017              cp R20,R16
+ 000E 5107              cpc R21,R17
+ 0010 D8F3              brlo L2
+ 0012                   .dbline -2
+ 0012           L1:
+ 0012 00D0              rcall pop_gset1
+ 0014                   .dbline 0 ; func end
+ 0014 0895              ret
+ 0016                   .dbsym r i 20 i
+ 0016                   .dbsym r times 16 i
+ 0016                   .dbend
+ 0016                   .dbfunc e lcd_send_byte _lcd_send_byte fV
+ 0016           ;          data1 -> R20,R21
+ 0016           ;              i -> R22,R23
+ 0016           ;           data -> R10
+                        .even
+ 0016           _lcd_send_byte::
+ 0016 00D0              rcall push_gset3
+ 0018 A02E              mov R10,R16
+ 001A                   .dbline -1
+ 001A                   .dbline 27
+ 001A           ; ;
+ 001A           ; }
+ 001A           ; 
+ 001A           ; void lcd_send_byte(char data)
+ 001A           ; {unsigned int i,data1;
+ 001A                   .dbline 28
+ 001A           ; for(i=0;i<8;i++)
+ 001A 6627              clr R22
+ 001C 7727              clr R23
+ 001E 15C0              rjmp L10
+ 0020           L7:
+ 0020                   .dbline 29
+ 0020           ; {data1=data&0x80;       //test data bit7 为零则放送零，为一则放送一
+ 0020                   .dbline 29
+ 0020 4A2D              mov R20,R10
+ 0022 5527              clr R21
+ 0024 4078              andi R20,128
+ 0026 5070              andi R21,0
+ 0028                   .dbline 30
+ 0028           ;  if(data1!=0)
+ 0028 4030              cpi R20,0
+ 002A 4507              cpc R20,R21
+ 002C 29F0              breq L11
+ 002E           X0:
+ 002E                   .dbline 31
+ 002E           ;  { PORTD|=BIT(PD7);
+ 002E                   .dbline 31
+ 002E 979A              sbi 0x12,7
+ 0030                   .dbline 32
+ 0030           ;      delay(20);
+ 0030 04E1              ldi R16,20
+ 0032 10E0              ldi R17,0
+ 0034 E5DF              rcall _delay
+ 0036                   .dbline 33
+ 0036           ;   }
+ 0036 04C0              rjmp L12
+ 0038           L11:
+ 0038                   .dbline 34
+ 0038           ;  else {PORTD&=~BIT(PD7);          ///当单片机速度太快时，加延时
+ 0038                   .dbline 34
+ 0038 9798              cbi 0x12,7
+ 003A                   .dbline 35
+ 003A           ;      delay(20); }
+ 003A 04E1              ldi R16,20
+ 003C 10E0              ldi R17,0
+ 003E E0DF              rcall _delay
+ 0040                   .dbline 35
+ 0040           L12:
+ 0040                   .dbline 38
+ 0040 969A              sbi 0x12,6
+ 0042                   .dbline 40
+ 0042 9698              cbi 0x12,6
+ 0044                   .dbline 41
+ 0044 AA0C              lsl R10
+ 0046                   .dbline 42
+ 0046           L8:
+ 0046                   .dbline 28
+ 0046 6F5F              subi R22,255  ; offset = 1
+ 0048 7F4F              sbci R23,255
+ 004A           L10:
+ 004A                   .dbline 28
+ 004A 6830              cpi R22,8
+ 004C E0E0              ldi R30,0
+ 004E 7E07              cpc R23,R30
+ 0050 38F3              brlo L7
+ 0052                   .dbline -2
+ 0052           L6:
+ 0052 00D0              rcall pop_gset3
+ 0054                   .dbline 0 ; func end
+ 0054 0895              ret
+ 0056                   .dbsym r data1 20 i
+ 0056                   .dbsym r i 22 i
+ 0056                   .dbsym r data 10 c
+ 0056                   .dbend
+ 0056                   .dbfunc e lcd_write_data _lcd_write_data fV
+ 0056           ;          data2 -> R22
+ 0056           ;          data1 -> R10
+ 0056           ;          data3 -> R20
+ 0056           ;           data -> R20
+                        .even
+ 0056           _lcd_write_data::
+ 0056 00D0              rcall push_gset3
+ 0058 402F              mov R20,R16
+ 005A                   .dbline -1
+ 005A                   .dbline 48
+ 005A           ;          
+ 005A           ; //PORTD=PORTD&data;
+ 005A           ; PORTD|=BIT(PD6);     // set sclk high
+ 005A           ; 
+ 005A           ; PORTD&=~BIT(PD6);    // set sclk low
+ 005A           ; data=data<<1;
+ 005A           ; }
+ 005A           ; }
+ 005A           ; /////////////////////////////////////////////////////////////
+ 005A           ; ////
+ 005A           ; ////////////////////////////////////////////////////////////
+ 005A           ; void lcd_write_data(char data)
+ 005A           ; {char data1=0xfa,data2,data3;
+ 005A                   .dbline 48
+ 005A 8AEF              ldi R24,250
+ 005C A82E              mov R10,R24
+ 005E                   .dbline 50
+ 005E           ;     
+ 005E           ;       PORTD|=BIT(PD5);      //set cs high
+ 005E 959A              sbi 0x12,5
+ 0060                   .dbline 52
+ 0060           ;       
+ 0060           ;    data2=data&0xf0;
+ 0060 642F              mov R22,R20
+ 0062 607F              andi R22,240
+ 0064                   .dbline 53
+ 0064           ;    data3=data&0x0f;
+ 0064 4F70              andi R20,15
+ 0066                   .dbline 54
+ 0066           ;    data3=data3<<4;
+ 0066 842F              mov R24,R20
+ 0068 8F70              andi R24,#0x0F
+ 006A 8295              swap R24
+ 006C 482F              mov R20,R24
+ 006E                   .dbline 56
+ 006E           ;    
+ 006E           ;    lcd_send_byte(data1);
+ 006E 0A2D              mov R16,R10
+ 0070 D2DF              rcall _lcd_send_byte
+ 0072                   .dbline 57
+ 0072           ;    lcd_send_byte(data2);
+ 0072 062F              mov R16,R22
+ 0074 D0DF              rcall _lcd_send_byte
+ 0076                   .dbline 58
+ 0076           ;    lcd_send_byte(data3);
+ 0076 042F              mov R16,R20
+ 0078 CEDF              rcall _lcd_send_byte
+ 007A                   .dbline 60
+ 007A           ;    
+ 007A           ;    PORTD&=~BIT(PD5);       //set cs low
+ 007A 9598              cbi 0x12,5
+ 007C                   .dbline -2
+ 007C           L13:
+ 007C 00D0              rcall pop_gset3
+ 007E                   .dbline 0 ; func end
+ 007E 0895              ret
+ 0080                   .dbsym r data2 22 c
+ 0080                   .dbsym r data1 10 c
+ 0080                   .dbsym r data3 20 c
+ 0080                   .dbsym r data 20 c
+ 0080                   .dbend
+ 0080                   .dbfunc e lcd_write_comm _lcd_write_comm fV
+ 0080           ;          data2 -> R22
+ 0080           ;          data1 -> R10
+ 0080           ;          data3 -> R20
+ 0080           ;           data -> R20
+                        .even
+ 0080           _lcd_write_comm::
+ 0080 00D0              rcall push_gset3
+ 0082 402F              mov R20,R16
+ 0084                   .dbline -1
+ 0084                   .dbline 68
+ 0084           ; 
+ 0084           ; }
+ 0084           ; /////////////////////////////////////////////////////////////
+ 0084           ; ////
+ 0084           ; ////////////////////////////////////////////////////////////
+ 0084           ; void lcd_write_comm(char data)
+ 0084           ; //int data;
+ 0084           ; {char data1=0xf8,data2,data3;
+ 0084                   .dbline 68
+ 0084 88EF              ldi R24,248
+ 0086 A82E              mov R10,R24
+ 0088                   .dbline 69
+ 0088           ;    PORTD|=BIT(PD5);     //set cs high
+ 0088 959A              sbi 0x12,5
+ 008A                   .dbline 71
+ 008A           ;    
+ 008A           ;    data2=data&0xf0;
+ 008A 642F              mov R22,R20
+ 008C 607F              andi R22,240
+ 008E                   .dbline 72
+ 008E           ;    data3=data&0x0f;
+ 008E 4F70              andi R20,15
+ 0090                   .dbline 73
+ 0090           ;    data3=data3<<4;
+ 0090 842F              mov R24,R20
+ 0092 8F70              andi R24,#0x0F
+ 0094 8295              swap R24
+ 0096 482F              mov R20,R24
+ 0098                   .dbline 75
+ 0098           ;    
+ 0098           ;    lcd_send_byte(data1);
+ 0098 0A2D              mov R16,R10
+ 009A BDDF              rcall _lcd_send_byte
+ 009C                   .dbline 76
+ 009C           ;    lcd_send_byte(data2);
+ 009C 062F              mov R16,R22
+ 009E BBDF              rcall _lcd_send_byte
+ 00A0                   .dbline 77
+ 00A0           ;    lcd_send_byte(data3);
+ 00A0 042F              mov R16,R20
+ 00A2 B9DF              rcall _lcd_send_byte
+ 00A4                   .dbline 79
+ 00A4           ;    
+ 00A4           ;    PORTD&=~BIT(PD5);     //set cs low
+ 00A4 9598              cbi 0x12,5
+ 00A6                   .dbline -2
+ 00A6           L14:
+ 00A6 00D0              rcall pop_gset3
+ 00A8                   .dbline 0 ; func end
+ 00A8 0895              ret
+ 00AA                   .dbsym r data2 22 c
+ 00AA                   .dbsym r data1 10 c
+ 00AA                   .dbsym r data3 20 c
+ 00AA                   .dbsym r data 20 c
+ 00AA                   .dbend
+ 00AA                   .dbfunc e lcd_initial _lcd_initial fV
+                        .even
+ 00AA           _lcd_initial::
+ 00AA                   .dbline -1
+ 00AA                   .dbline 83
+ 00AA           ; 
+ 00AA           ; }
+ 00AA           ; void lcd_initial(void)
+ 00AA           ; {
+ 00AA                   .dbline 85
+ 00AA           ;     
+ 00AA           ;    lcd_write_comm(0x30);                      //基本指令集
+ 00AA 00E3              ldi R16,48
+ 00AC E9DF              rcall _lcd_write_comm
+ 00AE                   .dbline 86
+ 00AE           ;    lcd_write_comm(0x01);                      //清除显示屏幕，把DDRAM位址计数器调整为"00H"
+ 00AE 01E0              ldi R16,1
+ 00B0 E7DF              rcall _lcd_write_comm
+ 00B2                   .dbline 87
+ 00B2           ;    lcd_write_comm(0x03);                      //把DDRAM位址计数器调整为"00H"，游标回原点，该功能不影响显示DDRAM
+ 00B2 03E0              ldi R16,3
+ 00B4 E5DF              rcall _lcd_write_comm
+ 00B6                   .dbline 88
+ 00B6           ;    lcd_write_comm(0x06);                      //光标右移
+ 00B6 06E0              ldi R16,6
+ 00B8 E3DF              rcall _lcd_write_comm
+ 00BA                   .dbline 89
+ 00BA           ;    lcd_write_comm(0x0c);                      //显示屏打开
+ 00BA 0CE0              ldi R16,12
+ 00BC E1DF              rcall _lcd_write_comm
+ 00BE                   .dbline -2
+ 00BE           L15:
+ 00BE                   .dbline 0 ; func end
+ 00BE 0895              ret
+ 00C0                   .dbend
+ 00C0                   .dbfunc e screen _screen fV
+ 00C0           ;              j -> <dead>
+ 00C0           ;              i -> R20,R21
+ 00C0           ;           data -> R22,R23
+                        .even
+ 00C0           _screen::
+ 00C0 00D0              rcall push_gset2
+ 00C2 B801              movw R22,R16
+ 00C4                   .dbline -1
+ 00C4                   .dbline 98
+ 00C4           ; }
+ 00C4           ; /////////////////////////////////////////////////////
+ 00C4           ; ////
+ 00C4           ; /////////////////////////////////////////////////////
+ 00C4           ; 
+ 00C4           ; void screen(data)
+ 00C4           ; char data[65];
+ 00C4           ; 
+ 00C4           ;  {         
+ 00C4                   .dbline 100
+ 00C4           ;           unsigned int i,j;
+ 00C4           ;               lcd_write_comm(0x08);
+ 00C4 08E0              ldi R16,8
+ 00C6 DCDF              rcall _lcd_write_comm
+ 00C8                   .dbline 101
+ 00C8           ;               for (i=0;i<64;i++)
+ 00C8 4427              clr R20
+ 00CA 5527              clr R21
+ 00CC 1FC0              rjmp L20
+ 00CE           L17:
+ 00CE                   .dbline 102
+ 00CE           ;                       {lcd_write_data(data[i]);
+ 00CE                   .dbline 102
+ 00CE FA01              movw R30,R20
+ 00D0 E60F              add R30,R22
+ 00D2 F71F              adc R31,R23
+ 00D4 0081              ldd R16,z+0
+ 00D6 BFDF              rcall _lcd_write_data
+ 00D8                   .dbline 103
+ 00D8           ;                       if (i==15)
+ 00D8 4F30              cpi R20,15
+ 00DA E0E0              ldi R30,0
+ 00DC 5E07              cpc R21,R30
+ 00DE 11F4              brne L21
+ 00E0                   .dbline 104
+ 00E0           ;                       lcd_write_comm(0x90);      //设定DDRAM第二行，第一列
+ 00E0 00E9              ldi R16,144
+ 00E2 CEDF              rcall _lcd_write_comm
+ 00E4           L21:
+ 00E4                   .dbline 105
+ 00E4           ;                       if (i==31)
+ 00E4 4F31              cpi R20,31
+ 00E6 E0E0              ldi R30,0
+ 00E8 5E07              cpc R21,R30
+ 00EA 11F4              brne L23
+ 00EC                   .dbline 106
+ 00EC           ;                       lcd_write_comm(0x88);     //设定DDRAM第三行，第一列
+ 00EC 08E8              ldi R16,136
+ 00EE C8DF              rcall _lcd_write_comm
+ 00F0           L23:
+ 00F0                   .dbline 107
+ 00F0           ;                       if (i==47)
+ 00F0 4F32              cpi R20,47
+ 00F2 E0E0              ldi R30,0
+ 00F4 5E07              cpc R21,R30
+ 00F6 11F4              brne L25
+ 00F8                   .dbline 108
+ 00F8           ;                       lcd_write_comm(0x98);     //设定DDRAM第四行，第一列
+ 00F8 08E9              ldi R16,152
+ 00FA C2DF              rcall _lcd_write_comm
+ 00FC           L25:
+ 00FC                   .dbline 109
+ 00FC           ;                       if (i==63)
+ 00FC 4F33              cpi R20,63
+ 00FE E0E0              ldi R30,0
+ 0100 5E07              cpc R21,R30
+ 0102 11F4              brne L27
+ 0104                   .dbline 110
+ 0104           ;                       lcd_write_comm(0x80);     //设定DDRAM第一行，第一列
+ 0104 00E8              ldi R16,128
+ 0106 BCDF              rcall _lcd_write_comm
+ 0108           L27:
+ 0108                   .dbline 111
+ 0108           L18:
+ 0108                   .dbline 101
+ 0108 4F5F              subi R20,255  ; offset = 1
+ 010A 5F4F              sbci R21,255
+ 010C           L20:
+ 010C                   .dbline 101
+ 010C 4034              cpi R20,64
+ 010E E0E0              ldi R30,0
+ 0110 5E07              cpc R21,R30
+ 0112 E8F2              brlo L17
+ 0114                   .dbline 112
+ 0114           ;                       }
+ 0114           ;               lcd_write_comm(0x0c);
+ 0114 0CE0              ldi R16,12
+ 0116 B4DF              rcall _lcd_write_comm
+ 0118                   .dbline -2
+ 0118           L16:
+ 0118 00D0              rcall pop_gset2
+ 011A                   .dbline 0 ; func end
+ 011A 0895              ret
+ 011C                   .dbsym l j 1 i
+ 011C                   .dbsym r i 20 i
+ 011C                   .dbsym r data 22 pc
+ 011C                   .dbend
+ 011C                   .dbfunc e fanxian _fanxian fV
+ 011C           ;              y -> R20
+ 011C           ;              x -> R22
+ 011C           ;              j -> R10
+ 011C           ;              i -> R12
+ 011C           ;           hang -> R14
+                        .even
+ 011C           _fanxian::
+ 011C 00D0              rcall push_gset5
+ 011E E02E              mov R14,R16
+ 0120                   .dbline -1
+ 0120                   .dbline 116
+ 0120           ; }     
+ 0120           ; //////////////////////////////////
+ 0120           ; void fanxian(unsigned char hang)   //  0x80-1     0x90-2   0x88-3    0x98-4
+ 0120           ;       {       
+ 0120                   .dbline 118
+ 0120           ;           unsigned char x,y,i,j;
+ 0120           ;            lcd_write_comm(0x34);        //开启绘图功能显示 
+ 0120 04E3              ldi R16,52
+ 0122 AEDF              rcall _lcd_write_comm
+ 0124                   .dbline 119
+ 0124           ;                lcd_write_comm(0x34);
+ 0124 04E3              ldi R16,52
+ 0126 ACDF              rcall _lcd_write_comm
+ 0128                   .dbline 121
+ 0128           ;           
+ 0128           ;           y=0x80;
+ 0128 40E8              ldi R20,128
+ 012A                   .dbline 122
+ 012A           ;         x=0x80;
+ 012A 60E8              ldi R22,128
+ 012C                   .dbline 123
+ 012C           ;               lcd_write_data(0x00);
+ 012C 0027              clr R16
+ 012E 93DF              rcall _lcd_write_data
+ 0130                   .dbline 124
+ 0130           ;               lcd_write_comm(x);             //设置x 坐标 
+ 0130 062F              mov R16,R22
+ 0132 A6DF              rcall _lcd_write_comm
+ 0134                   .dbline 125
+ 0134           ;               lcd_write_comm(y); 
+ 0134 042F              mov R16,R20
+ 0136 A4DF              rcall _lcd_write_comm
+ 0138                   .dbline 126
+ 0138           ;               for (j=0;j<32;j++)
+ 0138 AA24              clr R10
+ 013A 10C0              rjmp L33
+ 013C           L30:
+ 013C                   .dbline 127
+ 013C           ;                 {for (i=0;i<16;i++)
+ 013C                   .dbline 127
+ 013C CC24              clr R12
+ 013E 03C0              rjmp L37
+ 0140           L34:
+ 0140                   .dbline 128
+ 0140 0027              clr R16
+ 0142 89DF              rcall _lcd_write_data
+ 0144           L35:
+ 0144                   .dbline 127
+ 0144 C394              inc R12
+ 0146           L37:
+ 0146                   .dbline 127
+ 0146 8C2D              mov R24,R12
+ 0148 8031              cpi R24,16
+ 014A D0F3              brlo L34
+ 014C                   .dbline 131
+ 014C 862F              mov R24,R22
+ 014E 8F5F              subi R24,255    ; addi 1
+ 0150 682F              mov R22,R24
+ 0152 082F              mov R16,R24
+ 0154 95DF              rcall _lcd_write_comm
+ 0156                   .dbline 132
+ 0156 042F              mov R16,R20
+ 0158 93DF              rcall _lcd_write_comm
+ 015A                   .dbline 134
+ 015A           L31:
+ 015A                   .dbline 126
+ 015A A394              inc R10
+ 015C           L33:
+ 015C                   .dbline 126
+ 015C 8A2D              mov R24,R10
+ 015E 8032              cpi R24,32
+ 0160 68F3              brlo L30
+ 0162                   .dbline 136
+ 0162           ;                       lcd_write_data(0x00);
+ 0162           ;               
+ 0162           ;                       
+ 0162           ;                       lcd_write_comm(++x);
+ 0162           ;                       lcd_write_comm(y);
+ 0162           ;                       
+ 0162           ;                 }
+ 0162           ;               
+ 0162           ;         y=0x88; 
+ 0162 48E8              ldi R20,136
+ 0164                   .dbline 137
+ 0164           ;               x=0x80;
+ 0164 60E8              ldi R22,128
+ 0166                   .dbline 138
+ 0166           ;               lcd_write_data(0x00);
+ 0166 0027              clr R16
+ 0168 76DF              rcall _lcd_write_data
+ 016A                   .dbline 139
+ 016A           ;       lcd_write_comm(x);
+ 016A 062F              mov R16,R22
+ 016C 89DF              rcall _lcd_write_comm
+ 016E                   .dbline 140
+ 016E           ;               lcd_write_comm(y);
+ 016E 042F              mov R16,R20
+ 0170 87DF              rcall _lcd_write_comm
+ 0172                   .dbline 141
+ 0172           ;               for (j=32;j<64;j++)
+ 0172 80E2              ldi R24,32
+ 0174 A82E              mov R10,R24
+ 0176 10C0              rjmp L41
+ 0178           L38:
+ 0178                   .dbline 142
+ 0178           ;                 {for (i=0;i<16;i++)
+ 0178                   .dbline 142
+ 0178 CC24              clr R12
+ 017A 03C0              rjmp L45
+ 017C           L42:
+ 017C                   .dbline 143
+ 017C 0027              clr R16
+ 017E 6BDF              rcall _lcd_write_data
+ 0180           L43:
+ 0180                   .dbline 142
+ 0180 C394              inc R12
+ 0182           L45:
+ 0182                   .dbline 142
+ 0182 8C2D              mov R24,R12
+ 0184 8031              cpi R24,16
+ 0186 D0F3              brlo L42
+ 0188                   .dbline 144
+ 0188 862F              mov R24,R22
+ 018A 8F5F              subi R24,255    ; addi 1
+ 018C 682F              mov R22,R24
+ 018E 082F              mov R16,R24
+ 0190 77DF              rcall _lcd_write_comm
+ 0192                   .dbline 145
+ 0192 042F              mov R16,R20
+ 0194 75DF              rcall _lcd_write_comm
+ 0196                   .dbline 148
+ 0196           L39:
+ 0196                   .dbline 141
+ 0196 A394              inc R10
+ 0198           L41:
+ 0198                   .dbline 141
+ 0198 8A2D              mov R24,R10
+ 019A 8034              cpi R24,64
+ 019C 68F3              brlo L38
+ 019E                   .dbline 150
+ 019E           ;                       lcd_write_data(0x00);
+ 019E           ;                       lcd_write_comm(++x);
+ 019E           ;                       lcd_write_comm(y);       
+ 019E           ;                       
+ 019E           ;                 
+ 019E           ;                 }
+ 019E           ;                   
+ 019E           ;                 lcd_write_comm(0x36);        //开启绘图功能显示       
+ 019E 06E3              ldi R16,54
+ 01A0 6FDF              rcall _lcd_write_comm
+ 01A2                   .dbline 152
+ 01A2           ;                       
+ 01A2           ;               if(hang==1)
+ 01A2 8E2D              mov R24,R14
+ 01A4 8130              cpi R24,1
+ 01A6 19F4              brne L46
+ 01A8                   .dbline 153
+ 01A8           ;       {
+ 01A8                   .dbline 154
+ 01A8           ;       y=0x80; 
+ 01A8 40E8              ldi R20,128
+ 01AA                   .dbline 155
+ 01AA           ;               x=0x80;}
+ 01AA 60E8              ldi R22,128
+ 01AC                   .dbline 155
+ 01AC 0EC0              rjmp L47
+ 01AE           L46:
+ 01AE                   .dbline 156
+ 01AE           ;               else if(hang==2)
+ 01AE 8E2D              mov R24,R14
+ 01B0 8230              cpi R24,2
+ 01B2 19F4              brne L48
+ 01B4                   .dbline 157
+ 01B4           ;               {
+ 01B4                   .dbline 158
+ 01B4           ;               y=0x80;
+ 01B4 40E8              ldi R20,128
+ 01B6                   .dbline 159
+ 01B6           ;               x=0x90;}
+ 01B6 60E9              ldi R22,144
+ 01B8                   .dbline 159
+ 01B8 08C0              rjmp L49
+ 01BA           L48:
+ 01BA                   .dbline 160
+ 01BA           ;               else if(hang==3)
+ 01BA 8E2D              mov R24,R14
+ 01BC 8330              cpi R24,3
+ 01BE 19F4              brne L50
+ 01C0                   .dbline 161
+ 01C0           ;               {y=0x88;
+ 01C0                   .dbline 161
+ 01C0 48E8              ldi R20,136
+ 01C2                   .dbline 162
+ 01C2           ;                x=0x80;}
+ 01C2 60E8              ldi R22,128
+ 01C4                   .dbline 162
+ 01C4 02C0              rjmp L51
+ 01C6           L50:
+ 01C6                   .dbline 164
+ 01C6           ;               else
+ 01C6           ;               {y=0x88;
+ 01C6                   .dbline 164
+ 01C6 48E8              ldi R20,136
+ 01C8                   .dbline 165
+ 01C8           ;               x=0x90;}
+ 01C8 60E9              ldi R22,144
+ 01CA                   .dbline 165
+ 01CA           L51:
+ 01CA           L49:
+ 01CA           L47:
+ 01CA                   .dbline 167
+ 01CA           ;               
+ 01CA           ;               lcd_write_comm(x);             //设置x 坐标 
+ 01CA 062F              mov R16,R22
+ 01CC 59DF              rcall _lcd_write_comm
+ 01CE                   .dbline 168
+ 01CE           ;               lcd_write_comm(y);             //设置y 坐标
+ 01CE 042F              mov R16,R20
+ 01D0 57DF              rcall _lcd_write_comm
+ 01D2                   .dbline 171
+ 01D2           ; 
+ 01D2           ;               
+ 01D2           ;               for (j=0;j<16;j++)
+ 01D2 AA24              clr R10
+ 01D4 10C0              rjmp L55
+ 01D6           L52:
+ 01D6                   .dbline 172
+ 01D6           ;                 {for (i=0;i<16;i++)
+ 01D6                   .dbline 172
+ 01D6 CC24              clr R12
+ 01D8 03C0              rjmp L59
+ 01DA           L56:
+ 01DA                   .dbline 173
+ 01DA 0FEF              ldi R16,255
+ 01DC 3CDF              rcall _lcd_write_data
+ 01DE           L57:
+ 01DE                   .dbline 172
+ 01DE C394              inc R12
+ 01E0           L59:
+ 01E0                   .dbline 172
+ 01E0 8C2D              mov R24,R12
+ 01E2 8031              cpi R24,16
+ 01E4 D0F3              brlo L56
+ 01E6                   .dbline 175
+ 01E6 862F              mov R24,R22
+ 01E8 8F5F              subi R24,255    ; addi 1
+ 01EA 682F              mov R22,R24
+ 01EC 082F              mov R16,R24
+ 01EE 48DF              rcall _lcd_write_comm
+ 01F0                   .dbline 176
+ 01F0 042F              mov R16,R20
+ 01F2 46DF              rcall _lcd_write_comm
+ 01F4                   .dbline 178
+ 01F4           L53:
+ 01F4                   .dbline 171
+ 01F4 A394              inc R10
+ 01F6           L55:
+ 01F6                   .dbline 171
+ 01F6 8A2D              mov R24,R10
+ 01F8 8031              cpi R24,16
+ 01FA 68F3              brlo L52
+ 01FC                   .dbline -2
+ 01FC           L29:
+ 01FC 00D0              rcall pop_gset5
+ 01FE                   .dbline 0 ; func end
+ 01FE 0895              ret
+ 0200                   .dbsym r y 20 c
+ 0200                   .dbsym r x 22 c
+ 0200                   .dbsym r j 10 c
+ 0200                   .dbsym r i 12 c
+ 0200                   .dbsym r hang 14 c
+ 0200                   .dbend

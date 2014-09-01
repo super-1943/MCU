@@ -1,0 +1,47 @@
+
+#include "msp430x14x1.h"
+const unsigned char table[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77};
+unsigned char buffer[6]={0,1,2,3,4,10};
+void send164(unsigned char a)
+{
+   unsigned char i;
+   for(i=0;i<8;i++)
+   {
+     if(a&0x80)
+     {
+       P5OUT|=0x80;
+     }
+     else
+     {
+       P5OUT&=~0x80;
+     }
+     P5OUT&=~0x40;
+     P5OUT|=0x40;
+     a<<=1;
+   }
+}
+void delay(unsigned int a)
+{
+  while(a--);
+}
+void show(unsigned char *d)
+{
+  unsigned char i;
+  for(i=0;i<6;i++)
+  {
+    send164(~(1<<i));
+    send164(table[d[5-i]]);
+    delay(450);
+  }
+}
+int main( void )
+{
+  // Stop watchdog timer to prevent time out reset
+  WDTCTL = WDTPW + WDTHOLD;
+  P5DIR=0xff;
+  while(1)
+  {
+    show(buffer);
+  }
+  return 0;
+}

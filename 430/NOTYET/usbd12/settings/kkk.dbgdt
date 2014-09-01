@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Project>
+  <Desktop>
+    <Static>
+      <Debug-Log/>
+      <Build>
+        <ColumnWidth0>20</ColumnWidth0>
+        <ColumnWidth1>723</ColumnWidth1>
+        <ColumnWidth2>193</ColumnWidth2>
+        <ColumnWidth3>48</ColumnWidth3>
+      </Build>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>205</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Disassembly>
+        
+        
+      <MixedMode>1</MixedMode><CodeCovShow>0</CodeCovShow></Disassembly>
+    </Static>
+    <Windows>
+      
+      
+      
+    <Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-2948-31904</Identity>
+            <TabName>Debug Log</TabName>
+            <Factory>Debug-Log</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-2425-31914</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd3><Wnd4>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-13696-31908</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>kkk</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd4><Wnd5>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-24444-31911</Identity>
+            <TabName>Disassembly</TabName>
+            <Factory>Disassembly</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd5></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>G:\&#x8D75;&#x6C38;&#x79D1;&#x7684;&#x6587;&#x4eF6;\&#x7B2C;&#x4e8C;&#x5468;\&#x6700;&#x8FD1;&#x5De5;&#x7A0B;\NOTYET\usbd12\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>456</SelStart><SelEnd>456</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>G:\&#x8D75;&#x6C38;&#x79D1;&#x7684;&#x6587;&#x4eF6;\&#x7B2C;&#x4e8C;&#x5468;\&#x6700;&#x8FD1;&#x5De5;&#x7A0B;\NOTYET\usbd12\usb.h</Filename><XPos>0</XPos><YPos>761</YPos><SelStart>17868</SelStart><SelEnd>17868</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-01488570><key>iaridepm.enu1</key></Toolbar-01488570></Sizes></Row0><Row1><Sizes><Toolbar-0157fb38><key>debuggergui.enu1</key></Toolbar-0157fb38></Sizes></Row1><Row2><Sizes><Toolbar-01513e20><key>430fet1</key></Toolbar-01513e20></Sizes></Row2><Row3><Sizes/></Row3><Row4><Sizes/></Row4></Top><Left><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>495</Bottom><Right>279</Right><x>-2</x><y>-2</y><xscreen>281</xscreen><yscreen>238</yscreen><sizeHorzCX>195139</sizeHorzCX><sizeHorzCY>288835</sizeHorzCY><sizeVertCX>195139</sizeVertCX><sizeVertCY>603155</sizeVertCY></Rect></Wnd4></Sizes></Row0></Left><Right><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>495</Bottom><Right>279</Right><x>-2</x><y>-2</y><xscreen>281</xscreen><yscreen>238</yscreen><sizeHorzCX>195139</sizeHorzCX><sizeHorzCY>288835</sizeHorzCY><sizeVertCX>195139</sizeVertCX><sizeVertCY>603155</sizeVertCY></Rect></Wnd5></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>236</Bottom><Right>1442</Right><x>-2</x><y>-2</y><xscreen>1444</xscreen><yscreen>238</yscreen><sizeHorzCX>1002778</sizeHorzCX><sizeHorzCY>288835</sizeHorzCY><sizeVertCX>195139</sizeVertCX><sizeVertCY>288835</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Project>
+
+

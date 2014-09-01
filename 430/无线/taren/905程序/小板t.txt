@@ -1,0 +1,16 @@
+sbit	TX_EN	=P2^0;               //发射使能，高有效
+sbit	TRX_CE	=P2^6;               //TRX_CE发送接收使能  高有效
+sbit	PWR_UP	=P2^1;               //上电     
+sbit	MISO	=P3^6;               //spi输出
+sbit	MOSI	=P2^4;               //spi输入
+sbit	SCK		=P3^7;               //spi时钟
+sbit	CSN		=P2^5;               //spi片选
+
+sbit	AM		=P3^5;               //AM 地址匹配，受到有效地址被置高
+sbit	DR		=P2^3;               //数据准备就绪
+sbit	CD		=P2^2;               //载波检测，检测到频率相同的载波时，置高
+
+sbit    LED1    =P1^0; 
+sbit    LED2    =P1^1;
+sbit    KEY1    =P1^2;
+sbit    KEY2    =P1^3;

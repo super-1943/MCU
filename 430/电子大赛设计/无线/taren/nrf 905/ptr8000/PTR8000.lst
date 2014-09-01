@@ -1,0 +1,1017 @@
+__text_start:
+__start:
+    002A E5CF      LDI	R28,0x5F
+    002B E0D4      LDI	R29,4
+    002C BFCD      OUT	0x3D,R28
+    002D BFDE      OUT	0x3E,R29
+    002E 51C0      SUBI	R28,0x10
+    002F 40D0      SBCI	R29,0
+    0030 EA0A      LDI	R16,0xAA
+    0031 8308      STD	Y+0,R16
+    0032 2400      CLR	R0
+    0033 E6E0      LDI	R30,0x60
+    0034 E0F0      LDI	R31,0
+    0035 E010      LDI	R17,0
+    0036 3AE4      CPI	R30,0xA4
+    0037 07F1      CPC	R31,R17
+    0038 F011      BEQ	0x003B
+    0039 9201      ST	R0,Z+
+    003A CFFB      RJMP	0x0036
+    003B 8300      STD	Z+0,R16
+    003C E5E4      LDI	R30,0x54
+    003D E0F0      LDI	R31,0
+    003E E6A0      LDI	R26,0x60
+    003F E0B0      LDI	R27,0
+    0040 E010      LDI	R17,0
+    0041 35E4      CPI	R30,0x54
+    0042 07F1      CPC	R31,R17
+    0043 F021      BEQ	0x0048
+    0044 95C8      LPM
+    0045 9631      ADIW	R30,1
+    0046 920D      ST	R0,X+
+    0047 CFF9      RJMP	0x0041
+    0048 940E0181  CALL	_main
+_exit:
+    004A CFFF      RJMP	_exit
+_nrf905_Config:
+    004B 940E020B  CALL	push_gset2
+FILE: D:\IccAvr\Pei\ptr8000\nrf905.C
+(0001) #include "config.h"
+(0002) 
+(0003) extern void DelayMs(uchar ms);
+(0004) extern void DelayUs(uint us);
+(0005) 
+(0006) #define SIZE 32
+(0007) 
+(0008) uchar TxBuf[SIZE],RxBuf[SIZE];
+(0009) 
+(0010) /*-------------------------------------------------------------------------------------------
+(0011) nrf905配置寄存器宏定义 author:HotPower
+(0012)         nrf905配置寄存器(10Byte)
+(0013) 工作频率f=(422.4+CH_NO/10)*(1+HFREQ_PLL)MHz
+(0014) -------------------------------------------------------------------------------------------*/
+(0015) #define RX_ADDRESS           0x12345678               //接收有效地址(本方)
+(0016) #define TX_ADDRESS           0x12345678               //发送有效地址(对方)
+(0017) 
+(0018) #define CH_NO_FREQ_422_4MHz  0x000                     //工作频率422.4MHz(433MHz频段最低频率)
+(0019) #define CH_NO_FREQ_422_5MHz  0x001                     //工作频率422.5MHz
+(0020) #define CH_NO_FREQ_425_0MHz  0x01a                     //工作频率425.0MHz
+(0021) #define CH_NO_FREQ_427_5MHz  0x033                     //工作频率427.5MHz
+(0022) 
+(0023) #define CH_NO_FREQ_430_0MHz  0x04c                     //工作频率430.0MHz
+(0024) #define CH_NO_FREQ_433_0MHz  0x06a                     //工作频率433.0MHz(433MHz频段基准频率)
+(0025) #define CH_NO_FREQ_433_1MHz  0x06b                     //工作频率433.1MHz
+(0026) #define CH_NO_FREQ_433_2MHz  0x06c                     //工作频率433.2MHz
+(0027) #define CH_NO_FREQ_434_7MHz  0x07b                     //工作频率434.7MHz
+(0028) #define CH_NO_FREQ_473_5MHz  0x1ff                     //工作频率473.5MHz(433MHz频段最高频率)
+(0029) 
+(0030) #define CH_NO_FREQ_844_8MHz  0x000                     //工作频率844.8MHz(868MHz频段最低频率)
+(0031) 
+(0032) #define CH_NO_FREQ_862_0MHz  0x056                     //工作频率862.0MHz
+(0033) #define CH_NO_FREQ_868_0MHz  0x074                     //工作频率868.0MHz(868MHz频段基准频率)
+(0034) #define CH_NO_FREQ_868_2MHz  0x075                     //工作频率868.2MHz
+(0035) #define CH_NO_FREQ_868_4MHz  0x076                     //工作频率868.4MHz
+(0036) #define CH_NO_FREQ_869_8MHz  0x07d                     //工作频率869.8MHz
+(0037) #define CH_NO_FREQ_895_8MHz  0x0ff                     //工作频率895.8MHz
+(0038) #define CH_NO_FREQ_896_0MHz  0x100                     //工作频率896.0MHz
+(0039) #define CH_NO_FREQ_900_0MHz  0x114                     //工作频率900.0MHz
+(0040) #define CH_NO_FREQ_902_2MHz  0x11f                     //工作频率902.2MHz
+(0041) #define CH_NO_FREQ_902_4MHz  0x120                     //工作频率902.4MHz
+(0042) #define CH_NO_FREQ_915_0MHz  0x15f                     //工作频率915.0MHz(915MHz频段基准频率)
+(0043) #define CH_NO_FREQ_927_8MHz  0x19f                     //工作频率927.8MHz
+(0044) 
+(0045) #define CH_NO_FREQ_947_0MHz  0x1ff                     //工作频率947.0MHz(915MHz频段最高频率)
+(0046) 
+(0047) #define CH_NO_FREQ           CH_NO_FREQ_430_0MHz       //工作频率433.0MHz
+(0048) 
+(0049) 
+(0050) #define CH_NO_BYTE           CH_NO_FREQ & 0xff         //工作频率低8位       Byte0       01101100
+(0051) 
+(0052) #define AUTO_RETRAN          0x20                      //重发数据包          Byte1.5     0
+(0053) #define RX_RED_PWR           0x10                      //接收低功耗模式      Byte1.4     0
+(0054) #define PA_PWR__10dBm        0x00                      //输出功率-10dBm      Byte1.3~2   00
+(0055) #define PA_PWR_2dBm          0x04                      //输出功率+2dBm       Byte1.3~2
+(0056) #define PA_PWR_6dBm          0x08                      //输出功率+6dBm       Byte1.3~2
+(0057) #define PA_PWR_10dBm         0x0c                      //输出功率+10dBm      Byte1.3~2   
+(0058) #define HFREQ_PLL_433MHz     0x00                      //工作在433MHz频段    Byte1.1     0
+(0059) #define HFREQ_PLL_868MHz     0x02                      //工作在868MHz频段    Byte1.1
+(0060) #define HFREQ_PLL_915MHz     0x02                      //工作在915MHz频段    Byte1.1
+(0061) #define CH_NO_BIT8           CH_NO_FREQ >> 8           //工作频率第9位       Byte1.0     0
+(0062) 
+(0063) #define TX_AFW_1BYTE         1 * 16                    //发送地址宽度1字节   Byte2.7~4
+(0064) #define TX_AFW_2BYTE         2 * 16                    //发送地址宽度2字节   Byte2.7~4
+(0065) #define TX_AFW_3BYTE         3 * 16                    //发送地址宽度3字节   Byte2.7~4
+(0066) #define TX_AFW_4BYTE         4 * 16                    //发送地址宽度4字节   Byte2.7~4   100
+(0067) #define RX_AFW_1BYTE         1                         //接收地址宽度1字节   Byte2.3~0
+(0068) #define RX_AFW_2BYTE         2                         //接收地址宽度2字节   Byte2.3~0
+(0069) #define RX_AFW_3BYTE         3                         //接收地址宽度3字节   Byte2.3~0
+(0070) #define RX_AFW_4BYTE         4                         //接收地址宽度4字节   Byte2.3~0   100
+(0071) 
+(0072) #define RX_PW_1BYTE          1                         //接收数据宽度1字节   Byte3.5~0
+(0073) #define RX_PW_32BYTE         32                        //接收数据宽度32字节  Byte3.5~0   00100000
+(0074) #define TX_PW_1BYTE          1                         //发送数据宽度1字节   Byte4.5~0 
+(0075) #define TX_PW_32BYTE         32                        //发送数据宽度32字节  Byte4.5~0   00100000
+(0076) 
+(0077) #define RX_ADDRESS_0         RX_ADDRESS >> 24          //接收有效地址第1字节 Byte5       11100111
+(0078) #define RX_ADDRESS_1         (RX_ADDRESS >> 16) & 0xff //接收有效地址第2字节 Byte6       11100111 
+(0079) #define RX_ADDRESS_2         (RX_ADDRESS >> 8) & 0xff  //接收有效地址第3字节 Byte7       11100111
+(0080) #define RX_ADDRESS_3         RX_ADDRESS & 0xff         //接收有效地址第4字节 Byte8       11100111
+(0081)        
+(0082) #define CRC_MODE_16BIT       0x80                      //CRC16模式           Byte9.7     1
+(0083) #define CRC_MODE_8BIT        0x00                      //CRC8模式            Byte9.7     
+(0084) #define CRC_EN               0x40                      //CRC使能             Byte9.6     1
+(0085) #define CRC16_EN             0xc0                      //CRC16模式使能       Byte9.7~6   11
+(0086) #define CRC8_EN              0x40                      //CRC8模式使能        Byte9.7~6
+(0087) #define XOF_20MHz            0x20                      //晶体振荡器频率20MHz Byte9.5~3
+(0088) #define XOF_16MHz            0x18                      //晶体振荡器频率16MHz Byte9.5~3   100
+(0089) #define XOF_12MHz            0x10                      //晶体振荡器频率12MHz Byte9.5~3
+(0090) #define XOF_8MHz             0x08                      //晶体振荡器频率8MHz  Byte9.5~3
+(0091) #define XOF_4MHz             0x00                      //晶体振荡器频率4MHz  Byte9.5~3
+(0092) #define UP_CLK_EN            0x40                      //输出时钟使能        Byte9.2     1
+(0093) #define UP_CLK_FREQ_500kHz   0x03                      //输出时钟频率500kHz  Byte9.1~0   11
+(0094) #define UP_CLK_FREQ_1MHz     0x02                      //输出时钟频率1MHz    Byte9.1~0
+(0095) #define UP_CLK_FREQ_2MHz     0x01                      //输出时钟频率2MHz    Byte9.1~0
+(0096) #define UP_CLK_FREQ_4MHz     0x00                      //输出时钟频率4MHz    Byte9.1~0
+(0097) 
+(0098) #define UP_CLK_EN_500kHz     0x43                      //输出时钟频率500kHz  Byte9.2~0   111
+(0099) #define UP_CLK_EN_1MHz       0x42                      //输出时钟频率1MHz    Byte9.2~0
+(0100) #define UP_CLK_EN_2MHz       0x41                      //输出时钟频率2MHz    Byte9.2~0
+(0101) #define UP_CLK_EN_4MHz       0x40                      //输出时钟频率4MHz    Byte9.2~0
+(0102) 
+(0103) #define TX_ADDRESS_0         TX_ADDRESS >> 24          //发送有效地址第1字节
+(0104) #define TX_ADDRESS_1         (TX_ADDRESS >> 16) & 0xff //发送有效地址第2字节
+(0105) #define TX_ADDRESS_2         (TX_ADDRESS >> 8) & 0xff  //发送有效地址第3字节
+(0106) #define TX_ADDRESS_3         TX_ADDRESS & 0xff         //发送有效地址第4字节
+(0107) 
+(0108) /*-----------------------------------------------
+(0109)         nrf905命令控制字 author:HotPower
+(0110) ------------------------------------------------*/
+(0111) #define WC        0x00            // Write configuration register command
+(0112) #define RC        0x10            // Read  configuration register command
+(0113) #define WTP       0x20            // Write TX Payload  command
+(0114) #define RTP       0x21            // Read  TX Payload  command
+(0115) #define WTA       0x22            // Write TX Address  command
+(0116) #define RTA       0x23            // Read  TX Address  command
+(0117) #define RRP       0x24            // Read  RX Payload  command
+(0118)  
+(0119) 
+(0120) //配置nRF905
+(0121) void nrf905_Config(void)
+(0122) {
+(0123)   CLR(PORTB,CSN);                   // Spi 片选开
+    004D 98C4      CBI	0x18,4
+(0124)   nrf905_SpiRW(WC);                // Write config command
+    004E 2700      CLR	R16
+    004F 2711      CLR	R17
+    0050 D02A      RCALL	_nrf905_SpiRW
+(0125)   nrf905_SpiRW(CH_NO_BYTE);                      //中心频率低8位
+    0051 E40C      LDI	R16,0x4C
+    0052 E010      LDI	R17,0
+    0053 D027      RCALL	_nrf905_SpiRW
+(0126)   nrf905_SpiRW(PA_PWR_10dBm | HFREQ_PLL_433MHz); //发射+10dBm,发射频率433MHz,中心频率第9位=0
+    0054 E00C      LDI	R16,0xC
+    0055 E010      LDI	R17,0
+    0056 D024      RCALL	_nrf905_SpiRW
+(0127)   nrf905_SpiRW(TX_AFW_4BYTE | RX_AFW_4BYTE);     //接收地址宽度4字节,发送地址宽度4字节
+    0057 E404      LDI	R16,0x44
+    0058 E010      LDI	R17,0
+    0059 D021      RCALL	_nrf905_SpiRW
+(0128)   nrf905_SpiRW(RX_PW_32BYTE);                    //接收数据宽度32字节
+    005A E200      LDI	R16,0x20
+    005B E010      LDI	R17,0
+    005C D01E      RCALL	_nrf905_SpiRW
+(0129)   nrf905_SpiRW(TX_PW_32BYTE);                    //发送数据宽度32字节
+    005D E200      LDI	R16,0x20
+    005E E010      LDI	R17,0
+    005F D01B      RCALL	_nrf905_SpiRW
+(0130)   nrf905_SpiRW(RX_ADDRESS_0);                    //接收有效地址第1字节
+    0060 E102      LDI	R16,0x12
+    0061 E010      LDI	R17,0
+    0062 E020      LDI	R18,0
+    0063 E030      LDI	R19,0
+    0064 D016      RCALL	_nrf905_SpiRW
+(0131)   nrf905_SpiRW(RX_ADDRESS_1);                    //接收有效地址第2字节
+    0065 E304      LDI	R16,0x34
+    0066 E010      LDI	R17,0
+    0067 E020      LDI	R18,0
+    0068 E030      LDI	R19,0
+    0069 D011      RCALL	_nrf905_SpiRW
+(0132)   nrf905_SpiRW(RX_ADDRESS_2);                    //接收有效地址第3字节
+    006A E506      LDI	R16,0x56
+    006B E010      LDI	R17,0
+    006C E020      LDI	R18,0
+    006D E030      LDI	R19,0
+    006E D00C      RCALL	_nrf905_SpiRW
+(0133)   nrf905_SpiRW(RX_ADDRESS_3);                    //接收有效地址第4字节
+    006F E708      LDI	R16,0x78
+    0070 E010      LDI	R17,0
+    0071 E020      LDI	R18,0
+    0072 E030      LDI	R19,0
+    0073 D007      RCALL	_nrf905_SpiRW
+(0134)   nrf905_SpiRW(CRC16_EN | XOF_16MHz);            //CRC16模式使能,晶体振荡器频率16MHz
+    0074 ED08      LDI	R16,0xD8
+    0075 E010      LDI	R17,0
+    0076 D004      RCALL	_nrf905_SpiRW
+(0135)   SET(PORTB,CSN);                 // Disable Spi
+    0077 9AC4      SBI	0x18,4
+    0078 940E0202  CALL	pop_gset2
+    007A 9508      RET
+_nrf905_SpiRW:
+  temp                 --> R20
+  val                  --> R16
+    007B 940E020D  CALL	push_gset1
+(0136) }
+(0137) 
+(0138) uchar nrf905_SpiRW(uchar val) 
+(0139) {uchar temp;
+(0140) 
+(0141)     SPDR=val;
+    007D B90F      OUT	0x0F,R16
+(0142) 	while ((SPSR&(1<<SPIF))==0);
+    007E 9B77      SBIS	0x0E,7
+    007F CFFE      RJMP	0x007E
+(0143) 	temp=SPDR;
+    0080 B14F      IN	R20,0x0F
+(0144) 	return temp;
+    0081 2F04      MOV	R16,R20
+    0082 940E0210  CALL	pop_gset1
+    0084 9508      RET
+(0145) }
+(0146) 
+(0147) //PwrDown->StandBy
+(0148) void nrf905_StandBy()
+(0149) {
+(0150)    SET(PORTB,PWR);
+_nrf905_StandBy:
+    0085 9AC0      SBI	0x18,0
+(0151)    CLR(PORTB,TRXCE);
+    0086 98C1      CBI	0x18,1
+(0152)    CLR(PORTB,TX_EN);
+    0087 98C2      CBI	0x18,2
+    0088 9508      RET
+(0153) }
+(0154) 
+(0155) //->PwrDown
+(0156) void nrf905_Off()
+(0157) {
+(0158)   CLR(PORTB,PWR);
+_nrf905_Off:
+    0089 98C0      CBI	0x18,0
+    008A 9508      RET
+(0159) }
+(0160) 
+(0161) //->ShockBurst Send
+(0162) void nrf905_TxOn()
+(0163) {
+(0164)   SET(PORTB,PWR);
+_nrf905_TxOn:
+    008B 9AC0      SBI	0x18,0
+(0165)   SET(PORTB,TX_EN);
+    008C 9AC2      SBI	0x18,2
+(0166)   CLR(PORTB,TRXCE);
+    008D 98C1      CBI	0x18,1
+    008E 9508      RET
+(0167) }
+(0168) 
+(0169) //->ShockBurst Send
+(0170) void nrf905_TxSend()
+(0171) {
+(0172)   SET(PORTB,TRXCE);
+_nrf905_TxSend:
+    008F 9AC1      SBI	0x18,1
+(0173)   DelayUs(20);//>10us
+    0090 E104      LDI	R16,0x14
+    0091 E010      LDI	R17,0
+    0092 940E01EF  CALL	_DelayUs
+(0174)   CLR(PORTB,TRXCE);//只发送一次
+    0094 98C1      CBI	0x18,1
+    0095 9508      RET
+(0175) }
+(0176) 
+(0177) //->ShockBurst Recv
+(0178) void nrf905_RxOn()
+(0179) {
+(0180)   SET(PORTB,PWR);
+_nrf905_RxOn:
+    0096 9AC0      SBI	0x18,0
+(0181)   CLR(PORTB,TX_EN);//maybe first
+    0097 98C2      CBI	0x18,2
+(0182)   SET(PORTB,TRXCE);
+    0098 9AC1      SBI	0x18,1
+    0099 9508      RET
+(0183) }
+(0184) 
+(0185) //初始化nrf905
+(0186) void nrf905_Init()
+(0187) {
+(0188)    nrf905_StandBy();
+_nrf905_Init:
+    009A DFEA      RCALL	_nrf905_StandBy
+(0189)    DelayMs(10);//!!!must >3ms
+    009B E00A      LDI	R16,0xA
+    009C 940E01E1  CALL	_DelayMs
+(0190)    nrf905_Config();
+    009E DFAC      RCALL	_nrf905_Config
+(0191)    
+(0192)    nrf905_SpiTest();//test...
+    009F D002      RCALL	_nrf905_SpiTest
+(0193)    nrf905_RxOn();
+    00A0 DFF5      RCALL	_nrf905_RxOn
+    00A1 9508      RET
+_nrf905_SpiTest:
+  i                    --> R20
+    00A2 940E020D  CALL	push_gset1
+(0194) }
+(0195) 
+(0196) //测试：通过读配置，判断SPI操作是否正确
+(0197) void nrf905_SpiTest()
+(0198) {uchar i;
+(0199)   CLR(PORTB,CSN);                   
+    00A4 98C4      CBI	0x18,4
+(0200)   nrf905_SpiRW(RC);  //读配置
+    00A5 E100      LDI	R16,0x10
+    00A6 DFD4      RCALL	_nrf905_SpiRW
+(0201)   for (i=0;i<10;i++)
+    00A7 2744      CLR	R20
+    00A8 C00A      RJMP	0x00B3
+(0202)   { 
+(0203)     RxBuf[i]=  nrf905_SpiRW(0);//read from nrf905
+    00A9 2700      CLR	R16
+    00AA DFD0      RCALL	_nrf905_SpiRW
+    00AB E680      LDI	R24,0x60
+    00AC E090      LDI	R25,0
+    00AD 2FE4      MOV	R30,R20
+    00AE 27FF      CLR	R31
+    00AF 0FE8      ADD	R30,R24
+    00B0 1FF9      ADC	R31,R25
+    00B1 8300      STD	Z+0,R16
+    00B2 9543      INC	R20
+    00B3 304A      CPI	R20,0xA
+    00B4 F3A0      BCS	0x00A9
+(0204)   }
+(0205)   SET(PORTB,CSN);  
+    00B5 9AC4      SBI	0x18,4
+    00B6 940E0210  CALL	pop_gset1
+    00B8 9508      RET
+(0206) }
+(0207) 
+(0208) //写Tx地址
+(0209) void nrf905_SetTxAddr()
+(0210) {
+(0211)   CLR(PORTB,CSN);                   
+_nrf905_SetTxAddr:
+    00B9 98C4      CBI	0x18,4
+(0212)   nrf905_SpiRW(WTA);  //写Tx地址  
+    00BA E202      LDI	R16,0x22
+    00BB DFBF      RCALL	_nrf905_SpiRW
+(0213)   nrf905_SpiRW(TX_ADDRESS_0);
+    00BC E102      LDI	R16,0x12
+    00BD DFBD      RCALL	_nrf905_SpiRW
+(0214)   nrf905_SpiRW(TX_ADDRESS_1);
+    00BE E304      LDI	R16,0x34
+    00BF DFBB      RCALL	_nrf905_SpiRW
+(0215)   nrf905_SpiRW(TX_ADDRESS_2);
+    00C0 E506      LDI	R16,0x56
+    00C1 DFB9      RCALL	_nrf905_SpiRW
+(0216)   nrf905_SpiRW(TX_ADDRESS_3);
+    00C2 E708      LDI	R16,0x78
+    00C3 DFB7      RCALL	_nrf905_SpiRW
+(0217)   SET(PORTB,CSN);  
+    00C4 9AC4      SBI	0x18,4
+    00C5 9508      RET
+_nrf905_SetData:
+  i                    --> R20
+    00C6 940E020D  CALL	push_gset1
+(0218) }
+(0219) 
+(0220) //写Tx数据
+(0221) void nrf905_SetData()
+(0222) {uchar i;
+(0223) 
+(0224)   CLR(PORTB,CSN);                   
+    00C8 98C4      CBI	0x18,4
+(0225)   nrf905_SpiRW(WTP);  //写TxPayload 
+    00C9 E200      LDI	R16,0x20
+    00CA DFB0      RCALL	_nrf905_SpiRW
+(0226)   for (i=0;i<SIZE;i++)
+    00CB 2744      CLR	R20
+    00CC C009      RJMP	0x00D6
+(0227)   { 
+(0228)     nrf905_SpiRW(TxBuf[i]);
+    00CD E880      LDI	R24,0x80
+    00CE E090      LDI	R25,0
+    00CF 2FE4      MOV	R30,R20
+    00D0 27FF      CLR	R31
+    00D1 0FE8      ADD	R30,R24
+    00D2 1FF9      ADC	R31,R25
+    00D3 8100      LDD	R16,Z+0
+    00D4 DFA6      RCALL	_nrf905_SpiRW
+    00D5 9543      INC	R20
+    00D6 3240      CPI	R20,0x20
+    00D7 F3A8      BCS	0x00CD
+(0229)   }
+(0230)   
+(0231)   SET(PORTB,CSN);  
+    00D8 9AC4      SBI	0x18,4
+    00D9 940E0210  CALL	pop_gset1
+    00DB 9508      RET
+(0232) }
+(0233) 
+(0234) //等待发送结束
+(0235) void nrf905_WaitSended()
+(0236) {
+(0237)    while ((PIND&(1<<DR))==0);
+_nrf905_WaitSended:
+    00DC 9B84      SBIS	0x10,4
+    00DD CFFE      RJMP	_nrf905_WaitSended
+    00DE 9508      RET
+(0238) }
+(0239) 
+(0240) //发送TxBuf中的数据
+(0241) void nrf905_SendData()
+(0242) {
+(0243)    nrf905_TxOn();//切换到发送模式
+_nrf905_SendData:
+    00DF DFAB      RCALL	_nrf905_TxOn
+(0244)    nrf905_SetTxAddr();//写发送地址
+    00E0 DFD8      RCALL	_nrf905_SetTxAddr
+(0245)    nrf905_SetData();//写数据
+    00E1 DFE4      RCALL	_nrf905_SetData
+(0246)    nrf905_TxSend();//启动发送
+    00E2 DFAC      RCALL	_nrf905_TxSend
+(0247)    nrf905_WaitSended();//等待发送结束
+    00E3 DFF8      RCALL	_nrf905_WaitSended
+    00E4 9508      RET
+(0248)    
+(0249) }
+(0250) 
+(0251) //测试直接重新发送上次写入的数据
+(0252) void nrf905_SendAgain()
+(0253) {
+(0254)    nrf905_TxOn();
+_nrf905_SendAgain:
+    00E5 DFA5      RCALL	_nrf905_TxOn
+(0255)    nrf905_TxSend();
+    00E6 DFA8      RCALL	_nrf905_TxSend
+(0256)    nrf905_WaitSended();
+    00E7 DFF4      RCALL	_nrf905_WaitSended
+    00E8 9508      RET
+_nrf905_ReadData:
+  i                    --> R20
+    00E9 940E020D  CALL	push_gset1
+(0257)    
+(0258) }
+(0259) 
+(0260) //读出接收到的数据
+(0261) void nrf905_ReadData()
+(0262) {
+(0263)   uchar i;
+(0264) 
+(0265)   CLR(PORTB,CSN);                   
+    00EB 98C4      CBI	0x18,4
+(0266)   nrf905_SpiRW(RRP);  //读RxPayload 
+    00EC E204      LDI	R16,0x24
+    00ED DF8D      RCALL	_nrf905_SpiRW
+(0267)   for (i=0;i<SIZE;i++)
+    00EE 2744      CLR	R20
+    00EF C00A      RJMP	0x00FA
+(0268)   { 
+(0269)     RxBuf[i]=nrf905_SpiRW(0);//read...
+    00F0 2700      CLR	R16
+    00F1 DF89      RCALL	_nrf905_SpiRW
+    00F2 E680      LDI	R24,0x60
+    00F3 E090      LDI	R25,0
+    00F4 2FE4      MOV	R30,R20
+    00F5 27FF      CLR	R31
+    00F6 0FE8      ADD	R30,R24
+    00F7 1FF9      ADC	R31,R25
+    00F8 8300      STD	Z+0,R16
+    00F9 9543      INC	R20
+    00FA 3240      CPI	R20,0x20
+    00FB F3A0      BCS	0x00F0
+(0270)   }
+(0271)   
+(0272)   SET(PORTB,CSN);  
+    00FC 9AC4      SBI	0x18,4
+    00FD 940E0210  CALL	pop_gset1
+    00FF 9508      RET
+FILE: D:\IccAvr\Pei\ptr8000\PTR8000.C
+(0001) //ICC-AVR application builder : 2006-4-4 11:28:26
+(0002) // Target : M16 PTR8000模块简单测试
+(0003) // Crystal: 11.059Mhz
+(0004) 
+(0005) //最关键的是SPI的初始化，MSB首位和极性方式00，极性方式错误，数据则不正确
+(0006) 
+(0007) #include <iom16v.h>
+(0008) #include <macros.h>
+(0009) 
+(0010) #include "config.h"
+(0011) #include "nrf905.h"
+(0012) 
+(0013) #define MASTER  //编译控制是主机还是从机
+(0014) 
+(0015) #define T0N 25
+(0016) 
+(0017) //32字节数据包发送时间 
+(0018) //=650us_StartUp+200us_Preamble+(4+32+2)Byts*8Bit/50000bps*1000000us=6.6ms
+(0019) #define RFTN 10  //发送测试间隔 10*20ms
+(0020) 
+(0021) bit bTimer,bRfSend;
+(0022) uchar T0Cnt,RfCnt;
+(0023) 
+(0024) void port_init(void)
+(0025) {
+(0026)  PORTA = 0x08;
+_port_init:
+    0100 E088      LDI	R24,0x8
+    0101 BB8B      OUT	0x1B,R24
+(0027)  DDRA  = 0x37;
+    0102 E387      LDI	R24,0x37
+    0103 BB8A      OUT	0x1A,R24
+(0028)  PORTB = 0x50;
+    0104 E580      LDI	R24,0x50
+    0105 BB88      OUT	0x18,R24
+(0029)  DDRB  = 0xBF;
+    0106 EB8F      LDI	R24,0xBF
+    0107 BB87      OUT	0x17,R24
+(0030)  PORTC = 0x00; //m103 output only
+    0108 2422      CLR	R2
+    0109 BA25      OUT	0x15,R2
+(0031)  DDRC  = 0x00;
+    010A BA24      OUT	0x14,R2
+(0032)  PORTD = 0x1C;
+    010B E18C      LDI	R24,0x1C
+    010C BB82      OUT	0x12,R24
+(0033)  DDRD  = 0x80;
+    010D E880      LDI	R24,0x80
+    010E BB81      OUT	0x11,R24
+    010F 9508      RET
+(0034) }
+(0035) 
+(0036) //TIMER0 initialize - prescale:1024
+(0037) // WGM: Normal
+(0038) // desired value: 20mSec
+(0039) // actual value: 19.908mSec (0.5%)
+(0040) void timer0_init(void)
+(0041) {
+(0042)  TCCR0 = 0x00; //stop
+_timer0_init:
+    0110 2422      CLR	R2
+    0111 BE23      OUT	0x33,R2
+(0043)  TCNT0 = 0x29; //set count
+    0112 E289      LDI	R24,0x29
+    0113 BF82      OUT	0x32,R24
+(0044)  OCR0  = 0xD7;  //set compare
+    0114 ED87      LDI	R24,0xD7
+    0115 BF8C      OUT	0x3C,R24
+(0045)  TCCR0 = 0x05; //start timer
+    0116 E085      LDI	R24,5
+    0117 BF83      OUT	0x33,R24
+    0118 9508      RET
+_timer0_ovf_isr:
+    0119 922A      ST	R2,-Y
+    011A 938A      ST	R24,-Y
+    011B B62F      IN	R2,0x3F
+    011C 922A      ST	R2,-Y
+(0046) }
+(0047) 
+(0048) #pragma interrupt_handler timer0_ovf_isr:10
+(0049) void timer0_ovf_isr(void)
+(0050) {
+(0051)  TCNT0 = 0x29; //reload counter value
+    011D E289      LDI	R24,0x29
+    011E BF82      OUT	0x32,R24
+(0052)  
+(0053)  if (--T0Cnt==0)
+    011F 918000A1  LDS	R24,T0Cnt
+    0121 5081      SUBI	R24,1
+    0122 2E28      MOV	R2,R24
+    0123 922000A1  STS	T0Cnt,R2
+    0125 2388      TST	R24
+    0126 F431      BNE	0x012D
+(0054)    {T0Cnt=T0N;
+    0127 E189      LDI	R24,0x19
+    0128 938000A1  STS	T0Cnt,R24
+(0055)     bTimer=1;
+    012A E081      LDI	R24,1
+    012B 938000A3  STS	bTimer,R24
+(0056)     }
+(0057) if (--RfCnt==0)
+    012D 918000A0  LDS	R24,RfCnt
+    012F 5081      SUBI	R24,1
+    0130 2E28      MOV	R2,R24
+    0131 922000A0  STS	RfCnt,R2
+    0133 2388      TST	R24
+    0134 F431      BNE	0x013B
+(0058)    {RfCnt=RFTN;
+    0135 E08A      LDI	R24,0xA
+    0136 938000A0  STS	RfCnt,R24
+(0059)     bRfSend=1;
+    0138 E081      LDI	R24,1
+    0139 938000A2  STS	bRfSend,R24
+(0060)     }
+    013B 9029      LD	R2,Y+
+    013C BE2F      OUT	0x3F,R2
+    013D 9189      LD	R24,Y+
+    013E 9029      LD	R2,Y+
+    013F 9518      RETI
+(0061) }
+(0062) 
+(0063) //TIMER1 initialize - prescale:8
+(0064) // WGM: 0) Normal, TOP=0xFFFF
+(0065) // desired value: 10mSec
+(0066) // actual value:  9.999mSec (0.0%)
+(0067) void timer1_init(void)
+(0068) {
+(0069)  TCCR1B = 0x00; //stop
+_timer1_init:
+    0140 2422      CLR	R2
+    0141 BC2E      OUT	0x2E,R2
+(0070)  TCNT1H = 0xCA; //setup
+    0142 EC8A      LDI	R24,0xCA
+    0143 BD8D      OUT	0x2D,R24
+(0071)  TCNT1L = 0x01;
+    0144 E081      LDI	R24,1
+    0145 BD8C      OUT	0x2C,R24
+(0072)  OCR1AH = 0x35;
+    0146 E385      LDI	R24,0x35
+    0147 BD8B      OUT	0x2B,R24
+(0073)  OCR1AL = 0xFF;
+    0148 EF8F      LDI	R24,0xFF
+    0149 BD8A      OUT	0x2A,R24
+(0074)  OCR1BH = 0x35;
+    014A E385      LDI	R24,0x35
+    014B BD89      OUT	0x29,R24
+(0075)  OCR1BL = 0xFF;
+    014C EF8F      LDI	R24,0xFF
+    014D BD88      OUT	0x28,R24
+(0076)  ICR1H  = 0x35;
+    014E E385      LDI	R24,0x35
+    014F BD87      OUT	0x27,R24
+(0077)  ICR1L  = 0xFF;
+    0150 EF8F      LDI	R24,0xFF
+    0151 BD86      OUT	0x26,R24
+(0078)  TCCR1A = 0x00;
+    0152 BC2F      OUT	0x2F,R2
+(0079)  TCCR1B = 0x02; //start Timer
+    0153 E082      LDI	R24,2
+    0154 BD8E      OUT	0x2E,R24
+    0155 9508      RET
+_timer1_ovf_isr:
+    0156 938A      ST	R24,-Y
+    0157 B78F      IN	R24,0x3F
+    0158 938A      ST	R24,-Y
+(0080) }
+(0081) 
+(0082) #pragma interrupt_handler timer1_ovf_isr:9
+(0083) void timer1_ovf_isr(void)
+(0084) {
+(0085)  //TIMER1 has overflowed
+(0086)  TCNT1H = 0xCA; //reload counter high value
+    0159 EC8A      LDI	R24,0xCA
+    015A BD8D      OUT	0x2D,R24
+(0087)  TCNT1L = 0x01; //reload counter low value
+    015B E081      LDI	R24,1
+    015C BD8C      OUT	0x2C,R24
+    015D 9189      LD	R24,Y+
+    015E BF8F      OUT	0x3F,R24
+    015F 9189      LD	R24,Y+
+    0160 9518      RETI
+(0088) }
+(0089) 
+(0090) //SPI initialize
+(0091) void spi_init(void)
+(0092) {uchar temp;
+(0093) 
+(0094)  //SPCR = 0xD1; //SPI中断允许,SPI允许，主机模式，MSB，极性方式00，1/16系统时钟速率
+(0095)  SPCR = 0x51; //不使用SPI中断,其它同上
+_spi_init:
+  temp                 --> R16
+    0161 E581      LDI	R24,0x51
+    0162 B98D      OUT	0x0D,R24
+(0096)  SPSR = 0x00; //setup SPI
+    0163 2422      CLR	R2
+    0164 B82E      OUT	0x0E,R2
+(0097)  
+(0098)  temp = SPSR; //!!!
+    0165 B10E      IN	R16,0x0E
+(0099)  temp = SPDR; //清空SPI，和中断标志，使SPI空闲    
+    0166 B10F      IN	R16,0x0F
+    0167 9508      RET
+(0100) }
+(0101) 
+(0102) #pragma interrupt_handler spi_stc_isr:11
+(0103) void spi_stc_isr(void)
+(0104) {uchar data;
+_spi_stc_isr:
+  data                 --> Y+1
+    0168 9518      RETI
+(0105)  //byte in SPDR has been sent/received
+(0106)  //data=SPDR;
+(0107)  //SPDR=0x66;
+(0108) }
+(0109) 
+(0110) //UART0 initialize
+(0111) // desired baud rate: 19200
+(0112) // actual: baud rate:19200 (0.0%)
+(0113) // char size: 5 bits
+(0114) // parity: Disabled
+(0115) void uart0_init(void)
+(0116) {
+(0117)  UCSRB = 0x00; //disable while setting baud rate
+_uart0_init:
+    0169 2422      CLR	R2
+    016A B82A      OUT	0x0A,R2
+(0118)  UCSRA = 0x00;
+    016B B82B      OUT	0x0B,R2
+(0119)  UCSRC = BIT(URSEL) | 0x00;
+    016C E880      LDI	R24,0x80
+    016D BD80      OUT	0x20,R24
+(0120)  UBRRL = 0x23; //set baud rate lo
+    016E E283      LDI	R24,0x23
+    016F B989      OUT	0x09,R24
+(0121)  UBRRH = 0x00; //set baud rate hi
+    0170 BC20      OUT	0x20,R2
+(0122)  UCSRB = 0x18;
+    0171 E188      LDI	R24,0x18
+    0172 B98A      OUT	0x0A,R24
+    0173 9508      RET
+(0123) }
+(0124) 
+(0125) //call this routine to initialize all peripherals
+(0126) void init_devices(void)
+(0127) {
+(0128)  //stop errant interrupts until set up
+(0129)  CLI(); //disable all interrupts
+_init_devices:
+    0174 94F8      BCLR	7
+(0130)  port_init();
+    0175 DF8A      RCALL	_port_init
+(0131)  timer0_init();
+    0176 DF99      RCALL	_timer0_init
+(0132)  timer1_init();
+    0177 DFC8      RCALL	_timer1_init
+(0133)  spi_init();
+    0178 DFE8      RCALL	_spi_init
+(0134)  uart0_init();
+    0179 DFEF      RCALL	_uart0_init
+(0135) 
+(0136)  MCUCR = 0x00;
+    017A 2422      CLR	R2
+    017B BE25      OUT	0x35,R2
+(0137)  GICR  = 0x00;
+    017C BE2B      OUT	0x3B,R2
+(0138)  TIMSK = 0x05; //timer interrupt sources
+    017D E085      LDI	R24,5
+    017E BF89      OUT	0x39,R24
+(0139)  SEI(); //re-enable interrupts
+    017F 9478      BSET	7
+    0180 9508      RET
+(0140)  //all peripherals are now initialized
+(0141) }
+(0142) 
+(0143) void main()
+(0144) {
+(0145)    init_devices();
+_main:
+    0181 DFF2      RCALL	_init_devices
+(0146)    SystemIni();
+    0182 D057      RCALL	_SystemIni
+(0147)    nrf905_Init();
+    0183 940E009A  CALL	_nrf905_Init
+    0185 C00E      RJMP	0x0194
+(0148) 
+(0149)    while (1)
+(0150)    {  
+(0151)       if (bTimer) TimerFunc();
+    0186 902000A3  LDS	R2,bTimer
+    0188 2022      TST	R2
+    0189 F009      BEQ	0x018B
+    018A D044      RCALL	_TimerFunc
+(0152) 	  #ifdef MASTER
+(0153) 	    if (bRfSend)
+    018B 902000A2  LDS	R2,bRfSend
+    018D 2022      TST	R2
+    018E F021      BEQ	0x0193
+(0154) 		{ bRfSend=0;
+    018F 2422      CLR	R2
+    0190 922000A2  STS	bRfSend,R2
+(0155) 		  RfSendProc();//发送测试
+    0192 D025      RCALL	_RfSendProc
+(0156) 		}
+(0157) 	  #endif
+(0158) 	  
+(0159) 	  RfRecvProc();//接收处理
+    0193 D002      RCALL	_RfRecvProc
+    0194 CFF1      RJMP	0x0186
+(0160)    };
+    0195 9508      RET
+_RfRecvProc:
+  i                    --> R20
+    0196 940E020D  CALL	push_gset1
+(0161) }
+(0162) 
+(0163) //接收处理
+(0164) void RfRecvProc()
+(0165) {uchar i;
+(0166) 
+(0167)    //if ((PIND&(1<<AM))==0) return;//一般先AM=1指示地址匹配对
+(0168)    
+(0169)    if ((PIND&(1<<DR))==0) return;//DR=1时表示数据接收对而且Crc正确
+    0198 9984      SBIC	0x10,4
+    0199 C001      RJMP	0x019B
+    019A C01A      RJMP	0x01B5
+(0170)    
+(0171)    //已经接收到数据
+(0172)    nrf905_ReadData();//读出...
+    019B 940E00E9  CALL	_nrf905_ReadData
+(0173)    for (i=0;i<32;i++)
+    019D 2744      CLR	R20
+    019E C00D      RJMP	0x01AC
+(0174)    { if (RxBuf[i]!=(i+i)) 
+    019F 2E24      MOV	R2,R20
+    01A0 0E24      ADD	R2,R20
+    01A1 E680      LDI	R24,0x60
+    01A2 E090      LDI	R25,0
+    01A3 2FE4      MOV	R30,R20
+    01A4 27FF      CLR	R31
+    01A5 0FE8      ADD	R30,R24
+    01A6 1FF9      ADC	R31,R25
+    01A7 8030      LDD	R3,Z+0
+    01A8 1432      CP	R3,R2
+    01A9 F009      BEQ	0x01AB
+(0175)         return;
+    01AA C00A      RJMP	0x01B5
+    01AB 9543      INC	R20
+    01AC 3240      CPI	R20,0x20
+    01AD F388      BCS	0x019F
+(0176)    }
+(0177)    
+(0178)    //数据接收正确...灯指示
+(0179)    CPL(PORTD,LED);
+    01AE E880      LDI	R24,0x80
+    01AF E090      LDI	R25,0
+    01B0 B222      IN	R2,0x12
+    01B1 2433      CLR	R3
+    01B2 2628      EOR	R2,R24
+    01B3 2639      EOR	R3,R25
+    01B4 BA22      OUT	0x12,R2
+    01B5 940E0210  CALL	pop_gset1
+    01B7 9508      RET
+_RfSendProc:
+  i                    --> R20
+    01B8 940E020D  CALL	push_gset1
+(0180)    
+(0181)    //从机回送数据包,这样双方都能指示是否收到有效数据包
+(0182)    #ifndef MASTER
+(0183)      RfSendProc();
+(0184)    #endif
+(0185) }
+(0186) 
+(0187) //发送测试
+(0188) void RfSendProc()
+(0189) {uchar i;
+(0190)    for (i=0;i<32;i++) TxBuf[i]=i+i;
+    01BA 2744      CLR	R20
+    01BB C00A      RJMP	0x01C6
+    01BC 2E24      MOV	R2,R20
+    01BD 0E24      ADD	R2,R20
+    01BE E880      LDI	R24,0x80
+    01BF E090      LDI	R25,0
+    01C0 2FE4      MOV	R30,R20
+    01C1 27FF      CLR	R31
+    01C2 0FE8      ADD	R30,R24
+    01C3 1FF9      ADC	R31,R25
+    01C4 8220      STD	Z+0,R2
+    01C5 9543      INC	R20
+    01C6 3240      CPI	R20,0x20
+    01C7 F3A0      BCS	0x01BC
+(0191)    nrf905_SendData();//发送测试数据
+    01C8 940E00DF  CALL	_nrf905_SendData
+(0192)    nrf905_RxOn();//重新回到接收状态
+    01CA 940E0096  CALL	_nrf905_RxOn
+    01CC 940E0210  CALL	pop_gset1
+    01CE 9508      RET
+(0193) }
+(0194) 
+(0195) void TimerFunc()
+(0196) {
+(0197)    bTimer=0;
+_TimerFunc:
+    01CF 2422      CLR	R2
+    01D0 922000A3  STS	bTimer,R2
+(0198)    //WDR();//clear WDT
+(0199)    
+(0200)    CPL(PORTD,LED);
+    01D2 E880      LDI	R24,0x80
+    01D3 E090      LDI	R25,0
+    01D4 B222      IN	R2,0x12
+    01D5 2433      CLR	R3
+    01D6 2628      EOR	R2,R24
+    01D7 2639      EOR	R3,R25
+    01D8 BA22      OUT	0x12,R2
+    01D9 9508      RET
+(0201)    //SPDR=66;
+(0202) }
+(0203) 
+(0204) void SystemIni()
+(0205) {
+(0206)   T0Cnt=T0N;
+_SystemIni:
+    01DA E189      LDI	R24,0x19
+    01DB 938000A1  STS	T0Cnt,R24
+(0207)   RfCnt=RFTN;
+    01DD E08A      LDI	R24,0xA
+    01DE 938000A0  STS	RfCnt,R24
+    01E0 9508      RET
+_DelayMs:
+  i                    --> R20
+  ms                   --> R22
+    01E1 940E020B  CALL	push_gset2
+    01E3 2F60      MOV	R22,R16
+(0208) }
+(0209) 
+(0210) void DelayMs(uchar ms)
+(0211) {char i;
+(0212) for (i=0;i<ms;i++)
+    01E4 2744      CLR	R20
+    01E5 C004      RJMP	0x01EA
+(0213)   {DelayUs(1000);
+    01E6 EE08      LDI	R16,0xE8
+    01E7 E013      LDI	R17,3
+    01E8 D006      RCALL	_DelayUs
+    01E9 9543      INC	R20
+    01EA 1746      CP	R20,R22
+    01EB F3D0      BCS	0x01E6
+(0214)   }
+(0215)   return;
+    01EC 940E0202  CALL	pop_gset2
+    01EE 9508      RET
+_DelayUs:
+  i                    --> R20
+  us                   --> R16
+    01EF 940E020D  CALL	push_gset1
+(0216) }
+(0217) 
+(0218) void DelayUs(uint us)
+(0219) {uint i;
+(0220)   for (i=0;i<us;i++)
+    01F1 2744      CLR	R20
+    01F2 2755      CLR	R21
+    01F3 C008      RJMP	0x01FC
+(0221)   {NOP();NOP();NOP();NOP();NOP();NOP();
+FILE: <library>
+    01F4 0000      NOP
+    01F5 0000      NOP
+    01F6 0000      NOP
+    01F7 0000      NOP
+    01F8 0000      NOP
+    01F9 0000      NOP
+    01FA 5F4F      SUBI	R20,0xFF
+    01FB 4F5F      SBCI	R21,0xFF
+    01FC 1740      CP	R20,R16
+    01FD 0751      CPC	R21,R17
+    01FE F3A8      BCS	0x01F4
+    01FF 940E0210  CALL	pop_gset1
+    0201 9508      RET
+pop_gset2:
+    0202 E0E2      LDI	R30,2
+    0203 940C0211  JMP	pop
+push_gset5:
+    0205 92FA      ST	R15,-Y
+    0206 92EA      ST	R14,-Y
+push_gset4:
+    0207 92DA      ST	R13,-Y
+    0208 92CA      ST	R12,-Y
+push_gset3:
+    0209 92BA      ST	R11,-Y
+    020A 92AA      ST	R10,-Y
+push_gset2:
+    020B 937A      ST	R23,-Y
+    020C 936A      ST	R22,-Y
+push_gset1:
+    020D 935A      ST	R21,-Y
+    020E 934A      ST	R20,-Y
+    020F 9508      RET
+pop_gset1:
+    0210 E0E1      LDI	R30,1
+pop:
+    0211 9149      LD	R20,Y+
+    0212 9159      LD	R21,Y+
+    0213 FDE0      SBRC	R30,0
+    0214 9508      RET
+    0215 9169      LD	R22,Y+
+    0216 9179      LD	R23,Y+
+    0217 FDE1      SBRC	R30,1
+    0218 9508      RET
+    0219 90A9      LD	R10,Y+
+    021A 90B9      LD	R11,Y+
+    021B FDE2      SBRC	R30,2
+    021C 9508      RET
+    021D 90C9      LD	R12,Y+
+    021E 90D9      LD	R13,Y+
+    021F FDE3      SBRC	R30,3
+    0220 9508      RET
+    0221 90E9      LD	R14,Y+
+    0222 90F9      LD	R15,Y+
+    0223 9508      RET

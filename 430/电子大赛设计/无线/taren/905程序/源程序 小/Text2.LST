@@ -1,0 +1,312 @@
+C51 COMPILER V7.06   TEXT2                                                                 07/21/2008 08:42:25 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE TEXT2
+OBJECT MODULE PLACED IN Text2.OBJ
+COMPILER INVOKED BY: e:\Keil\C51\BIN\C51.EXE Text2.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          /******************************************************************************************\ 
+   2          ============================================================================================
+   3          * T905.c
+   4          *
+   5          * This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTYT; 
+   6          * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   7          *
+   8          *
+   9          * NOTES:
+  10          * This program is for the nRF905 with 232 interface;
+  11          * $write date: 2004.4.7 ;time 11:00$
+  12          * $Revision: 1 $
+  13          *
+  14          /*******************************************************************************************/
+  15          #include <at89x51.h>
+  16          #include<intrins.h>
+  17          
+  18          #define uchar unsigned char 
+  19          #define uint  unsigned int
+  20          
+  21          #define WC              0x00                    // Write configuration register command
+  22          #define RC              0x10                    // Read  configuration register command
+  23          #define WTP             0x20                    // Write TX Payload  command
+  24          #define RTP             0x21                    // Read  TX Payload  command
+  25          #define WTA             0x22                    // Write TX Address  command
+  26          #define RTA             0x23                    // Read  TX Address  command
+  27          #define RRP             0x24                    // Read  RX Payload  command
+  28          /*******************************************************************************************/
+  29          typedef struct RFConfig
+  30          {
+  31                  uchar n;
+  32                  uchar buf[10];
+  33          }RFConfig;
+  34          
+  35          code RFConfig RxTxConf =
+  36          {
+  37                  10,
+  38                  0x01, 0x0c, 0x44, 0x20, 0x20, 0xcc, 0xcc, 0xcc,0xcc, 0x58       
+  39          };
+  40          // The content of this struct is nRF905's initialize data.初始化数据
+  41          // CH_NO=1;433MHZ;Normal Opration,No Retrans;RX,TX Address is 4 Bytes
+  42          // RX TX Payload Width is 32 Bytes;Disable Extern Clock;Fosc=16MHZ
+  43          // 8 Bits CRC And enable
+  44          /*******************************************************************************************/
+  45          uchar data TxBuf[32];
+  46          uchar data RxBuf[32];
+  47          uchar key,rsbrf,delayf,tf;
+  48          /*******************************************************************************************/
+  49          uchar bdata DATA_BUF;
+  50          sbit    flag    =DATA_BUF^7;
+  51          sbit    flag1   =DATA_BUF^0;
+  52          /*******************************************************************************************/
+  53          sbit    TX_EN   =P2^0;               //发射使能，高有效
+  54          sbit    TRX_CE  =P2^6;               //TRX_CE发送接收使能  高有效
+  55          sbit    PWR_UP  =P2^1;               //上电     
+C51 COMPILER V7.06   TEXT2                                                                 07/21/2008 08:42:25 PAGE 2   
+
+  56          sbit    MISO    =P3^6;               //spi输出
+  57          sbit    MOSI    =P2^4;               //spi输入
+  58          sbit    SCK             =P3^7;               //spi时钟
+  59          sbit    CSN             =P2^5;               //spi片选
+  60          
+  61          sbit    AM              =P3^5;               //AM 地址匹配，受到有效地址被置高
+  62          sbit    DR              =P2^3;               //数据准备就绪
+  63          sbit    CD              =P2^2;               //载波检测，检测到频率相同的载波时，置高
+  64          
+  65          sbit    LED1    =P1^0; 
+  66          sbit    LED2    =P1^1;
+  67          sbit    KEY1    =P1^2;
+  68          sbit    KEY2    =P1^3;
+  69          
+  70          /*******************************************************************************************/
+  71          void InitIO(void);                              // Initialize IO port
+  72          void Inituart(void);                    // initialize 232 uart
+  73          void Config905(void);                   // Config nRF905 module配置NRF905模式
+  74          void SetTxMode(void);                   // Set nRF905 in Tx mode
+  75          void SetRxMode(void);                   // Set nRF905 in Rx mode
+  76          void TxPacket(void);                    // Send data by nRF905
+  77          void RxPacket(void);                    // Recive data by nRF905
+  78          void SpiWrite(uchar);                   // Write data to nRF905
+  79          uchar SpiRead(void);                    // Read data to nRF905
+  80          void Delay(uchar n);                    // Delay 100us
+  81          void Scankey(void);                             // Scan key
+  82          void TxData (uchar x);                  // Send key_value to CRT display
+  83          void comdebug(void);
+  84          /*******************************************************************************************/
+  85          void Delay(uchar n)
+  86          {
+  87   1              uint i;
+  88   1              while(n--)
+  89   1              for(i=0;i<80;i++);      
+  90   1      }
+  91          
+  92          void main()
+  93          {
+  94   1      unsigned int cyc=0;
+  95   1      unsigned int distan=0;
+  96   1      
+  97   1      
+  98   1          //================NRF905初始化
+  99   1              CSN=1;                                          // Spi  disable                                         
+ 100   1              SCK=0;                                          // Spi clock line init high
+ 101   1              DR=1;                                           // Init DR for input
+ 102   1              AM=1;                                           // Init AM for input
+ 103   1              PWR_UP=1;                                       // nRF905 power on
+ 104   1              TRX_CE=0;                                       // Set nRF905 in standby mode
+ 105   1              TX_EN=0;                                        // set radio in Rx mode 
+ 106   1      
+ 107   1              //================
+ 108   1              Config905();                            // Config nRF905 module
+ 109   1              TxBuf[0] = 1;
+ 110   1              TxBuf[1] = 1;
+ 111   1              SetTxMode();                            // Set Tx Mode
+ 112   1              TxPacket();                             // Transmit Tx buffer data
+ 113   1              LED1 = 0;
+ 114   1              LED2 = 0;
+ 115   1      
+ 116   1              Delay(500);                             // delay for led light  
+ 117   1              LED1 = 1;
+C51 COMPILER V7.06   TEXT2                                                                 07/21/2008 08:42:25 PAGE 3   
+
+ 118   1              LED2 = 1;
+ 119   1              TxBuf[0] = 0xff;
+ 120   1              TxBuf[1] = 0xff;
+ 121   1      
+ 122   1                                              // led close
+ 123   1              SetRxMode();                            // Set nRF905 in Rx mode
+ 124   1      
+ 125   1      while(1)
+ 126   1      {
+ 127   2               //=====================从键盘获得数据
+ 128   2              
+ 129   2      
+ 130   2                         if(KEY1 ==0 ) {      LED1 = 0; TxBuf[0] = 1 ;tf = 1 ; }
+ 131   2                         if(KEY2 ==0 ) {      LED2 = 0; TxBuf[1] = 1 ;tf = 1 ; }
+ 132   2      
+ 133   2                 if (tf==1)
+ 134   2                   {  
+ 135   3                      
+ 136   3                        //===============NRF905发送相应的按键   
+ 137   3                           SetTxMode();                               // Set Tx Mode
+ 138   3                           TxPacket();                                // Transmit Tx buffer data
+ 139   3                              TxBuf[0] = 0xff;
+ 140   3                              TxBuf[1] = 0xff;
+ 141   3                              SetRxMode();                            // Set nRF905 in Rx mode
+ 142   3                              tf=0;
+ 143   3                              Delay(500);
+ 144   3                              LED1 = 1;
+ 145   3                              LED2 = 1;
+ 146   3                        }
+ 147   2      
+ 148   2               //=====================等待NRF905接收
+ 149   2                 if (DR)                      // If recive data ready... 
+ 150   2                 RxPacket();                  // ... recive data
+ 151   2      
+ 152   2      }
+ 153   1      
+ 154   1      }
+ 155          /*******************************************************************************************/
+ 156          /*******************************************************************************************/
+ 157          //function Config905();
+ 158          /*******************************************************************************************/
+ 159          void Config905(void)
+ 160          {
+ 161   1              uchar i;                                        
+ 162   1              CSN=0;                                          // Spi enable for write a spi command
+ 163   1              SpiWrite(WC);                           // Write config command写放配置命令
+ 164   1              for (i=0;i<RxTxConf.n;i++)      // Write configration words  写放配置字
+ 165   1              {
+ 166   2                      SpiWrite(RxTxConf.buf[i]);
+ 167   2              }
+ 168   1              CSN=1;                                          // Disable Spi
+ 169   1      }
+ 170          /*******************************************************************************************/
+ 171          //function SpiWrite();
+ 172          /*******************************************************************************************/
+ 173          void SpiWrite(uchar  byte)
+ 174          {
+ 175   1              uchar i;        
+ 176   1              DATA_BUF=byte;                          // Put function's parameter into a bdata variable               
+ 177   1              for (i=0;i<8;i++)                       // Setup byte circulation bits
+ 178   1              {       
+ 179   2                      
+C51 COMPILER V7.06   TEXT2                                                                 07/21/2008 08:42:25 PAGE 4   
+
+ 180   2                      if (flag)                               // Put DATA_BUF.7 on data line
+ 181   2                              MOSI=1;
+ 182   2                      else
+ 183   2                              MOSI=0;
+ 184   2                      SCK=1;                                  // Set clock line high
+ 185   2                      DATA_BUF=DATA_BUF<<1;   // Shift DATA_BUF
+ 186   2                      SCK=0;                                  // Set clock line low 
+ 187   2              }       
+ 188   1      }
+ 189          /*******************************************************************************************/
+ 190          //function SpiRead();
+ 191          /*******************************************************************************************/
+ 192          uchar SpiRead(void)
+ 193          {
+ 194   1              uchar i;        
+ 195   1              for (i=0;i<8;i++)                       // Setup byte circulation bits
+ 196   1              {       
+ 197   2                      DATA_BUF=DATA_BUF<<1;   // Right shift DATA_BUF
+ 198   2                      SCK=1;                                  // Set clock line high
+ 199   2                      if (MISO)
+ 200   2                              flag1=1;                        // Read data
+ 201   2                      else
+ 202   2                              flag1=0;
+ 203   2                                                              
+ 204   2                      
+ 205   2                      SCK=0;                                  // Set clock line low
+ 206   2              }
+ 207   1              return DATA_BUF;                        // Return function parameter
+ 208   1      }
+ 209          /*******************************************************************************************/
+ 210          //function TxPacket();
+ 211          /*******************************************************************************************/
+ 212          void TxPacket(void)
+ 213          {
+ 214   1              uchar i;
+ 215   1              //Config905();                          
+ 216   1              CSN=0;                                          // Spi enable for write a spi command   
+ 217   1              SpiWrite(WTP);                          // Write payload command
+ 218   1              for (i=0;i<32;i++)
+ 219   1              {
+ 220   2                      SpiWrite(TxBuf[i]);             // Write 32 bytes Tx data
+ 221   2              }
+ 222   1              CSN=1;                                          // Spi disable                                          
+ 223   1              Delay(1);
+ 224   1              CSN=0;                                          // Spi enable for write a spi command   
+ 225   1              SpiWrite(WTA);                          // Write address command
+ 226   1              for (i=0;i<4;i++)                       // Write 4 bytes address
+ 227   1              {
+ 228   2                      SpiWrite(RxTxConf.buf[i+5]);
+ 229   2              }       
+ 230   1              CSN=1;                                          // Spi disable
+ 231   1              TRX_CE=1;                                       // Set TRX_CE high,start Tx data transmission
+ 232   1              Delay(1);                                       // while (DR!=1);
+ 233   1              TRX_CE=0;                                       // Set TRX_CE low
+ 234   1      }
+ 235          /*******************************************************************************************/
+ 236          //function RxPacket();
+ 237          /*******************************************************************************************/
+ 238          void RxPacket(void)
+ 239          {
+ 240   1              uchar i;        
+ 241   1              TRX_CE=0;                                       // Set nRF905 in standby mode   
+C51 COMPILER V7.06   TEXT2                                                                 07/21/2008 08:42:25 PAGE 5   
+
+ 242   1              CSN=0;                                          // Spi enable for write a spi command
+ 243   1              SpiWrite(RRP);                          // Read payload command 
+ 244   1              for (i=0;i<32;i++)
+ 245   1              {
+ 246   2                      RxBuf[i]=SpiRead();             // Read data and save to buffer         
+ 247   2              }
+ 248   1              CSN=1;                                          // Disable spi
+ 249   1              while(DR||AM);  
+ 250   1      //      P0=     RxBuf[0];                               // Buffer[0] output from P0 port...
+ 251   1              TRX_CE=1;
+ 252   1              //xx=(RxBuf[0]>>4)&0x0f;
+ 253   1              //TxData(xx);
+ 254   1               //=====================
+ 255   1                 if(RxBuf[0] == 1) LED1 = 0 ;
+ 256   1                 if(RxBuf[1] == 1) LED2 = 0 ;
+ 257   1                
+ 258   1              Delay(500);                                     // ...light led
+ 259   1      //      P0=0xff;                                        // Close led
+ 260   1            LED1 = 1 ;
+ 261   1                LED2 = 1 ;                                                            
+ 262   1      }
+ 263          /*******************************************************************************************/
+ 264          //function SetTxMode();
+ 265          /*******************************************************************************************/
+ 266          void SetTxMode(void)                            
+ 267          {       
+ 268   1              TX_EN=1;
+ 269   1              TRX_CE=0;
+ 270   1              Delay(1);                                       // delay for mode change(>=650us)
+ 271   1      }                               
+ 272          /*******************************************************************************************/
+ 273          //function SetRxMode();
+ 274          /*******************************************************************************************/
+ 275          void SetRxMode(void)
+ 276          {
+ 277   1              TX_EN=0;
+ 278   1              TRX_CE=1;
+ 279   1              Delay(1);                                       // delay for mode change(>=650us)                               
+ 280   1      }
+ 281          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    374    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     69       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,282 @@
+XL
+H 1 areas F global symbols
+M lcd.c
+S push_gset1 Ref0000
+S push_gset2 Ref0000
+S push_gset3 Ref0000
+S push_gset5 Ref0000
+S pop_gset1 Ref0000
+S pop_gset2 Ref0000
+S pop_gset3 Ref0000
+S pop_gset5 Ref0000
+A text size 200 flags 0
+dbfile F:\programme\RF905\lcd.c
+dbfunc e delay 0 fV
+dbsym r i 14 i
+dbsym r times 10 i
+dbline FFFFFFFF 2
+dbline 15 2
+dbline 16 2
+dbline 17 8
+dbline 16 8
+dbline 16 C
+dbline FFFFFFFE 12
+dbline 0 14
+dbfunc e lcd_send_byte 16 fV
+dbsym r data1 14 i
+dbsym r i 16 i
+dbsym r data A c
+dbline FFFFFFFF 1A
+dbline 1B 1A
+dbline 1C 1A
+dbline 1D 20
+dbline 1D 20
+dbline 1E 28
+dbline 1F 2E
+dbline 1F 2E
+dbline 20 30
+dbline 21 36
+dbline 22 38
+dbline 22 38
+dbline 23 3A
+dbline 23 40
+dbline 26 40
+dbline 28 42
+dbline 29 44
+dbline 2A 46
+dbline 1C 46
+dbline 1C 4A
+dbline FFFFFFFE 52
+dbline 0 54
+dbfunc e lcd_write_data 56 fV
+dbsym r data2 16 c
+dbsym r data1 A c
+dbsym r data3 14 c
+dbsym r data 14 c
+dbline FFFFFFFF 5A
+dbline 30 5A
+dbline 30 5A
+dbline 32 5E
+dbline 34 60
+dbline 35 64
+dbline 36 66
+dbline 38 6E
+dbline 39 72
+dbline 3A 76
+dbline 3C 7A
+dbline FFFFFFFE 7C
+dbline 0 7E
+dbfunc e lcd_write_comm 80 fV
+dbsym r data2 16 c
+dbsym r data1 A c
+dbsym r data3 14 c
+dbsym r data 14 c
+dbline FFFFFFFF 84
+dbline 44 84
+dbline 44 84
+dbline 45 88
+dbline 47 8A
+dbline 48 8E
+dbline 49 90
+dbline 4B 98
+dbline 4C 9C
+dbline 4D A0
+dbline 4F A4
+dbline FFFFFFFE A6
+dbline 0 A8
+dbfunc e lcd_initial AA fV
+dbline FFFFFFFF AA
+dbline 53 AA
+dbline 55 AA
+dbline 56 AE
+dbline 57 B2
+dbline 58 B6
+dbline 59 BA
+dbline FFFFFFFE BE
+dbline 0 BE
+dbfunc e screen C0 fV
+dbsym l j 1 i
+dbsym r i 14 i
+dbsym r data 16 pc
+dbline FFFFFFFF C4
+dbline 62 C4
+dbline 64 C4
+dbline 65 C8
+dbline 66 CE
+dbline 66 CE
+dbline 67 D8
+dbline 68 E0
+dbline 69 E4
+dbline 6A EC
+dbline 6B F0
+dbline 6C F8
+dbline 6D FC
+dbline 6E 104
+dbline 6F 108
+dbline 65 108
+dbline 65 10C
+dbline 70 114
+dbline FFFFFFFE 118
+dbline 0 11A
+dbfunc e fanxian 11C fV
+dbsym r y 14 c
+dbsym r x 16 c
+dbsym r j A c
+dbsym r i C c
+dbsym r hang E c
+dbline FFFFFFFF 120
+dbline 74 120
+dbline 76 120
+dbline 77 124
+dbline 79 128
+dbline 7A 12A
+dbline 7B 12C
+dbline 7C 130
+dbline 7D 134
+dbline 7E 138
+dbline 7F 13C
+dbline 7F 13C
+dbline 80 140
+dbline 7F 144
+dbline 7F 146
+dbline 83 14C
+dbline 84 156
+dbline 86 15A
+dbline 7E 15A
+dbline 7E 15C
+dbline 88 162
+dbline 89 164
+dbline 8A 166
+dbline 8B 16A
+dbline 8C 16E
+dbline 8D 172
+dbline 8E 178
+dbline 8E 178
+dbline 8F 17C
+dbline 8E 180
+dbline 8E 182
+dbline 90 188
+dbline 91 192
+dbline 94 196
+dbline 8D 196
+dbline 8D 198
+dbline 96 19E
+dbline 98 1A2
+dbline 99 1A8
+dbline 9A 1A8
+dbline 9B 1AA
+dbline 9B 1AC
+dbline 9C 1AE
+dbline 9D 1B4
+dbline 9E 1B4
+dbline 9F 1B6
+dbline 9F 1B8
+dbline A0 1BA
+dbline A1 1C0
+dbline A1 1C0
+dbline A2 1C2
+dbline A2 1C4
+dbline A4 1C6
+dbline A4 1C6
+dbline A5 1C8
+dbline A5 1CA
+dbline A7 1CA
+dbline A8 1CE
+dbline AB 1D2
+dbline AC 1D6
+dbline AC 1D6
+dbline AD 1DA
+dbline AC 1DE
+dbline AC 1E0
+dbline AF 1E6
+dbline B0 1F0
+dbline B2 1F4
+dbline AB 1F4
+dbline AB 1F6
+dbline FFFFFFFE 1FC
+dbline 0 1FE
+S _lcd_write_data Def0056
+S _lcd_write_comm Def0080
+S _fanxian Def011C
+S _delay Def0000
+S _lcd_send_byte Def0016
+S _lcd_initial Def00AA
+S _screen Def00C0
+T 00 00 00 D0 44 27 55 27 02 C0 4F 5F 5F 4F 40 17
+R 00 00 00 00 82 02 00 00
+T 0E 00 51 07 D8 F3 00 D0 08 95
+R 00 00 00 00 82 06 04 00
+T 16 00 00 D0 A0 2E 66 27 77 27 15 C0 4A 2D 55 27
+R 00 00 00 00 82 02 02 00
+T 24 00 40 78 50 70 40 30 45 07 29 F0 97 9A 04 E1
+R 00 00 00 00
+T 32 00 10 E0 E5 DF 04 C0 97 98 04 E1 10 E0 E0 DF
+R 00 00 00 00
+T 40 00 96 9A 96 98 AA 0C 6F 5F 7F 4F 68 30 E0 E0
+R 00 00 00 00
+T 4E 00 7E 07 38 F3 00 D0 08 95
+R 00 00 00 00 82 06 06 00
+T 56 00 00 D0 40 2F 8A EF A8 2E 95 9A 64 2F 60 7F
+R 00 00 00 00 82 02 02 00
+T 64 00 4F 70 84 2F 8F 70 82 95 48 2F 0A 2D D2 DF
+R 00 00 00 00
+T 72 00 06 2F D0 DF 04 2F CE DF 95 98 00 D0 08 95
+R 00 00 00 00 82 0C 06 00
+T 80 00 00 D0 40 2F 88 EF A8 2E 95 9A 64 2F 60 7F
+R 00 00 00 00 82 02 02 00
+T 8E 00 4F 70 84 2F 8F 70 82 95 48 2F 0A 2D BD DF
+R 00 00 00 00
+T 9C 00 06 2F BB DF 04 2F B9 DF 95 98 00 D0 08 95
+R 00 00 00 00 82 0C 06 00
+T AA 00 00 E3 E9 DF 01 E0 E7 DF 03 E0 E5 DF 06 E0
+R 00 00 00 00
+T B8 00 E3 DF 0C E0 E1 DF 08 95
+R 00 00 00 00
+T C0 00 00 D0 B8 01 08 E0 DC DF 44 27 55 27 1F C0
+R 00 00 00 00 82 02 01 00
+T CE 00 FA 01 E6 0F F7 1F 00 81 BF DF 4F 30 E0 E0
+R 00 00 00 00
+T DC 00 5E 07 11 F4 00 E9 CE DF 4F 31 E0 E0 5E 07
+R 00 00 00 00
+T EA 00 11 F4 08 E8 C8 DF 4F 32 E0 E0 5E 07 11 F4
+R 00 00 00 00
+T F8 00 08 E9 C2 DF 4F 33 E0 E0 5E 07 11 F4 00 E8
+R 00 00 00 00
+T 06 01 BC DF 4F 5F 5F 4F 40 34 E0 E0 5E 07 E8 F2
+R 00 00 00 00
+T 14 01 0C E0 B4 DF 00 D0 08 95
+R 00 00 00 00 82 06 05 00
+T 1C 01 00 D0 E0 2E 04 E3 AE DF 04 E3 AC DF 40 E8
+R 00 00 00 00 82 02 03 00
+T 2A 01 60 E8 00 27 93 DF 06 2F A6 DF 04 2F A4 DF
+R 00 00 00 00
+T 38 01 AA 24 10 C0 CC 24 03 C0 00 27 89 DF C3 94
+R 00 00 00 00
+T 46 01 8C 2D 80 31 D0 F3 86 2F 8F 5F 68 2F 08 2F
+R 00 00 00 00
+T 54 01 95 DF 04 2F 93 DF A3 94 8A 2D 80 32 68 F3
+R 00 00 00 00
+T 62 01 48 E8 60 E8 00 27 76 DF 06 2F 89 DF 04 2F
+R 00 00 00 00
+T 70 01 87 DF 80 E2 A8 2E 10 C0 CC 24 03 C0 00 27
+R 00 00 00 00
+T 7E 01 6B DF C3 94 8C 2D 80 31 D0 F3 86 2F 8F 5F
+R 00 00 00 00
+T 8C 01 68 2F 08 2F 77 DF 04 2F 75 DF A3 94 8A 2D
+R 00 00 00 00
+T 9A 01 80 34 68 F3 06 E3 6F DF 8E 2D 81 30 19 F4
+R 00 00 00 00
+T A8 01 40 E8 60 E8 0E C0 8E 2D 82 30 19 F4 40 E8
+R 00 00 00 00
+T B6 01 60 E9 08 C0 8E 2D 83 30 19 F4 48 E8 60 E8
+R 00 00 00 00
+T C4 01 02 C0 48 E8 60 E9 06 2F 59 DF 04 2F 57 DF
+R 00 00 00 00
+T D2 01 AA 24 10 C0 CC 24 03 C0 0F EF 3C DF C3 94
+R 00 00 00 00
+T E0 01 8C 2D 80 31 D0 F3 86 2F 8F 5F 68 2F 08 2F
+R 00 00 00 00
+T EE 01 48 DF 04 2F 46 DF A3 94 8A 2D 80 31 68 F3
+R 00 00 00 00
+T FC 01 00 D0 08 95
+R 00 00 00 00 82 02 07 00

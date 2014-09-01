@@ -1,0 +1,1050 @@
+                        .module main.c
+                        .area data(ram, con, rel)
+ 0000           _hz0::
+ 0000                   .blkb 65
+                        .area idata
+ 0000 D6C7C4DCBCD2B5E7BFD8D6C6CFB5CDB3  .byte 214,199,196,220,188,210,181,231,191,216,214,198,207,181,205,179
+ 0010 20202020202020202020202020202020  .byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
+ 0020 CAE4C8EB202020202020202020202020  .byte 202,228,200,235,32,32,32,32,32,32,32,32,32,32,32,32
+ 0030 20202020202020202020202020202020  .byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
+ 0040 00                .byte 0
+                        .area data(ram, con, rel)
+ 0041                   .dbfile F:\programme\RF905\main.c
+ 0041                   .dbsym e hz0 _hz0 A[65:65]c
+ 0041           _times::
+ 0041                   .blkb 1
+                        .area idata
+ 0041 00                .byte 0
+                        .area data(ram, con, rel)
+ 0042                   .dbfile F:\programme\RF905\main.c
+ 0042                   .dbsym e times _times c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile F:\programme\RF905\main.c
+ 0000                   .dbfunc e spi_init _spi_init fV
+                        .even
+ 0000           _spi_init::
+ 0000                   .dbline -1
+ 0000                   .dbline 15
+ 0000           ; #include <stdio.h>
+ 0000           ; #include <iom8v.h>
+ 0000           ; #include <macros.h>
+ 0000           ; #include "nrf905.h"
+ 0000           ; 
+ 0000           ; unsigned char hz0[65]={"智能家电控制系统                输入                            "};
+ 0000           ; unsigned char KeyV,KeyFlag;
+ 0000           ; extern uchar TxBuf[],RxBuf[];
+ 0000           ; unsigned char  value_T,set_data;
+ 0000           ; unsigned char times=0;
+ 0000           ; //unsigned char KeyD[5];
+ 0000           ; //unsigned char KeyI=0;
+ 0000           ; 
+ 0000           ; void spi_init(void)
+ 0000           ; {
+ 0000                   .dbline 16
+ 0000           ;  SPCR = 0x51;    //setup SPI
+ 0000 81E5              ldi R24,81
+ 0002 8DB9              out 0xd,R24
+ 0004                   .dbline -2
+ 0004           L1:
+ 0004                   .dbline 0 ; func end
+ 0004 0895              ret
+ 0006                   .dbend
+ 0006                   .dbfunc e print_temp _print_temp fV
+ 0006           ;          wendu -> y+4
+ 0006           ;           temp -> y+0
+ 0006           ;        address -> R10
+                        .even
+ 0006           _print_temp::
+ 0006 00D0              rcall push_gset3
+ 0008 A02E              mov R10,R16
+ 000A 6097              sbiw R28,16
+ 000C                   .dbline -1
+ 000C                   .dbline 21
+ 000C           ;  //SPSR = 0x00; //setup SPI
+ 000C           ; }
+ 000C           ; 
+ 000C           ; void  print_temp(unsigned char address)
+ 000C           ; {
+ 000C                   .dbline 25
+ 000C           ; 
+ 000C           ;    float  wendu;
+ 000C           ;    unsigned long int temp;
+ 000C           ;    wendu=GetTemp()*0.0625;
+ 000C 00D0              rcall _GetTemp
+ 000E 1801              movw R2,R16
+ 0010 00E0              ldi R16,<L3
+ 0012 10E0              ldi R17,>L3
+ 0014 00D0              rcall lpm32
+ 0016 3A93              st -y,R19
+ 0018 2A93              st -y,R18
+ 001A 1A93              st -y,R17
+ 001C 0A93              st -y,R16
+ 001E 8101              movw R16,R2
+ 0020 00D0              rcall int2fp
+ 0022 3A93              st -y,R19
+ 0024 2A93              st -y,R18
+ 0026 1A93              st -y,R17
+ 0028 0A93              st -y,R16
+ 002A 00D0              rcall empy32f
+ 002C FE01              movw R30,R28
+ 002E 0483              std z+4,R16
+ 0030 1583              std z+5,R17
+ 0032 2683              std z+6,R18
+ 0034 3783              std z+7,R19
+ 0036                   .dbline 26
+ 0036           ;    temp=wendu*10000;
+ 0036 00E0              ldi R16,<L6
+ 0038 10E0              ldi R17,>L6
+ 003A 00D0              rcall lpm32
+ 003C 3A93              st -y,R19
+ 003E 2A93              st -y,R18
+ 0040 1A93              st -y,R17
+ 0042 0A93              st -y,R16
+ 0044 FE01              movw R30,R28
+ 0046            ; stack offset 4
+ 0046 2084              ldd R2,z+8
+ 0048 3184              ldd R3,z+9
+ 004A 4284              ldd R4,z+10
+ 004C 5384              ldd R5,z+11
+ 004E 5A92              st -y,R5
+ 0050 4A92              st -y,R4
+ 0052 3A92              st -y,R3
+ 0054 2A92              st -y,R2
+ 0056 00D0              rcall empy32f
+ 0058 FE01              movw R30,R28
+ 005A 0487              std z+12,R16
+ 005C 1587              std z+13,R17
+ 005E 2687              std z+14,R18
+ 0060 3787              std z+15,R19
+ 0062 FE01              movw R30,R28
+ 0064 2484              ldd R2,z+12
+ 0066 3584              ldd R3,z+13
+ 0068 4684              ldd R4,z+14
+ 006A 5784              ldd R5,z+15
+ 006C 5A92              st -y,R5
+ 006E 4A92              st -y,R4
+ 0070 3A92              st -y,R3
+ 0072 2A92              st -y,R2
+ 0074 00E0              ldi R16,<L7
+ 0076 10E0              ldi R17,>L7
+ 0078 00D0              rcall lpm32
+ 007A 3A93              st -y,R19
+ 007C 2A93              st -y,R18
+ 007E 1A93              st -y,R17
+ 0080 0A93              st -y,R16
+ 0082 00D0              rcall cmp32f
+ 0084 14F1              brlt L4
+ 0086 FE01              movw R30,R28
+ 0088 2484              ldd R2,z+12
+ 008A 3584              ldd R3,z+13
+ 008C 4684              ldd R4,z+14
+ 008E 5784              ldd R5,z+15
+ 0090 5A92              st -y,R5
+ 0092 4A92              st -y,R4
+ 0094 3A92              st -y,R3
+ 0096 2A92              st -y,R2
+ 0098 00E0              ldi R16,<L7
+ 009A 10E0              ldi R17,>L7
+ 009C 00D0              rcall lpm32
+ 009E 3A93              st -y,R19
+ 00A0 2A93              st -y,R18
+ 00A2 1A93              st -y,R17
+ 00A4 0A93              st -y,R16
+ 00A6 00D0              rcall sub32f
+ 00A8 00D0              rcall fp2long
+ 00AA 1801              movw R2,R16
+ 00AC 2901              movw R4,R18
+ 00AE 40E0              ldi R20,0
+ 00B0 50E0              ldi R21,0
+ 00B2 60E0              ldi R22,0
+ 00B4 70E8              ldi R23,128
+ 00B6 240E              add R2,R20
+ 00B8 351E              adc R3,R21
+ 00BA 461E              adc R4,R22
+ 00BC 571E              adc R5,R23
+ 00BE FE01              movw R30,R28
+ 00C0 2086              std z+8,R2
+ 00C2 3186              std z+9,R3
+ 00C4 4286              std z+10,R4
+ 00C6 5386              std z+11,R5
+ 00C8 0BC0              rjmp L5
+ 00CA           L4:
+ 00CA FE01              movw R30,R28
+ 00CC 0485              ldd R16,z+12
+ 00CE 1585              ldd R17,z+13
+ 00D0 2685              ldd R18,z+14
+ 00D2 3785              ldd R19,z+15
+ 00D4 00D0              rcall fp2long
+ 00D6 FE01              movw R30,R28
+ 00D8 0087              std z+8,R16
+ 00DA 1187              std z+9,R17
+ 00DC 2287              std z+10,R18
+ 00DE 3387              std z+11,R19
+ 00E0           L5:
+ 00E0 FE01              movw R30,R28
+ 00E2 2084              ldd R2,z+8
+ 00E4 3184              ldd R3,z+9
+ 00E6 4284              ldd R4,z+10
+ 00E8 5384              ldd R5,z+11
+ 00EA FE01              movw R30,R28
+ 00EC 2082              std z+0,R2
+ 00EE 3182              std z+1,R3
+ 00F0 4282              std z+2,R4
+ 00F2 5382              std z+3,R5
+ 00F4                   .dbline 28
+ 00F4           ; 
+ 00F4           ;  lcd_write_comm(0x30);
+ 00F4 00E3              ldi R16,48
+ 00F6 10E0              ldi R17,0
+ 00F8 00D0              rcall _lcd_write_comm
+ 00FA                   .dbline 29
+ 00FA           ;  lcd_write_comm(address);     
+ 00FA 0A2D              mov R16,R10
+ 00FC 1127              clr R17
+ 00FE 00D0              rcall _lcd_write_comm
+ 0100                   .dbline 30
+ 0100           ;  lcd_write_data((temp/1000000)%10+0x30);      
+ 0100 40E4              ldi R20,64
+ 0102 52E4              ldi R21,66
+ 0104 6FE0              ldi R22,15
+ 0106 70E0              ldi R23,0
+ 0108 FE01              movw R30,R28
+ 010A 2080              ldd R2,z+0
+ 010C 3180              ldd R3,z+1
+ 010E 4280              ldd R4,z+2
+ 0110 5380              ldd R5,z+3
+ 0112 7A93              st -y,R23
+ 0114 6A93              st -y,R22
+ 0116 5A93              st -y,R21
+ 0118 4A93              st -y,R20
+ 011A 8101              movw R16,R2
+ 011C 9201              movw R18,R4
+ 011E 00D0              rcall div32u
+ 0120 4AE0              ldi R20,10
+ 0122 50E0              ldi R21,0
+ 0124 60E0              ldi R22,0
+ 0126 70E0              ldi R23,0
+ 0128 7A93              st -y,R23
+ 012A 6A93              st -y,R22
+ 012C 5A93              st -y,R21
+ 012E 4A93              st -y,R20
+ 0130 00D0              rcall mod32u
+ 0132 1801              movw R2,R16
+ 0134 2901              movw R4,R18
+ 0136 40E3              ldi R20,48
+ 0138 50E0              ldi R21,0
+ 013A 60E0              ldi R22,0
+ 013C 70E0              ldi R23,0
+ 013E 240E              add R2,R20
+ 0140 351E              adc R3,R21
+ 0142 461E              adc R4,R22
+ 0144 571E              adc R5,R23
+ 0146 8101              movw R16,R2
+ 0148 9201              movw R18,R4
+ 014A 00D0              rcall _lcd_write_data
+ 014C                   .dbline 31
+ 014C           ;  lcd_write_data((temp/100000)%10+0x30);
+ 014C 40EA              ldi R20,160
+ 014E 56E8              ldi R21,134
+ 0150 61E0              ldi R22,1
+ 0152 70E0              ldi R23,0
+ 0154 FE01              movw R30,R28
+ 0156 2080              ldd R2,z+0
+ 0158 3180              ldd R3,z+1
+ 015A 4280              ldd R4,z+2
+ 015C 5380              ldd R5,z+3
+ 015E 7A93              st -y,R23
+ 0160 6A93              st -y,R22
+ 0162 5A93              st -y,R21
+ 0164 4A93              st -y,R20
+ 0166 8101              movw R16,R2
+ 0168 9201              movw R18,R4
+ 016A 00D0              rcall div32u
+ 016C 4AE0              ldi R20,10
+ 016E 50E0              ldi R21,0
+ 0170 60E0              ldi R22,0
+ 0172 70E0              ldi R23,0
+ 0174 7A93              st -y,R23
+ 0176 6A93              st -y,R22
+ 0178 5A93              st -y,R21
+ 017A 4A93              st -y,R20
+ 017C 00D0              rcall mod32u
+ 017E 1801              movw R2,R16
+ 0180 2901              movw R4,R18
+ 0182 40E3              ldi R20,48
+ 0184 50E0              ldi R21,0
+ 0186 60E0              ldi R22,0
+ 0188 70E0              ldi R23,0
+ 018A 240E              add R2,R20
+ 018C 351E              adc R3,R21
+ 018E 461E              adc R4,R22
+ 0190 571E              adc R5,R23
+ 0192 8101              movw R16,R2
+ 0194 9201              movw R18,R4
+ 0196 00D0              rcall _lcd_write_data
+ 0198                   .dbline 32
+ 0198           ;  lcd_write_data((temp/10000)%10+0x30);
+ 0198 40E1              ldi R20,16
+ 019A 57E2              ldi R21,39
+ 019C 60E0              ldi R22,0
+ 019E 70E0              ldi R23,0
+ 01A0 FE01              movw R30,R28
+ 01A2 2080              ldd R2,z+0
+ 01A4 3180              ldd R3,z+1
+ 01A6 4280              ldd R4,z+2
+ 01A8 5380              ldd R5,z+3
+ 01AA 7A93              st -y,R23
+ 01AC 6A93              st -y,R22
+ 01AE 5A93              st -y,R21
+ 01B0 4A93              st -y,R20
+ 01B2 8101              movw R16,R2
+ 01B4 9201              movw R18,R4
+ 01B6 00D0              rcall div32u
+ 01B8 4AE0              ldi R20,10
+ 01BA 50E0              ldi R21,0
+ 01BC 60E0              ldi R22,0
+ 01BE 70E0              ldi R23,0
+ 01C0 7A93              st -y,R23
+ 01C2 6A93              st -y,R22
+ 01C4 5A93              st -y,R21
+ 01C6 4A93              st -y,R20
+ 01C8 00D0              rcall mod32u
+ 01CA 1801              movw R2,R16
+ 01CC 2901              movw R4,R18
+ 01CE 40E3              ldi R20,48
+ 01D0 50E0              ldi R21,0
+ 01D2 60E0              ldi R22,0
+ 01D4 70E0              ldi R23,0
+ 01D6 240E              add R2,R20
+ 01D8 351E              adc R3,R21
+ 01DA 461E              adc R4,R22
+ 01DC 571E              adc R5,R23
+ 01DE 8101              movw R16,R2
+ 01E0 9201              movw R18,R4
+ 01E2 00D0              rcall _lcd_write_data
+ 01E4                   .dbline 33
+ 01E4           ;  lcd_write_data('.');    
+ 01E4 0EE2              ldi R16,46
+ 01E6 10E0              ldi R17,0
+ 01E8 00D0              rcall _lcd_write_data
+ 01EA                   .dbline 34
+ 01EA           ;  lcd_write_data((temp/1000)%10+0x30);
+ 01EA 48EE              ldi R20,232
+ 01EC 53E0              ldi R21,3
+ 01EE 60E0              ldi R22,0
+ 01F0 70E0              ldi R23,0
+ 01F2 FE01              movw R30,R28
+ 01F4 2080              ldd R2,z+0
+ 01F6 3180              ldd R3,z+1
+ 01F8 4280              ldd R4,z+2
+ 01FA 5380              ldd R5,z+3
+ 01FC 7A93              st -y,R23
+ 01FE 6A93              st -y,R22
+ 0200 5A93              st -y,R21
+ 0202 4A93              st -y,R20
+ 0204 8101              movw R16,R2
+ 0206 9201              movw R18,R4
+ 0208 00D0              rcall div32u
+ 020A 4AE0              ldi R20,10
+ 020C 50E0              ldi R21,0
+ 020E 60E0              ldi R22,0
+ 0210 70E0              ldi R23,0
+ 0212 7A93              st -y,R23
+ 0214 6A93              st -y,R22
+ 0216 5A93              st -y,R21
+ 0218 4A93              st -y,R20
+ 021A 00D0              rcall mod32u
+ 021C 1801              movw R2,R16
+ 021E 2901              movw R4,R18
+ 0220 40E3              ldi R20,48
+ 0222 50E0              ldi R21,0
+ 0224 60E0              ldi R22,0
+ 0226 70E0              ldi R23,0
+ 0228 240E              add R2,R20
+ 022A 351E              adc R3,R21
+ 022C 461E              adc R4,R22
+ 022E 571E              adc R5,R23
+ 0230 8101              movw R16,R2
+ 0232 9201              movw R18,R4
+ 0234 00D0              rcall _lcd_write_data
+ 0236                   .dbline 35
+ 0236           ;  lcd_write_data((temp/100)%10+0x30);
+ 0236 44E6              ldi R20,100
+ 0238 50E0              ldi R21,0
+ 023A 60E0              ldi R22,0
+ 023C 70E0              ldi R23,0
+ 023E FE01              movw R30,R28
+ 0240 2080              ldd R2,z+0
+ 0242 3180              ldd R3,z+1
+ 0244 4280              ldd R4,z+2
+ 0246 5380              ldd R5,z+3
+ 0248 7A93              st -y,R23
+ 024A 6A93              st -y,R22
+ 024C 5A93              st -y,R21
+ 024E 4A93              st -y,R20
+ 0250 8101              movw R16,R2
+ 0252 9201              movw R18,R4
+ 0254 00D0              rcall div32u
+ 0256 4AE0              ldi R20,10
+ 0258 50E0              ldi R21,0
+ 025A 60E0              ldi R22,0
+ 025C 70E0              ldi R23,0
+ 025E 7A93              st -y,R23
+ 0260 6A93              st -y,R22
+ 0262 5A93              st -y,R21
+ 0264 4A93              st -y,R20
+ 0266 00D0              rcall mod32u
+ 0268 1801              movw R2,R16
+ 026A 2901              movw R4,R18
+ 026C 40E3              ldi R20,48
+ 026E 50E0              ldi R21,0
+ 0270 60E0              ldi R22,0
+ 0272 70E0              ldi R23,0
+ 0274 240E              add R2,R20
+ 0276 351E              adc R3,R21
+ 0278 461E              adc R4,R22
+ 027A 571E              adc R5,R23
+ 027C 8101              movw R16,R2
+ 027E 9201              movw R18,R4
+ 0280 00D0              rcall _lcd_write_data
+ 0282                   .dbline 36
+ 0282           ;  lcd_write_data((temp/10)%10+0x30);    
+ 0282 4AE0              ldi R20,10
+ 0284 50E0              ldi R21,0
+ 0286 60E0              ldi R22,0
+ 0288 70E0              ldi R23,0
+ 028A FE01              movw R30,R28
+ 028C 2080              ldd R2,z+0
+ 028E 3180              ldd R3,z+1
+ 0290 4280              ldd R4,z+2
+ 0292 5380              ldd R5,z+3
+ 0294 7A93              st -y,R23
+ 0296 6A93              st -y,R22
+ 0298 5A93              st -y,R21
+ 029A 4A93              st -y,R20
+ 029C 8101              movw R16,R2
+ 029E 9201              movw R18,R4
+ 02A0 00D0              rcall div32u
+ 02A2 4AE0              ldi R20,10
+ 02A4 50E0              ldi R21,0
+ 02A6 60E0              ldi R22,0
+ 02A8 70E0              ldi R23,0
+ 02AA 7A93              st -y,R23
+ 02AC 6A93              st -y,R22
+ 02AE 5A93              st -y,R21
+ 02B0 4A93              st -y,R20
+ 02B2 00D0              rcall mod32u
+ 02B4 1801              movw R2,R16
+ 02B6 2901              movw R4,R18
+ 02B8 40E3              ldi R20,48
+ 02BA 50E0              ldi R21,0
+ 02BC 60E0              ldi R22,0
+ 02BE 70E0              ldi R23,0
+ 02C0 240E              add R2,R20
+ 02C2 351E              adc R3,R21
+ 02C4 461E              adc R4,R22
+ 02C6 571E              adc R5,R23
+ 02C8 8101              movw R16,R2
+ 02CA 9201              movw R18,R4
+ 02CC 00D0              rcall _lcd_write_data
+ 02CE                   .dbline 37
+ 02CE           ;  lcd_write_data(temp%10+0x30);
+ 02CE 4AE0              ldi R20,10
+ 02D0 50E0              ldi R21,0
+ 02D2 60E0              ldi R22,0
+ 02D4 70E0              ldi R23,0
+ 02D6 FE01              movw R30,R28
+ 02D8 2080              ldd R2,z+0
+ 02DA 3180              ldd R3,z+1
+ 02DC 4280              ldd R4,z+2
+ 02DE 5380              ldd R5,z+3
+ 02E0 7A93              st -y,R23
+ 02E2 6A93              st -y,R22
+ 02E4 5A93              st -y,R21
+ 02E6 4A93              st -y,R20
+ 02E8 8101              movw R16,R2
+ 02EA 9201              movw R18,R4
+ 02EC 00D0              rcall mod32u
+ 02EE 1801              movw R2,R16
+ 02F0 2901              movw R4,R18
+ 02F2 40E3              ldi R20,48
+ 02F4 50E0              ldi R21,0
+ 02F6 60E0              ldi R22,0
+ 02F8 70E0              ldi R23,0
+ 02FA 240E              add R2,R20
+ 02FC 351E              adc R3,R21
+ 02FE 461E              adc R4,R22
+ 0300 571E              adc R5,R23
+ 0302 8101              movw R16,R2
+ 0304 9201              movw R18,R4
+ 0306 00D0              rcall _lcd_write_data
+ 0308                   .dbline -2
+ 0308           L2:
+ 0308 6096              adiw R28,16
+ 030A 00D0              rcall pop_gset3
+ 030C                   .dbline 0 ; func end
+ 030C 0895              ret
+ 030E                   .dbsym l wendu 4 D
+ 030E                   .dbsym l temp 0 l
+ 030E                   .dbsym r address 10 c
+ 030E                   .dbend
+ 030E                   .dbfunc e main _main fV
+ 030E           ;         detect -> <dead>
+ 030E           ;             kk -> R22
+ 030E           ;       KeyValue -> R10
+                        .even
+ 030E           _main::
+ 030E 2297              sbiw R28,2
+ 0310                   .dbline -1
+ 0310                   .dbline 41
+ 0310           ; }
+ 0310           ; 
+ 0310           ; void main(void)
+ 0310           ; { unsigned char KeyValue,kk,detect;
+ 0310                   .dbline 42
+ 0310           ;    CLI();                     //disable all interrupts
+ 0310 F894              cli
+ 0312                   .dbline 44
+ 0312           ;   
+ 0312           ;   spi_init();
+ 0312 76DE              rcall _spi_init
+ 0314                   .dbline 47
+ 0314           ;  
+ 0314           ;      
+ 0314           ;   DDRB=0x6f;                //0110 1111b
+ 0314 8FE6              ldi R24,111
+ 0316 87BB              out 0x17,R24
+ 0318                   .dbline 48
+ 0318           ;   PORTB=0xd4;               //1101 0100b
+ 0318 84ED              ldi R24,212
+ 031A 88BB              out 0x18,R24
+ 031C                   .dbline 51
+ 031C           ;   //SET(PORTB,CSN);
+ 031C           ;   
+ 031C           ;   DDRC=0x00;
+ 031C 2224              clr R2
+ 031E 24BA              out 0x14,R2
+ 0320                   .dbline 52
+ 0320           ;   PORTC=0x00;
+ 0320 25BA              out 0x15,R2
+ 0322                   .dbline 54
+ 0322           ;   
+ 0322           ;   DDRD=0xf8;               //1111 1000b
+ 0322 88EF              ldi R24,248
+ 0324 81BB              out 0x11,R24
+ 0326                   .dbline 55
+ 0326           ;   PORTD=0xfc;              //1111 1100b
+ 0326 8CEF              ldi R24,252
+ 0328 82BB              out 0x12,R24
+ 032A                   .dbline 57
+ 032A           ;   
+ 032A           ;   timer0_init();
+ 032A 00D0              rcall _timer0_init
+ 032C                   .dbline 59
+ 032C           ;   
+ 032C           ;   MCUCR = 0x02;
+ 032C 82E0              ldi R24,2
+ 032E 85BF              out 0x35,R24
+ 0330                   .dbline 60
+ 0330           ;   GICR  = 0x40;
+ 0330 80E4              ldi R24,64
+ 0332 8BBF              out 0x3b,R24
+ 0334                   .dbline 61
+ 0334           ;   TIMSK = 0x01; //timer interrupt sources
+ 0334 81E0              ldi R24,1
+ 0336 89BF              out 0x39,R24
+ 0338                   .dbline 72
+ 0338           ;  
+ 0338           ;   
+ 0338           ;  // DDRD=0xff;
+ 0338           ;   // PORTD=0xf8;
+ 0338           ;   
+ 0338           ;  // MCUCR = 0x02;
+ 0338           ;  // GICR  = 0x40;
+ 0338           ;   //TIMSK = 0x00; //timer interrupt sources
+ 0338           ;   
+ 0338           ;  // nrf905_Init();
+ 0338           ;   SEI(); //re-enable interrupts
+ 0338 7894              sei
+ 033A                   .dbline 73
+ 033A           ;   screen(hz0);
+ 033A 00E0              ldi R16,<_hz0
+ 033C 10E0              ldi R17,>_hz0
+ 033E 00D0              rcall _screen
+ 0340 D7C0              rjmp L10
+ 0342           L9:
+ 0342                   .dbline 76
+ 0342           ;    
+ 0342           ;    while(1)
+ 0342           ;   {
+ 0342                   .dbline 83
+ 0342           ;    
+ 0342           ;   //  nrf905_RxOn(); 
+ 0342           ;    // detect=RfRecvProc();
+ 0342           ;       
+ 0342           ;    // lcd_write_comm(0x9f);
+ 0342           ;    // lcd_write_data(detect);
+ 0342           ;     displayint(0x8a,value_T);
+ 0342 20910200          lds R18,_value_T
+ 0346 3327              clr R19
+ 0348 0AE8              ldi R16,138
+ 034A 10E0              ldi R17,0
+ 034C 00D0              rcall _displayint
+ 034E                   .dbline 84
+ 034E           ;       displayint(0x8c,times);
+ 034E 20914100          lds R18,_times
+ 0352 3327              clr R19
+ 0354 0CE8              ldi R16,140
+ 0356 10E0              ldi R17,0
+ 0358 00D0              rcall _displayint
+ 035A                   .dbline 85
+ 035A           ;       print_temp(0x90);
+ 035A 00E9              ldi R16,144
+ 035C 54DE              rcall _print_temp
+ 035E                   .dbline 89
+ 035E           ;       //if(detect=='Y')
+ 035E           ;       //{detect=='N'; }
+ 035E           ;       
+ 035E           ;     if(KeyFlag==1)
+ 035E 80910300          lds R24,_KeyFlag
+ 0362 8130              cpi R24,1
+ 0364 29F4              brne L12
+ 0366                   .dbline 90
+ 0366           ;       {
+ 0366                   .dbline 91
+ 0366           ;        KeyValue=KeyV;
+ 0366 A0900400          lds R10,_KeyV
+ 036A                   .dbline 92
+ 036A           ;        KeyFlag=0;
+ 036A 2224              clr R2
+ 036C 20920300          sts _KeyFlag,R2
+ 0370                   .dbline 93
+ 0370           ;       }
+ 0370           L12:
+ 0370                   .dbline 94
+ 0370           ;    switch(KeyValue)        //此时相当按一次键处理两次程序
+ 0370 4A2D              mov R20,R10
+ 0372 5527              clr R21
+ 0374 4936              cpi R20,105
+ 0376 E0E0              ldi R30,0
+ 0378 5E07              cpc R21,R30
+ 037A 09F4              brne X2
+ 037C 4AC0              rjmp L18
+ 037E           X2:
+ 037E 4B36              cpi R20,107
+ 0380 E0E0              ldi R30,0
+ 0382 5E07              cpc R21,R30
+ 0384 09F4              brne X3
+ 0386 5FC0              rjmp L21
+ 0388           X3:
+ 0388 4C36              cpi R20,108
+ 038A E0E0              ldi R30,0
+ 038C 5E07              cpc R21,R30
+ 038E 09F4              brne X4
+ 0390 74C0              rjmp L24
+ 0392           X4:
+ 0392 4037              cpi R20,112
+ 0394 E0E0              ldi R30,0
+ 0396 5E07              cpc R21,R30
+ 0398 51F1              breq L17
+ 039A 4237              cpi R20,114
+ 039C E0E0              ldi R30,0
+ 039E 5E07              cpc R21,R30
+ 03A0 09F4              brne X5
+ 03A2 3FC0              rjmp L19
+ 03A4           X5:
+ 03A4 4337              cpi R20,115
+ 03A6 E0E0              ldi R30,0
+ 03A8 5E07              cpc R21,R30
+ 03AA 09F4              brne X6
+ 03AC 54C0              rjmp L22
+ 03AE           X6:
+ 03AE 4437              cpi R20,116
+ 03B0 E0E0              ldi R30,0
+ 03B2 5E07              cpc R21,R30
+ 03B4 09F4              brne X7
+ 03B6 58C0              rjmp L23
+ 03B8           X7:
+ 03B8 4537              cpi R20,117
+ 03BA E0E0              ldi R30,0
+ 03BC 5E07              cpc R21,R30
+ 03BE 09F4              brne X8
+ 03C0 6DC0              rjmp L25
+ 03C2           X8:
+ 03C2 4A37              cpi R20,122
+ 03C4 E0E0              ldi R30,0
+ 03C6 5E07              cpc R21,R30
+ 03C8 09F4              brne X9
+ 03CA 33C0              rjmp L20
+ 03CC           X9:
+ 03CC 8AE7              ldi R24,122
+ 03CE 90E0              ldi R25,0
+ 03D0 8417              cp R24,R20
+ 03D2 9507              cpc R25,R21
+ 03D4 34F0              brlt L31
+ 03D6           L30:
+ 03D6 4A35              cpi R20,90
+ 03D8 E0E0              ldi R30,0
+ 03DA 5E07              cpc R21,R30
+ 03DC 09F4              brne X10
+ 03DE 80C0              rjmp L29
+ 03E0           X10:
+ 03E0 87C0              rjmp L15
+ 03E2           L31:
+ 03E2 4D37              cpi R20,125
+ 03E4 E0E0              ldi R30,0
+ 03E6 5E07              cpc R21,R30
+ 03E8 09F4              brne X11
+ 03EA 69C0              rjmp L27
+ 03EC           X11:
+ 03EC 81C0              rjmp L15
+ 03EE           X0:
+ 03EE                   .dbline 95
+ 03EE           ;    {
+ 03EE           L17:
+ 03EE                   .dbline 96
+ 03EE           ;     case 112:kk=0;displayint(0x98,kk);
+ 03EE 6627              clr R22
+ 03F0                   .dbline 96
+ 03F0 262F              mov R18,R22
+ 03F2 3327              clr R19
+ 03F4 08E9              ldi R16,152
+ 03F6 10E0              ldi R17,0
+ 03F8 00D0              rcall _displayint
+ 03FA                   .dbline 97
+ 03FA           ;                     nrf905_SpiTest();
+ 03FA 00D0              rcall _nrf905_SpiTest
+ 03FC                   .dbline 98
+ 03FC           ;                     display_int(RxBuf,0x80,10);
+ 03FC 8AE0              ldi R24,10
+ 03FE 90E0              ldi R25,0
+ 0400 9983              std y+1,R25
+ 0402 8883              std y+0,R24
+ 0404 20E8              ldi R18,128
+ 0406 30E0              ldi R19,0
+ 0408 00E0              ldi R16,<_RxBuf
+ 040A 10E0              ldi R17,>_RxBuf
+ 040C 00D0              rcall _display_int
+ 040E                   .dbline 99
+ 040E           ;                     KeyValue=0;   break;
+ 040E AA24              clr R10
+ 0410                   .dbline 99
+ 0410 6FC0              rjmp L15
+ 0412           L18:
+ 0412                   .dbline 100
+ 0412           ;     case 105:kk=1;displayint(0x98,kk);KeyValue=0;break;
+ 0412 61E0              ldi R22,1
+ 0414                   .dbline 100
+ 0414 262F              mov R18,R22
+ 0416 3327              clr R19
+ 0418 08E9              ldi R16,152
+ 041A 10E0              ldi R17,0
+ 041C 00D0              rcall _displayint
+ 041E                   .dbline 100
+ 041E AA24              clr R10
+ 0420                   .dbline 100
+ 0420 67C0              rjmp L15
+ 0422           L19:
+ 0422                   .dbline 101
+ 0422           ;       case 114:kk=2;displayint(0x98,kk);KeyValue=0;break;
+ 0422 62E0              ldi R22,2
+ 0424                   .dbline 101
+ 0424 262F              mov R18,R22
+ 0426 3327              clr R19
+ 0428 08E9              ldi R16,152
+ 042A 10E0              ldi R17,0
+ 042C 00D0              rcall _displayint
+ 042E                   .dbline 101
+ 042E AA24              clr R10
+ 0430                   .dbline 101
+ 0430 5FC0              rjmp L15
+ 0432           L20:
+ 0432                   .dbline 102
+ 0432           ;       case 122:kk=3;displayint(0x98,kk);print_temp(0x9a);KeyValue=0;break;
+ 0432 63E0              ldi R22,3
+ 0434                   .dbline 102
+ 0434 262F              mov R18,R22
+ 0436 3327              clr R19
+ 0438 08E9              ldi R16,152
+ 043A 10E0              ldi R17,0
+ 043C 00D0              rcall _displayint
+ 043E                   .dbline 102
+ 043E 0AE9              ldi R16,154
+ 0440 E2DD              rcall _print_temp
+ 0442                   .dbline 102
+ 0442 AA24              clr R10
+ 0444                   .dbline 102
+ 0444 55C0              rjmp L15
+ 0446           L21:
+ 0446                   .dbline 103
+ 0446           ;       case 107:kk=4;displayint(0x98,kk);//RfSendProc();1122445645633312345
+ 0446 64E0              ldi R22,4
+ 0448                   .dbline 103
+ 0448 262F              mov R18,R22
+ 044A 3327              clr R19
+ 044C 08E9              ldi R16,152
+ 044E 10E0              ldi R17,0
+ 0450 00D0              rcall _displayint
+ 0452                   .dbline 104
+ 0452           ;                                         KeyValue=0;break;
+ 0452 AA24              clr R10
+ 0454                   .dbline 104
+ 0454 4DC0              rjmp L15
+ 0456           L22:
+ 0456                   .dbline 105
+ 0456           ;       case 115:kk=5;displayint(0x98,kk);nrf905_SendData();KeyValue=0;break;
+ 0456 65E0              ldi R22,5
+ 0458                   .dbline 105
+ 0458 262F              mov R18,R22
+ 045A 3327              clr R19
+ 045C 08E9              ldi R16,152
+ 045E 10E0              ldi R17,0
+ 0460 00D0              rcall _displayint
+ 0462                   .dbline 105
+ 0462 00D0              rcall _nrf905_SendData
+ 0464                   .dbline 105
+ 0464 AA24              clr R10
+ 0466                   .dbline 105
+ 0466 44C0              rjmp L15
+ 0468           L23:
+ 0468                   .dbline 106
+ 0468           ;       case 116:kk=6;displayint(0x98,kk);nrf905_ReadData();KeyValue=0;break;
+ 0468 66E0              ldi R22,6
+ 046A                   .dbline 106
+ 046A 262F              mov R18,R22
+ 046C 3327              clr R19
+ 046E 08E9              ldi R16,152
+ 0470 10E0              ldi R17,0
+ 0472 00D0              rcall _displayint
+ 0474                   .dbline 106
+ 0474 00D0              rcall _nrf905_ReadData
+ 0476                   .dbline 106
+ 0476 AA24              clr R10
+ 0478                   .dbline 106
+ 0478 3BC0              rjmp L15
+ 047A           L24:
+ 047A                   .dbline 107
+ 047A           ;       case 108:kk=7;displayint(0x98,kk);display_int(RxBuf,0x80,12);KeyValue=0;break;
+ 047A 67E0              ldi R22,7
+ 047C                   .dbline 107
+ 047C 262F              mov R18,R22
+ 047E 3327              clr R19
+ 0480 08E9              ldi R16,152
+ 0482 10E0              ldi R17,0
+ 0484 00D0              rcall _displayint
+ 0486                   .dbline 107
+ 0486 8CE0              ldi R24,12
+ 0488 90E0              ldi R25,0
+ 048A 9983              std y+1,R25
+ 048C 8883              std y+0,R24
+ 048E 20E8              ldi R18,128
+ 0490 30E0              ldi R19,0
+ 0492 00E0              ldi R16,<_RxBuf
+ 0494 10E0              ldi R17,>_RxBuf
+ 0496 00D0              rcall _display_int
+ 0498                   .dbline 107
+ 0498 AA24              clr R10
+ 049A                   .dbline 107
+ 049A 2AC0              rjmp L15
+ 049C           L25:
+ 049C                   .dbline 108
+ 049C           ;       case 117:kk=8;displayint(0x98,kk);display_int(RxBuf+12,0x80,12);KeyValue=0;break;
+ 049C 68E0              ldi R22,8
+ 049E                   .dbline 108
+ 049E 262F              mov R18,R22
+ 04A0 3327              clr R19
+ 04A2 08E9              ldi R16,152
+ 04A4 10E0              ldi R17,0
+ 04A6 00D0              rcall _displayint
+ 04A8                   .dbline 108
+ 04A8 8CE0              ldi R24,12
+ 04AA 90E0              ldi R25,0
+ 04AC 9983              std y+1,R25
+ 04AE 8883              std y+0,R24
+ 04B0 20E8              ldi R18,128
+ 04B2 30E0              ldi R19,0
+ 04B4 00E0              ldi R16,<_RxBuf+12
+ 04B6 10E0              ldi R17,>_RxBuf+12
+ 04B8 00D0              rcall _display_int
+ 04BA                   .dbline 108
+ 04BA AA24              clr R10
+ 04BC                   .dbline 108
+ 04BC 19C0              rjmp L15
+ 04BE           L27:
+ 04BE                   .dbline 109
+ 04BE           ;       case 125:kk=9;displayint(0x98,kk);display_int(RxBuf+24,0x80,8);KeyValue=0;break;
+ 04BE 69E0              ldi R22,9
+ 04C0                   .dbline 109
+ 04C0 262F              mov R18,R22
+ 04C2 3327              clr R19
+ 04C4 08E9              ldi R16,152
+ 04C6 10E0              ldi R17,0
+ 04C8 00D0              rcall _displayint
+ 04CA                   .dbline 109
+ 04CA 88E0              ldi R24,8
+ 04CC 90E0              ldi R25,0
+ 04CE 9983              std y+1,R25
+ 04D0 8883              std y+0,R24
+ 04D2 20E8              ldi R18,128
+ 04D4 30E0              ldi R19,0
+ 04D6 00E0              ldi R16,<_RxBuf+24
+ 04D8 10E0              ldi R17,>_RxBuf+24
+ 04DA 00D0              rcall _display_int
+ 04DC                   .dbline 109
+ 04DC AA24              clr R10
+ 04DE                   .dbline 109
+ 04DE 08C0              rjmp L15
+ 04E0           L29:
+ 04E0                   .dbline 110
+ 04E0           ;       case 90: kk='k'; KeyValue=0;
+ 04E0 6BE6              ldi R22,107
+ 04E2                   .dbline 110
+ 04E2 AA24              clr R10
+ 04E4                   .dbline 112
+ 04E4           ;                        //display_int(RxBuf,0x80,12);
+ 04E4           ;                        lcd_write_comm(0x98);
+ 04E4 08E9              ldi R16,152
+ 04E6 10E0              ldi R17,0
+ 04E8 00D0              rcall _lcd_write_comm
+ 04EA                   .dbline 113
+ 04EA           ;                        lcd_write_data('k');
+ 04EA 0BE6              ldi R16,107
+ 04EC 10E0              ldi R17,0
+ 04EE 00D0              rcall _lcd_write_data
+ 04F0                   .dbline 114
+ 04F0           ;                      break;
+ 04F0                   .dbline 115
+ 04F0           ;       default :break;
+ 04F0           L15:
+ 04F0                   .dbline 119
+ 04F0           L10:
+ 04F0                   .dbline 75
+ 04F0 28CF              rjmp L9
+ 04F2           X1:
+ 04F2                   .dbline -2
+ 04F2           L8:
+ 04F2 2296              adiw R28,2
+ 04F4                   .dbline 0 ; func end
+ 04F4 0895              ret
+ 04F6                   .dbsym l detect 3 c
+ 04F6                   .dbsym r kk 22 c
+ 04F6                   .dbsym r KeyValue 10 c
+ 04F6                   .dbend
+                        .area vector(rom, abs)
+                        .org 2
+ 0002 7BC2              rjmp _int0_isr
+                        .area text(rom, con, rel)
+ 04F6                   .dbfile F:\programme\RF905\main.c
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile F:\programme\RF905\main.c
+ 0000           L33:
+ 0000                   .blkb 1
+                        .area text(rom, con, rel)
+ 04F6                   .dbfile F:\programme\RF905\main.c
+ 04F6                   .dbfunc e int0_isr _int0_isr fV
+ 04F6                   .dbsym s IntNum L33 c
+                        .even
+ 04F6           _int0_isr::
+ 04F6 2A92              st -y,R2
+ 04F8 3A92              st -y,R3
+ 04FA 8A93              st -y,R24
+ 04FC 9A93              st -y,R25
+ 04FE 2FB6              in R2,0x3f
+ 0500 2A92              st -y,R2
+ 0502                   .dbline -1
+ 0502                   .dbline 125
+ 0502           ;    }  
+ 0502           ;   
+ 0502           ;   
+ 0502           ;   }
+ 0502           ; }
+ 0502           ;   
+ 0502           ;   
+ 0502           ; #pragma interrupt_handler int0_isr:2
+ 0502           ; void int0_isr(void)
+ 0502           ; {
+ 0502                   .dbline 127
+ 0502           ;  static unsigned char IntNum;
+ 0502           ;  times++;
+ 0502 80914100          lds R24,_times
+ 0506 8F5F              subi R24,255    ; addi 1
+ 0508 80934100          sts _times,R24
+ 050C                   .dbline 128
+ 050C           ;    if((IntNum>0)&&(IntNum<9))
+ 050C 2224              clr R2
+ 050E 30900000          lds R3,L33
+ 0512 2314              cp R2,R3
+ 0514 70F4              brsh L34
+ 0516 832D              mov R24,R3
+ 0518 8930              cpi R24,9
+ 051A 58F4              brsh L34
+ 051C                   .dbline 129
+ 051C           ;       {
+ 051C                   .dbline 130
+ 051C           ;        KeyV>>=1;
+ 051C 20900400          lds R2,_KeyV
+ 0520 2694              lsr R2
+ 0522 20920400          sts _KeyV,R2
+ 0526                   .dbline 131
+ 0526           ;        if(PINB&0x80)
+ 0526 B79B              sbis 0x16,7
+ 0528 04C0              rjmp L36
+ 052A                   .dbline 132
+ 052A           ;        KeyV|=0x80;     
+ 052A 822D              mov R24,R2
+ 052C 8068              ori R24,128
+ 052E 80930400          sts _KeyV,R24
+ 0532           L36:
+ 0532                   .dbline 133
+ 0532           ;        }
+ 0532           L34:
+ 0532                   .dbline 135
+ 0532 80910000          lds R24,L33
+ 0536 8F5F              subi R24,255    ; addi 1
+ 0538 80930000          sts L33,R24
+ 053C                   .dbline 137
+ 053C 8AE0              ldi R24,10
+ 053E 20900000          lds R2,L33
+ 0542 8215              cp R24,R2
+ 0544 30F4              brsh L38
+ 0546                   .dbline 138
+ 0546                   .dbline 139
+ 0546 2224              clr R2
+ 0548 20920000          sts L33,R2
+ 054C                   .dbline 140
+ 054C 81E0              ldi R24,1
+ 054E 80930300          sts _KeyFlag,R24
+ 0552                   .dbline 141
+ 0552           L38:
+ 0552                   .dbline -2
+ 0552           L32:
+ 0552 2990              ld R2,y+
+ 0554 2FBE              out 0x3f,R2
+ 0556 9991              ld R25,y+
+ 0558 8991              ld R24,y+
+ 055A 3990              ld R3,y+
+ 055C 2990              ld R2,y+
+ 055E                   .dbline 0 ; func end
+ 055E 1895              reti
+ 0560                   .dbend
+                        .area bss(ram, con, rel)
+ 0001                   .dbfile F:\programme\RF905\main.c
+ 0001           _set_data::
+ 0001                   .blkb 1
+ 0002                   .dbsym e set_data _set_data c
+ 0002           _value_T::
+ 0002                   .blkb 1
+ 0003                   .dbsym e value_T _value_T c
+ 0003           _KeyFlag::
+ 0003                   .blkb 1
+ 0004                   .dbsym e KeyFlag _KeyFlag c
+ 0004           _KeyV::
+ 0004                   .blkb 1
+ 0005                   .dbsym e KeyV _KeyV c
+                        .area lit(rom, con, rel)
+ 0000           L7:
+ 0000 0000004F          .word 0x0,0x4f00
+ 0004           L6:
+ 0004 00401C46          .word 0x4000,0x461c
+ 0008           L3:
+ 0008 0000803D          .word 0x0,0x3d80

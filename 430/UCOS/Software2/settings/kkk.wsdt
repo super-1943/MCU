@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>myucos/Debug</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>155</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>723</ColumnWidth1><ColumnWidth2>193</ColumnWidth2><ColumnWidth3>48</ColumnWidth3></Build>
+    <Find-in-Files><ColumnWidth0>350</ColumnWidth0><ColumnWidth1>50</ColumnWidth1><ColumnWidth2>601</ColumnWidth2></Find-in-Files><TerminalIO/></Static>
+    <Windows>
+      
+      
+    <Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-3274-12001</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>myucos</ExpandedNode><ExpandedNode>myucos/app.c</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-23328-12854</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-2882-10763</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\SOURCE\os_mbox.c</Filename><XPos>4</XPos><YPos>7</YPos><SelStart>620</SelStart><SelEnd>620</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\SOURCE\os_mem.c</Filename><XPos>4</XPos><YPos>7</YPos><SelStart>678</SelStart><SelEnd>678</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\Ports\MSP430\IAR\os_dbg.c</Filename><XPos>0</XPos><YPos>241</YPos><SelStart>7826</SelStart><SelEnd>7826</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\Ports\MSP430\IAR\Ex1-C-Spy\includes.h</Filename><XPos>0</XPos><YPos>9</YPos><SelStart>738</SelStart><SelEnd>738</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\Ports\MSP430\IAR\Ex1-C-Spy\app.c</Filename><XPos>0</XPos><YPos>15</YPos><SelStart>3245</SelStart><SelEnd>3245</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\Ports\MSP430\IAR\Ex1-C-Spy\os_cfg.h</Filename><XPos>0</XPos><YPos>39</YPos><SelStart>2987</SelStart><SelEnd>2987</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\Ports\MSP430\IAR\Os_cpu_c.c</Filename><XPos>0</XPos><YPos>102</YPos><SelStart>4096</SelStart><SelEnd>4096</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\SOURCE\os_core.c</Filename><XPos>0</XPos><YPos>1122</YPos><SelStart>48407</SelStart><SelEnd>48407</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\SOURCE\ucos_ii.c</Filename><XPos>0</XPos><YPos>9</YPos><SelStart>739</SelStart><SelEnd>739</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\Ports\MSP430\IAR\OS_CPU.H</Filename><XPos>0</XPos><YPos>106</YPos><SelStart>739</SelStart><SelEnd>739</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\Ports\MSP430\IAR\Os_cpu_a.s43</Filename><XPos>0</XPos><YPos>67</YPos><SelStart>10060</SelStart><SelEnd>10060</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\SOURCE\os_mutex.c</Filename><XPos>0</XPos><YPos>7</YPos><SelStart>708</SelStart><SelEnd>708</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\SOURCE\os_q.c</Filename><XPos>0</XPos><YPos>3</YPos><SelStart>621</SelStart><SelEnd>621</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\SOURCE\os_sem.c</Filename><XPos>4</XPos><YPos>7</YPos><SelStart>679</SelStart><SelEnd>679</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\SOURCE\os_task.c</Filename><XPos>4</XPos><YPos>7</YPos><SelStart>677</SelStart><SelEnd>677</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\SOURCE\os_time.c</Filename><XPos>0</XPos><YPos>14</YPos><SelStart>1779</SelStart><SelEnd>1779</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\SOURCE\os_flag.c</Filename><XPos>0</XPos><YPos>459</YPos><SelStart>21326</SelStart><SelEnd>21326</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Software\uCOS-II\SOURCE\ucos_ii.h</Filename><XPos>0</XPos><YPos>144</YPos><SelStart>7243</SelStart><SelEnd>7243</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\Program Files\IAR Systems\Embedded Workbench 5.0\430\inc\dlib\DLib_Defaults.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\Program Files\IAR Systems\Embedded Workbench 5.0\430\inc\in430.h</Filename><XPos>0</XPos><YPos>75</YPos><SelStart>1219</SelStart><SelEnd>1219</SelEnd></Tab><ActiveTab>19</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-013888d0><key>iaridepm.enu1</key></Toolbar-013888d0></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>468</Bottom><Right>248</Right><x>-2</x><y>-2</y><xscreen>250</xscreen><yscreen>208</yscreen><sizeHorzCX>195313</sizeHorzCX><sizeHorzCY>288889</sizeHorzCY><sizeVertCX>195313</sizeVertCX><sizeVertCY>652778</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>206</Bottom><Right>1282</Right><x>-2</x><y>-2</y><xscreen>1284</xscreen><yscreen>208</yscreen><sizeHorzCX>1003125</sizeHorzCX><sizeHorzCY>288889</sizeHorzCY><sizeVertCX>195313</sizeVertCX><sizeVertCY>288889</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+
